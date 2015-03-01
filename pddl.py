@@ -34,7 +34,7 @@ class Operator():
 class Domain(pddlListener):
     def __init__(self):
         self.objects = {}
-        self.operators = []
+        self.operators = {}
         self.scopes = []
         self.negativescopes = []
 
@@ -45,7 +45,7 @@ class Domain(pddlListener):
 
     def exitActionDef(self, ctx):
         action = self.scopes.pop()
-        self.operators.append( action )
+        self.operators[action.operator_name] = action
 
     def enterPredicatesDef(self, ctx):
         self.scopes.append(Operator('dummy'))
@@ -203,42 +203,63 @@ class Problem(pddlListener):
         self.objects = scope.variable_list
 
 
+class DomainProblem():
+
+    def __init__(self, domainfile, problemfile):
+        # domain
+        inp = FileStream(domainfile)
+        lexer = pddlLexer(inp)
+        stream = CommonTokenStream(lexer)
+        parser = pddlParser(stream)
+        tree = parser.domain()
+        self.domain = Domain()
+        walker = ParseTreeWalker()
+        walker.walk(self.domain, tree)
+        # problem
+        inp = FileStream(problemfile)
+        lexer = pddlLexer(inp)
+        stream = CommonTokenStream(lexer)
+        parser = pddlParser(stream)
+        tree = parser.problem()
+        self.problem = Problem()
+        walker = ParseTreeWalker()
+        walker.walk(self.problem, tree)
+
+    def ground_operator(self, op_name):
+        return None
+
+    def operators(self):
+        return self.domain.operators.keys()
+
+    def initialstate(self):
+        return self.problem.initialstate
+
+    def goals(self):
+        return self.problem.goals
+
+    def worldobjects(self):
+        return dict( self.domain.objects.items() | self.problem.objects.items() )
+
+
 def main(argv):
-    # domain
-    inp = FileStream(argv[1])
-    lexer = pddlLexer(inp)
-    stream = CommonTokenStream(lexer)
-    parser = pddlParser(stream)
-    tree = parser.domain()
-    domain = Domain()
-    walker = ParseTreeWalker()
-    walker.walk(domain, tree)
-    # problem
-    inp = FileStream(argv[2])
-    lexer = pddlLexer(inp)
-    stream = CommonTokenStream(lexer)
-    parser = pddlParser(stream)
-    tree = parser.problem()
-    problem = Problem()
-    walker = ParseTreeWalker()
-    walker.walk(problem, tree)
-    # world
+    domprob = DomainProblem(argv[1], argv[2])
     print()
     print("DOMAIN")
-    print("objects", domain.objects)
-    for op in domain.operators:
-        print(op.operator_name)    
+    for opname in domprob.domain.operators:
+        print(opname)
+        op = domprob.domain.operators[opname]
         print('\t', "vars", op.variable_list)
         print('\t', "pre+", op.precondition_pos)
-        print('\t', "pre-",  op.precondition_neg)
+        print('\t', "pre-", op.precondition_neg)
         print('\t', "eff+", op.effect_pos)
         print('\t', "eff-", op.effect_neg)
     print()
-    print("PROBLEM")
-    print("objects", problem.objects)
-    print("init", problem.initialstate)
-    print("goal", problem.goals)
-    print()
+    print("DOMAIN PROBLEM")
+    print("objects", domprob.worldobjects())
+    print("operators", list( domprob.operators() ))
+    print("init", domprob.initialstate())
+    print("goal", domprob.goals())
+
 
 
 if __name__ == '__main__':
