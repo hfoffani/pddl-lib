@@ -50,10 +50,13 @@ class Domain(pddlListener):
         
     def enterTypedVariableList(self, ctx):
         for v in ctx.VARIABLE():
+            vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeVarList():
+            t = vs.r_type().getText()
             for v in vs.VARIABLE():
-                self.scopes[-1].variable_list[v.getText()] = None
+                vname = v.getText()
+                self.scopes[-1].variable_list[vname] = t
 
     def enterAtomicTermFormula(self, ctx):
         # print("-> termform")
