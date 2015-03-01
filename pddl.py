@@ -5,6 +5,20 @@ from pddlpy.pddlParser import pddlParser
 from pddlpy.pddlListener import pddlListener
 
 
+
+class Atom():
+    def __init__(self, predicate):
+        self.predicate = predicate
+
+    def __repr__(self):
+        return str(tuple(self.predicate))
+
+    def ground(self, varvals):
+        g = []
+        for v in self.predicate:
+            g.append( varvals[v] if v in varvals else v )
+        return tuple(g)
+
 class Scope():
     def __init__(self):
         self.atoms = []
@@ -75,9 +89,9 @@ class Domain(pddlListener):
         # print(pred)
         scope = self.scopes[-1]
         if not neg:
-            scope.addatom(tuple(pred))
+            scope.addatom(Atom(pred))
         else:
-            scope.addnegatom(tuple(pred))
+            scope.addnegatom(Atom(pred))
 
     def enterPrecondition(self, ctx):
         self.scopes.append(Scope())
@@ -171,7 +185,7 @@ class Problem(pddlListener):
             pred.append(n)
         # print(pred)
         scope = self.scopes[-1]
-        scope.addatom(tuple(pred))
+        scope.addatom(Atom(pred))
 
     def enterAtomicTermFormula(self, ctx):
         # with a NOT!
@@ -183,7 +197,7 @@ class Problem(pddlListener):
             pred.append(n)
         # print(pred)
         scope = self.scopes[-1]
-        scope.addatom(tuple(pred))
+        scope.addatom(Atom(pred))
 
     def enterTypedNameList(self, ctx):
         for v in ctx.NAME():
@@ -226,7 +240,25 @@ class DomainProblem():
         walker.walk(self.problem, tree)
 
     def ground_operator(self, op_name):
-        return None
+        op = self.domain.operators[op_name]
+        gop = Operator(op_name)
+        for ground in self.instantiate( op.variable_list.items() ):
+            st = dict(ground)
+            gop.precondition_pos = set( [ a.ground( st ) for a in op.precondition_pos ] )
+            yield gop
+
+    def typesymbols(self, t):
+        return ( k for k,v in self.worldobjects().items() if v == t )
+
+    def instantiate(self, variables):
+        import itertools
+        alls = []
+        for vname, t in variables:
+            c = []
+            for symb in self.typesymbols(t):
+                c.append((vname, symb) )
+            alls.append(c)
+        return [ x for x in itertools.product(*alls) ]
 
     def operators(self):
         return self.domain.operators.keys()
@@ -259,6 +291,10 @@ def main(argv):
     print("operators", list( domprob.operators() ))
     print("init", domprob.initialstate())
     print("goal", domprob.goals())
+
+    for o in domprob.ground_operator('move'):
+        print( o.precondition_pos )
+
 
 
 
