@@ -164,9 +164,14 @@ actionSymbol : NAME ;
 // but I can't get the LL(*) parsing to work
 // This means 'preference' preconditions cannot be used
 actionDefBody
-	: ( ':precondition' (('(' ')') | goalDesc))?
+	: ( ':precondition' (('(' ')') | precondition))?
 	  ( ':effect' (('(' ')') | effect))?
 	;
+
+// to ease Listener implementation
+precondition
+    : goalDesc
+    ;
 
 //preGD
 //	: prefGD
