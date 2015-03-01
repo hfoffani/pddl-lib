@@ -8,9 +8,13 @@ from pddlpy.pddlListener import pddlListener
 class Scope():
     def __init__(self):
         self.atoms = []
+        self.negatoms = []
 
     def addatom(self, atom):
         self.atoms.append(atom)
+
+    def addnegatom(self, atom):
+        self.negatoms.append(atom)
 
 
 class Action():
@@ -27,11 +31,11 @@ class Domain(pddlListener):
     def __init__(self):
         self.actions = []
         self.scopes = []
+        self.negativescopes = []
 
     def enterActionDef(self, ctx):
         opname = ctx.actionSymbol().getText()
         opvars = {}
-        # print(opname,":",ctx.typedVariableList())
         self.scopes.append(Action(opname))
 
     def exitActionDef(self, ctx):
@@ -44,6 +48,7 @@ class Domain(pddlListener):
 
     def enterAtomicTermFormula(self, ctx):
         # print("-> termform")
+        neg = self.negativescopes[-1]
         pred = []
         for c in ctx.getChildren():
             n = c.getText()
@@ -52,7 +57,10 @@ class Domain(pddlListener):
             pred.append(n)
         # print(pred)
         scope = self.scopes[-1]
-        scope.addatom(tuple(pred))
+        if not neg:
+            scope.addatom(tuple(pred))
+        else:
+            scope.addnegatom(tuple(pred))
 
     def enterPrecondition(self, ctx):
         self.scopes.append(Scope())
@@ -60,6 +68,7 @@ class Domain(pddlListener):
     def exitPrecondition(self, ctx):
         scope = self.scopes.pop()
         self.scopes[-1].precondition_pos = set( scope.atoms )
+        self.scopes[-1].precondition_neg = set( scope.negatoms )
 
     def enterEffect(self, ctx):
         self.scopes.append(Scope())
@@ -67,6 +76,29 @@ class Domain(pddlListener):
     def exitEffect(self, ctx):
         scope = self.scopes.pop()
         self.scopes[-1].effect_pos = set( scope.atoms )
+        self.scopes[-1].effect_neg = set( scope.negatoms )
+
+    def enterGoalDesc(self, ctx):
+        negscope = False
+        for c in ctx.getChildren():
+            if c.getText() == 'not':
+                negscope = True
+                break
+        self.negativescopes.append(negscope)
+
+    def exitGoalDesc(self, ctx):
+        self.negativescopes.pop()
+
+    def enterPEffect(self, ctx):
+        negscope = False
+        for c in ctx.getChildren():
+            if c.getText() == 'not':
+                negscope = True
+                break
+        self.negativescopes.append(negscope)
+
+    def exitPEffect(self, ctx):
+        self.negativescopes.pop()
 
 
 class Problem(pddlListener):
