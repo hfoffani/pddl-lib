@@ -41,10 +41,19 @@ class Domain(pddlListener):
     def exitActionDef(self, ctx):
         action = self.scopes.pop()
         self.operators.append( action )
+
+    def enterPredicatesDef(self, ctx):
+        self.scopes.append(Operator('dummy'))
+
+    def exitPredicatesDef(self, ctx):
+        self.scopes.pop()
         
     def enterTypedVariableList(self, ctx):
         for v in ctx.VARIABLE():
             self.scopes[-1].variable_list.add(v.getText())
+        for vs in ctx.singleTypeVarList():
+            for v in vs.VARIABLE():
+                self.scopes[-1].variable_list.add(v.getText())
 
     def enterAtomicTermFormula(self, ctx):
         # print("-> termform")
