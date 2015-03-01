@@ -20,7 +20,7 @@ class Scope():
 class Operator():
     def __init__(self, name):
         self.operator_name = name
-        self.variable_list = set()
+        self.variable_list = {}
         self.precondition_pos = set()
         self.precondition_neg = set()
         self.effect_pos = set()
@@ -50,10 +50,10 @@ class Domain(pddlListener):
         
     def enterTypedVariableList(self, ctx):
         for v in ctx.VARIABLE():
-            self.scopes[-1].variable_list.add(v.getText())
+            self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeVarList():
             for v in vs.VARIABLE():
-                self.scopes[-1].variable_list.add(v.getText())
+                self.scopes[-1].variable_list[v.getText()] = None
 
     def enterAtomicTermFormula(self, ctx):
         # print("-> termform")
