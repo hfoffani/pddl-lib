@@ -52,31 +52,6 @@ tokens {
 	PROBLEM_METRIC
 }
 
-@parser::header {package uk.ac.bham.cs.zas.pddl.antlr;}
-
-@parser::members {
-private boolean wasError = false;
-public void reportError(RecognitionException e) {
-	wasError = true;
-	super.reportError(e);
-}
-public boolean invalidGrammar() {
-	return wasError;
-}
-}
-// Standard way of disabling the default error handler, and throwing Exceptions instead:
-//@rulecatch { }
-//@members {
-// // raise exception, rather than recovering, on mismatched token within alt
-// protected void mismatch(IntStream input, int ttype, BitSet follow)
-//   throws RecognitionException
-// {
-//   throw new MismatchedTokenException(ttype, input);
-// }
-//}
-
-@lexer::header {package uk.ac.bham.cs.zas.pddl.antlr;}
-
 
 /************* Start of grammar *******************/
 
