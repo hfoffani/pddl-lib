@@ -17,7 +17,7 @@ class Scope():
         self.negatoms.append(atom)
 
 
-class Action():
+class Operator():
     def __init__(self, name):
         self.operator_name = name
         self.variable_list = set()
@@ -29,18 +29,18 @@ class Action():
 
 class Domain(pddlListener):
     def __init__(self):
-        self.actions = []
+        self.operators = []
         self.scopes = []
         self.negativescopes = []
 
     def enterActionDef(self, ctx):
         opname = ctx.actionSymbol().getText()
         opvars = {}
-        self.scopes.append(Action(opname))
+        self.scopes.append(Operator(opname))
 
     def exitActionDef(self, ctx):
         action = self.scopes.pop()
-        self.actions.append( action )
+        self.operators.append( action )
         
     def enterTypedVariableList(self, ctx):
         for v in ctx.VARIABLE():
@@ -167,13 +167,13 @@ def main(argv):
     # world
     print()
     print("DOMAIN")
-    for a in domain.actions:
-        print(a.operator_name)    
-        print('\t', "vars", a.variable_list)
-        print('\t', "pre+", a.precondition_pos)
-        print('\t', "pre-",  a.precondition_neg)
-        print('\t', "eff+", a.effect_pos)
-        print('\t', "eff-", a.effect_neg)
+    for op in domain.operators:
+        print(op.operator_name)    
+        print('\t', "vars", op.variable_list)
+        print('\t', "pre+", op.precondition_pos)
+        print('\t', "pre-",  op.precondition_neg)
+        print('\t', "eff+", op.effect_pos)
+        print('\t', "eff-", op.effect_neg)
     print()
     print("PROBLEM")
     print("init", problem.initialstate)
