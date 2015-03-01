@@ -17,6 +17,10 @@ class Scope():
         self.negatoms.append(atom)
 
 
+class Obj():
+    def __init__(self):
+        self.variable_list = {}
+
 class Operator():
     def __init__(self, name):
         self.operator_name = name
@@ -29,6 +33,7 @@ class Operator():
 
 class Domain(pddlListener):
     def __init__(self):
+        self.objects = {}
         self.operators = []
         self.scopes = []
         self.negativescopes = []
@@ -47,7 +52,7 @@ class Domain(pddlListener):
 
     def exitPredicatesDef(self, ctx):
         self.scopes.pop()
-        
+
     def enterTypedVariableList(self, ctx):
         for v in ctx.VARIABLE():
             vname = v.getText()
@@ -112,10 +117,34 @@ class Domain(pddlListener):
     def exitPEffect(self, ctx):
         self.negativescopes.pop()
 
+    def enterTypedNameList(self, ctx):
+        for v in ctx.NAME():
+            vname = v.getText()
+            self.scopes[-1].variable_list[v.getText()] = None
+        for vs in ctx.singleTypeNameList():
+            t = vs.r_type().getText()
+            for v in vs.NAME():
+                vname = v.getText()
+                self.scopes[-1].variable_list[vname] = t
+
+    def enterConstantsDef(self, ctx):
+        self.scopes.append(Obj())
+
+    def exitConstantsDef(self, ctx):
+        scope = self.scopes.pop()
+        self.objects = scope.variable_list
+
+    def enterTypesDef(self, ctx):
+        self.scopes.append(Obj())
+
+    def exitTypesDef(self, ctx):
+        scope = self.scopes.pop()
+
 
 class Problem(pddlListener):
 
     def __init__(self):
+        self.objects = {}
         self.initialstate = []
         self.goals = []
         self.scopes = []
@@ -156,6 +185,23 @@ class Problem(pddlListener):
         scope = self.scopes[-1]
         scope.addatom(tuple(pred))
 
+    def enterTypedNameList(self, ctx):
+        for v in ctx.NAME():
+            vname = v.getText()
+            self.scopes[-1].variable_list[v.getText()] = None
+        for vs in ctx.singleTypeNameList():
+            t = vs.r_type().getText()
+            for v in vs.NAME():
+                vname = v.getText()
+                self.scopes[-1].variable_list[vname] = t
+
+    def enterObjectDecl(self, ctx):
+        self.scopes.append(Obj())
+
+    def exitObjectDecl(self, ctx):
+        scope = self.scopes.pop()
+        self.objects = scope.variable_list
+
 
 def main(argv):
     # domain
@@ -179,6 +225,7 @@ def main(argv):
     # world
     print()
     print("DOMAIN")
+    print("objects", domain.objects)
     for op in domain.operators:
         print(op.operator_name)    
         print('\t', "vars", op.variable_list)
@@ -188,6 +235,7 @@ def main(argv):
         print('\t', "eff-", op.effect_neg)
     print()
     print("PROBLEM")
+    print("objects", problem.objects)
     print("init", problem.initialstate)
     print("goal", problem.goals)
     print()
