@@ -60,7 +60,7 @@ From an application point of view you will only need the `pddl.py` file, the `pd
 ### Known bugs ###
 
 * The library expands the variables (ground them) using a cartesian product of the domains of each variable.
-    It should consider only the ones /admissible/ for a given state.
+    It should only expands the ones that successfully binds to a given state.
 
 
 ### Future development ###
