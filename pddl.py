@@ -239,29 +239,33 @@ class DomainProblem():
         walker = ParseTreeWalker()
         walker.walk(self.problem, tree)
 
+    def operators(self):
+        return self.domain.operators.keys()
+
     def ground_operator(self, op_name):
         op = self.domain.operators[op_name]
         gop = Operator(op_name)
-        for ground in self.instantiate( op.variable_list.items() ):
+        for ground in self._instantiate( op.variable_list.items() ):
             st = dict(ground)
+            gop.variable_list = st
             gop.precondition_pos = set( [ a.ground( st ) for a in op.precondition_pos ] )
+            gop.precondition_neg = set( [ a.ground( st ) for a in op.precondition_neg ] )
+            gop.effect_pos = set( [ a.ground( st ) for a in op.effect_pos ] )
+            gop.effect_neg = set( [ a.ground( st ) for a in op.effect_neg ] )
             yield gop
 
-    def typesymbols(self, t):
+    def _typesymbols(self, t):
         return ( k for k,v in self.worldobjects().items() if v == t )
 
-    def instantiate(self, variables):
+    def _instantiate(self, variables):
         import itertools
         alls = []
         for vname, t in variables:
             c = []
-            for symb in self.typesymbols(t):
+            for symb in self._typesymbols(t):
                 c.append((vname, symb) )
             alls.append(c)
         return [ x for x in itertools.product(*alls) ]
-
-    def operators(self):
-        return self.domain.operators.keys()
 
     def initialstate(self):
         return self.problem.initialstate
@@ -276,24 +280,25 @@ class DomainProblem():
 def main(argv):
     domprob = DomainProblem(argv[1], argv[2])
     print()
-    print("DOMAIN")
-    for opname in domprob.domain.operators:
-        print(opname)
-        op = domprob.domain.operators[opname]
-        print('\t', "vars", op.variable_list)
-        print('\t', "pre+", op.precondition_pos)
-        print('\t', "pre-", op.precondition_neg)
-        print('\t', "eff+", op.effect_pos)
-        print('\t', "eff-", op.effect_neg)
-    print()
     print("DOMAIN PROBLEM")
-    print("objects", domprob.worldobjects())
-    print("operators", list( domprob.operators() ))
-    print("init", domprob.initialstate())
-    print("goal", domprob.goals())
+    print("objects")
+    print("\t", domprob.worldobjects())
+    print("operators")
+    print("\t", list( domprob.operators() ))
+    print("init",)
+    print("\t", domprob.initialstate())
+    print("goal",)
+    print("\t", domprob.goals())
 
+    print()
+    print("ground for move operator")
     for o in domprob.ground_operator('move'):
-        print( o.precondition_pos )
+        print()
+        print( "\tvars", o.variable_list )
+        print( "\tpre+", o.precondition_pos )
+        print( "\tpre-", o.precondition_neg )
+        print( "\teff+", o.effect_pos )
+        print( "\teff-", o.effect_neg )
 
 
 

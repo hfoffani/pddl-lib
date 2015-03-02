@@ -11,6 +11,8 @@ This README would normally document whatever steps are necessary to get your app
 ### How do I get set up? ###
 
 * Summary of set up
+`pip install antlr4-python3-runtime`
+
 * Configuration
 * Dependencies
 * Database configuration
@@ -20,6 +22,7 @@ This README would normally document whatever steps are necessary to get your app
 ### Things to do ###
 
 * This README.
+* Copyrights.
 * The rest of the `ground_operator`.
 * API description.
 * AI Plan jargon.
