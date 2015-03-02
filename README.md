@@ -26,8 +26,8 @@ The orginal grammar file was authored by Zeyn Saigol from University of Birmingh
 This library doesn't include and won't include algorithms for solutions search.
 There are lots of projects and complete packages for planning available. This project is just a library that provides the user a simple PDDL helper API useful when she experiments with her own planning algorithms.
 
-### How do I get set up? ###
 
+### How do I get set up? ###
 
 #### Prerequisites
 
@@ -49,11 +49,6 @@ There are lots of projects and complete packages for planning available. This pr
 The file `demo.py` shows how to use this library.
 
 From an application point of view you will only need the `pddl.py` file, the `pddlpy` directory and the `antlr4-python3-runtime` library.
-
-### Things to do ###
-
-* My contact.
-* Open issue tracking, wiki?
 
 
 ### Known bugs ###
@@ -77,8 +72,11 @@ From an application point of view you will only need the `pddl.py` file, the `pd
 
 I'd appreciate any feedback you send like pull requests, bug reports, etc.
 
+Please, use the issue tracker at will.
+
 
 ### Who do I talk to? ###
 
-Emailme at 
+You may contact me directly to hfoffani at gmail.com
+
 
