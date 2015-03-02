@@ -14,6 +14,8 @@ This library publishes one object class whose API exposes methods for obtaining:
 
 This is enough for the user to focus on the implementation of state-space or plan-space search algorithms.
 
+The development of this tool was inspired from Univerty of Edimburgh's Artificial Intelligence Planning course by XXX and XXX and XXX and XXX XXX book. The terms used in this API (and the API itself) closely resembles the ones used in those references.
+
 As of today it only supports Python but I plan to give support to .NET and Java languages.
 
 The orginal grammar file was authored by XXX. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
@@ -51,7 +53,6 @@ The file `demo.py` shows how to use this library.
 
 * Copyrights.
 * AI Plan jargon.
-* Demo program.
 
 
 ### Known bugs ###
