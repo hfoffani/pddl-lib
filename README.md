@@ -48,11 +48,13 @@ There are lots of projects and complete packages for planning available. This pr
 
 The file `demo.py` shows how to use this library.
 
+From an application point of view you will only need the `pddl.py` file, the `pddlpy` directory and the `antlr4-python3-runtime` library.
 
 ### Things to do ###
 
 * Copyrights.
-* AI Plan jargon.
+* My contact.
+* Open issue tracking, wiki?
 
 
 ### Known bugs ###
@@ -60,8 +62,8 @@ The file `demo.py` shows how to use this library.
 * The library expands the variables (ground them) using a cartesian product of the domains of each variable.
     It should consider only the ones /admissible/ for a given state.
 
-### Future development ###
 
+### Future development ###
 
 * Document API.
 * More tests.
