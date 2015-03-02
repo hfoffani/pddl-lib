@@ -5,11 +5,12 @@
 
 This is a PDDL parser library using an ANTLR 4 grammar that provides a very simple interface to interact with domain-problems.
 This library publishes one object class whose API exposes methods for obtaining:
+
 * The initial state.
 * The goals.
 * The list of operators.
 * The positive and negative preconditions and the positive and negative effects.
-* The /grounded/ states of a given operator (grounded variables, preconditions and effects).
+* The _grounded_ states of a given operator (grounded variables, preconditions and effects).
 
 This is enough for the user to focus on the implementation of state-space or plan-space search algorithms.
 
@@ -49,7 +50,6 @@ The file `demo.py` shows how to use this library.
 ### Things to do ###
 
 * Copyrights.
-* API description.
 * AI Plan jargon.
 * Demo program.
 
@@ -62,7 +62,8 @@ The file `demo.py` shows how to use this library.
 ### Future development ###
 
 
-* More tests
+* Document API.
+* More tests.
 * Publish the Python library as a PIP package.
 * C# version.
 * Publish the .NET library as a NuGet package.
