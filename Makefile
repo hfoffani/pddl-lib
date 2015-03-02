@@ -4,6 +4,8 @@ ANTLRLIB=$(ANTLRDIR)/antlr-4.5-complete.jar
 ANTLR=$(ANTLRDIR)/bin/antlr4
 GRUN=$(ANTLRDIR)/bin/grun
 
+export CLASSPATH:=.:$(ANTLRLIB)
+
 all: testgrammar parser
 
 parser: pddl.g4
