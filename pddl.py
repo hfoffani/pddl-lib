@@ -265,7 +265,7 @@ class DomainProblem():
             for symb in self._typesymbols(t):
                 c.append((vname, symb) )
             alls.append(c)
-        return [ x for x in itertools.product(*alls) ]
+        return itertools.product(*alls)
 
     def initialstate(self):
         return self.problem.initialstate
@@ -291,8 +291,10 @@ def main(argv):
     print("\t", domprob.goals())
 
     print()
-    print("ground for move operator")
-    for o in domprob.ground_operator('move'):
+    op = "move"
+    #op = "op2"
+    print("ground for operator", op)
+    for o in domprob.ground_operator(op):
         print()
         print( "\tvars", o.variable_list )
         print( "\tpre+", o.precondition_pos )
