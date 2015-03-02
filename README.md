@@ -26,7 +26,7 @@ There are lots of projects and complete packages for planning available. This pr
 ### How do I get set up? ###
 
 
-# Prerequisites
+#### Prerequisites
 
 * Install ANTLR version 4.
     I used `brew install antlr4` (a Mac). Your mileage may vary depending on your environment.
@@ -35,13 +35,13 @@ There are lots of projects and complete packages for planning available. This pr
 * Install antlr4 runtime.
     `pip install antlr4-python3-runtime`
 
-# Building
+#### Building
 
 * Checkout the repository.
 * Edit the Makefile to configure PATHs.
 * Run `make` 
 
-# Running a program.
+#### Running a program.
 
 The file `demo.py` shows how to use this library.
 
