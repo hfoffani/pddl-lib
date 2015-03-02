@@ -154,6 +154,17 @@ class Domain(pddlListener):
     def exitTypesDef(self, ctx):
         scope = self.scopes.pop()
 
+    def exitDomain(self, ctx):
+        if not self.objects:
+            vs = set()
+            for opn, oper in self.operators.items():
+                alls = oper.precondition_pos | oper.precondition_neg | oper.effect_pos | oper.effect_neg
+                for a in alls:
+                    for s in a.predicate:
+                        if s[0] != '?':
+                            vs.add( (s, None) )
+            self.objects = dict( vs)
+
 
 class Problem(pddlListener):
 
@@ -215,6 +226,17 @@ class Problem(pddlListener):
     def exitObjectDecl(self, ctx):
         scope = self.scopes.pop()
         self.objects = scope.variable_list
+
+    def exitProblem(self, ctx):
+        if not self.objects:
+            vs = set()
+            for a in self.initialstate:
+                for s in a.predicate:
+                    vs.add( (s, None) )
+            for a in self.goals:
+                for s in a.predicate:
+                    vs.add( (s, None) )
+            self.objects = dict( vs )
 
 
 class DomainProblem():
@@ -291,8 +313,8 @@ def main(argv):
     print("\t", domprob.goals())
 
     print()
-    op = "move"
-    #op = "op2"
+    #op = "move"
+    op = "op2"
     print("ground for operator", op)
     for o in domprob.ground_operator(op):
         print()
