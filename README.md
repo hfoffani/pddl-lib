@@ -17,6 +17,20 @@ This README would normally document whatever steps are necessary to get your app
 * How to run tests
 * Deployment instructions
 
+### Things to do ###
+
+* This README.
+* The rest of the `ground_operator`.
+* API description.
+* AI Plan jargon.
+* Demo program.
+* PIP package.
+* C# version.
+* NuGet package.
+* Java version.
+* Java Central Repository.
+
+
 ### Contribution guidelines ###
 
 * Writing tests
