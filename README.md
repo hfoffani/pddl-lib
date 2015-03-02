@@ -25,30 +25,49 @@ There are lots of projects and complete packages for planning available. This pr
 
 ### How do I get set up? ###
 
-There are two ways to use this project.
 
+# Prerequisites
 
-`pip install antlr4-python3-runtime`
+* Install ANTLR version 4.
+    I used `brew install antlr4` (a Mac). Your mileage may vary depending on your environment.
+* Install Python 3.
+    For this I also used brew.
+* Install antlr4 runtime.
+    `pip install antlr4-python3-runtime`
 
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+# Building
+
+* Checkout the repository.
+* Edit the Makefile to configure PATHs.
+* Run `make` 
+
+# Running a program.
+
+The file `demo.py` shows how to use this library.
+
 
 ### Things to do ###
 
-* This README.
 * Copyrights.
 * API description.
 * AI Plan jargon.
 * Demo program.
-* Tests.
-* PIP package.
+
+
+### Known bugs ###
+
+* The library expands the variables (ground them) using a cartesian product of the domains of each variable.
+    It should consider only the ones /admissible/ for a given state.
+
+### Future development ###
+
+
+* More tests
+* Publish the Python library as a PIP package.
 * C# version.
-* NuGet package.
+* Publish the .NET library as a NuGet package.
 * Java version.
-* Java Central Repository.
+* Publish the Java library in the Java Central Repository.
 
 
 ### Contribution guidelines ###
