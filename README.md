@@ -48,9 +48,11 @@ There are lots of projects and complete packages for planning available. This pr
 
 Run the demo by calling:
 ```
-python3 demo.py XXX XXX
+python3 demo.py domain-02.pddl problem-02.pddl
 ```
-The file `demo.py` shows how to use this library.
+The pddl files are examples obtained from the course material.
+
+Analyse the file `demo.py` to see  how to use this library.
 
 From an application point of view you will only need the `pddl.py` file, the `pddlpy` directory and the `antlr4-python3-runtime` library.
 
