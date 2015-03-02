@@ -1,10 +1,12 @@
 /**
  * PDDL grammar for ANTLR v4
+ *
  * Zeyn Saigol
  * School of Computer Science
  * University of Birmingham
  *
- * modified for v4 by Hernán M. Foffani
+ * modified for v4 and made it language agnostic by
+ * Hernán M. Foffani
  */
 
 grammar pddl;

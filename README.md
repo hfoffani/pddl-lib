@@ -14,11 +14,11 @@ This library publishes one object class whose API exposes methods for obtaining:
 
 This is enough for the user to focus on the implementation of state-space or plan-space search algorithms.
 
-The development of this tool was inspired from Univerty of Edimburgh's Artificial Intelligence Planning course by XXX and XXX and XXX and XXX XXX book. The terms used in this API (and the API itself) closely resembles the ones used in those references.
+The development of this tool was inspired from Univerty of Edimburgh's Artificial Intelligence Planning course by Dr. Gerhard Wickler and Prof. Austin Tate. The terms used in this API (and the API itself) closely resembles the ones proposed by the lecturers.
 
 As of today it only supports Python but I plan to give support to .NET and Java languages.
 
-The orginal grammar file was authored by XXX. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
+The orginal grammar file was authored by Zeyn Saigol from University of Birmingham. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
 
 
 ### What this project is NOT? ###
@@ -52,7 +52,6 @@ From an application point of view you will only need the `pddl.py` file, the `pd
 
 ### Things to do ###
 
-* Copyrights.
 * My contact.
 * Open issue tracking, wiki?
 
@@ -67,7 +66,7 @@ From an application point of view you will only need the `pddl.py` file, the `pd
 
 * Document API.
 * More tests.
-* Publish the Python library as a PIP package.
+* Publish the Python library as a PIP package. This way the user won't need to checkout and build this project.
 * C# version.
 * Publish the .NET library as a NuGet package.
 * Java version.
