@@ -57,10 +57,9 @@ Analyse the file `demo.py` to see  how to use this library.
 From an application point of view you will only need the `pddl.py` file, the `pddlpy` directory and the `antlr4-python3-runtime` library.
 
 
-### Known bugs ###
+### Improvements ###
 
-* The library expands the variables (ground them) using a cartesian product of the domains of each variable.
-    It should only expands the ones that successfully binds to a given state.
+* The library expands the variables (ground them) using a cartesian product of the domains of each variable. Checking preconditions are left to the user in a later step. While this simplifies the usage it imposes a penalty.
 
 
 ### Future development ###
