@@ -1,8 +1,8 @@
 import sys
 from antlr4 import *
-from pddlpy.pddlLexer import pddlLexer
-from pddlpy.pddlParser import pddlParser
-from pddlpy.pddlListener import pddlListener
+from .pddlLexer import pddlLexer
+from .pddlParser import pddlParser
+from .pddlListener import pddlListener
 
 
 # To do:

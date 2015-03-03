@@ -1,8 +1,8 @@
 import sys
-import pddl
+from  pddlpy import DomainProblem
 
 def main(argv):
-    domprob = pddl.DomainProblem(argv[1], argv[2])
+    domprob = DomainProblem(argv[1], argv[2])
     print()
     print("DOMAIN PROBLEM")
     print("objects")
