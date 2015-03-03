@@ -67,7 +67,7 @@ class DomainListener(pddlListener):
         self.operators[action.operator_name] = action
 
     def enterPredicatesDef(self, ctx):
-        self.scopes.append(Operator('__dummy__'))
+        self.scopes.append(Operator(None))
 
     def exitPredicatesDef(self, ctx):
         self.scopes.pop()
@@ -161,7 +161,7 @@ class DomainListener(pddlListener):
         if not self.objects:
             vs = set()
             for opn, oper in self.operators.items():
-                if opn == "__dummy__":
+                if not opn:
                     continue
                 alls = oper.precondition_pos | oper.precondition_neg | oper.effect_pos | oper.effect_neg
                 for a in alls:
