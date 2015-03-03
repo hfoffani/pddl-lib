@@ -29,7 +29,7 @@
      :parameters (?l - location ?c - container ?r - robot)
      :precondition (and (atl ?r ?l) (in ?c ?l) (unloaded ?r))
      :effect (and (loaded ?r ?c)
-                    (not (in ?c ?l) (not (unloaded ?r))) ))
+                    (not (in ?c ?l)) (not (unloaded ?r)) ))
 
 ;; unloads a robot holding a container with a nearby crane
  (:action unload                                 

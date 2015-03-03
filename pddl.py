@@ -67,7 +67,7 @@ class DomainListener(pddlListener):
         self.operators[action.operator_name] = action
 
     def enterPredicatesDef(self, ctx):
-        self.scopes.append(Operator('dummy'))
+        self.scopes.append(Operator('__dummy__'))
 
     def exitPredicatesDef(self, ctx):
         self.scopes.pop()
@@ -83,7 +83,6 @@ class DomainListener(pddlListener):
                 self.scopes[-1].variable_list[vname] = t
 
     def enterAtomicTermFormula(self, ctx):
-        # print("-> termform")
         neg = self.negativescopes[-1]
         pred = []
         for c in ctx.getChildren():
@@ -91,7 +90,6 @@ class DomainListener(pddlListener):
             if n == '(' or n == ')':
                 continue
             pred.append(n)
-        # print(pred)
         scope = self.scopes[-1]
         if not neg:
             scope.addatom(Atom(pred))
@@ -163,6 +161,8 @@ class DomainListener(pddlListener):
         if not self.objects:
             vs = set()
             for opn, oper in self.operators.items():
+                if opn == "__dummy__":
+                    continue
                 alls = oper.precondition_pos | oper.precondition_neg | oper.effect_pos | oper.effect_neg
                 for a in alls:
                     for s in a.predicate:
@@ -192,14 +192,12 @@ class ProblemListener(pddlListener):
         self.goals = set( self.scopes.pop().atoms )
 
     def enterAtomicNameFormula(self, ctx):
-        # print(ctx.__dir__())
         pred = []
         for c in ctx.getChildren():
             n = c.getText()
             if n == '(' or n == ')':
                 continue
             pred.append(n)
-        # print(pred)
         scope = self.scopes[-1]
         scope.addatom(Atom(pred))
 
@@ -211,7 +209,6 @@ class ProblemListener(pddlListener):
             if n == '(' or n == ')':
                 continue
             pred.append(n)
-        # print(pred)
         scope = self.scopes[-1]
         scope.addatom(Atom(pred))
 

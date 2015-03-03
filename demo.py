@@ -17,14 +17,15 @@ def main(argv):
     print()
     op = "move"
     #op = "op2"
-    print("ground for operator", op)
+    print("ground for operator", op, "applicable if (adjacent loc1 loc2)")
     for o in domprob.ground_operator(op):
-        print()
-        print( "\tvars", o.variable_list )
-        print( "\tpre+", o.precondition_pos )
-        print( "\tpre-", o.precondition_neg )
-        print( "\teff+", o.effect_pos )
-        print( "\teff-", o.effect_neg )
+        if ("adjacent","loc1","loc2") in o.precondition_pos:
+            print()
+            print( "\tvars", o.variable_list )
+            print( "\tpre+", o.precondition_pos )
+            print( "\tpre-", o.precondition_neg )
+            print( "\teff+", o.effect_pos )
+            print( "\teff-", o.effect_neg )
 
 
 if __name__ == '__main__':
