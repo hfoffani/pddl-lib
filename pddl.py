@@ -5,6 +5,11 @@ from pddlpy.pddlParser import pddlParser
 from pddlpy.pddlListener import pddlListener
 
 
+# To do:
+#   . Cache expansion of variables.
+#   . Move pddl.py a pddlpy
+#   . Move demo.py to examplespy
+
 
 class Atom():
     def __init__(self, predicate):
@@ -45,7 +50,7 @@ class Operator():
         self.effect_neg = set()
 
 
-class Domain(pddlListener):
+class DomainListener(pddlListener):
     def __init__(self):
         self.objects = {}
         self.operators = {}
@@ -166,7 +171,7 @@ class Domain(pddlListener):
             self.objects = dict( vs)
 
 
-class Problem(pddlListener):
+class ProblemListener(pddlListener):
 
     def __init__(self):
         self.objects = {}
@@ -248,7 +253,7 @@ class DomainProblem():
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)
         tree = parser.domain()
-        self.domain = Domain()
+        self.domain = DomainListener()
         walker = ParseTreeWalker()
         walker.walk(self.domain, tree)
         # problem
@@ -257,7 +262,7 @@ class DomainProblem():
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)
         tree = parser.problem()
-        self.problem = Problem()
+        self.problem = ProblemListener()
         walker = ParseTreeWalker()
         walker.walk(self.problem, tree)
 
