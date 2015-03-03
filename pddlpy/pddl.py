@@ -1,4 +1,3 @@
-import sys
 from antlr4 import *
 from .pddlLexer import pddlLexer
 from .pddlParser import pddlParser
@@ -7,7 +6,6 @@ from .pddlListener import pddlListener
 
 # To do:
 #   . Cache expansion of variables.
-#   . Move pddl.py a pddlpy
 #   . Move demo.py to examplespy
 
 
@@ -70,9 +68,10 @@ class DomainListener(pddlListener):
         self.scopes.append(Operator(None))
 
     def exitPredicatesDef(self, ctx):
-        self.scopes.pop()
+        dummyop = self.scopes.pop()
 
     def enterTypedVariableList(self, ctx):
+        # print("-> tvar")
         for v in ctx.VARIABLE():
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
@@ -83,6 +82,7 @@ class DomainListener(pddlListener):
                 self.scopes[-1].variable_list[vname] = t
 
     def enterAtomicTermFormula(self, ctx):
+        # print("-> terf")
         neg = self.negativescopes[-1]
         pred = []
         for c in ctx.getChildren():
@@ -135,6 +135,7 @@ class DomainListener(pddlListener):
         self.negativescopes.pop()
 
     def enterTypedNameList(self, ctx):
+        # print("-> tnam")
         for v in ctx.NAME():
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
@@ -161,8 +162,6 @@ class DomainListener(pddlListener):
         if not self.objects:
             vs = set()
             for opn, oper in self.operators.items():
-                if not opn:
-                    continue
                 alls = oper.precondition_pos | oper.precondition_neg | oper.effect_pos | oper.effect_neg
                 for a in alls:
                     for s in a.predicate:
