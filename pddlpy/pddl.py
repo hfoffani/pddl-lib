@@ -5,8 +5,11 @@ from .pddlListener import pddlListener
 
 
 # To do:
+#   . Type production to filter non-typed objects.
 #   . Cache expansion of variables.
 #   . Move demo.py to examplespy
+#   . copyright.
+#   . pydoc public class
 
 
 class Atom():
