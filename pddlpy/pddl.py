@@ -3,10 +3,9 @@ from .pddlLexer import pddlLexer
 from .pddlParser import pddlParser
 from .pddlListener import pddlListener
 
+import itertools
 
 # To do:
-#   . Type production to filter non-typed objects.
-#   . Cache expansion of variables.
 #   . move *.pddl files to examples_pddl
 #   . Move demo.py to examples_py
 #   . Add solve plan to demo.
@@ -22,9 +21,7 @@ class Atom():
         return str(tuple(self.predicate))
 
     def ground(self, varvals):
-        g = []
-        for v in self.predicate:
-            g.append( varvals[v] if v in varvals else v )
+        g = [ varvals[v] if v in varvals else v for v in self.predicate ]
         return tuple(g)
 
 class Scope():
@@ -268,6 +265,8 @@ class DomainProblem():
         self.problem = ProblemListener()
         walker = ParseTreeWalker()
         walker.walk(self.problem, tree)
+        # variable ground space
+        self.vargroundspace = []
 
     def operators(self):
         return self.domain.operators.keys()
@@ -288,14 +287,13 @@ class DomainProblem():
         return ( k for k,v in self.worldobjects().items() if v == t )
 
     def _instantiate(self, variables):
-        import itertools
-        alls = []
-        for vname, t in variables:
-            c = []
-            for symb in self._typesymbols(t):
-                c.append((vname, symb) )
-            alls.append(c)
-        return itertools.product(*alls)
+        if not self.vargroundspace:
+            for vname, t in variables:
+                c = []
+                for symb in self._typesymbols(t):
+                    c.append((vname, symb) )
+                self.vargroundspace.append(c)
+        return itertools.product(*self.vargroundspace)
 
     def initialstate(self):
         return self.problem.initialstate
