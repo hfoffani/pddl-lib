@@ -83,6 +83,11 @@ I'd appreciate any feedback you send like pull requests, bug reports, etc.
 Please, use the issue tracker at will.
 
 
+### License ###
+
+This project is publish under the MIT Open Source license.
+
+
 ### Who do I talk to? ###
 
 You may contact me directly to hfoffani at gmail.com
