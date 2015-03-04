@@ -67,7 +67,6 @@ From an application point of view you will only need the `pddl.py` file, the `pd
 
 ### Future development ###
 
-* Publish the Python library in PYPI repository.
 * Split docs between installing package and building from source.
 * Unit tests.
 * C# version.
