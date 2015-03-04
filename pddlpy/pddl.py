@@ -7,7 +7,9 @@ from .pddlListener import pddlListener
 # To do:
 #   . Type production to filter non-typed objects.
 #   . Cache expansion of variables.
-#   . Move demo.py to examplespy
+#   . move *.pddl files to examples_pddl
+#   . Move demo.py to examples_py
+#   . Add solve plan to demo.
 #   . copyright.
 #   . pydoc public class
 
@@ -53,6 +55,7 @@ class Operator():
 
 class DomainListener(pddlListener):
     def __init__(self):
+        self.typesdef = False
         self.objects = {}
         self.operators = {}
         self.scopes = []
@@ -72,6 +75,13 @@ class DomainListener(pddlListener):
 
     def exitPredicatesDef(self, ctx):
         dummyop = self.scopes.pop()
+
+    def enterTypesDef(self, ctx):
+        self.scopes.append(Obj())
+
+    def exitTypesDef(self, ctx):
+        self.typesdef = True
+        self.scopes.pop()
 
     def enterTypedVariableList(self, ctx):
         # print("-> tvar")
@@ -155,14 +165,8 @@ class DomainListener(pddlListener):
         scope = self.scopes.pop()
         self.objects = scope.variable_list
 
-    def enterTypesDef(self, ctx):
-        self.scopes.append(Obj())
-
-    def exitTypesDef(self, ctx):
-        scope = self.scopes.pop()
-
     def exitDomain(self, ctx):
-        if not self.objects:
+        if not self.objects and not self.typesdef:
             vs = set()
             for opn, oper in self.operators.items():
                 alls = oper.precondition_pos | oper.precondition_neg | oper.effect_pos | oper.effect_neg
