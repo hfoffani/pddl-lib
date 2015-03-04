@@ -51,7 +51,7 @@ There are lots of projects and complete packages for planning available. This pr
 
 Run the demo by calling:
 ```
-python3 demo.py domain-02.pddl problem-02.pddl
+python3 demo.py { 1|2|3 }
 ```
 The pddl files are examples obtained from the course material.
 
