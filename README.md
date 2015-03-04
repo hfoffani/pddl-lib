@@ -67,9 +67,11 @@ From an application point of view you will only need the `pddl.py` file, the `pd
 
 ### Future development ###
 
-* Document API.
-* More tests.
-* Publish the Python library as a PIP package. This way the user won't need to checkout and build this project.
+* Refactor pddlpy/pddl.py
+* Document API for Python
+* Add copyright notice to sources.
+* Publish the Python library in PYPI repository.
+* Unit tests.
 * C# version.
 * Publish the .NET library as a NuGet package.
 * Java version.

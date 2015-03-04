@@ -5,13 +5,6 @@ from .pddlListener import pddlListener
 
 import itertools
 
-# To do:
-#   . move *.pddl files to examples_pddl
-#   . Move demo.py to examples_py
-#   . Add solve plan to demo.
-#   . copyright.
-#   . pydoc public class
-
 
 class Atom():
     def __init__(self, predicate):
