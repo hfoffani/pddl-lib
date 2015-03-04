@@ -67,7 +67,6 @@ From an application point of view you will only need the `pddl.py` file, the `pd
 
 ### Future development ###
 
-* Add copyright notice to sources.
 * Publish the Python library in PYPI repository.
 * Split docs between installing package and building from source.
 * Unit tests.

@@ -1,3 +1,12 @@
+
+#
+# Library: pypddl
+#
+# Copyright 2015, Hernán Foffani
+# This library is part of the project:
+# https://bitbucket.org/hfoffani/pddl-parser
+#
+
 from antlr4 import *
 from .pddlLexer import pddlLexer
 from .pddlParser import pddlParser
