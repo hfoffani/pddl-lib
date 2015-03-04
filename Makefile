@@ -19,3 +19,6 @@ testgrammar: pddl.g4
 	$(GRUN) pddl domain ../domain-01.pddl && \
 	$(GRUN) pddl problem ../problem-01.pddl
 
+pydist:
+	python3 setup.py bdist_wheel
+	pip3 install -e .

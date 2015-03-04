@@ -37,6 +37,9 @@ There are lots of projects and complete packages for planning available. This pr
     For this I also used brew.
 * Install antlr4 runtime.
     `pip install antlr4-python3-runtime`
+* To publish the package you'll also need:
+    `pip install wheel`
+    `pip install tween`
 
 #### Building
 
