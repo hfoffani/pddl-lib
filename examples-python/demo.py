@@ -2,7 +2,10 @@ import sys
 from  pddlpy import DomainProblem
 
 def main(argv):
-    domprob = DomainProblem(argv[1], argv[2])
+    demonumber = int(argv[1])
+    domainfile = "../examples-pddl/domain-0%d.pddl" % demonumber
+    problemfile = "../examples-pddl/problem-0%d.pddl" % demonumber
+    domprob = DomainProblem(domainfile, problemfile)
     print()
     print("DOMAIN PROBLEM")
     print("objects")
@@ -15,8 +18,8 @@ def main(argv):
     print("\t", domprob.goals())
 
     print()
-    op = "move"
-    #op = "op2"
+    ops_to_test = { 1:"op2", 2:"move", 3:"move" }
+    op = ops_to_test[demonumber]
     print("ground for operator", op, "applicable if (adjacent loc1 loc2)")
     for o in domprob.ground_operator(op):
         if ("adjacent","loc1","loc2") in o.precondition_pos:

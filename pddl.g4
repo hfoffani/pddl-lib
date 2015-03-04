@@ -7,6 +7,10 @@
  *
  * modified for v4 and made it language agnostic by
  * Hernán M. Foffani
+ * Now part of the project
+ * https://bitbucket.org/hfoffani/pddl-parser
+ * 
+ * This file carries the same license from the original.
  */
 
 grammar pddl;

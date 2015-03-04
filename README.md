@@ -51,7 +51,7 @@ There are lots of projects and complete packages for planning available. This pr
 
 Run the demo by calling:
 ```
-python3 demo.py domain-02.pddl problem-02.pddl
+python3 demo.py { 1|2|3 }
 ```
 The pddl files are examples obtained from the course material.
 
@@ -67,9 +67,8 @@ From an application point of view you will only need the `pddl.py` file, the `pd
 
 ### Future development ###
 
-* Document API.
-* More tests.
-* Publish the Python library as a PIP package. This way the user won't need to checkout and build this project.
+* Split docs between installing package and building from source.
+* Unit tests.
 * C# version.
 * Publish the .NET library as a NuGet package.
 * Java version.
@@ -81,6 +80,11 @@ From an application point of view you will only need the `pddl.py` file, the `pd
 I'd appreciate any feedback you send like pull requests, bug reports, etc.
 
 Please, use the issue tracker at will.
+
+
+### License ###
+
+This project is publish under the MIT Open Source license.
 
 
 ### Who do I talk to? ###

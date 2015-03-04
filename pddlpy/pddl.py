@@ -1,16 +1,19 @@
+
+#
+# Library: pypddl
+#
+# Copyright 2015, Hernán Foffani
+# MIT License
+# This library is part of the project:
+# https://bitbucket.org/hfoffani/pddl-parser
+#
+
 from antlr4 import *
 from .pddlLexer import pddlLexer
 from .pddlParser import pddlParser
 from .pddlListener import pddlListener
 
 import itertools
-
-# To do:
-#   . move *.pddl files to examples_pddl
-#   . Move demo.py to examples_py
-#   . Add solve plan to demo.
-#   . copyright.
-#   . pydoc public class
 
 
 class Atom():
@@ -41,6 +44,22 @@ class Obj():
         self.variable_list = {}
 
 class Operator():
+    """Represents and action. Can be grounded or ungrounded.
+    Ungrounded operators have a '?' in names (unbound variables).
+    Attributes:
+
+        operator_name -- the name of operator (action in the domain.)
+        variable_list -- a dictionary of key-value pairs where the key
+                         is the variable name (with the '?') and the
+                         value is the value of it when the operator is
+                         grounded.
+        precondition_pos -- a set of atoms corresponding to the
+                            positive preconditions.
+        precondition_neg -- a set of atoms corresponding to the
+                            negative preconditions.
+        effect_pos -- a set of atoms to add.
+        effect_neg -- a set of atoms to delete.
+    """
     def __init__(self, name):
         self.operator_name = name
         self.variable_list = {}
@@ -247,6 +266,12 @@ class ProblemListener(pddlListener):
 class DomainProblem():
 
     def __init__(self, domainfile, problemfile):
+        """Parses a PDDL domain and problem files and
+        returns an object representing them.
+
+        domainfile -- path for the PDDL domain file
+        problemfile -- path for the PDDL problem file
+        """
         # domain
         inp = FileStream(domainfile)
         lexer = pddlLexer(inp)
@@ -269,9 +294,17 @@ class DomainProblem():
         self.vargroundspace = []
 
     def operators(self):
+        """Returns an iterator of the names of the actions defined in
+        the domain file.
+        """
         return self.domain.operators.keys()
 
     def ground_operator(self, op_name):
+        """Returns an interator of Operator instances. Each item of the iterator
+        is a grounded instance.
+
+        returns -- An iterator of Operator instances.
+        """
         op = self.domain.operators[op_name]
         gop = Operator(op_name)
         for ground in self._instantiate( op.variable_list.items() ):
@@ -296,12 +329,21 @@ class DomainProblem():
         return itertools.product(*self.vargroundspace)
 
     def initialstate(self):
+        """Returns a set of atoms (tuples of strings) corresponding to the intial
+        state defined in the problem file.
+        """
         return self.problem.initialstate
 
     def goals(self):
+        """Returns a set of atoms (tuples of strings) corresponding to the goals
+        defined in the problem file.
+        """
         return self.problem.goals
 
     def worldobjects(self):
+        """Returns a dictionary of key value pairs where the key is the name of
+        an object and the value is it's type (None in case is untyped.)
+        """
         return dict( self.domain.objects.items() | self.problem.objects.items() )
 
 

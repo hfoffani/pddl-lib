@@ -16,9 +16,25 @@ testgrammar: pddl.g4
 	mkdir -p tmp && \
 	$(ANTLR) -o tmp pddl.g4 && \
 	cd tmp && javac *.java && \
-	$(GRUN) pddl domain ../domain-01.pddl && \
-	$(GRUN) pddl problem ../problem-01.pddl
+	$(GRUN) pddl domain ../examples-pddl/domain-01.pddl && \
+	$(GRUN) pddl problem ../examples-pddl/problem-01.pddl
+
 
 pydist:
 	python3 setup.py bdist_wheel
 	pip3 install -e .
+
+pypitest: pydist
+	python setup.py register -r pypitest && \
+	python setup.py bdist_wheel upload -r pypitest
+
+pypipublish: pydist
+	python setup.py register -r pypi && \
+	python setup.py bdist_wheel upload -r pypi
+
+pydemo: pydist
+	cd examples-python && \
+	python3 demo.py 1 && \
+	python3 demo.py 2 && \
+	python3 demo.py 3
+

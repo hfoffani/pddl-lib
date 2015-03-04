@@ -5,8 +5,20 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
-with open(path.join(here, 'pddlpy-readme.txt'), encoding='utf-8') as f:
-    long_description = f.read()
+with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+    keep=False
+    l = []
+    for line in f:
+        if not keep and "###" in line:
+            keep = True
+            continue
+        if "###" in line:
+            keep = False
+            break
+        if keep:
+            l.append(line)
+    long_description = "".join(l)
+
 
 setup(
     name='pddlpy',
@@ -14,7 +26,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.1.0',
+    version='0.1.2',
 
     description='Python PDDL parser',
     long_description=long_description,
