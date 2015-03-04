@@ -25,12 +25,12 @@ pydist:
 	pip3 install -e .
 
 pypitest: pydist
-	python setup.py register -r pypitest
-	python setup.py sdist upload -r pypitest
+	python setup.py register -r pypitest && \
+	python setup.py bdist_wheel upload -r pypitest
 
-pypiinstall:
-	python setup.py register -r pypitest
-	python setup.py sdist upload -r pypitest
+pypipublish: pydist
+	python setup.py register -r pypi && \
+	python setup.py bdist_wheel upload -r pypi
 
 pydemo: pydist
 	cd examples-python && \
