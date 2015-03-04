@@ -5,8 +5,20 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
-with open(path.join(here, 'pddlpy-readme.txt'), encoding='utf-8') as f:
-    long_description = f.read()
+with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+    keep=False
+    l = []
+    for line in f:
+        if not keep and "###" in line:
+            keep = True
+            continue
+        if "###" in line:
+            keep = False
+            break
+        if keep:
+            l.append(line)
+    long_description = "".join(l)
+
 
 setup(
     name='pddlpy',
