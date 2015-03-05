@@ -16,7 +16,7 @@ This is enough for the user to focus on the implementation of state-space or pla
 
 The development of this tool was inspired from Univerty of Edimburgh's Artificial Intelligence Planning course by Dr. Gerhard Wickler and Prof. Austin Tate. The terms used in this API (and the API itself) closely resembles the ones proposed by the lecturers.
 
-As of today it only supports Python 3 but I plan to give support to .NET and Java languages.
+As of today it only supports Python 3 but I plan to give support to .NET and Java languages. While project name is `pddl-parser` to emphasize its language agnosticy each target library has its own name. For Python is `pddlpy`.
 
 The orginal grammar file was authored by Zeyn Saigol from University of Birmingham. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
 
@@ -30,7 +30,9 @@ There are lots of projects and complete packages for planning available. This pr
 ### Examples ###
 
 In this repostory you'll find some PDDL examples files useful for testing purposes.
-For instance, domain-03.pddl and problem-03.pddl
+For instance, [domain-03.pddl](https://bitbucket.org/hfoffani/pddl-parser/raw/master/examples-pddl/domain-03.pddl)
+and [problem-03.pddl](https://bitbucket.org/hfoffani/pddl-parser/raw/master/examples-pddl/problem-03.pddl)
+
 
 ### Using the PDDL Python library ###
 
@@ -97,7 +99,7 @@ In case you want to tweak the grammar, add other target languages or modify the 
     For this I also used brew.
 * Install antlr4 runtime.
     `pip install antlr4-python3-runtime`
-* The package is build using wheel.
+* The package is built using wheel.
     `pip install wheel`
 
 #### Building
