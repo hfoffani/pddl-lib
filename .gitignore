@@ -1,10 +1,13 @@
 tmp
 __pycache__
+
 pddl.tokens
-pddlLexer.py
 pddlLexer.tokens
-pddlListener.py
-pddlParser.py
+pddlLexer.*
+pddlListener.*
+pddlParser.*
+pddlBaseListener.*
+
 build
 dist
 pddlpy.egg-info

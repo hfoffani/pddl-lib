@@ -6,11 +6,9 @@ GRUN=$(ANTLRDIR)/bin/grun
 
 export CLASSPATH:=.:$(ANTLRLIB)
 
-all: testgrammar parser
+all: testgrammar parsers
 
-parser: pddl.g4
-	mkdir -p pddlpy && \
-	$(ANTLR) -Dlanguage=Python3 -o pddlpy pddl.g4
+parsers: pyparser csparser
 
 testgrammar: pddl.g4
 	mkdir -p tmp && \
@@ -19,6 +17,10 @@ testgrammar: pddl.g4
 	$(GRUN) pddl domain ../examples-pddl/domain-01.pddl && \
 	$(GRUN) pddl problem ../examples-pddl/problem-01.pddl
 
+
+pyparser: pddl.g4
+	mkdir -p pddlpy && \
+	$(ANTLR) -Dlanguage=Python3 -o pddlpy pddl.g4
 
 pydist:
 	python3 setup.py bdist_wheel
@@ -37,4 +39,8 @@ pydemo: pydist
 	python3 demo.py 1 && \
 	python3 demo.py 2 && \
 	python3 demo.py 3
+
+csparser: pddl.g4
+	mkdir -p pddlnet && \
+	$(ANTLR) -Dlanguage=CSharp -o pddlnet pddl.g4
 
