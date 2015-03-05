@@ -1,7 +1,7 @@
 # README #
 
 
-### What is this repository for? ###
+### Description ###
 
 This is a PDDL parser library using an ANTLR 4 grammar that provides a very simple interface to interact with domain-problems.
 This library publishes one object class whose API exposes methods for obtaining:
@@ -16,21 +16,55 @@ This is enough for the user to focus on the implementation of state-space or pla
 
 The development of this tool was inspired from Univerty of Edimburgh's Artificial Intelligence Planning course by Dr. Gerhard Wickler and Prof. Austin Tate. The terms used in this API (and the API itself) closely resembles the ones proposed by the lecturers.
 
-As of today it only supports Python but I plan to give support to .NET and Java languages.
+As of today it only supports Python 3 but I plan to give support to .NET and Java languages.
 
 The orginal grammar file was authored by Zeyn Saigol from University of Birmingham. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
 
 
-### What this project is NOT? ###
+### What this project is not? ###
 
 This library doesn't include and won't include algorithms for solutions search.
 There are lots of projects and complete packages for planning available. This project is just a library that provides the user a simple PDDL helper API useful when she experiments with her own planning algorithms.
 
 
-### How do I get set up? ###
+### Using the library ###
+
+To use this library the recommended way is to install it via PIP:
+```
+pip install pddlpy
+```
+
+It would download `pddlpy` and its dependencies (`antlr4-python3-runtime`) from PYPI and install them.
+And that's it. You are ready to go.
+
+The next step is to pick up some of the demos available here to learn how to use the library.
+
+```
+python demo.py { 1|2|3 }
+```
+The pddl files are examples obtained from the course material.
+
+Analyse the file `demo.py` to understand the API.
+
+
+### Future development ###
+
+* Publish API documentations and examples.
+* C# version.
+* Publish the .NET library as a NuGet package.
+* Unit tests.
+* Java version.
+* Publish the Java library in the Java Central Repository.
+* The process that grounds variables is very simple (it's a cartesian product) and needs to be optimized.
+
+
+### Adavanced ###
+
+In case you want to tweak the grammar, add other target languages or modify the library you will need build this project from the repository sources.
 
 #### Prerequisites
 
+* Python 3
 * Install ANTLR version 4.
     I used `brew install antlr4` (a Mac). Your mileage may vary depending on your environment.
 * Install Python 3.
@@ -45,34 +79,7 @@ There are lots of projects and complete packages for planning available. This pr
 
 * Checkout the repository.
 * Edit the Makefile to configure PATHs.
-* Run `make` 
-
-#### Running a program.
-
-Run the demo by calling:
-```
-python3 demo.py { 1|2|3 }
-```
-The pddl files are examples obtained from the course material.
-
-Analyse the file `demo.py` to see  how to use this library.
-
-From an application point of view you will only need the `pddl.py` file, the `pddlpy` directory and the `antlr4-python3-runtime` library.
-
-
-### Improvements ###
-
-* The library expands the variables (ground them) using a cartesian product of the domains of each variable. Checking preconditions are left to the user in a later step. While this simplifies the usage it imposes a penalty.
-
-
-### Future development ###
-
-* Split docs between installing package and building from source.
-* Unit tests.
-* C# version.
-* Publish the .NET library as a NuGet package.
-* Java version.
-* Publish the Java library in the Java Central Repository.
+* Run `make` (it includes tests.)
 
 
 ### Contribution guidelines ###
