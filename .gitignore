@@ -12,3 +12,4 @@ build
 dist
 pddlpy.egg-info
 
+*.dll

@@ -22,7 +22,7 @@ pyparser: pddl.g4
 	mkdir -p pddlpy && \
 	$(ANTLR) -Dlanguage=Python3 -o pddlpy pddl.g4
 
-pydist:
+pydist: pyparser pddlpy.py
 	python3 setup.py bdist_wheel
 	pip3 install -e .
 
@@ -42,5 +42,7 @@ pydemo: pydist
 
 csparser: pddl.g4
 	mkdir -p pddlnet && \
-	$(ANTLR) -Dlanguage=CSharp -o pddlnet pddl.g4
+	$(ANTLR) -Dlanguage=CSharp -o pddlnet pddl.g4 && \
+	(cd pddlnet && \
+	mcs -out:pddlnet.dll -r:Antlr4.Runtime.dll -t:library *.cs)
 
