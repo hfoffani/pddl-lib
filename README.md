@@ -27,7 +27,12 @@ This library doesn't include and won't include algorithms for solutions search.
 There are lots of projects and complete packages for planning available. This project is just a library that provides the user a simple PDDL helper API useful when she experiments with her own planning algorithms.
 
 
-### Using the library ###
+### Examples ###
+
+In this repostory you'll find some PDDL examples files useful for testing purposes.
+For instance, domain-03.pddl and problem-03.pddl
+
+### Using the PDDL Python library ###
 
 To use this library the recommended way is to install it via PIP:
 ```
@@ -37,14 +42,36 @@ pip install pddlpy
 It would download `pddlpy` and its dependencies (`antlr4-python3-runtime`) from PYPI and install them.
 And that's it. You are ready to go.
 
-The next step is to pick up some of the demos available here to learn how to use the library.
+Using the library is easy.
 
 ```
-python demo.py { 1|2|3 }
+~hernan$ python
+Python 3.4.3 (default, Feb 25 2015, 21:28:45) 
+[GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.56)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+>>> import pddlpy
+>>> domprob = pddlpy.DomainProblem('domain-03.pddl', 'problem-03.pddl')
+>>>
+
+>>> domprob.initialstate()
+{('adjacent', 'loc2', 'loc1'), ('unloaded', 'robr'), ('atl', 'robr', 'loc1'), ('unloaded', 'robq'), ('in', 'conta', 'loc1'), ('atl', 'robq', 'loc2'), ('adjacent', 'loc1', 'loc2'), ('in', 'contb', 'loc2')}
+>>>
+
+>>> list( domprob.operators() )
+['load', 'unload', 'move']
+>>>
+
+>>> list( domprob.ground_operator('move') )
+[<pddlpy.pddl.Operator object at 0x10a968438>, <pddlpy.pddl.Operator object at 0x10a968438>, <pddlpy.pddl.Operator object at 0x10a968438>, <pddlpy.pddl.Operator object at 0x10a968438>, <pddlpy.pddl.Operator object at 0x10a968438>, <pddlpy.pddl.Operator object at 0x10a968438>, <pddlpy.pddl.Operator object at 0x10a968438>, <pddlpy.pddl.Operator object at 0x10a968438>]
+>>>
+
+>>> list( domprob.ground_operator('move') )[0].precondition_pos
+{('atl', 'robq', 'loc1'), ('adjacent', 'loc1', 'loc1')}
+>>> 
 ```
 The pddl files are examples obtained from the course material.
 
-Analyse the file `demo.py` to understand the API.
 
 
 ### Future development ###
@@ -64,16 +91,14 @@ In case you want to tweak the grammar, add other target languages or modify the 
 
 #### Prerequisites
 
-* Python 3
 * Install ANTLR version 4.
     I used `brew install antlr4` (a Mac). Your mileage may vary depending on your environment.
 * Install Python 3.
     For this I also used brew.
 * Install antlr4 runtime.
     `pip install antlr4-python3-runtime`
-* To publish the package you'll also need:
+* The package is build using wheel.
     `pip install wheel`
-    `pip install tween`
 
 #### Building
 
