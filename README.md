@@ -75,6 +75,16 @@ Type "help", "copyright", "credits" or "license" for more information.
 The pddl files are examples obtained from the course material.
 
 
+### Using the PDDL .NET library ###
+
+
+#### Prerequisites
+
+The .NET library depends on Antlr4.Runtime.dll. Go get it at www.antlr4.org
+
+
+
+
 
 ### Future development ###
 
@@ -101,12 +111,16 @@ In case you want to tweak the grammar, add other target languages or modify the 
     `pip install antlr4-python3-runtime`
 * The package is built using wheel.
     `pip install wheel`
+* mono development.
+* Antlr4.Runtime.dll
 
 #### Building
 
 * Checkout the repository.
 * Edit the Makefile to configure PATHs.
 * Run `make` (it includes tests.)
+
+To build the .NET library you must place Antlr4.Runtime.dll under the pddlnet directory.
 
 
 ### Contribution guidelines ###
