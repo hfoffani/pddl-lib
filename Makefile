@@ -40,9 +40,9 @@ pydemo: pydist
 	python3 demo.py 2 && \
 	python3 demo.py 3
 
-csparser: pddl.g4
+csparser: pddl.g4 pddlnet/pddl.cs
 	mkdir -p pddlnet && \
-	$(ANTLR) -Dlanguage=CSharp -o pddlnet pddl.g4 && \
+	$(ANTLR) -Dlanguage=CSharp -package PDDLNET -o pddlnet pddl.g4 && \
 	(cd pddlnet && \
 	mcs -out:pddlnet.dll -r:Antlr4.Runtime.dll -t:library *.cs)
 
