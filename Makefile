@@ -51,6 +51,10 @@ cstest: csparser pddlnet/pddltest.cs
 	(cd pddlnet && \
 	mcs -d:NUNIT $(LIBSTEST) -out:pddlnettest.dll $(ANTLRNET) -t:library pddltest.cs)
 
+pddlcstest : pddlnet/pddlnettest.dll
+	(cd pddlnet && \
+	MONO_PATH=$(MONOPATH) $(NUNITCONSOLE) pddlnettest.dll --nologo )
+
 csparser: pddl.g4 pddlnet/pddl.cs
 	mkdir -p pddlnet && \
 	$(ANTLR) -Dlanguage=CSharp -package PDDLNET -o pddlnet pddl.g4 && \
