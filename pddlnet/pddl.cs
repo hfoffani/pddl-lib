@@ -203,6 +203,108 @@ internal class DomainListener : pddlBaseListener {
 }
 
 internal class ProblemListener : pddlBaseListener {
+        /*
+        self.objects = {}
+        self.initialstate = []
+        self.goals = []
+        self.scopes = []
+        */
+    HashSet<object> objects = new HashSet<object>();
+    List<object> initialstate = new List<object>();
+    List<object> goals = new List<object>();
+    List<object> scopes = new List<object>();
+
+    public override void EnterInit(pddlParser.InitContext ctx) {
+        /*
+        self.scopes.append(Scope())
+        */
+    }
+
+    public override void ExitInit(pddlParser.InitContext ctx) {
+        /*
+        self.initialstate = set( self.scopes.pop().atoms )
+        */
+    }
+
+    public override void EnterGoal(pddlParser.GoalContext ctx) {
+        /*
+        self.scopes.append(Scope())
+        */
+    }
+
+    public override void ExitGoal(pddlParser.GoalContext ctx) {
+        /*
+        self.goals = set( self.scopes.pop().atoms )
+        */
+    }
+
+    public override void EnterAtomicNameFormula(pddlParser.AtomicNameFormulaContext ctx) {
+        /*
+        pred = []
+        for c in ctx.getChildren():
+            n = c.getText()
+            if n == '(' or n == ')':
+                continue
+            pred.append(n)
+        scope = self.scopes[-1]
+        scope.addatom(Atom(pred))
+        */
+    }
+
+    public override void EnterAtomicTermFormula(pddlParser.AtomicTermFormulaContext ctx) {
+        /*
+        # with a NOT!
+        pred = []
+        for c in ctx.getChildren():
+            n = c.getText()
+            if n == '(' or n == ')':
+                continue
+            pred.append(n)
+        scope = self.scopes[-1]
+        scope.addatom(Atom(pred))
+        */
+    }
+
+    public override void EnterTypedNameList(pddlParser.TypedNameListContext ctx) {
+        /*
+        for v in ctx.NAME():
+            vname = v.getText()
+            self.scopes[-1].variable_list[v.getText()] = None
+        for vs in ctx.singleTypeNameList():
+            t = vs.r_type().getText()
+            for v in vs.NAME():
+                vname = v.getText()
+                self.scopes[-1].variable_list[vname] = t
+        */
+    }
+
+    public override void EnterObjectDecl(pddlParser.ObjectDeclContext ctx) {
+        /*
+        self.scopes.append(Obj())
+        */
+    }
+
+    public override void ExitObjectDecl(pddlParser.ObjectDeclContext ctx) {
+        /*
+        scope = self.scopes.pop()
+        self.objects = scope.variable_list
+        */
+    }
+
+    public override void ExitProblem(pddlParser.ProblemContext ctx) {
+        /*
+        if not self.objects:
+            vs = set()
+            for a in self.initialstate:
+                for s in a.predicate:
+                    vs.add( (s, None) )
+            for a in self.goals:
+                for s in a.predicate:
+                    vs.add( (s, None) )
+            self.objects = dict( vs )
+        */
+    }
+
 }
 
 public class DomainProblem {
