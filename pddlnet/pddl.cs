@@ -46,10 +46,10 @@ public class DomainProblem {
             var lexer = new pddlLexer(inp);
             var stream = new Antlr4.Runtime.CommonTokenStream(lexer);
             var parser = new pddlParser(stream);
-            var tree = parser.domain();
+            var tree = parser.problem();
             this.problem = new ProblemListener();
             var walker = new Antlr4.Runtime.Tree.ParseTreeWalker();
-            walker.Walk(this.domain, tree);
+            walker.Walk(this.problem, tree);
         }
     }
 
