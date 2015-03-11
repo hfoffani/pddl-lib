@@ -101,8 +101,8 @@ internal class Operator : IScopeItem {
 }
 
 internal class DomainListener : pddlBaseListener {
-    Dictionary<string, object> objects = new Dictionary<string, object>();
-    Dictionary<string, object> operators = new Dictionary<string, object>();
+    internal Dictionary<string, object> objects = new Dictionary<string, object>();
+    internal Dictionary<string, object> operators = new Dictionary<string, object>();
     Stack<IScopeItem> scopes = new Stack<IScopeItem>();
     Stack<bool> negativescopes = new Stack<bool>();
     bool typesdef = false;
@@ -401,9 +401,9 @@ internal class ProblemListener : pddlBaseListener {
         self.goals = []
         self.scopes = []
         */
-    Dictionary<string, object> objects = new Dictionary<string, object>();
-    HashSet<object> initialstate = new HashSet<object>();
-    HashSet<object> goals = new HashSet<object>();
+    internal Dictionary<string, object> objects = new Dictionary<string, object>();
+    internal HashSet<object> initialstate = new HashSet<object>();
+    internal HashSet<object> goals = new HashSet<object>();
     Stack<IScopeItem> scopes = new Stack<IScopeItem>();
 
     public override void EnterInit(pddlParser.InitContext ctx) {
@@ -567,6 +567,30 @@ public class DomainProblem {
     private ProblemListener problem;
     
     public DomainProblem() {
+    }
+
+    ///<summary>
+    /// Returns an iterator of the names of the actions defined in
+    /// the domain file.
+    ///</summary>
+    public IEnumerable<string> operators {
+        get { return this.domain.operators.Keys; }
+    }
+
+    ///<summary>
+    /// Returns a set of atoms (tuples of strings) corresponding to the intial
+    /// state defined in the problem file.
+    ///</summary>
+    public ISet<object> initialstate {
+        get { return this.problem.initialstate; }
+    }
+
+    ///<summary>
+    /// Returns a set of atoms (tuples of strings) corresponding to the goals
+    /// defined in the problem file.
+    ///</summary>
+    public ISet<object> goals {
+        get { return this.problem.goals; }
     }
 
     public DomainProblem(string domainfile, string problemfile) : this() {
