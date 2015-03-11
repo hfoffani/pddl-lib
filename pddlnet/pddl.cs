@@ -6,14 +6,64 @@ using Antlr4.Runtime;
 
 namespace PDDLNET {
 
+internal class ElementCollection<T> : IReadOnlyCollection<T> {
+
+    private List<T> _pred = new List<T>();
+    int _hash = 0;
+
+    public ElementCollection() {
+    }
+
+    public ElementCollection(IEnumerable<T> predicate) {
+        _pred.AddRange(predicate);
+        for (int i = 0; i < _pred.Count; i++) {
+            _hash ^= _pred[i].GetHashCode() + i;
+        }
+    }
+
+    public int Count {
+        get { return _pred.Count; }
+    }
+
+    public IEnumerator<T> GetEnumerator() {
+        return _pred.GetEnumerator();
+    }
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+        return _pred.GetEnumerator();
+    }
+
+    public override bool Equals(object obj) {
+        if (obj == null)
+            return false;
+        var other = obj as ElementCollection<T>;
+        if (other == null)
+            return false;
+        return this.GetHashCode() == other.GetHashCode();
+    }
+    public override int GetHashCode() {
+        return _hash;
+    }
+
+    public override string ToString() {
+        var s = new System.Text.StringBuilder();
+        s.Append("(");
+        foreach (var it in this._pred) {
+            s.Append(it.ToString());
+            s.Append(", ");
+        }
+        s.Append(")");
+        return s.ToString();
+    }
+}
+
+
 internal class Atom {
     // should be a tuple. or a hashable immutable object.
-    public List<string> predicate = new List<string>();
+    public ElementCollection<string> predicate = new ElementCollection<string>();
 
     internal Atom(IList<string> predicate) {
-        // TO DO.
-        foreach (var s in predicate)
-            this.predicate.Add(s);
+        this.predicate = new ElementCollection<string>( predicate);
     }
 }
 
@@ -25,11 +75,11 @@ internal class Scope : IScopeItem {
     public HashSet<object> negatoms = new HashSet<object>();
 
     public void addatom(Atom atom) {
-        // TO DO.
+        atoms.UnionWith(atom.predicate);
     }
 
     public void addnegatom(Atom atom) {
-        // TO DO.
+        negatoms.UnionWith(atom.predicate);
     }
 }
 
@@ -88,7 +138,7 @@ internal class DomainListener : pddlBaseListener {
         /*
         dummyop = self.scopes.pop()
         */
-        var dummyop = (Operator) this.scopes.Pop();
+        this.scopes.Pop();
     }
 
     public override void EnterTypesDef(pddlParser.TypesDefContext ctx) {
@@ -104,7 +154,7 @@ internal class DomainListener : pddlBaseListener {
         self.scopes.pop()
         */
         this.typesdef = true;
-        var dummy = this.scopes.Pop();
+        this.scopes.Pop();
     }
 
     public override void EnterTypedVariableList(pddlParser.TypedVariableListContext ctx) {
