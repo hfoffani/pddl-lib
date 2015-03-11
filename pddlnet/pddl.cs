@@ -34,6 +34,7 @@ internal class Scope : IScopeItem {
 }
 
 internal class Obj : IScopeItem {
+    public Dictionary<string, object> variable_list = null;
 }
 
 internal class Operator : IScopeItem {
@@ -154,7 +155,7 @@ internal class DomainListener : pddlBaseListener {
         System.Console.WriteLine("-> terf");
         var neg = this.negativescopes.Peek();
         var pred = new List<string>();
-        var nchilds = 5 ; // MAL OJO. va ctx.getChildCount()
+        var nchilds = 5 ; // TO DO. MAL OJO. va ctx.getChildCount()
         for (int i = 0; i < nchilds; i++) {
             var c = ctx.GetChild(i);
             var n = c.GetText();
@@ -304,7 +305,7 @@ internal class DomainListener : pddlBaseListener {
         scope = self.scopes.pop()
         self.objects = scope.variable_list
         */
-        var scope = (Operator)this.scopes.Pop();
+        var scope = (Obj)this.scopes.Pop();
         this.objects = scope.variable_list;
     }
 
@@ -350,33 +351,39 @@ internal class ProblemListener : pddlBaseListener {
         self.goals = []
         self.scopes = []
         */
-    HashSet<object> objects = new HashSet<object>();
-    List<object> initialstate = new List<object>();
-    List<object> goals = new List<object>();
-    List<object> scopes = new List<object>();
+    Dictionary<string, object> objects = new Dictionary<string, object>();
+    HashSet<object> initialstate = new HashSet<object>();
+    HashSet<object> goals = new HashSet<object>();
+    Stack<IScopeItem> scopes = new Stack<IScopeItem>();
 
     public override void EnterInit(pddlParser.InitContext ctx) {
         /*
         self.scopes.append(Scope())
         */
+        this.scopes.Push(new Scope());
     }
 
     public override void ExitInit(pddlParser.InitContext ctx) {
         /*
         self.initialstate = set( self.scopes.pop().atoms )
         */
+        var scope = (Scope)this.scopes.Pop();
+        this.initialstate = new HashSet<object>( scope.atoms );
     }
 
     public override void EnterGoal(pddlParser.GoalContext ctx) {
         /*
         self.scopes.append(Scope())
         */
+        this.scopes.Push(new Scope());
     }
 
     public override void ExitGoal(pddlParser.GoalContext ctx) {
         /*
         self.goals = set( self.scopes.pop().atoms )
         */
+        var scope = (Scope)this.scopes.Pop();
+        this.goals = new HashSet<object>( scope.atoms );
     }
 
     public override void EnterAtomicNameFormula(pddlParser.AtomicNameFormulaContext ctx) {
@@ -390,6 +397,19 @@ internal class ProblemListener : pddlBaseListener {
         scope = self.scopes[-1]
         scope.addatom(Atom(pred))
         */
+
+        System.Console.WriteLine("-> namf");
+        var pred = new List<string>();
+        var nchilds = 5 ; // TO DO. MAL OJO. va ctx.getChildCount()
+        for (int i = 0; i < nchilds; i++) {
+            var c = ctx.GetChild(i);
+            var n = c.GetText();
+            if (n == "(" || n == ")")
+                continue;
+            pred.Add(n);
+        }
+        var scope = (Scope) this.scopes.Peek();
+        scope.addatom(new Atom(pred));
     }
 
     public override void EnterAtomicTermFormula(pddlParser.AtomicTermFormulaContext ctx) {
@@ -404,6 +424,18 @@ internal class ProblemListener : pddlBaseListener {
         scope = self.scopes[-1]
         scope.addatom(Atom(pred))
         */
+        System.Console.WriteLine("-> terf");
+        var pred = new List<string>();
+        var nchilds = 5 ; // TO DO. MAL OJO. va ctx.getChildCount()
+        for (int i = 0; i < nchilds; i++) {
+            var c = ctx.GetChild(i);
+            var n = c.GetText();
+            if (n == "(" || n == ")")
+                continue;
+            pred.Add(n);
+        }
+        var scope = (Scope) this.scopes.Peek();
+        scope.addatom(new Atom(pred));
     }
 
     public override void EnterTypedNameList(pddlParser.TypedNameListContext ctx) {
@@ -417,12 +449,27 @@ internal class ProblemListener : pddlBaseListener {
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
         */
+        System.Console.WriteLine("-> tnam");
+        foreach (var v in ctx.NAME()) {
+            var vname = v.GetText();
+            var op = (Operator)this.scopes.Peek();
+            op.variable_list.Add(vname, null);
+        }
+        foreach (var vs in ctx.singleTypeNameList()) {
+            var t = vs.r_type().GetText();
+            foreach (var v in vs.NAME()) {
+                var vname = v.GetText();
+                var op = (Operator)this.scopes.Peek();
+                op.variable_list.Add(vname, t);
+            }
+        }
     }
 
     public override void EnterObjectDecl(pddlParser.ObjectDeclContext ctx) {
         /*
         self.scopes.append(Obj())
         */
+        this.scopes.Push(new Obj());
     }
 
     public override void ExitObjectDecl(pddlParser.ObjectDeclContext ctx) {
@@ -430,6 +477,8 @@ internal class ProblemListener : pddlBaseListener {
         scope = self.scopes.pop()
         self.objects = scope.variable_list
         */
+        var scope = (Obj)this.scopes.Pop();
+        this.objects = scope.variable_list;
     }
 
     public override void ExitProblem(pddlParser.ProblemContext ctx) {
@@ -444,6 +493,20 @@ internal class ProblemListener : pddlBaseListener {
                     vs.add( (s, None) )
             self.objects = dict( vs )
         */
+        if (this.objects != null && this.objects.Count() > 0) {
+            var vs = new HashSet<string>();
+            foreach (Atom a in this.initialstate) {
+                foreach (var s in a.predicate) {
+                    vs.Add(s);
+                }
+            }
+            foreach (Atom a in this.goals) {
+                foreach (var s in a.predicate) {
+                    vs.Add(s);
+                }
+            }
+            this.objects = vs.ToDictionary(h => h, h => (object)null);
+        }
     }
 
 }
