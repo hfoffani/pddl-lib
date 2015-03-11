@@ -4,21 +4,53 @@ using System.Linq;
 
 using Antlr4.Runtime;
 
+/*
+ * TO DO:
+ * - quitar Atom y dejar directamente ElementCollection.
+ *   o: agregar class Pred : ElementCollection<string>, IReadOnlyCollection<string>
+ * - los sets deberian ser ISet<IReadOnlyCollection<string>> no se si se puede.
+ *   y por dentro HashSet<ElementCollection<string>>
+ * - ground(Atom) pasa a DomainProblem.
+ */
+
 namespace PDDLNET {
 
-internal class ElementCollection<T> : IReadOnlyCollection<T> {
+public class ElementCollection<T> : IReadOnlyCollection<T> {
 
+    static int[] aes = null;
+    static object sync = new object();
     private List<T> _pred = new List<T>();
     int _hash = 0;
 
-    public ElementCollection() {
+    int universalhashing(IList<T> x) {
+        if (x.Count == 0)
+            return 0;
+        var h=x[0].GetHashCode();
+        var p = (1<<61)-1;
+        for (int i=1 ; i < x.Count ; i++)
+            h = ((h*aes[i%100]) + x[i].GetHashCode()) % p;
+        return h;
     }
 
-    public ElementCollection(IEnumerable<T> predicate) {
-        _pred.AddRange(predicate);
-        for (int i = 0; i < _pred.Count; i++) {
-            _hash ^= _pred[i].GetHashCode() + i;
+    public ElementCollection() {
+        lock (sync) {
+            if (aes == null) {
+                aes = new int[100];
+                var rnd = new System.Random();
+                for (int i=0; i<100; i++) {
+                    aes[i] = 0;
+                    do {
+                        aes[i] = rnd.Next();
+                    } while (aes[i] == 0 || aes[i] % 2 == 0);
+                }
+            }
         }
+    }
+
+    public ElementCollection(IEnumerable<T> predicate) : this() {
+        _pred.AddRange(predicate);
+        _hash = universalhashing( _pred);
+        // System.Console.WriteLine("hash for {0} is {1}", this, _hash);
     }
 
     public int Count {
@@ -71,20 +103,22 @@ interface IScopeItem {
 }
 
 internal class Scope : IScopeItem {
-    public HashSet<object> atoms = new HashSet<object>();
-    public HashSet<object> negatoms = new HashSet<object>();
+    public IList<Atom> atoms = new List<Atom>();
+    public IList<Atom> negatoms = new List<Atom>();
 
     public void addatom(Atom atom) {
-        atoms.UnionWith(atom.predicate);
+        atoms.Add(atom);
+        // System.Console.WriteLine("addpos at: "+atom.predicate.ToString());
     }
 
     public void addnegatom(Atom atom) {
-        negatoms.UnionWith(atom.predicate);
+        negatoms.Add(atom);
+        // System.Console.WriteLine("addneg at: "+atom.predicate.ToString());
     }
 }
 
 internal class Obj : IScopeItem {
-    public Dictionary<string, object> variable_list = null;
+    public Dictionary<string, object> variable_list = new Dictionary<string, object>();
 }
 
 internal class Operator : IScopeItem {
@@ -93,7 +127,7 @@ internal class Operator : IScopeItem {
     public HashSet<object> precondition_neg = null;
     public HashSet<object> effect_pos = null;
     public HashSet<object> effect_neg = null;
-    public Dictionary<string, object> variable_list = null;
+    public Dictionary<string, object> variable_list = new Dictionary<string, object>();
 
     public Operator(string name) {
         this.operator_name = name;
@@ -205,8 +239,7 @@ internal class DomainListener : pddlBaseListener {
         System.Console.WriteLine("-> terf");
         var neg = this.negativescopes.Peek();
         var pred = new List<string>();
-        var nchilds = 5 ; // TO DO. MAL OJO. va ctx.getChildCount()
-        for (int i = 0; i < nchilds; i++) {
+        for (int i = 0; i < ctx.ChildCount; i++) {
             var c = ctx.GetChild(i);
             var n = c.GetText();
             if (n == "(" || n == ")")
@@ -269,8 +302,7 @@ internal class DomainListener : pddlBaseListener {
         self.negativescopes.append(negscope)
         */
         var negscope = false;
-        var nchilds = 5; // ctx.getChildCount();
-        for (int i = 0; i < nchilds; i++) {
+        for (int i = 0; i < ctx.ChildCount; i++) {
             var c = ctx.GetChild(i);
             if (c.GetText() == "not") {
                 negscope = true;
@@ -297,8 +329,7 @@ internal class DomainListener : pddlBaseListener {
         self.negativescopes.append(negscope)
         */
         var negscope = false;
-        var nchilds = 5; // ctx.getChildCount();
-        for (int i = 0; i < nchilds; i++) {
+        for (int i = 0; i < ctx.ChildCount; i++) {
             var c = ctx.GetChild(i);
             if (c.GetText() == "not") {
                 negscope = true;
@@ -371,7 +402,7 @@ internal class DomainListener : pddlBaseListener {
                             vs.add( (s, None) )
             self.objects = dict( vs)
         */
-        if (this.objects != null && this.objects.Count() > 0 && !this.typesdef) {
+        if (this.objects.Count() == 0 && !this.typesdef) {
             var vs = new HashSet<string>();
             foreach (var opn in this.objects.Keys) {
                 var oper = (Operator)this.objects[opn];
@@ -402,14 +433,17 @@ internal class ProblemListener : pddlBaseListener {
         self.scopes = []
         */
     internal Dictionary<string, object> objects = new Dictionary<string, object>();
-    internal HashSet<object> initialstate = new HashSet<object>();
-    internal HashSet<object> goals = new HashSet<object>();
+    internal HashSet<ElementCollection<string>> initialstate =
+        new HashSet<ElementCollection<string>>();
+    internal HashSet<ElementCollection<string>> goals =
+        new HashSet<ElementCollection<string>>();
     Stack<IScopeItem> scopes = new Stack<IScopeItem>();
 
     public override void EnterInit(pddlParser.InitContext ctx) {
         /*
         self.scopes.append(Scope())
         */
+        System.Console.WriteLine("-> ini");
         this.scopes.Push(new Scope());
     }
 
@@ -417,14 +451,17 @@ internal class ProblemListener : pddlBaseListener {
         /*
         self.initialstate = set( self.scopes.pop().atoms )
         */
+        System.Console.WriteLine("<- ini");
         var scope = (Scope)this.scopes.Pop();
-        this.initialstate = new HashSet<object>( scope.atoms );
+        this.initialstate = new HashSet<ElementCollection<string>>(
+             scope.atoms.Select(a=>a.predicate));
     }
 
     public override void EnterGoal(pddlParser.GoalContext ctx) {
         /*
         self.scopes.append(Scope())
         */
+        System.Console.WriteLine("-> goal");
         this.scopes.Push(new Scope());
     }
 
@@ -432,8 +469,10 @@ internal class ProblemListener : pddlBaseListener {
         /*
         self.goals = set( self.scopes.pop().atoms )
         */
+        System.Console.WriteLine("<- goal");
         var scope = (Scope)this.scopes.Pop();
-        this.goals = new HashSet<object>( scope.atoms );
+        this.goals = new HashSet<ElementCollection<string>>(
+            scope.atoms.Select(a=>a.predicate ));
     }
 
     public override void EnterAtomicNameFormula(pddlParser.AtomicNameFormulaContext ctx) {
@@ -450,8 +489,7 @@ internal class ProblemListener : pddlBaseListener {
 
         System.Console.WriteLine("-> namf");
         var pred = new List<string>();
-        var nchilds = 5 ; // TO DO. MAL OJO. va ctx.getChildCount()
-        for (int i = 0; i < nchilds; i++) {
+        for (int i = 0; i < ctx.ChildCount; i++) {
             var c = ctx.GetChild(i);
             var n = c.GetText();
             if (n == "(" || n == ")")
@@ -476,8 +514,7 @@ internal class ProblemListener : pddlBaseListener {
         */
         System.Console.WriteLine("-> terf");
         var pred = new List<string>();
-        var nchilds = 5 ; // TO DO. MAL OJO. va ctx.getChildCount()
-        for (int i = 0; i < nchilds; i++) {
+        for (int i = 0; i < ctx.ChildCount; i++) {
             var c = ctx.GetChild(i);
             var n = c.GetText();
             if (n == "(" || n == ")")
@@ -545,13 +582,13 @@ internal class ProblemListener : pddlBaseListener {
         */
         if (this.objects != null && this.objects.Count() > 0) {
             var vs = new HashSet<string>();
-            foreach (Atom a in this.initialstate) {
-                foreach (var s in a.predicate) {
+            foreach (var a in this.initialstate) {
+                foreach (var s in a) {
                     vs.Add(s);
                 }
             }
-            foreach (Atom a in this.goals) {
-                foreach (var s in a.predicate) {
+            foreach (var a in this.goals) {
+                foreach (var s in a) {
                     vs.Add(s);
                 }
             }
@@ -581,7 +618,7 @@ public class DomainProblem {
     /// Returns a set of atoms (tuples of strings) corresponding to the intial
     /// state defined in the problem file.
     ///</summary>
-    public ISet<object> initialstate {
+    public ISet<ElementCollection<string>> initialstate {
         get { return this.problem.initialstate; }
     }
 
@@ -589,7 +626,7 @@ public class DomainProblem {
     /// Returns a set of atoms (tuples of strings) corresponding to the goals
     /// defined in the problem file.
     ///</summary>
-    public ISet<object> goals {
+    public ISet<ElementCollection<string>> goals {
         get { return this.problem.goals; }
     }
 
@@ -599,6 +636,8 @@ public class DomainProblem {
     ///</summary>
     public IDictionary<string, object> worldobjects {
         get {
+            System.Console.WriteLine("d ob: "+this.domain.objects.Count);
+            System.Console.WriteLine("p ob: "+this.problem.objects.Count);
             return this.domain.objects
                 .Concat(this.problem.objects)
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
