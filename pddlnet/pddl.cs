@@ -593,6 +593,21 @@ public class DomainProblem {
         get { return this.problem.goals; }
     }
 
+    ///<summary>
+    /// Returns a dictionary of key value pairs where the key is the name of
+    /// an object and the value is it's type (None in case is untyped.)
+    ///</summary>
+    public IDictionary<string, object> worldobjects {
+        get {
+            return this.domain.objects
+                .Concat(this.problem.objects)
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+    }
+
+    ///<summary>
+    /// Constructor.
+    ///</summary>
     public DomainProblem(string domainfile, string problemfile) : this() {
         using (var domstream = new StreamReader(domainfile)) {
             var inp = new Antlr4.Runtime.AntlrInputStream(domstream);

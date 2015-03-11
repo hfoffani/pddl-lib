@@ -49,10 +49,7 @@ pydemo: pydist
 
 cstest: csparser pddlnet/pddltest.cs
 	(cd pddlnet && \
-	mcs -d:NUNIT $(LIBSTEST) -out:pddlnettest.dll $(ANTLRNET) -t:library pddltest.cs)
-
-pddlcstest : cstest
-	(cd pddlnet && \
+	mcs -d:NUNIT $(LIBSTEST) -out:pddlnettest.dll $(ANTLRNET) -t:library pddltest.cs && \
 	MONO_PATH=$(MONOPATH) $(NUNITCONSOLE) pddlnettest.dll --nologo )
 
 csparser: pddl.g4 pddlnet/pddl.cs

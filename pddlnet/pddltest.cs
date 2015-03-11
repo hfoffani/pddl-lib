@@ -41,9 +41,24 @@ public class TS_PDDLNET {
         Assert.IsNotNull(pd.goals);
         Assert.Equals(1, pd.goals.Count);
 
+        Assert.IsNotNull(pd.worldobjects);
+        Assert.Equals(5, pd.worldobjects.Keys.Count);
+
         Assert.IsNotNull(pd.operators);
         var ops = new List<string>(pd.operators);
         Assert.Equals(2, ops.Count);
+        Assert.IsTrue(ops.Contains("op1"));
+        Assert.IsTrue(ops.Contains("op2"));
+    }
+
+    [TestMethod]
+    public void UseCase_03() {
+        var d1 = "../examples-pddl/domain-01.pddl";
+        var p1 = "../examples-pddl/problem-01.pddl";
+        var pd = new PDDLNET.DomainProblem(d1, p1);
+
+        Assert.IsNotNull(pd);
+        // pd.ground_operator("op1");
     }
 
     [TestInitialize()]
