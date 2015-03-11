@@ -1,26 +1,59 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+
 using Antlr4.Runtime;
 
 namespace PDDLNET {
 
 internal class Atom {
+    // should be a tuple. or a hashable immutable object.
+    public List<string> predicate = new List<string>();
+
+    internal Atom(IList<string> predicate) {
+        // TO DO.
+        foreach (var s in predicate)
+            this.predicate.Add(s);
+    }
 }
 
-internal class Scope {
+interface IScopeItem {
 }
 
-internal class Obj {
+internal class Scope : IScopeItem {
+    public HashSet<object> atoms = new HashSet<object>();
+    public HashSet<object> negatoms = new HashSet<object>();
+
+    public void addatom(Atom atom) {
+        // TO DO.
+    }
+
+    public void addnegatom(Atom atom) {
+        // TO DO.
+    }
 }
 
-internal class Operator {
+internal class Obj : IScopeItem {
+}
+
+internal class Operator : IScopeItem {
+    public string operator_name = "";
+    public HashSet<object> precondition_pos = null;
+    public HashSet<object> precondition_neg = null;
+    public HashSet<object> effect_pos = null;
+    public HashSet<object> effect_neg = null;
+    public Dictionary<string, object> variable_list = null;
+
+    public Operator(string name) {
+        this.operator_name = name;
+    }
 }
 
 internal class DomainListener : pddlBaseListener {
-    HashSet<object> objects = new HashSet<object>();
-    HashSet<object> operators = new HashSet<object>();
-    List<object> scopes = new List<object>();
-    List<object> negativescopes = new List<object>();
+    Dictionary<string, object> objects = new Dictionary<string, object>();
+    Dictionary<string, object> operators = new Dictionary<string, object>();
+    Stack<IScopeItem> scopes = new Stack<IScopeItem>();
+    Stack<bool> negativescopes = new Stack<bool>();
     bool typesdef = false;
 
 
@@ -30,6 +63,8 @@ internal class DomainListener : pddlBaseListener {
         opvars = {}
         self.scopes.append(Operator(opname))
         */
+        var opname = ctx.actionSymbol().GetText();
+        this.scopes.Push(new Operator(opname) );
     }
 
     public override void ExitActionDef(pddlParser.ActionDefContext ctx) {
@@ -37,24 +72,29 @@ internal class DomainListener : pddlBaseListener {
         action = self.scopes.pop()
         self.operators[action.operator_name] = action
         */
+        var action = (Operator)this.scopes.Pop();
+        this.operators.Add(action.operator_name, action);
     }
 
     public override void EnterPredicatesDef(pddlParser.PredicatesDefContext ctx) {
         /*
         self.scopes.append(Operator(None))
         */
+        this.scopes.Push(new Operator( null) );
     }
 
     public override void ExitPredicatesDef(pddlParser.PredicatesDefContext ctx) {
         /*
         dummyop = self.scopes.pop()
         */
+        var dummyop = (Operator) this.scopes.Pop();
     }
 
     public override void EnterTypesDef(pddlParser.TypesDefContext ctx) {
         /*
         self.scopes.append(Obj())
         */
+        this.scopes.Push(new Obj() );
     }
 
     public override void ExitTypesDef(pddlParser.TypesDefContext ctx) {
@@ -62,6 +102,8 @@ internal class DomainListener : pddlBaseListener {
         self.typesdef = True
         self.scopes.pop()
         */
+        this.typesdef = true;
+        var dummy = this.scopes.Pop();
     }
 
     public override void EnterTypedVariableList(pddlParser.TypedVariableListContext ctx) {
@@ -76,6 +118,20 @@ internal class DomainListener : pddlBaseListener {
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
         */
+        System.Console.WriteLine("-> tvar");
+        foreach (var v in ctx.VARIABLE()) {
+            var vname = v.GetText();
+            var op = (Operator)this.scopes.Peek();
+            op.variable_list.Add(vname, null);
+        }
+        foreach (var vs in ctx.singleTypeVarList()) {
+            var t = vs.r_type().GetText();
+            foreach (var v in vs.VARIABLE()) {
+                var vname = v.GetText();
+                var op = (Operator)this.scopes.Peek();
+                op.variable_list.Add(vname, t);
+            }
+        }
     }
 
     public override void EnterAtomicTermFormula(pddlParser.AtomicTermFormulaContext ctx) {
@@ -95,12 +151,30 @@ internal class DomainListener : pddlBaseListener {
             scope.addnegatom(Atom(pred))
 
         */
+        System.Console.WriteLine("-> terf");
+        var neg = this.negativescopes.Peek();
+        var pred = new List<string>();
+        var nchilds = 5 ; // MAL OJO. va ctx.getChildCount()
+        for (int i = 0; i < nchilds; i++) {
+            var c = ctx.GetChild(i);
+            var n = c.GetText();
+            if (n == "(" || n == ")")
+                continue;
+            pred.Add(n);
+        }
+        var scope = (Scope) this.scopes.Peek();
+        if (!neg) {
+            scope.addatom(new Atom(pred));
+        } else {
+            scope.addnegatom(new Atom(pred));
+        }
     }
 
     public override void EnterPrecondition(pddlParser.PreconditionContext ctx) {
         /*
         self.scopes.append(Scope())
         */
+        this.scopes.Push( new Scope());
     }
 
     public override void ExitPrecondition(pddlParser.PreconditionContext ctx) {
@@ -109,12 +183,17 @@ internal class DomainListener : pddlBaseListener {
         self.scopes[-1].precondition_pos = set( scope.atoms )
         self.scopes[-1].precondition_neg = set( scope.negatoms )
         */
+        var scope = (Scope) this.scopes.Pop();
+        var op = (Operator)this.scopes.Peek();
+        op.precondition_pos = new HashSet<object>( scope.atoms );
+        op.precondition_neg = new HashSet<object>( scope.negatoms );
     }
 
     public override void EnterEffect(pddlParser.EffectContext ctx) {
         /*
         self.scopes.append(Scope())
         */
+        this.scopes.Push(new Scope());
     }
 
     public override void ExitEffect(pddlParser.EffectContext ctx) {
@@ -123,6 +202,10 @@ internal class DomainListener : pddlBaseListener {
         self.scopes[-1].effect_pos = set( scope.atoms )
         self.scopes[-1].effect_neg = set( scope.negatoms )
         */
+        var scope = (Scope) this.scopes.Pop();
+        var op = (Operator)this.scopes.Peek();
+        op.effect_pos = new HashSet<object>( scope.atoms );
+        op.effect_neg = new HashSet<object>( scope.negatoms );
     }
 
     public override void EnterGoalDesc(pddlParser.GoalDescContext ctx) {
@@ -134,12 +217,23 @@ internal class DomainListener : pddlBaseListener {
                 break
         self.negativescopes.append(negscope)
         */
+        var negscope = false;
+        var nchilds = 5; // ctx.getChildCount();
+        for (int i = 0; i < nchilds; i++) {
+            var c = ctx.GetChild(i);
+            if (c.GetText() == "not") {
+                negscope = true;
+                break;
+            }
+        }
+        this.negativescopes.Push(negscope);
     }
 
     public override void ExitGoalDesc(pddlParser.GoalDescContext ctx) {
         /*
         self.negativescopes.pop()
         */
+        this.negativescopes.Pop();
     }
 
     public override void EnterPEffect(pddlParser.PEffectContext ctx) {
@@ -151,12 +245,23 @@ internal class DomainListener : pddlBaseListener {
                 break
         self.negativescopes.append(negscope)
         */
+        var negscope = false;
+        var nchilds = 5; // ctx.getChildCount();
+        for (int i = 0; i < nchilds; i++) {
+            var c = ctx.GetChild(i);
+            if (c.GetText() == "not") {
+                negscope = true;
+                break;
+            }
+        }
+        this.negativescopes.Push(negscope);
     }
 
     public override void ExitPEffect(pddlParser.PEffectContext ctx) {
         /*
         self.negativescopes.pop()
         */
+        this.negativescopes.Pop();
     }
 
     public override void EnterTypedNameList(pddlParser.TypedNameListContext ctx) {
@@ -171,12 +276,27 @@ internal class DomainListener : pddlBaseListener {
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
         */
+        System.Console.WriteLine("-> tnam");
+        foreach (var v in ctx.NAME()) {
+            var vname = v.GetText();
+            var op = (Operator)this.scopes.Peek();
+            op.variable_list.Add(vname, null);
+        }
+        foreach (var vs in ctx.singleTypeNameList()) {
+            var t = vs.r_type().GetText();
+            foreach (var v in vs.NAME()) {
+                var vname = v.GetText();
+                var op = (Operator)this.scopes.Peek();
+                op.variable_list.Add(vname, t);
+            }
+        }
     }
 
     public override void EnterConstantsDef(pddlParser.ConstantsDefContext ctx) {
         /*
         self.scopes.append(Obj())
         */
+        this.scopes.Push(new Obj());
     }
 
     public override void ExitConstantsDef(pddlParser.ConstantsDefContext ctx) {
@@ -184,6 +304,8 @@ internal class DomainListener : pddlBaseListener {
         scope = self.scopes.pop()
         self.objects = scope.variable_list
         */
+        var scope = (Operator)this.scopes.Pop();
+        this.objects = scope.variable_list;
     }
 
     public override void ExitDomain(pddlParser.DomainContext ctx) {
@@ -198,6 +320,25 @@ internal class DomainListener : pddlBaseListener {
                             vs.add( (s, None) )
             self.objects = dict( vs)
         */
+        if (this.objects != null && this.objects.Count() > 0 && !this.typesdef) {
+            var vs = new HashSet<string>();
+            foreach (var opn in this.objects.Keys) {
+                var oper = (Operator)this.objects[opn];
+                var alls = new HashSet<object>();
+                alls.UnionWith(oper.precondition_pos);
+                alls.UnionWith(oper.precondition_neg);
+                alls.UnionWith(oper.effect_pos);
+                alls.UnionWith(oper.effect_neg);
+                foreach (Atom a in alls) {
+                    foreach (var s in a.predicate) {
+                        if (!s.StartsWith("?")) {
+                            vs.Add(s);
+                        }
+                    }
+                }
+            }
+            this.objects = vs.ToDictionary(h => h, h => (object)null);
+        }
     }
 
 }
