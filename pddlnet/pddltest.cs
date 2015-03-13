@@ -37,12 +37,8 @@ public class TS_PDDLNET {
 
         Assert.IsNotNull(pd);
         Assert.IsNotNull(pd.initialstate);
-        foreach (var i in pd.initialstate)
-            System.Console.WriteLine("i"+i.ToString());
         Assert.AreEqual(5, pd.initialstate.Count);
         Assert.IsNotNull(pd.goals);
-        foreach (var g in pd.goals)
-            System.Console.WriteLine("g"+g.ToString());
         Assert.AreEqual(1, pd.goals.Count);
 
         Assert.IsNotNull(pd.worldobjects);

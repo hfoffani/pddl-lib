@@ -6,81 +6,179 @@ using Antlr4.Runtime;
 
 /*
  * TO DO:
- * - quitar Atom y dejar directamente ElementCollection.
- *   o: agregar class Pred : ElementCollection<string>, IReadOnlyCollection<string>
- * - los sets deberian ser ISet<IReadOnlyCollection<string>> no se si se puede.
- *   y por dentro HashSet<ElementCollection<string>>
- * - ground(Atom) pasa a DomainProblem.
+ * - los sets deberian ser ISet<IROCollection<string>> no se si se puede.
+ *   y por dentro HashSet<ROCollection<string>>
+ * - Atom.ground() pasa a DomainProblem.
  */
 
 namespace PDDLNET {
 
-public class ElementCollection<T> : IReadOnlyCollection<T> {
+/// <summary>
+/// Represents a strongly-typed, read-only collection of elements.
+/// </summary>
+/// <typeparam name="T">The type of the elements.
+/// This type parameter is covariant. That is, you can use either the
+/// type you specified or any type that is more derived.</typeparam>
+/// <remarks>
+/// IReadOnlyCollection is BUILTIN IN 4.5
+/// </remarks>
+public interface IROCollection<out T> : IEnumerable<T>, System.Collections.IEnumerable {
+    /// <summary>
+    /// Gets the number of elements in the collection.
+    /// </summary>
+    int Count { get; }
+}
 
-    static int[] aes = null;
+
+class HashFunctions {
+
     static object sync = new object();
-    private List<T> _pred = new List<T>();
-    int _hash = 0;
+    static int[] aes = null;
+    static HashFunctions _provider = null;
 
-    int universalhashing(IList<T> x) {
-        if (x.Count == 0)
+    public int Universal<T>(T[] x) {
+        if (x.Length == 0)
             return 0;
-        var h=x[0].GetHashCode();
-        var p = (1<<61)-1;
-        for (int i=1 ; i < x.Count ; i++)
-            h = ((h*aes[i%100]) + x[i].GetHashCode()) % p;
+        var h = x[0].GetHashCode();
+        var p = (1 << 61) - 1;
+        for (int i = 1; i < x.Length; i++)
+            h = ((h * aes[i % 100]) + x[i].GetHashCode()) % p;
         return h;
     }
 
-    public ElementCollection() {
-        lock (sync) {
-            if (aes == null) {
-                aes = new int[100];
-                var rnd = new System.Random();
-                for (int i=0; i<100; i++) {
-                    aes[i] = 0;
-                    do {
-                        aes[i] = rnd.Next();
-                    } while (aes[i] == 0 || aes[i] % 2 == 0);
+    public static HashFunctions Provider {
+        get {
+            lock (sync) {
+                if (HashFunctions._provider == null) {
+                    HashFunctions._provider = new HashFunctions();
                 }
+                return HashFunctions._provider;
             }
         }
     }
 
-    public ElementCollection(IEnumerable<T> predicate) : this() {
-        _pred.AddRange(predicate);
-        _hash = universalhashing( _pred);
-        // System.Console.WriteLine("hash for {0} is {1}", this, _hash);
+    private HashFunctions() {
+        if (aes == null) {
+            aes = new int[100];
+            var rnd = new System.Random();
+            for (int i = 0; i < 100; i++) {
+                aes[i] = 0;
+                do {
+                    aes[i] = rnd.Next();
+                } while (aes[i] == 0 || aes[i] % 2 == 0);
+            }
+        }
     }
 
+}
+
+/// <summary>
+/// Implements a strongly-typed, read-only collection of elements.
+/// </summary>
+/// <typeparam name="T">The type of the elements.
+/// This type parameter is covariant. That is, you can use either the
+/// type you specified or any type that is more derived.</typeparam>
+public class ROCollection<T> : IROCollection<T> {
+
+    private T[] _internalArray = new T[0];
+    int _hash = 0;
+
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    public ROCollection() { }
+
+    /// <summary>
+    /// Constructor and factory.
+    /// </summary>
+    /// <param name="collection">The source of elements for this instance.</param>
+    public ROCollection(IEnumerable<T> collection) {
+        _internalArray = collection.ToArray();
+        _hash = HashFunctions.Provider.Universal<T>(_internalArray);
+    }
+
+    /// <summary>
+    /// Gets the number of elements in the collection.
+    /// </summary>
     public int Count {
-        get { return _pred.Count; }
+        get { return _internalArray.Length; }
     }
 
+    /// <summary>
+    /// Returns an enumerator that iterates through the collection.
+    /// </summary>
+    /// <returns>An enumerator that can be used to iterate through the collection.</returns>
     public IEnumerator<T> GetEnumerator() {
-        return _pred.GetEnumerator();
+        return _internalArray.AsEnumerable().GetEnumerator();
     }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-        return _pred.GetEnumerator();
+        return _internalArray.GetEnumerator();
     }
 
-    public override bool Equals(object obj) {
-        if (obj == null)
-            return false;
-        var other = obj as ElementCollection<T>;
-        if (other == null)
+    /// <summary>
+    /// Determines whether the specified object is equal to the current object.
+    /// </summary>
+    /// <param name="other">The object to compare with the current object.</param>
+    /// <returns><c>true</c> if the specified object is equal to the current object; otherwise, <c>false</c>.</returns>
+    public bool Equals(ROCollection<T> other) {
+        if ((object)other == null)
             return false;
         return this.GetHashCode() == other.GetHashCode();
     }
+
+    /// <summary>
+    /// Serves as the default hash function.
+    /// </summary>
+    /// <returns>A hash code for the current object.</returns>
     public override int GetHashCode() {
         return _hash;
     }
 
+    /// <summary>
+    /// Determines whether the specified object is equal to the current object.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current object.</param>
+    /// <returns><c>true</c> if the specified object is equal to the current object; otherwise, <c>false</c>.</returns>
+    public override bool Equals(object obj) {
+        return this.Equals(obj as ROCollection<T>);
+    }
+
+    /// <summary>
+    /// Determines whether two objects are equal.
+    /// </summary>
+    /// <param name="a">The first object.</param>
+    /// <param name="b">The second object</param>
+    /// <returns><c>true</c> if the both object are equal; otherwise, <c>false</c>.</returns>
+    public static bool operator ==(ROCollection<T> a, ROCollection<T> b) {
+        if (System.Object.ReferenceEquals(a, b)) {
+            return true;
+        }
+        // null,null have already been considered in the previous if.
+        if ((object)a == null) {
+            return false;
+        }
+        return a.Equals(b);
+    }
+
+    /// <summary>
+    /// Determines whether two objects are different.
+    /// </summary>
+    /// <param name="a">The first object.</param>
+    /// <param name="b">The second object</param>
+    /// <returns><c>true</c> if the both object are different; otherwise, <c>false</c>.</returns>
+    public static bool operator !=(ROCollection<T> a, ROCollection<T> b) {
+        return !(a == b);
+    }
+
+    /// <summary>
+    /// Returns a string that represents the current object.
+    /// </summary>
+    /// <returns>A string that represents the current object.</returns>
     public override string ToString() {
         var s = new System.Text.StringBuilder();
         s.Append("(");
-        foreach (var it in this._pred) {
+        foreach (var it in this._internalArray) {
             s.Append(it.ToString());
             s.Append(", ");
         }
@@ -90,30 +188,19 @@ public class ElementCollection<T> : IReadOnlyCollection<T> {
 }
 
 
-internal class Atom {
-    // should be a tuple. or a hashable immutable object.
-    public ElementCollection<string> predicate = new ElementCollection<string>();
-
-    internal Atom(IList<string> predicate) {
-        this.predicate = new ElementCollection<string>( predicate);
-    }
-}
-
 interface IScopeItem {
 }
 
 internal class Scope : IScopeItem {
-    public IList<Atom> atoms = new List<Atom>();
-    public IList<Atom> negatoms = new List<Atom>();
+    public List<ROCollection<string>> atoms = new List<ROCollection<string>>();
+    public List<ROCollection<string>> negatoms = new List<ROCollection<string>>();
 
-    public void addatom(Atom atom) {
-        atoms.Add(atom);
-        // System.Console.WriteLine("addpos at: "+atom.predicate.ToString());
+    public void addatom(IList<string> atompredicate) {
+        atoms.Add(new ROCollection<string>(atompredicate));
     }
 
-    public void addnegatom(Atom atom) {
-        negatoms.Add(atom);
-        // System.Console.WriteLine("addneg at: "+atom.predicate.ToString());
+    public void addnegatom(IList<string> atompredicate) {
+        negatoms.Add(new ROCollection<string>(atompredicate));
     }
 }
 
@@ -121,7 +208,7 @@ internal class Obj : IScopeItem {
     public Dictionary<string, object> variable_list = new Dictionary<string, object>();
 }
 
-internal class Operator : IScopeItem {
+public class Operator : IScopeItem {
     public string operator_name = "";
     public HashSet<object> precondition_pos = null;
     public HashSet<object> precondition_neg = null;
@@ -203,7 +290,7 @@ internal class DomainListener : pddlBaseListener {
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
         */
-        System.Console.WriteLine("-> tvar");
+        // System.Console.WriteLine("-> tvar");
         foreach (var v in ctx.VARIABLE()) {
             var vname = v.GetText();
             var op = (Operator)this.scopes.Peek();
@@ -236,7 +323,7 @@ internal class DomainListener : pddlBaseListener {
             scope.addnegatom(Atom(pred))
 
         */
-        System.Console.WriteLine("-> terf");
+        // System.Console.WriteLine("-> terf");
         var neg = this.negativescopes.Peek();
         var pred = new List<string>();
         for (int i = 0; i < ctx.ChildCount; i++) {
@@ -248,9 +335,9 @@ internal class DomainListener : pddlBaseListener {
         }
         var scope = (Scope) this.scopes.Peek();
         if (!neg) {
-            scope.addatom(new Atom(pred));
+            scope.addatom(pred);
         } else {
-            scope.addnegatom(new Atom(pred));
+            scope.addnegatom(pred);
         }
     }
 
@@ -358,7 +445,7 @@ internal class DomainListener : pddlBaseListener {
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
         */
-        System.Console.WriteLine("-> tnam");
+        // System.Console.WriteLine("-> tnam");
         foreach (var v in ctx.NAME()) {
             var vname = v.GetText();
             var op = (Operator)this.scopes.Peek();
@@ -404,17 +491,17 @@ internal class DomainListener : pddlBaseListener {
         */
         if (this.objects.Count() == 0 && !this.typesdef) {
             var vs = new HashSet<string>();
-            foreach (var opn in this.objects.Keys) {
-                var oper = (Operator)this.objects[opn];
+            foreach (var opn in this.operators.Keys) {
+                var oper = (Operator)this.operators[opn];
                 var alls = new HashSet<object>();
                 alls.UnionWith(oper.precondition_pos);
                 alls.UnionWith(oper.precondition_neg);
                 alls.UnionWith(oper.effect_pos);
                 alls.UnionWith(oper.effect_neg);
-                foreach (Atom a in alls) {
-                    foreach (var s in a.predicate) {
-                        if (!s.StartsWith("?")) {
-                            vs.Add(s);
+                foreach (ROCollection<string> atom in alls) {
+                    foreach (var vname in atom) {
+                        if (!vname.StartsWith("?")) {
+                            vs.Add(vname);
                         }
                     }
                 }
@@ -422,7 +509,6 @@ internal class DomainListener : pddlBaseListener {
             this.objects = vs.ToDictionary(h => h, h => (object)null);
         }
     }
-
 }
 
 internal class ProblemListener : pddlBaseListener {
@@ -433,17 +519,17 @@ internal class ProblemListener : pddlBaseListener {
         self.scopes = []
         */
     internal Dictionary<string, object> objects = new Dictionary<string, object>();
-    internal HashSet<ElementCollection<string>> initialstate =
-        new HashSet<ElementCollection<string>>();
-    internal HashSet<ElementCollection<string>> goals =
-        new HashSet<ElementCollection<string>>();
+    internal HashSet<ROCollection<string>> initialstate =
+        new HashSet<ROCollection<string>>();
+    internal HashSet<ROCollection<string>> goals =
+        new HashSet<ROCollection<string>>();
     Stack<IScopeItem> scopes = new Stack<IScopeItem>();
 
     public override void EnterInit(pddlParser.InitContext ctx) {
         /*
         self.scopes.append(Scope())
         */
-        System.Console.WriteLine("-> ini");
+        // System.Console.WriteLine("-> ini");
         this.scopes.Push(new Scope());
     }
 
@@ -451,17 +537,16 @@ internal class ProblemListener : pddlBaseListener {
         /*
         self.initialstate = set( self.scopes.pop().atoms )
         */
-        System.Console.WriteLine("<- ini");
+        // System.Console.WriteLine("<- ini");
         var scope = (Scope)this.scopes.Pop();
-        this.initialstate = new HashSet<ElementCollection<string>>(
-             scope.atoms.Select(a=>a.predicate));
+        this.initialstate = new HashSet<ROCollection<string>>( scope.atoms);
     }
 
     public override void EnterGoal(pddlParser.GoalContext ctx) {
         /*
         self.scopes.append(Scope())
         */
-        System.Console.WriteLine("-> goal");
+        // System.Console.WriteLine("-> goal");
         this.scopes.Push(new Scope());
     }
 
@@ -469,10 +554,9 @@ internal class ProblemListener : pddlBaseListener {
         /*
         self.goals = set( self.scopes.pop().atoms )
         */
-        System.Console.WriteLine("<- goal");
+        // System.Console.WriteLine("<- goal");
         var scope = (Scope)this.scopes.Pop();
-        this.goals = new HashSet<ElementCollection<string>>(
-            scope.atoms.Select(a=>a.predicate ));
+        this.goals = new HashSet<ROCollection<string>>( scope.atoms);
     }
 
     public override void EnterAtomicNameFormula(pddlParser.AtomicNameFormulaContext ctx) {
@@ -486,8 +570,7 @@ internal class ProblemListener : pddlBaseListener {
         scope = self.scopes[-1]
         scope.addatom(Atom(pred))
         */
-
-        System.Console.WriteLine("-> namf");
+        // System.Console.WriteLine("-> namf");
         var pred = new List<string>();
         for (int i = 0; i < ctx.ChildCount; i++) {
             var c = ctx.GetChild(i);
@@ -497,7 +580,7 @@ internal class ProblemListener : pddlBaseListener {
             pred.Add(n);
         }
         var scope = (Scope) this.scopes.Peek();
-        scope.addatom(new Atom(pred));
+        scope.addatom(pred);
     }
 
     public override void EnterAtomicTermFormula(pddlParser.AtomicTermFormulaContext ctx) {
@@ -512,7 +595,7 @@ internal class ProblemListener : pddlBaseListener {
         scope = self.scopes[-1]
         scope.addatom(Atom(pred))
         */
-        System.Console.WriteLine("-> terf");
+        // System.Console.WriteLine("-> terf");
         var pred = new List<string>();
         for (int i = 0; i < ctx.ChildCount; i++) {
             var c = ctx.GetChild(i);
@@ -522,7 +605,7 @@ internal class ProblemListener : pddlBaseListener {
             pred.Add(n);
         }
         var scope = (Scope) this.scopes.Peek();
-        scope.addatom(new Atom(pred));
+        scope.addatom(pred);
     }
 
     public override void EnterTypedNameList(pddlParser.TypedNameListContext ctx) {
@@ -536,7 +619,7 @@ internal class ProblemListener : pddlBaseListener {
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
         */
-        System.Console.WriteLine("-> tnam");
+        // System.Console.WriteLine("-> tnam");
         foreach (var v in ctx.NAME()) {
             var vname = v.GetText();
             var op = (Operator)this.scopes.Peek();
@@ -580,7 +663,7 @@ internal class ProblemListener : pddlBaseListener {
                     vs.add( (s, None) )
             self.objects = dict( vs )
         */
-        if (this.objects != null && this.objects.Count() > 0) {
+        if (this.objects.Count() == 0) {
             var vs = new HashSet<string>();
             foreach (var a in this.initialstate) {
                 foreach (var s in a) {
@@ -595,7 +678,6 @@ internal class ProblemListener : pddlBaseListener {
             this.objects = vs.ToDictionary(h => h, h => (object)null);
         }
     }
-
 }
 
 public class DomainProblem {
@@ -618,7 +700,7 @@ public class DomainProblem {
     /// Returns a set of atoms (tuples of strings) corresponding to the intial
     /// state defined in the problem file.
     ///</summary>
-    public ISet<ElementCollection<string>> initialstate {
+    public ISet<ROCollection<string>> initialstate {
         get { return this.problem.initialstate; }
     }
 
@@ -626,7 +708,7 @@ public class DomainProblem {
     /// Returns a set of atoms (tuples of strings) corresponding to the goals
     /// defined in the problem file.
     ///</summary>
-    public ISet<ElementCollection<string>> goals {
+    public ISet<ROCollection<string>> goals {
         get { return this.problem.goals; }
     }
 
@@ -636,10 +718,9 @@ public class DomainProblem {
     ///</summary>
     public IDictionary<string, object> worldobjects {
         get {
-            System.Console.WriteLine("d ob: "+this.domain.objects.Count);
-            System.Console.WriteLine("p ob: "+this.problem.objects.Count);
             return this.domain.objects
-                .Concat(this.problem.objects)
+                .Concat(this.problem.objects
+                    .Where(kvp => !this.domain.objects.ContainsKey(kvp.Key)))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
     }
@@ -671,6 +752,55 @@ public class DomainProblem {
         }
     }
 
+    /*
+     * ground
+     *     def ground(self, varvals):
+     *        g = [ varvals[v] if v in varvals else v for v in self.predicate ]
+     *        return tuple(g)
+     *
+     */
+
+    public Operator get_operator(string op_name) {
+        return (Operator) this.domain.operators[op_name];
+    }
+
+    public IEnumerable<Operator> ground_operator(string op_name) {
+        var op = (Operator)this.domain.operators[op_name];
+        var gop = new Operator(op_name);
+        foreach (var groundvars in this.instantiate(op.variable_list)) {
+            var st = groundvars.ToDictionary(kvp=>kvp.Key, kvp=>kvp.Value);
+            gop.precondition_pos = ground(op.precondition_pos, st);
+            gop.precondition_neg = ground(op.precondition_neg, st);
+            gop.effect_pos = ground(op.effect_pos, st);
+            gop.effect_neg = ground(op.effect_neg, st);
+            yield return gop;
+        }
+    }
+
+    private HashSet<object> ground(
+        HashSet<object> predvars, Dictionary<string, string> varvalues) {
+
+        return predvars;
+    }
+
+    private IEnumerable<string> typesymbols(string t) {
+        return this.worldobjects
+            .Where(kvp => kvp.Value == t)
+            .Select(kvp => kvp.Key);
+    }
+
+    List<string> vargroundspace = new List<string>();
+
+    private IEnumerable<IEnumerable<KeyValuePair<string,string>>>
+        instantiate(IDictionary<string, object> variables) {
+
+        if (this.vargroundspace.Count == 0) {
+            foreach (var kvp in variables) {
+                
+            }
+        }
+        return null;
+    }
 }
 
 }
