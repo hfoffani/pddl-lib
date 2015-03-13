@@ -210,10 +210,10 @@ internal class Obj : IScopeItem {
 
 public class Operator : IScopeItem {
     public string operator_name = "";
-    public HashSet<object> precondition_pos = null;
-    public HashSet<object> precondition_neg = null;
-    public HashSet<object> effect_pos = null;
-    public HashSet<object> effect_neg = null;
+    public HashSet<ROCollection<string>> precondition_pos = null;
+    public HashSet<ROCollection<string>> precondition_neg = null;
+    public HashSet<ROCollection<string>> effect_pos = null;
+    public HashSet<ROCollection<string>> effect_neg = null;
     public Dictionary<string, string> variable_list = new Dictionary<string, string>();
 
     public Operator(string name) {
@@ -356,8 +356,8 @@ internal class DomainListener : pddlBaseListener {
         */
         var scope = (Scope) this.scopes.Pop();
         var op = (Operator)this.scopes.Peek();
-        op.precondition_pos = new HashSet<object>( scope.atoms );
-        op.precondition_neg = new HashSet<object>( scope.negatoms );
+        op.precondition_pos = new HashSet<ROCollection<string>>( scope.atoms );
+        op.precondition_neg = new HashSet<ROCollection<string>>( scope.negatoms );
     }
 
     public override void EnterEffect(pddlParser.EffectContext ctx) {
@@ -375,8 +375,8 @@ internal class DomainListener : pddlBaseListener {
         */
         var scope = (Scope) this.scopes.Pop();
         var op = (Operator)this.scopes.Peek();
-        op.effect_pos = new HashSet<object>( scope.atoms );
-        op.effect_neg = new HashSet<object>( scope.negatoms );
+        op.effect_pos = new HashSet<ROCollection<string>>( scope.atoms );
+        op.effect_neg = new HashSet<ROCollection<string>>( scope.negatoms );
     }
 
     public override void EnterGoalDesc(pddlParser.GoalDescContext ctx) {
@@ -493,7 +493,7 @@ internal class DomainListener : pddlBaseListener {
             var vs = new HashSet<string>();
             foreach (var opn in this.operators.Keys) {
                 var oper = (Operator)this.operators[opn];
-                var alls = new HashSet<object>();
+                var alls = new HashSet<ROCollection<string>>();
                 alls.UnionWith(oper.precondition_pos);
                 alls.UnionWith(oper.precondition_neg);
                 alls.UnionWith(oper.effect_pos);
@@ -774,16 +774,25 @@ public class DomainProblem {
         }
     }
 
-    private HashSet<object> ground(
-        HashSet<object> predvars, Dictionary<string, string> varvalues) {
+    private HashSet<ROCollection<string>> ground(
+        HashSet<ROCollection<string>> predvars,
+        Dictionary<string, string> varvals) {
     /*
      *     g = [ varvals[v] if v in varvals else v for v in self.predicate ]
      *     return tuple(g)
      *  set( [ a.ground( st ) for a in op.precondition_pos ] )
      *
      */
-        
-        return predvars;
+        var r = new List<ROCollection<string>>();
+        foreach (var p in predvars) {
+            var l = new List<string>();
+            foreach (var v in p) {
+                 l.Add( varvals.ContainsKey(v) ? varvals[v] : v);
+            }
+            var pg = new ROCollection<string>(l);
+            r.Add( pg);
+        }
+        return new HashSet<ROCollection<string>>(r);
     }
 
     private IEnumerable<string> typesymbols(string t) {
@@ -826,14 +835,14 @@ public class DomainProblem {
         IEnumerable<IEnumerable<T>> inputs) {
 
         return inputs.Aggregate(
-        EnumerableFrom(Enumerable.Empty<T>()),
-            (soFar, input) =>
-                from prevProductItem in soFar
-                from item in input
-                select prevProductItem.Append(item));
+            Return(Enumerable.Empty<T>()),
+                (soFar, input) =>
+                    from prevProductItem in soFar
+                    from item in input
+                    select prevProductItem.Append(item));
     }
-    private static IEnumerable<T> EnumerableFrom<T>(T item) {
-        yield return item;
+    private static IEnumerable<T> Return<T>(T item) {
+        return new T[] { item };
     }
 
 /*
