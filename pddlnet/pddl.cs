@@ -205,7 +205,7 @@ internal class Scope : IScopeItem {
 }
 
 internal class Obj : IScopeItem {
-    public Dictionary<string, object> variable_list = new Dictionary<string, object>();
+    public Dictionary<string, string> variable_list = new Dictionary<string, string>();
 }
 
 public class Operator : IScopeItem {
@@ -214,7 +214,7 @@ public class Operator : IScopeItem {
     public HashSet<object> precondition_neg = null;
     public HashSet<object> effect_pos = null;
     public HashSet<object> effect_neg = null;
-    public Dictionary<string, object> variable_list = new Dictionary<string, object>();
+    public Dictionary<string, string> variable_list = new Dictionary<string, string>();
 
     public Operator(string name) {
         this.operator_name = name;
@@ -222,7 +222,7 @@ public class Operator : IScopeItem {
 }
 
 internal class DomainListener : pddlBaseListener {
-    internal Dictionary<string, object> objects = new Dictionary<string, object>();
+    internal Dictionary<string, string> objects = new Dictionary<string, string>();
     internal Dictionary<string, object> operators = new Dictionary<string, object>();
     Stack<IScopeItem> scopes = new Stack<IScopeItem>();
     Stack<bool> negativescopes = new Stack<bool>();
@@ -506,7 +506,7 @@ internal class DomainListener : pddlBaseListener {
                     }
                 }
             }
-            this.objects = vs.ToDictionary(h => h, h => (object)null);
+            this.objects = vs.ToDictionary(h => h, h => (string)null);
         }
     }
 }
@@ -518,7 +518,7 @@ internal class ProblemListener : pddlBaseListener {
         self.goals = []
         self.scopes = []
         */
-    internal Dictionary<string, object> objects = new Dictionary<string, object>();
+    internal Dictionary<string, string> objects = new Dictionary<string, string>();
     internal HashSet<ROCollection<string>> initialstate =
         new HashSet<ROCollection<string>>();
     internal HashSet<ROCollection<string>> goals =
@@ -675,7 +675,7 @@ internal class ProblemListener : pddlBaseListener {
                     vs.Add(s);
                 }
             }
-            this.objects = vs.ToDictionary(h => h, h => (object)null);
+            this.objects = vs.ToDictionary(h => h, h => (string)null);
         }
     }
 }
@@ -716,7 +716,7 @@ public class DomainProblem {
     /// Returns a dictionary of key value pairs where the key is the name of
     /// an object and the value is it's type (None in case is untyped.)
     ///</summary>
-    public IDictionary<string, object> worldobjects {
+    public IDictionary<string, string> worldobjects {
         get {
             return this.domain.objects
                 .Concat(this.problem.objects
@@ -754,9 +754,6 @@ public class DomainProblem {
 
     /*
      * ground
-     *     def ground(self, varvals):
-     *        g = [ varvals[v] if v in varvals else v for v in self.predicate ]
-     *        return tuple(g)
      *
      */
 
@@ -779,27 +776,92 @@ public class DomainProblem {
 
     private HashSet<object> ground(
         HashSet<object> predvars, Dictionary<string, string> varvalues) {
-
+    /*
+     *     g = [ varvals[v] if v in varvals else v for v in self.predicate ]
+     *     return tuple(g)
+     *  set( [ a.ground( st ) for a in op.precondition_pos ] )
+     *
+     */
+        
         return predvars;
     }
 
     private IEnumerable<string> typesymbols(string t) {
+        // return ( k for k,v in self.worldobjects().items() if v == t )
         return this.worldobjects
             .Where(kvp => kvp.Value == t)
             .Select(kvp => kvp.Key);
     }
 
-    List<string> vargroundspace = new List<string>();
+    List<List<KeyValuePair<string,string>>> vargroundspace =
+        new List<List<KeyValuePair<string,string>>>();
 
     private IEnumerable<IEnumerable<KeyValuePair<string,string>>>
-        instantiate(IDictionary<string, object> variables) {
-
+        instantiate(IDictionary<string, string> variables) {
+        /*
+         * if not self.vargroundspace:
+         *   for vname, t in variables:
+         *       c = []
+         *       for symb in self._typesymbols(t):
+         *           c.append((vname, symb) )
+         *       self.vargroundspace.append(c)
+         * return itertools.product(*self.vargroundspace)
+         */
         if (this.vargroundspace.Count == 0) {
             foreach (var kvp in variables) {
-                
+                var c = new List<KeyValuePair<string,string>>();
+                foreach (var symb in this.typesymbols(kvp.Value)) {
+                    c.Add( new KeyValuePair<string,string>( kvp.Key, symb));
+                }
+                this.vargroundspace.Add( c);
             }
         }
-        return null;
+        var cp = CartesianProduct<KeyValuePair<string,string>>(
+            this.vargroundspace);
+        return cp;
+    }
+
+
+    public static IEnumerable<IEnumerable<T>> CartesianProduct<T>(
+        IEnumerable<IEnumerable<T>> inputs) {
+
+        return inputs.Aggregate(
+        EnumerableFrom(Enumerable.Empty<T>()),
+            (soFar, input) =>
+                from prevProductItem in soFar
+                from item in input
+                select prevProductItem.Append(item));
+    }
+    private static IEnumerable<T> EnumerableFrom<T>(T item) {
+        yield return item;
+    }
+
+/*
+    public static IEnumerable<IEnumerable<T>> CartesianProduct<T>(
+        IEnumerable<IEnumerable<T>> inputs) {
+
+        return inputs.Aggregate(
+            (IEnumerable<IEnumerable<T>>) new T[][] { new T[0] },
+            (soFar, input) =>
+                from prevProductItem in soFar
+                from item in input
+                select prevProductItem.Concat(new T[] { item }));
+    }
+
+    public static IEnumerable<IEnumerable<T>> CartesianProduct<T>(
+        params IEnumerable<T>[] inputs) {
+
+        IEnumerable<IEnumerable<T>> e = inputs;
+        return CartesianProduct(e);
+    }
+*/
+
+}
+
+static class AppendExtension {
+    public static IEnumerable<T> Append<T>(this IEnumerable<T> that, T item) {
+        IEnumerable<T> itemAsSequence = new T[] { item };
+        return that.Concat(itemAsSequence);
     }
 }
 

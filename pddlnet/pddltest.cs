@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 #if NUNIT
 using TestClass = NUnit.Framework.TestFixtureAttribute;
@@ -58,7 +59,10 @@ public class TS_PDDLNET {
         var pd = new PDDLNET.DomainProblem(d1, p1);
 
         Assert.IsNotNull(pd);
-        // pd.ground_operator("op1");
+        var op1_grounds = pd.ground_operator("op1");
+        Assert.IsNotNull(op1_grounds);
+        var lops = op1_grounds.ToList();
+        Assert.AreEqual(125, lops.Count);
     }
 
     [TestInitialize()]
