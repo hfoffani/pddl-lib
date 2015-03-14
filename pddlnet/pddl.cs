@@ -4,13 +4,6 @@ using System.Linq;
 
 using Antlr4.Runtime;
 
-/*
- * TO DO:
- * - los sets deberian ser ISet<IROCollection<string>> no se si se puede.
- *   y por dentro HashSet<ROCollection<string>>
- * - Atom.ground() pasa a DomainProblem.
- */
-
 namespace PDDLNET {
 
 /// <summary>
