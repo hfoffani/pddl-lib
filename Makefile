@@ -47,14 +47,19 @@ pydemo: pydist
 	python3 demo.py 2 && \
 	python3 demo.py 3
 
-cstest: csparser pddlnet/pddltest.cs
-	(cd pddlnet && \
-	mcs -d:NUNIT $(LIBSTEST) -out:pddlnettest.dll $(ANTLRNET) -t:library pddltest.cs && \
-	MONO_PATH=$(MONOPATH) $(NUNITCONSOLE) pddlnettest.dll --nologo )
-
 csparser: pddl.g4 pddlnet/pddl.cs
 	mkdir -p pddlnet && \
 	$(ANTLR) -Dlanguage=CSharp -package PDDLNET -o pddlnet pddl.g4 && \
 	(cd pddlnet && \
 	mcs -out:pddlnet.dll $(ANTLRNET) -t:library pddl.cs $(CSANTLR))
+
+cstest: csparser pddlnet/pddltest.cs
+	(cd pddlnet && \
+	mcs -d:NUNIT $(LIBSTEST) -out:pddlnettest.dll $(ANTLRNET) -t:library pddltest.cs && \
+	MONO_PATH=$(MONOPATH) $(NUNITCONSOLE) pddlnettest.dll --nologo )
+
+csnuget: cstest
+	(cd pddlnet && \
+	mono NuGet.exe pack pddlnet.dll.nuspec )
+
 
