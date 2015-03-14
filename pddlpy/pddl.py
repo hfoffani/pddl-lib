@@ -306,9 +306,9 @@ class DomainProblem():
         returns -- An iterator of Operator instances.
         """
         op = self.domain.operators[op_name]
-        gop = Operator(op_name)
         for ground in self._instantiate( op.variable_list.items() ):
             st = dict(ground)
+            gop = Operator(op_name)
             gop.variable_list = st
             gop.precondition_pos = set( [ a.ground( st ) for a in op.precondition_pos ] )
             gop.precondition_neg = set( [ a.ground( st ) for a in op.precondition_neg ] )
