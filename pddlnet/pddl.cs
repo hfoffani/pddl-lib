@@ -763,15 +763,27 @@ public class DomainProblem {
 
     public IEnumerable<Operator> ground_operator(string op_name) {
         var op = (Operator)this.domain.operators[op_name];
-        var gop = new Operator(op_name);
         foreach (var groundvars in this.instantiate(op.variable_list)) {
             var st = groundvars.ToDictionary(kvp=>kvp.Key, kvp=>kvp.Value);
+            var gop = new Operator(op_name);
+            gop.variable_list = st;
             gop.precondition_pos = ground(op.precondition_pos, st);
             gop.precondition_neg = ground(op.precondition_neg, st);
             gop.effect_pos = ground(op.effect_pos, st);
             gop.effect_neg = ground(op.effect_neg, st);
             yield return gop;
         }
+    }
+
+    public string tostring(HashSet<ROCollection<string>> set) {
+        var sb = new System.Text.StringBuilder();
+        sb.Append("{ ");
+        foreach (var p in set) {
+            sb.Append(p.ToString());
+            sb.Append("; ");
+        }
+        sb.Append("}");
+        return sb.ToString();
     }
 
     private HashSet<ROCollection<string>> ground(
