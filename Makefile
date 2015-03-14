@@ -62,4 +62,7 @@ csnuget: cstest
 	(cd pddlnet && \
 	mono NuGet.exe pack pddlnet.dll.nuspec )
 
+csnugetpublish: csnuget
+	(cd pddlnet && \
+	mono NuGet.exe push pddlnet.dll.*.nupkg )
 
