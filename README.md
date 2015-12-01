@@ -31,7 +31,7 @@ There are lots of projects and complete packages for planning available. This pr
 
 In this repostory you'll find some PDDL examples files useful for testing purposes.
 For instance, [domain-03.pddl](examples-pddl/domain-03.pddl)
-and [problem-03.pddl](https://bitbucket.org/hfoffani/pddl-parser/raw/master/examples-pddl/problem-03.pddl)
+and [problem-03.pddl](examples-pddl/problem-03.pddl)
 
 
 ### Using the PDDL Python library ###
