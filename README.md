@@ -139,6 +139,6 @@ This project is publish under the MIT Open Source license.
 
 ### Who do I talk to? ###
 
-You may contact me directly to hfoffani at gmail.com
+For any doubt or inquiry post an issue or tweet me at http://twitter.com/herchu
 
 
