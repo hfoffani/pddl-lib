@@ -139,7 +139,7 @@ This project is publish under the MIT Open Source license.
 
 ### Who do I talk to? ###
 
-For any doubt or inquiry post an issue or tweet me at
+For questions or requests post an issue here or tweet me at
 [@herchu](http://twitter.com/herchu)
 
 
