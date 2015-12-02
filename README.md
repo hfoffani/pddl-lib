@@ -16,7 +16,7 @@ This is enough for the user to focus on the implementation of state-space or pla
 
 The development of this tool was inspired from Univerty of Edimburgh's Artificial Intelligence Planning course by Dr. Gerhard Wickler and Prof. Austin Tate. The terms used in this API (and the API itself) closely resembles the ones proposed by the lecturers.
 
-As of today it only supports Python 3 but I plan to give support to .NET and Java languages. While project name is `pddl-lib` to emphasize its language agnosticy each target library has its own name. For Python is `pddlpy`.
+As of today it supports Python 3 and .NET. While project name is `pddl-lib` to emphasize its language agnosticy each target library has its own name. For Python is `pddlpy`. For .NET the library is `pddlnet.dll`.
 
 The orginal grammar file was authored by Zeyn Saigol from University of Birmingham. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
 
@@ -75,13 +75,15 @@ Type "help", "copyright", "credits" or "license" for more information.
 The pddl files are examples obtained from the course material.
 
 
+
 ### Using the PDDL .NET library ###
+
+The .NET library is available from nuget as `pddlnet.dll`.
 
 
 #### Prerequisites
 
 The .NET library depends on Antlr4.Runtime.dll. Go get it at www.antlr4.org
-
 
 
 
