@@ -139,6 +139,8 @@ This project is publish under the MIT Open Source license.
 
 ### Who do I talk to? ###
 
-For any doubt or inquiry post an issue or tweet me at http://twitter.com/herchu
+For any doubt or inquiry post an issue or tweet me at
+[@herchu](http://twitter.com/herchu)
+
 
 
