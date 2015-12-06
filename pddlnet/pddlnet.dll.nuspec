@@ -5,9 +5,9 @@
     <version>0.1.3</version>
     <authors>Hernán Foffani</authors>
     <owners>Hernán Foffani</owners>
-    <!-- <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl> -->
-    <projectUrl>https://bibucket.org/pddl-parser</projectUrl>
-    <!-- <requireLicenseAcceptance>false</requireLicenseAcceptance> -->
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/hfoffani/pddl-lib</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>
     This is a PDDL parser library using an ANTLR 4 grammar that provides a very simple interface to
     interact with domain-problems.
