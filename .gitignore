@@ -14,5 +14,4 @@ pddlpy.egg-info
 
 *.dll
 TestResult.xml
-NuGet.exe
 *.nupkg

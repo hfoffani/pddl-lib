@@ -9,6 +9,7 @@ LIBSTEST=-reference:NUnit.Framework,Microsoft.CSharp,pddlnet
 MONOPATH=/Library/Frameworks/Mono.framework/Libraries/mono/4.5/
 NUNITCONSOLE="/Library/Frameworks/Mono.framework/Versions/Current/bin/nunit-console4"
 ANTLRNET=-reference:Antlr4.Runtime.dll
+NUGET=nuget
 
 
 export CLASSPATH:=.:$(ANTLRLIB)
@@ -60,9 +61,10 @@ cstest: csparser pddlnet/pddltest.cs
 
 csnuget: cstest
 	(cd pddlnet && \
-	mono NuGet.exe pack pddlnet.dll.nuspec )
+	rm pddlnet.dll.*.nupkg && \
+	$(NUGET) pack pddlnet.dll.nuspec )
 
 csnugetpublish: csnuget
 	(cd pddlnet && \
-	mono NuGet.exe push pddlnet.dll.*.nupkg )
+	$(NUGET) push pddlnet.dll.*.nupkg )
 
