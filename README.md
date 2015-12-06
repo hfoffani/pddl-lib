@@ -134,7 +134,7 @@ Please, use the issue tracker at will.
 
 ### License ###
 
-This project is publish under the MIT Open Source license.
+This project is publish under the Apache License.
 
 
 ### Who do I talk to? ###
