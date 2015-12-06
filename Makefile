@@ -1,5 +1,5 @@
 
-ANTLRDIR=/usr/local/Cellar/antlr/4.5
+ANTLRDIR=/usr/local
 ANTLRLIB=$(ANTLRDIR)/antlr-4.5-complete.jar
 ANTLR=$(ANTLRDIR)/bin/antlr4
 GRUN=$(ANTLRDIR)/bin/grun
