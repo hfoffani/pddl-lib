@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>pddlnet.dll</id>
-    <version>0.1.3</version>
+    <version>0.1.4</version>
     <authors>Hernán Foffani</authors>
     <owners>Hernán Foffani</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -24,9 +24,11 @@
     * The _grounded_ states of a given operator (grounded variables, preconditions and effects).
 
     This is enough for the user to focus on the implementation of state-space or plan-space search algorithms.
+
+    See examples at the project site.
     </description>
     <releaseNotes>
-        Initial Version.
+    New License. Moved to Github.
     </releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>PDDL parser</tags>
