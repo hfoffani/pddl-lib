@@ -21,6 +21,7 @@ As of today it supports Python 3 and .NET. While project name is `pddl-lib` to e
 The orginal grammar file was authored by Zeyn Saigol from University of Birmingham. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
 
 
+
 ### What this project is not? ###
 
 This library doesn't include and won't include algorithms for solutions search.
@@ -75,6 +76,13 @@ Type "help", "copyright", "credits" or "license" for more information.
 The pddl files are examples obtained from the course material.
 
 
+### Other Resources ###
+
+There are wonderful material at the the University of Edinburgh:
+* [AI Planning MOOC Project Home Page](http://www.aiai.ed.ac.uk/project/plan/ooc)
+* [Index to access all course materials and videos](http://media.aiai.ed.ac.uk/Project/AIPLAN)
+* [Videos on YouTube](http://bit.ly/aiplanmooc)
+
 
 ### Using the PDDL .NET library ###
 
@@ -86,13 +94,9 @@ The .NET library is available from nuget as `pddlnet.dll`.
 The .NET library depends on Antlr4.Runtime.dll. Go get it at www.antlr4.org
 
 
-
-
 ### Future development ###
 
 * Publish API documentations and examples.
-* C# version.
-* Publish the .NET library as a NuGet package.
 * Unit tests.
 * Java version.
 * Publish the Java library in the Java Central Repository.
