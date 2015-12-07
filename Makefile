@@ -61,7 +61,7 @@ cstest: csparser pddlnet/pddltest.cs
 
 csnuget: cstest
 	(cd pddlnet && \
-	rm pddlnet.dll.*.nupkg && \
+	rm -f pddlnet.dll.*.nupkg && \
 	$(NUGET) pack pddlnet.dll.nuspec )
 
 csnugetpublish: csnuget
