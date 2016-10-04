@@ -35,5 +35,6 @@
   </metadata>
   <files>
     <file src="pddlnet.dll" target="lib" />
+    <file src="Antlr4.Runtime.dll" target="lib" />
   </files>
 </package>
