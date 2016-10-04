@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>pddlnet.dll</id>
-    <version>0.1.4</version>
+    <version>0.1.5</version>
     <authors>Hernán Foffani</authors>
     <owners>Hernán Foffani</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -28,12 +28,12 @@
     See examples at the project site.
     </description>
     <releaseNotes>
-    New License. Moved to Github.
+    Fix bug in nuget spec.
     </releaseNotes>
-    <copyright>Copyright 2015</copyright>
+    <copyright>Copyright 2015-2016</copyright>
     <tags>PDDL parser</tags>
-    <dependencies>
-      <dependency id="pddlnet" version="1.0" /> 
-    </dependencies>
   </metadata>
+  <files>
+    <file src="pddlnet.dll" target="lib" />
+  </files>
 </package>
