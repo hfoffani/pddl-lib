@@ -88,10 +88,8 @@ There are wonderful material at the the University of Edinburgh:
 
 The .NET library is available from nuget as `pddlnet.dll`.
 
-
-#### Prerequisites
-
-The .NET library depends on Antlr4.Runtime.dll. Go get it at www.antlr4.org
+There is also a small zip file containing the DLL and its dependency at the Github project [releases]
+(https://github.com/hfoffani/pddl-lib/releases)
 
 
 ### Future development ###
@@ -126,9 +124,10 @@ In case you want to tweak the grammar, add other target languages or modify the 
 * Edit the Makefile to configure PATHs.
 * Run `make` (it includes tests.)
 
-To build the .NET library you must place Antlr4.Runtime.dll under the pddlnet directory.
-
-
+To build the .NET library you must download the Antlr4.Runtime.dll from www.antlr4.org and
+place it under the pddlnet directory.
+ 
+ 
 ### Contribution guidelines ###
 
 I'd appreciate any feedback you send like pull requests, bug reports, etc.
