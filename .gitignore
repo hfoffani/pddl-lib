@@ -15,3 +15,6 @@ pddlpy.egg-info
 *.dll
 TestResult.xml
 *.nupkg
+
+*.swp
+*.zip
