@@ -36,7 +36,7 @@ def main(argv):
     print("\t", domprob.goals())
 
     print()
-    ops_to_test = { 1:"op2", 2:"move", 3:"move" }
+    ops_to_test = { 1:"op2", 2:"move", 3:"move", 4:"move", 5:"A1" }
     op = ops_to_test[demonumber]
     print("ground for operator", op, "applicable if (adjacent loc1 loc2)")
     for o in domprob.ground_operator(op):

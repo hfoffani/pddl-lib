@@ -150,7 +150,7 @@ class DomainListener(pddlListener):
         self.scopes[-1].effect_neg = set( scope.negatoms )
 
     def enterGoalDesc(self, ctx):
-        negscope = False
+        negscope = bool(self.negativescopes and self.negativescopes[-1])
         for c in ctx.getChildren():
             if c.getText() == 'not':
                 negscope = True
