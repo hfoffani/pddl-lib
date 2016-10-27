@@ -32,8 +32,8 @@ pyparser: pddl.g4
 	$(ANTLR) -Dlanguage=Python3 -o pddlpy pddl.g4
 
 pydist: pyparser pddlpy/pddl.py
-	python3 setup.py bdist_wheel
-	pip3 install -e .
+	python setup.py bdist_wheel
+	pip install -e .
 
 pypitest: pydist
 	python setup.py register -r pypitest && \
