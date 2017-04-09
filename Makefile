@@ -62,7 +62,7 @@ cstest: csparser pddlnet/pddltest.cs
 	$(MONOBIN)/mcs -d:NUNIT $(LIBSTEST) -out:pddlnettest.dll $(ANTLRREF) -t:library pddltest.cs && \
 	MONO_PATH=$(MONOPATH) $(NUNITCONSOLE) pddlnettest.dll --nologo )
 
-csnuget: cstest
+csnuget: csparser
 	(cd pddlnet && \
 	rm -f pddlnet.dll.*.nupkg && \
 	$(NUGET) pack pddlnet.dll.nuspec )
