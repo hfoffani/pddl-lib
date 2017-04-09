@@ -26,13 +26,13 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.1.6',
+    version='0.1.7',
 
     description='Python PDDL parser',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://bibucket.org/pddl-parser',
+    url='https://github.com/hfoffani/pddl-parser',
 
     # Author details
     author='Hernán Foffani',
@@ -75,7 +75,7 @@ setup(
     # project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['antlr4-python3-runtime'],
+    install_requires=['antlr4-python3-runtime>=4.6,<4.7'],
 
     # List additional groups of dependencies here (e.g. development dependencies).
     # You can install these using the following syntax, for example:

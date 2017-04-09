@@ -33,16 +33,16 @@ pyparser: pddl.g4
 	$(ANTLR) -Dlanguage=Python3 -o pddlpy pddl.g4
 
 pydist: pyparser pddlpy/pddl.py
-	python setup.py bdist_wheel
-	pip install -e .
+	python3 setup.py bdist_wheel
+	pip3 install -e .
 
 pypitest: pydist
-	python setup.py register -r pypitest && \
-	python setup.py bdist_wheel upload -r pypitest
+	python3 setup.py register -r pypitest && \
+	python3 setup.py bdist_wheel upload -r pypitest
 
 pypipublish: pydist
-	python setup.py register -r pypi && \
-	python setup.py bdist_wheel upload -r pypi
+	python3 setup.py register -r pypi && \
+	python3 setup.py bdist_wheel upload -r pypi
 
 pydemo: pydist
 	cd examples-python && \
