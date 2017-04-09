@@ -1,16 +1,17 @@
 
-ANTLRDIR=/usr/local
-ANTLRLIB=$(ANTLRDIR)/antlr-4.5-complete.jar
+ANTLRDIR=/usr/local/opt/antlr
+ANTLRLIB=$(ANTLRDIR)/antlr-4.6-complete.jar
 ANTLR=$(ANTLRDIR)/bin/antlr4
 GRUN=$(ANTLRDIR)/bin/grun
-ANTLRNET=Antlr4.Runtime.dll
-ANTLRREF=-reference:$(ANTLRNET)
+ANTLRNET=Antlr.4.Runtime
+ANTLRREF=-reference:Antlr.4.Runtime.4.6.0/lib/net35/Antlr4.Runtime.dll
 DLLSPATH=../pddlnet
 CSANTLR=pddlListener.cs pddlBaseListener.cs pddlLexer.cs pddlParser.cs
 LIBSTEST=-reference:NUnit.Framework,Microsoft.CSharp,pddlnet
 MONOPATH=/Library/Frameworks/Mono.framework/Libraries/mono/4.5/
 NUNITCONSOLE="/Library/Frameworks/Mono.framework/Versions/Current/bin/nunit-console4"
-NUGET=nuget
+MONOBIN=/Library/Frameworks/Mono.framework/Commands
+NUGET=$(MONOBIN)/nuget
 
 
 export CLASSPATH:=.:$(ANTLRLIB)
@@ -53,11 +54,12 @@ csparser: pddl.g4 pddlnet/pddl.cs
 	mkdir -p pddlnet && \
 	$(ANTLR) -Dlanguage=CSharp -package PDDLNET -o pddlnet pddl.g4 && \
 	(cd pddlnet && \
-	mcs -out:pddlnet.dll $(ANTLRREF) -t:library pddl.cs $(CSANTLR))
+	$(NUGET) install $(ANTLRNET) && \
+	$(MONOBIN)/mcs -out:pddlnet.dll $(ANTLRREF) -t:library pddl.cs $(CSANTLR))
 
 cstest: csparser pddlnet/pddltest.cs
 	(cd pddlnet && \
-	mcs -d:NUNIT $(LIBSTEST) -out:pddlnettest.dll $(ANTLRREF) -t:library pddltest.cs && \
+	$(MONOBIN)/mcs -d:NUNIT $(LIBSTEST) -out:pddlnettest.dll $(ANTLRREF) -t:library pddltest.cs && \
 	MONO_PATH=$(MONOPATH) $(NUNITCONSOLE) pddlnettest.dll --nologo )
 
 csnuget: cstest
