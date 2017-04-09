@@ -22,6 +22,8 @@ using System.Linq;
 
 using Antlr4.Runtime;
 
+[assembly: System.CLSCompliant(true)]
+
 namespace PDDLNET {
 
 /// <summary>
@@ -786,7 +788,7 @@ public class DomainProblem {
         }
     }
 
-    public string tostring(HashSet<ROCollection<string>> set) {
+    public string to_string(HashSet<ROCollection<string>> set) {
         var sb = new System.Text.StringBuilder();
         sb.Append("{ ");
         foreach (var p in set) {
