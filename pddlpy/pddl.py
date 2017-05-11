@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 #
 # Copyright 2015 Hernán M. Foffani
@@ -173,12 +175,12 @@ class DomainListener(pddlListener):
 
     def enterTypedNameList(self, ctx):
         # print("-> tnam")
-        for v in ctx.NAME():
+        for v in ctx.name():
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeNameList():
             t = vs.r_type().getText()
-            for v in vs.NAME():
+            for v in vs.name():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
 
@@ -243,12 +245,12 @@ class ProblemListener(pddlListener):
         scope.addatom(Atom(pred))
 
     def enterTypedNameList(self, ctx):
-        for v in ctx.NAME():
+        for v in ctx.name():
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeNameList():
             t = vs.r_type().getText()
-            for v in vs.NAME():
+            for v in vs.name():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
 

@@ -78,7 +78,7 @@ domain
     ;
 
 domainName
-    : '(' 'domain' NAME ')'
+    : '(' 'domain' name ')'
     ;
 
 requireDef
@@ -91,11 +91,11 @@ typesDef
 
 // If have any typed names, they must come FIRST!
 typedNameList
-    : (NAME* | singleTypeNameList+ NAME*)
+    : (name* | singleTypeNameList+ name*)
     ;
 
 singleTypeNameList
-    : (NAME+ '-' t=r_type)
+    : (name+ '-' t=r_type)
 	;
 
 r_type
@@ -103,7 +103,7 @@ r_type
 	| primType
 	;
 
-primType : NAME ;
+primType : name ;
 
 functionsDef
 	: '(' ':functions' functionList ')'
@@ -117,7 +117,7 @@ atomicFunctionSkeleton
 	: '(' functionSymbol typedVariableList ')'
 	;
 
-functionSymbol : NAME ;
+functionSymbol : name ;
 
 functionType : 'number' ; // Currently in PDDL only numeric functions are allowed
 
@@ -133,7 +133,7 @@ atomicFormulaSkeleton
 	: '(' predicate typedVariableList ')'
 	;
 
-predicate : NAME ;
+predicate : name ;
 
 // If have any typed variables, they must come FIRST!
 typedVariableList
@@ -163,7 +163,7 @@ actionDef
            actionDefBody ')'
     ;
 
-actionSymbol : NAME ;
+actionSymbol : name ;
 
 
 // Should allow preGD instead of goalDesc for preconditions -
@@ -186,7 +186,7 @@ precondition
 //	;
 //
 //prefGD
-//	: '(' 'preference' NAME? goalDesc ')'
+//	: '(' 'preference' name? goalDesc ')'
 //	| goalDesc
 //	;
 
@@ -209,7 +209,7 @@ atomicTermFormula
 	: '(' predicate term* ')'
 	;
 
-term : NAME | VARIABLE ;
+term : name | VARIABLE ;
 
 /************* DURATIVE ACTIONS ****************************/
 
@@ -221,9 +221,9 @@ durativeActionDef
 
 daDefBody
 	: ':duration' durationConstraint
-	| ':condition' (('(' ')') | daGD)
-    | ':effect' (('(' ')') | daEffect)
-    ;
+	  ':condition' (('(' ')') | daGD)
+	  ':effect' (('(' ')') | daEffect)
+	;
 
 daGD
 	: prefTimedGD
@@ -233,7 +233,7 @@ daGD
 
 prefTimedGD
 	: timedGD
-	| '(' 'preference' NAME? timedGD ')'
+	| '(' 'preference' name? timedGD ')'
 	;
 
 timedGD
@@ -326,9 +326,9 @@ daEffect
 	;
 
 timedEffect
-	: '(' 'at' timeSpecifier daEffect ')'     // BNF has a-effect here, but not defined anywhere
+	: '(' 'at' timeSpecifier cEffect ')'
 	| '(' 'at' timeSpecifier fAssignDA ')'
-	| '(' assignOp fHead fExp ')'         // BNF has assign-op-t and f-exp-t here, but not defined anywhere
+	| '(' assignOpT fHead fExp ')' /* fExpT in BNF but not making sense */
 	;
 
 fAssignDA
@@ -340,6 +340,19 @@ fExpDA
 	| '?duration'
 	| fExp
 	;
+
+assignOpT : 'increase' | 'decrease' ;
+
+/*
+ * We should have fExpT according to:
+ * http://www.plg.inf.uc3m.es/ipc2011-deterministic/attachments/OtherContributions/kovacs-pddl-3.1-2011.pdf
+
+fExpT
+	: '(*' fExp #t ')'
+	| '(*' #t fExp ')'
+	| #t
+	;
+ */
 
 /************* PROBLEMS ****************************/
 
@@ -357,11 +370,11 @@ problem
     ;
 
 problemDecl
-    : '(' 'problem' NAME ')'
+    : '(' 'problem' name ')'
     ;
 
 problemDomain
-	: '(' ':domain' NAME ')'
+	: '(' ':domain' name ')'
 	;
 
 objectDecl
@@ -375,7 +388,7 @@ init
 initEl
 	: nameLiteral
 	| '(' '=' fHead NUMBER ')'         
-	| '(' 'at' NUMBER nameLiteral ')'  
+	| '(' 'at' NUMBER nameLiteral ')'
 	;
 
 nameLiteral
@@ -384,7 +397,7 @@ nameLiteral
 	;
 
 atomicNameFormula
-	: '(' predicate NAME* ')' 
+	: '(' predicate name* ')' 
 	;
 
 // Should allow preGD instead of goalDesc -
@@ -402,7 +415,7 @@ probConstraints
 prefConGD
 	: '(' 'and' prefConGD* ')'
 	| '(' 'forall' '(' typedVariableList ')' prefConGD ')'
-	| '(' 'preference' NAME? conGD ')'
+	| '(' 'preference' name? conGD ')'
 	| conGD
 	;
 
@@ -417,10 +430,10 @@ metricFExp
 	| '(' ('*'|'/') metricFExp metricFExp+ ')'
 	| '(' '-' metricFExp ')'
 	| NUMBER
-	| '(' functionSymbol NAME* ')'
+	| '(' functionSymbol name* ')'
 	| functionSymbol
     | 'total-time'
-	| '(' 'is-violated' NAME ')'
+	| '(' 'is-violated' name ')'
 	;
 
 /************* CONSTRAINTS ****************************/
@@ -429,7 +442,7 @@ conGD
 	: '(' 'and' conGD* ')'
 	| '(' 'forall' '(' typedVariableList ')' conGD ')'
 	| '(' 'at' 'end' goalDesc ')'
-    | '(' 'always' goalDesc ')'
+	| '(' 'always' goalDesc ')'
 	| '(' 'sometime' goalDesc ')'
  	| '(' 'within' NUMBER goalDesc ')'
 	| '(' 'at-most-once' goalDesc ')'
@@ -464,6 +477,15 @@ REQUIRE_KEY
     | ':constraints'
     ;
 
+/*
+ * allowing keywords as identifier where allowed
+ * may need more to specify
+ */
+name
+	: NAME
+	| 'at'
+	| 'over'
+	;
 
 NAME:    LETTER ANY_CHAR* ;
 
