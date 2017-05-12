@@ -88,9 +88,3 @@ csnugetpublish: csnuget
 	(cd pddlnet && \
 	$(NUGET) push pddlnet.dll.*.nupkg )
 
-
-binrelease: cstest
-	(cd pddlnet && \
-	zip pddlnetdll.zip pddlnet.dll $(ANTLRNET) )
-
-
