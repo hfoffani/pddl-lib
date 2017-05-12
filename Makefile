@@ -12,6 +12,8 @@ MONOPATH=/Library/Frameworks/Mono.framework/Libraries/mono/4.5/
 NUNITCONSOLE="/Library/Frameworks/Mono.framework/Versions/Current/bin/nunit-console4"
 MONOBIN=/Library/Frameworks/Mono.framework/Commands
 NUGET=$(MONOBIN)/nuget
+PIP=pip
+PYTHON=python
 
 
 export CLASSPATH:=.:$(ANTLRLIB)
@@ -30,25 +32,25 @@ testgrammar: pddl.g4
 
 pyparser: pddl.g4
 	mkdir -p pddlpy && \
-	$(ANTLR) -Dlanguage=Python3 -o pddlpy pddl.g4
+	$(ANTLR) -Dlanguage=Python2 -encoding utf8 -o pddlpy pddl.g4
 
 pydist: pyparser pddlpy/pddl.py
-	python3 setup.py bdist_wheel
-	pip3 install -e .
+	$(PYTHON) setup.py bdist_wheel
+	$(PIP) install -e .
 
 pypitest: pydist
-	python3 setup.py register -r pypitest && \
-	python3 setup.py bdist_wheel upload -r pypitest
+	$(PYTHON) setup.py register -r pypitest && \
+	$(PYTHON) setup.py bdist_wheel upload -r pypitest
 
 pypipublish: pydist
-	python3 setup.py register -r pypi && \
-	python3 setup.py bdist_wheel upload -r pypi
+	$(PYTHON) setup.py register -r pypi && \
+	$(PYTHON) setup.py bdist_wheel upload -r pypi
 
 pydemo: pydist
 	cd examples-python && \
-	python3 demo.py 1 && \
-	python3 demo.py 2 && \
-	python3 demo.py 3
+	$(PYTHON) demo.py 1 && \
+	$(PYTHON) demo.py 2 && \
+	$(PYTHON) demo.py 3
 
 csparser: pddl.g4 pddlnet/pddl.cs
 	mkdir -p pddlnet && \
