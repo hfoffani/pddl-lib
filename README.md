@@ -116,7 +116,7 @@ In case you want to tweak the grammar, add other target languages or modify the 
 * The package is built using wheel.
     `pip install wheel`
 * mono development.
-* Antlr4.Runtime.dll
+* Antlr4.Runtime.Standard.dll
 
 #### Building
 
@@ -125,8 +125,8 @@ In case you want to tweak the grammar, add other target languages or modify the 
 * Run `make` (it includes tests.)
   If you are using Python 2 you will need to call `make pyversion=2`.
 
-To build the .NET library you must download the Antlr4.Runtime.dll from www.antlr4.org and
-place it under the pddlnet directory.
+To build the .NET library you must download the Antlr4.Runtime.Standard.dll from www.antlr4.org and
+place it under the pddlnet directory. Currently it works with 4.7.0
  
  
 ### Contribution guidelines ###

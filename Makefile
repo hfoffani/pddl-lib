@@ -1,10 +1,10 @@
 
 ANTLRDIR=/usr/local/opt/antlr
-ANTLRLIB=$(ANTLRDIR)/antlr-4.6-complete.jar
+ANTLRLIB=$(ANTLRDIR)/antlr-4.7-complete.jar
 ANTLR=$(ANTLRDIR)/bin/antlr4
 GRUN=$(ANTLRDIR)/bin/grun
-ANTLRNET=Antlr.4.Runtime
-ANTLRREF=-reference:Antlr.4.Runtime.4.6.0/lib/net35/Antlr4.Runtime.dll
+ANTLRNET=Antlr4.Runtime.Standard
+ANTLRREF=-reference:Antlr4.Runtime.Standard.4.7.0/lib/net35/Antlr4.Runtime.Standard.dll
 DLLSPATH=../pddlnet
 CSANTLR=pddlListener.cs pddlBaseListener.cs pddlLexer.cs pddlParser.cs
 LIBSTEST=-reference:NUnit.Framework,Microsoft.CSharp,pddlnet
