@@ -12,9 +12,17 @@ MONOPATH=/Library/Frameworks/Mono.framework/Libraries/mono/4.5/
 NUNITCONSOLE="/Library/Frameworks/Mono.framework/Versions/Current/bin/nunit-console4"
 MONOBIN=/Library/Frameworks/Mono.framework/Commands
 NUGET=$(MONOBIN)/nuget
+
+pyversion ?= 3
+ifeq ($(pyversion),3)
+PIP=pip3
+PYTHON=python3
+ANTLRLANG=-Dlanguage=Python3
+else
 PIP=pip
 PYTHON=python
-
+ANTLRLANG=-Dlanguage=Python2 -encoding utf8
+endif
 
 export CLASSPATH:=.:$(ANTLRLIB)
 
@@ -32,7 +40,7 @@ testgrammar: pddl.g4
 
 pyparser: pddl.g4
 	mkdir -p pddlpy && \
-	$(ANTLR) -Dlanguage=Python2 -encoding utf8 -o pddlpy pddl.g4
+	$(ANTLR) $(ANTLRLANG) -o pddlpy pddl.g4
 
 pydist: pyparser pddlpy/pddl.py
 	$(PYTHON) setup.py bdist_wheel
