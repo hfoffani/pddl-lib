@@ -18,3 +18,5 @@ TestResult.xml
 
 *.swp
 *.zip
+
+pddlnet/output/
