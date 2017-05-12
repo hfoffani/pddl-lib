@@ -64,7 +64,10 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3'
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
     ],
 
     # What does your project relate to?
@@ -78,7 +81,10 @@ setup(
     # project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['antlr4-python2-runtime>=4.7,<4.8'],
+    install_requires=[
+        'antlr4-python2-runtime>=4.7,<4.8;python_version<"3"',
+        'antlr4-python3-runtime>=4.7,<4.8;python_version>="3"',
+        ],
 
     # List additional groups of dependencies here (e.g. development dependencies).
     # You can install these using the following syntax, for example:
