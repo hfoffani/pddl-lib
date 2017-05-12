@@ -109,10 +109,10 @@ In case you want to tweak the grammar, add other target languages or modify the 
 
 * Install ANTLR version 4.
     I used `brew install antlr4` (a Mac). Your mileage may vary depending on your environment.
-* Install Python 3.
+* Install Python 3 (it works with Python 2 too).
     For this I also used brew.
 * Install antlr4 runtime.
-    `pip install antlr4-python3-runtime`
+    `pip install antlr4-python3-runtime` (or `antlr4-python2-runtime` if building for Python 2)
 * The package is built using wheel.
     `pip install wheel`
 * mono development.
@@ -123,6 +123,7 @@ In case you want to tweak the grammar, add other target languages or modify the 
 * Checkout the repository.
 * Edit the Makefile to configure PATHs.
 * Run `make` (it includes tests.)
+  If you are using Python 2 you will need to call `make pyversion=2`.
 
 To build the .NET library you must download the Antlr4.Runtime.dll from www.antlr4.org and
 place it under the pddlnet directory.
