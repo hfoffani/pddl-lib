@@ -7,9 +7,8 @@ ANTLRNET=Antlr4.Runtime.Standard
 ANTLRREF=-reference:Antlr4.Runtime.Standard.4.7.0/lib/net35/Antlr4.Runtime.Standard.dll
 DLLSPATH=../pddlnet
 CSANTLR=pddlListener.cs pddlBaseListener.cs pddlLexer.cs pddlParser.cs
-LIBSTEST=-reference:NUnit.Framework,Microsoft.CSharp,pddlnet
+LIBSTEST=-reference:NUnit.3.6.1/lib/net45/nunit.framework.dll,NUnitLite.3.6.1/lib/net45/nunitlite.dll,Microsoft.CSharp,pddlnet
 MONOPATH=/Library/Frameworks/Mono.framework/Libraries/mono/4.5/
-NUNITCONSOLE="/Library/Frameworks/Mono.framework/Versions/Current/bin/nunit-console4"
 MONOBIN=/Library/Frameworks/Mono.framework/Commands
 NUGET=$(MONOBIN)/nuget
 
@@ -69,8 +68,16 @@ csparser: pddl.g4 pddlnet/pddl.cs
 
 cstest: csparser pddlnet/pddltest.cs
 	(cd pddlnet && \
-	$(MONOBIN)/mcs -d:NUNIT $(LIBSTEST) -out:pddlnettest.dll $(ANTLRREF) -t:library pddltest.cs && \
-	MONO_PATH=$(MONOPATH) $(NUNITCONSOLE) pddlnettest.dll --nologo )
+	$(NUGET) install NUnitLite && \
+	mkdir -p output && \
+	$(MONOBIN)/mcs -d:NUNIT $(LIBSTEST) -out:output/pddlnettest.exe $(ANTLRREF) -t:exe pddltest.cs && \
+	echo compiled && \
+	cp Antlr4.Runtime.Standard.4.7.0/lib/net35/Antlr4.Runtime.Standard.dll output && \
+	cp NUnit.3.6.1/lib/net45/nunit.framework.dll output && \
+	cp NUnitLite.3.6.1/lib/net45/nunitlite.dll output && \
+	cp pddlnet.dll output && \
+	cd output && \
+	MONO_PATH=$(MONOPATH) $(MONOBIN)/mono pddlnettest.exe )
 
 csnuget: csparser
 	(cd pddlnet && \
