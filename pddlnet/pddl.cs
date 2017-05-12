@@ -449,24 +449,24 @@ internal class DomainListener : pddlBaseListener {
     public override void EnterTypedNameList(pddlParser.TypedNameListContext ctx) {
         /*
         # print("-> tnam")
-        for v in ctx.NAME():
+        for v in ctx.name():
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeNameList():
             t = vs.r_type().getText()
-            for v in vs.NAME():
+            for v in vs.name():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
         */
         // System.Console.WriteLine("-> tnam");
-        foreach (var v in ctx.NAME()) {
+        foreach (var v in ctx.name()) {
             var vname = v.GetText();
             var op = (Operator)this.scopes.Peek();
             op.variable_list.Add(vname, null);
         }
         foreach (var vs in ctx.singleTypeNameList()) {
             var t = vs.r_type().GetText();
-            foreach (var v in vs.NAME()) {
+            foreach (var v in vs.name()) {
                 var vname = v.GetText();
                 var op = (Operator)this.scopes.Peek();
                 op.variable_list.Add(vname, t);
@@ -633,14 +633,14 @@ internal class ProblemListener : pddlBaseListener {
                 self.scopes[-1].variable_list[vname] = t
         */
         // System.Console.WriteLine("-> tnam");
-        foreach (var v in ctx.NAME()) {
+        foreach (var v in ctx.name()) {
             var vname = v.GetText();
             var op = (Operator)this.scopes.Peek();
             op.variable_list.Add(vname, null);
         }
         foreach (var vs in ctx.singleTypeNameList()) {
             var t = vs.r_type().GetText();
-            foreach (var v in vs.NAME()) {
+            foreach (var v in vs.name()) {
                 var vname = v.GetText();
                 var op = (Operator)this.scopes.Peek();
                 op.variable_list.Add(vname, t);
