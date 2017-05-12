@@ -3,12 +3,16 @@ ANTLRDIR=/usr/local/opt/antlr
 ANTLRLIB=$(ANTLRDIR)/antlr-4.7-complete.jar
 ANTLR=$(ANTLRDIR)/bin/antlr4
 GRUN=$(ANTLRDIR)/bin/grun
+
+# For dotnet
+NUNITVERSION=3.6.1
 ANTLRNET=Antlr4.Runtime.Standard
-ANTLRREF=-reference:Antlr4.Runtime.Standard.4.7.0/lib/net35/Antlr4.Runtime.Standard.dll
+ANTLRDLL=Antlr4.Runtime.Standard.4.7.0/lib/net35/Antlr4.Runtime.Standard.dll
 DLLSPATH=../pddlnet
 CSANTLR=pddlListener.cs pddlBaseListener.cs pddlLexer.cs pddlParser.cs
-LIBSTEST=-reference:NUnit.3.6.1/lib/net45/nunit.framework.dll,NUnitLite.3.6.1/lib/net45/nunitlite.dll,Microsoft.CSharp,pddlnet
-MONOPATH=/Library/Frameworks/Mono.framework/Libraries/mono/4.5/
+NUNITLIB=NUnit.$(NUNITVERSION)/lib/net45/nunit.framework.dll
+NUNITLITE=NUnitLite.$(NUNITVERSION)/lib/net45/nunitlite.dll
+LIBSTEST=-reference:output/$(NUNITLIB),output/$(NUNITLITE),Microsoft.CSharp,pddlnet
 MONOBIN=/Library/Frameworks/Mono.framework/Commands
 NUGET=$(MONOBIN)/nuget
 
@@ -64,20 +68,16 @@ csparser: pddl.g4 pddlnet/pddl.cs
 	$(ANTLR) -Dlanguage=CSharp -package PDDLNET -o pddlnet pddl.g4 && \
 	(cd pddlnet && \
 	$(NUGET) install $(ANTLRNET) && \
-	$(MONOBIN)/mcs -out:pddlnet.dll $(ANTLRREF) -t:library pddl.cs $(CSANTLR))
+	$(MONOBIN)/mcs -out:pddlnet.dll -reference:$(ANTLRDLL) -t:library pddl.cs $(CSANTLR))
 
 cstest: csparser pddlnet/pddltest.cs
 	(cd pddlnet && \
-	$(NUGET) install NUnitLite && \
 	mkdir -p output && \
-	$(MONOBIN)/mcs -d:NUNIT $(LIBSTEST) -out:output/pddlnettest.exe $(ANTLRREF) -t:exe pddltest.cs && \
-	echo compiled && \
-	cp Antlr4.Runtime.Standard.4.7.0/lib/net35/Antlr4.Runtime.Standard.dll output && \
-	cp NUnit.3.6.1/lib/net45/nunit.framework.dll output && \
-	cp NUnitLite.3.6.1/lib/net45/nunitlite.dll output && \
-	cp pddlnet.dll output && \
+	$(NUGET) install NUnitLite -Verbosity quiet -OutputDirectory output && \
+	$(MONOBIN)/mcs -d:NUNIT $(LIBSTEST) -out:output/pddlnettest.exe -reference:$(ANTLRDLL) -t:exe pddltest.cs && \
+	cp pddlnet.dll $(ANTLRDLL) output/$(NUNITLIB) output/$(NUNITLITE) output && \
 	cd output && \
-	MONO_PATH=$(MONOPATH) $(MONOBIN)/mono pddlnettest.exe )
+	$(MONOBIN)/mono pddlnettest.exe )
 
 csnuget: csparser
 	(cd pddlnet && \
