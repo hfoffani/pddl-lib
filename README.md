@@ -133,6 +133,11 @@ I'd appreciate any feedback you send like pull requests, bug reports, etc.
 Please, use the issue tracker at will.
 
 
+### Acknowledgments
+
+Michiaki Tatsubori @tatsubori added time-duration support. Thanks!
+
+
 ### License ###
 
 This project is publish under the
