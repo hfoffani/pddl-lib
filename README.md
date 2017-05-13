@@ -135,7 +135,7 @@ Please, use the issue tracker at will.
 
 ### Acknowledgments
 
-Michiaki Tatsubori @tatsubori added time-duration support. Thanks!
+Michiaki Tatsubori [@tatsubori](https://github.com/tatsubori) added time-duration support. Thanks!
 
 
 ### License ###
