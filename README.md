@@ -88,17 +88,14 @@ There are wonderful material at the the University of Edinburgh:
 
 The .NET library is available from nuget as `pddlnet.dll`.
 
-There is also a small zip file containing the DLL and its dependency at the Github project [releases]
-(https://github.com/hfoffani/pddl-lib/releases)
-
 
 ### Future development ###
 
-* Publish API documentations and examples.
-* Unit tests.
-* Java version.
-* Publish the Java library in the Java Central Repository.
-* The process that grounds variables is very simple (it's a cartesian product) and needs to be optimized.
+* Implement the `:requirements` directive.
+* Add more examples (a simple planner maybe?).
+* Add API documentation.
+* More unit tests.
+* Java version (it will be published in Java Central Repository).
 
 
 ### Adavanced ###
