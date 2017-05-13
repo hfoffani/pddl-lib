@@ -45,7 +45,10 @@ pyparser: pddl.g4
 	mkdir -p pddlpy && \
 	$(ANTLR) $(ANTLRLANG) -o pddlpy pddl.g4
 
-pydist: pyparser pddlpy/pddl.py
+pytest: pyparser pddlpy/pddl.py
+	$(PYTHON) pddlpy/test.py
+
+pydist: pytest
 	$(PYTHON) setup.py bdist_wheel
 	$(PIP) install -e .
 
