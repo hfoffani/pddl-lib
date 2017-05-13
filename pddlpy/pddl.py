@@ -311,7 +311,7 @@ class DomainProblem():
         walker = ParseTreeWalker()
         walker.walk(self.problem, tree)
         # variable ground space
-        self.vargroundspace = []
+        self.vargroundspace = {}
 
     def operators(self):
         """Returns an iterator of the names of the actions defined in
@@ -326,7 +326,8 @@ class DomainProblem():
         returns -- An iterator of Operator instances.
         """
         op = self.domain.operators[op_name]
-        for ground in self._instantiate( op.variable_list.items() ):
+        for ground in self._instantiate( op.operator_name, op.variable_list.items() ):
+            print('grounded', ground)
             st = dict(ground)
             gop = Operator(op_name)
             gop.variable_list = st
@@ -339,14 +340,18 @@ class DomainProblem():
     def _typesymbols(self, t):
         return ( k for k,v in self.worldobjects().items() if v == t )
 
-    def _instantiate(self, variables):
-        if not self.vargroundspace:
+    def _instantiate(self, opname, variables):
+        if opname not in self.vargroundspace:
+            self.vargroundspace[opname] = {}
+            d = self.vargroundspace[opname]
             for vname, t in variables:
-                c = []
                 for symb in self._typesymbols(t):
-                    c.append((vname, symb) )
-                self.vargroundspace.append(c)
-        return itertools.product(*self.vargroundspace)
+                    d.setdefault(vname, []).append(symb)
+        d = self.vargroundspace[opname]
+        # expands the dict to something like:
+        #[ [('?x1','A'),('?x1','B')..], [('?x2','M'),('?x2','N')..],..]
+        expanded = [ [ (vname, symb) for symb in d[vname] ] for vname in d ]
+        return itertools.product(*expanded)
 
     def initialstate(self):
         """Returns a set of atoms (tuples of strings) corresponding to the intial
