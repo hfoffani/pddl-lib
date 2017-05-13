@@ -310,7 +310,10 @@ class DomainProblem():
         self.problem = ProblemListener()
         walker = ParseTreeWalker()
         walker.walk(self.problem, tree)
-        # variable ground space
+        # variable ground space for each operator.
+        # a dict where keys are op names and values
+        # a dict where keys are var names and values
+        # the symbols.
         self.vargroundspace = {}
 
     def operators(self):
@@ -326,8 +329,9 @@ class DomainProblem():
         returns -- An iterator of Operator instances.
         """
         op = self.domain.operators[op_name]
-        for ground in self._instantiate( op.operator_name, op.variable_list.items() ):
-            print('grounded', ground)
+        self._set_operator_groundspace( op_name, op.variable_list.items() )
+        for ground in self._instantiate( op_name ):
+            # print('grounded', ground)
             st = dict(ground)
             gop = Operator(op_name)
             gop.variable_list = st
@@ -340,17 +344,20 @@ class DomainProblem():
     def _typesymbols(self, t):
         return ( k for k,v in self.worldobjects().items() if v == t )
 
-    def _instantiate(self, opname, variables):
+    def _set_operator_groundspace(self, opname, variables):
+        # cache the variables ground space for each operator.
         if opname not in self.vargroundspace:
-            self.vargroundspace[opname] = {}
-            d = self.vargroundspace[opname]
+            d = self.vargroundspace.setdefault(opname, {})
             for vname, t in variables:
                 for symb in self._typesymbols(t):
                     d.setdefault(vname, []).append(symb)
+
+    def _instantiate(self, opname):
         d = self.vargroundspace[opname]
         # expands the dict to something like:
         #[ [('?x1','A'),('?x1','B')..], [('?x2','M'),('?x2','N')..],..]
         expanded = [ [ (vname, symb) for symb in d[vname] ] for vname in d ]
+        # cartesian product.
         return itertools.product(*expanded)
 
     def initialstate(self):
