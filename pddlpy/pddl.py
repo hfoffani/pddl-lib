@@ -313,7 +313,7 @@ class DomainProblem():
         # variable ground space for each operator.
         # a dict where keys are op names and values
         # a dict where keys are var names and values
-        # the symbols.
+        # a list of possible symbols.
         self.vargroundspace = {}
 
     def operators(self):
