@@ -78,6 +78,16 @@ class Operator():
         self.effect_pos = set()
         self.effect_neg = set()
 
+    def __str__(self):
+        templ = "Operator Name: %s\n\tVariables: %s\n\t" + \
+                "Positive Preconditions: %s\n\t" + \
+                "Negative Preconditions: %s\n\t" + \
+                "Positive Effects: %s\n\t" + \
+                "Negative Effects: %s\n"
+        return templ % ( self.operator_name, self.variable_list,
+                         self.precondition_pos, self.precondition_neg,
+                         self.effect_pos, self.effect_neg)
+
 
 class DomainListener(pddlListener):
     def __init__(self):
