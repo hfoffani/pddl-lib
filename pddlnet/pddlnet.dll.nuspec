@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>pddlnet.dll</id>
-    <version>0.1.9</version>
+    <version>0.2.0</version>
     <authors>Hernán Foffani</authors>
     <owners>Hernán Foffani</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -28,8 +28,7 @@
     See examples at the project site.
     </description>
     <releaseNotes>
-    Upgrade to ANTLR 4.7.
-    Adds time constraints.
+    Better grounding mechanism.
     </releaseNotes>
     <copyright>Copyright 2015-2017</copyright>
     <tags>PDDL parser</tags>
