@@ -83,6 +83,28 @@ public class TS_PDDLNET {
         Assert.AreEqual(125, lops.Count);
     }
 
+    [TestMethod]
+    public void TestGround() {
+        // look for set( [('S','R','C'),('S','R','S')] )
+        var expect = new HashSet<PDDLNET.ROCollection<string>>();
+        expect.Add(new PDDLNET.ROCollection<string>(new string[] {"S","R","C"}));
+        expect.Add(new PDDLNET.ROCollection<string>(new string[] {"S","R","S"}));
+
+        var d1 = "../../examples-pddl/domain-01.pddl";
+        var p1 = "../../examples-pddl/problem-01.pddl";
+        var pd = new PDDLNET.DomainProblem(d1, p1);
+
+        var op2_grounds = pd.ground_operator("op2");
+        var lops = op2_grounds.ToList();
+        foreach (var gop in lops) {
+            if (gop.precondition_pos.SetEquals( expect) ) {
+                return;
+            }
+        }
+        Assert.Fail("Expected value not in result");
+
+    }
+
     [TestInitialize()]
     public void BeforeTest() {
         System.Threading.SynchronizationContext.SetSynchronizationContext(

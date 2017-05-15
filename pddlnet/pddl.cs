@@ -776,7 +776,8 @@ public class DomainProblem {
 
     public IEnumerable<Operator> ground_operator(string op_name) {
         var op = (Operator)this.domain.operators[op_name];
-        foreach (var groundvars in this.instantiate(op.variable_list)) {
+        set_operator_groundspace(op_name, op.variable_list);
+        foreach (var groundvars in this.instantiate(op_name)) {
             var st = groundvars.ToDictionary(kvp=>kvp.Key, kvp=>kvp.Value);
             var gop = new Operator(op_name);
             gop.variable_list = st;
@@ -827,31 +828,53 @@ public class DomainProblem {
             .Select(kvp => kvp.Key);
     }
 
-    List<List<KeyValuePair<string,string>>> vargroundspace =
-        new List<List<KeyValuePair<string,string>>>();
+    Dictionary<string,Dictionary<string,List<string>>> vargroundspace =
+        new Dictionary<string,Dictionary<string,List<string>>>();
 
-    private IEnumerable<IEnumerable<KeyValuePair<string,string>>>
-        instantiate(IDictionary<string, string> variables) {
+    private void set_operator_groundspace(string opname,
+                    IDictionary<string, string> variables) {
         /*
-         * if not self.vargroundspace:
-         *   for vname, t in variables:
-         *       c = []
-         *       for symb in self._typesymbols(t):
-         *           c.append((vname, symb) )
-         *       self.vargroundspace.append(c)
-         * return itertools.product(*self.vargroundspace)
+         *  def _set_operator_groundspace(self, opname, variables):
+         *      # cache the variables ground space for each operator.
+         *      if opname not in self.vargroundspace:
+         *          d = self.vargroundspace.setdefault(opname, {})
+         *          for vname, t in variables:
+         *              for symb in self._typesymbols(t):
+         *                  d.setdefault(vname, []).append(symb)
          */
-        if (this.vargroundspace.Count == 0) {
+        if (!this.vargroundspace.ContainsKey(opname)) {
+            // this.vargroundspace.Add(opname, new Dictionary<string, List<string>>());
+            var d = this.vargroundspace[opname] = new Dictionary<string, List<string>>();
             foreach (var kvp in variables) {
-                var c = new List<KeyValuePair<string,string>>();
+                var varname = kvp.Key;
+                d[varname] = new List<string>();
                 foreach (var symb in this.typesymbols(kvp.Value)) {
-                    c.Add( new KeyValuePair<string,string>( kvp.Key, symb));
+                    d[varname].Add( symb);
                 }
-                this.vargroundspace.Add( c);
             }
         }
-        var cp = CartesianProduct<KeyValuePair<string,string>>(
-            this.vargroundspace);
+    }
+
+    private IEnumerable<IEnumerable<KeyValuePair<string,string>>> instantiate(string opname) {
+        /*
+         * d = self.vargroundspace[opname]
+         * # expands the dict to something like:
+         * #[ [('?x1','A'),('?x1','B')..], [('?x2','M'),('?x2','N')..],..]
+         * expanded = [ [ (vname, symb) for symb in d[vname] ] for vname in d ]
+         * # cartesian product.
+         * return itertools.product(*expanded)
+         */
+        //var expanded = List<List<KeyValuePair<string,string>>>();
+        var d = this.vargroundspace[opname];
+        var expanded = new List<List<KeyValuePair<string,string>>>();
+        foreach (var vname in d.Keys) {
+            var p = new List<KeyValuePair<string,string>>();
+            foreach (var s in d[vname]) {
+                p.Add(new KeyValuePair<string,string>(vname, s));
+            }
+            expanded.Add(p);
+        }
+        var cp = CartesianProduct<KeyValuePair<string,string>>( expanded);
         return cp;
     }
 
