@@ -82,7 +82,7 @@ cstest: csparser pddlnet/pddltest.cs
 	cd output && \
 	$(MONOBIN)/mono pddlnettest.exe )
 
-csnuget: csparser
+csnuget: cstest
 	(cd pddlnet && \
 	rm -f pddlnet.dll.*.nupkg && \
 	$(NUGET) pack pddlnet.dll.nuspec )
