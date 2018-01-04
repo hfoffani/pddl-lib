@@ -18,8 +18,8 @@ NUGET=$(MONOBIN)/nuget
 
 pyversion ?= 3
 ifeq ($(pyversion),3)
-PIP=pip3
-PYTHON=python3
+PIP=pip
+PYTHON=python
 ANTLRLANG=-Dlanguage=Python3
 else
 PIP=pip
@@ -46,7 +46,7 @@ pyparser: pddl.g4
 	$(ANTLR) $(ANTLRLANG) -o pddlpy pddl.g4
 
 pytest: pyparser pddlpy/pddl.py
-	$(PYTHON) pddlpy/test.py
+	$(PYTHON) -m pddlpy.test
 
 pydist: pytest
 	$(PYTHON) setup.py bdist_wheel
