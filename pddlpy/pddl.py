@@ -24,37 +24,241 @@ from .pddlParser import pddlParser
 from .pddlListener import pddlListener
 
 import itertools
+from enum import Enum
 
 
-class Atom():
-    def __init__(self, predicate):
-        self.predicate = predicate
+def list2str(list_):
+    return ", ".join([str(elem) for elem in list_])
+
+
+def get_operator(ctx, operator_cls):
+    from antlr4.tree.Tree import TerminalNodeImpl
+    operator_name_list = []
+    for child in ctx.getChildren():
+        if child.getText() in ["(", ")"]:
+            continue
+        elif isinstance(child, (TerminalNodeImpl,
+                                pddlParser.TimeSpecifierContext, pddlParser.IntervalContext, pddlParser.DurOpContext)):
+            operator_name_list.append(child.getText())
+        else:
+            break
+    if not operator_name_list:
+        return None
+    operator_name = " ".join(operator_name_list)
+    return operator_cls(operator_name)
+
+
+class Atom:
+
+    def __init__(self, ctx):
+        self.predicate = None
+        self.variables = []
+        from antlr4.tree.Tree import TerminalNodeImpl
+        for child in ctx.getChildren():
+            if isinstance(child, TerminalNodeImpl):
+                continue
+            if isinstance(child, pddlParser.PredicateContext):
+                self.predicate = child.getText()
+            else:
+                self.variables.append(child.getText())
 
     def __repr__(self):
-        return str(tuple(self.predicate))
+        return "{} {}".format(self.predicate, list2str(self.variables))
 
     def ground(self, varvals):
         g = [ varvals[v] if v in varvals else v for v in self.predicate ]
         return tuple(g)
 
-class Scope():
+
+class Scope(dict):
     def __init__(self):
-        self.atoms = []
-        self.negatoms = []
+        super(Scope, self).__init__()
 
-    def addatom(self, atom):
-        self.atoms.append(atom)
+    def add_by_type(self, item):
+        type_ = type(item)
+        if type_ not in self:
+            self[type_] = []
+        self[type_].append(item)
 
-    def addnegatom(self, atom):
-        self.negatoms.append(atom)
+    def __missing__(self, key):
+        return []
 
 
 class Obj():
     def __init__(self):
         self.variable_list = {}
 
-class Operator():
-    """Represents and action. Can be grounded or ungrounded.
+    def __str__(self):
+        return ", ".join(["{}={}".format(name, value) if value else name
+                          for name, value in self.variable_list.items()])
+
+
+class GoalOperator(Enum):
+    AND = "and"
+    OR = "or"
+    NOT = "not"
+    IMPLY = "imply"
+    EXISTS = "exists"
+    FORALL = "forall"
+    AT_START = "at start"
+    AT_END = "at end"
+    OVER_ALL = "over all"
+
+
+class Goal:
+    atoms = None
+    operator = None
+    subgoals = None
+    obj = None
+
+    def __init__(self, operator=None, subgoals=None, atoms=None, obj=None):
+        self.operator = operator
+        if atoms:
+            self.atoms = atoms
+        elif operator in [GoalOperator.AND, GoalOperator.OR]:
+            assert hasattr(subgoals, "__iter__") and all(isinstance(goal, Goal) for goal in subgoals)
+            self.subgoals = set(subgoals)
+        elif operator == GoalOperator.NOT:
+            assert isinstance(subgoals, Goal)
+            self.subgoals = set([subgoals])
+        elif operator == GoalOperator.IMPLY:
+            assert hasattr(subgoals, "__len__") and len(subgoals) == 2 and all(isinstance(goal, Goal) for goal in subgoals)
+            self.subgoals = tuple(subgoals)
+        elif operator in [GoalOperator.EXISTS, GoalOperator.FORALL]:
+            assert isinstance(obj, Obj) and isinstance(subgoals, Goal)
+            self.obj = obj
+            self.subgoals = set([subgoals])
+        elif operator in [GoalOperator.AT_START, GoalOperator.AT_END, GoalOperator.OVER_ALL]:
+            assert isinstance(subgoals, Goal)
+            self.subgoals = set([subgoals])
+
+    def recursive_atoms(self):
+        for atom in self.atoms or []:
+            yield atom
+        for goal in self.subgoals or []:
+            for atom in goal.recursive_atoms():
+                yield atom
+
+    def __repr_(self):
+        if self.atoms:
+            return str(self.atoms)
+        elif self.operator in [GoalOperator.EXISTS, GoalOperator.FORALL]:
+            return "({op} ({var}) {goals})".format(op=self.operator, var=self.obj, goals=list2str(self.subgoals))
+        else:
+            return "({op} {goals})".format(op=self.operator, goals=list2str(self.subgoals))
+
+    def __str__(self):
+        return self.__repr_()
+
+
+class EffectOperator(Enum):
+    AND = "and"
+    NOT = "not"
+    WHEN = "when"
+    FORALL = "forall"
+    AT_START = "at start"
+    AT_END = "at end"
+
+
+class Effect:
+    atoms = None
+    operator = None
+    subeffects = None
+    obj = None
+    goal = None
+
+    def __init__(self, operator=None, subeffects=None, atoms=None, obj=None, goal=None):
+        self.operator = operator
+        if operator is None:
+            assert all(isinstance(atom, Atom) for atom in atoms)
+            self.atoms = atoms
+        elif operator == EffectOperator.AND:
+            assert all(isinstance(effect, Effect) for effect in subeffects)
+            assert all(isinstance(atom, Atom) for atom in atoms)
+            self.subeffects = set(subeffects)
+            self.atoms = set(atoms)
+        elif operator == EffectOperator.NOT:
+            assert isinstance(atoms, Atom)
+            self.atoms = set([atoms])
+        elif operator == EffectOperator.WHEN:
+            assert isinstance(goal, Goal) and isinstance(subeffects, Effect)
+            self.goal = goal
+            self.subeffects = set([subeffects])
+        elif operator == EffectOperator.FORALL:
+            assert isinstance(obj, Obj) and isinstance(subeffects, Effect)
+            self.obj = obj
+            self.subeffects = set([subeffects])
+        elif operator in [EffectOperator.AT_START, EffectOperator.AT_END]:
+            assert isinstance(subeffects, Effect)
+            self.subeffects = set([subeffects])
+
+    def recursive_atoms(self):
+        for atom in self.atoms or []:
+            yield atom
+        for effect in self.subeffects or []:
+            for atom in effect.recursive_atoms():
+                yield atom
+        if self.goal:
+            for atom in self.goal.recursive_atoms():
+                yield atom
+
+    def __repr_(self):
+        if self.operator is None:
+            return str(self.atoms)
+        elif self.operator == EffectOperator.FORALL:
+            return "({op} ({var}) {effects})".format(op=self.operator, var=self.obj, effects=list2str(self.subeffects))
+        elif self.operator == EffectOperator.WHEN:
+            return "({op} {goal} {effects})".format(op=self.operator, goal=self.goal, effects=list2str(self.subeffects))
+        elif self.operator == EffectOperator.NOT:
+            return "({op} {atoms})".format(op=self.operator, atoms=self.atoms)
+        else:
+            return "({op} {effects})".format(op=self.operator, effects=list2str(self.subeffects | (self.atoms or set())))
+
+    def __str__(self):
+        return self.__repr_()
+
+
+class DurationOperator(Enum):
+    AND = "and"
+    AT_START = "at start"
+    AT_END = "at end"
+    SE = "<= ?duration"
+    GE = ">= ?duration"
+    EQ = "= ?duration"
+
+
+class Duration:
+    operator = None
+    subdurations = None
+    value = None
+
+    def __init__(self, operator=None, subdurations=None, value=None):
+        self.operator = operator
+        if operator == DurationOperator.AND:
+            assert hasattr(subdurations, "__iter__") and all(
+                isinstance(duration, Duration) for duration in subdurations)
+            self.subdurations = set(subdurations)
+        elif operator in [DurationOperator.SE, DurationOperator.GE, DurationOperator.EQ]:
+            assert value is not None
+            self.value = value
+        elif operator in [DurationOperator.AT_START, DurationOperator.AT_END]:
+            assert isinstance(subdurations, Duration)
+            self.subdurations = set([subdurations])
+
+    def __repr_(self):
+        if self.operator is None:
+            return "()"
+        elif self.operator in [DurationOperator.SE, DurationOperator.GE, DurationOperator.EQ]:
+            return "({op} {value})".format(op=self.operator, value=self.value)
+        else:
+            return "({op} {durations})".format(op=self.operator, durations=list2str(self.subdurations))
+
+    def __str__(self):
+        return self.__repr_()
+
+
+class Operator(Scope):
+    """Represents an operation. Can be grounded or ungrounded.
     Ungrounded operators have a '?' in names (unbound variables).
     Attributes:
 
@@ -63,30 +267,51 @@ class Operator():
                          is the variable name (with the '?') and the
                          value is the value of it when the operator is
                          grounded.
-        precondition_pos -- a set of atoms corresponding to the
-                            positive preconditions.
-        precondition_neg -- a set of atoms corresponding to the
-                            negative preconditions.
-        effect_pos -- a set of atoms to add.
-        effect_neg -- a set of atoms to delete.
+        effect -- a possibly nested Effect
     """
     def __init__(self, name):
+        super(Operator, self).__init__()
         self.operator_name = name
         self.variable_list = {}
-        self.precondition_pos = set()
-        self.precondition_neg = set()
-        self.effect_pos = set()
-        self.effect_neg = set()
+        self.effect = None
 
-    def __str__(self):
-        templ = "Operator Name: %s\n\tVariables: %s\n\t" + \
-                "Positive Preconditions: %s\n\t" + \
-                "Negative Preconditions: %s\n\t" + \
-                "Positive Effects: %s\n\t" + \
-                "Negative Effects: %s\n"
-        return templ % ( self.operator_name, self.variable_list,
-                         self.precondition_pos, self.precondition_neg,
-                         self.effect_pos, self.effect_neg)
+    def effects_and_conditions(self):
+        if self.effect:
+            return [self.effect]
+        return []
+
+
+class Action(Operator):
+    """Represents an action. Can be grounded or ungrounded.
+    Ungrounded operators have a '?' in names (unbound variables).
+    Attributes:
+
+        precondition -- a possiby nested Goal
+        condition -- a possiby nested Goal
+    """
+    def __init__(self, name):
+        super(Action, self).__init__(name)
+        self.precondition = None
+
+    def effects_and_conditions(self):
+        conditions = [self.precondition] if self.precondition else []
+        return super(Action, self).effects_and_conditions() + conditions
+
+
+class DurativeAction(Operator):
+    """Represents an durative-action:
+
+        duration -- a possibly nested Duration
+        condition -- a possibly nested Goal
+    """
+    def __init__(self, name):
+        super(DurativeAction, self).__init__(name)
+        self.duration = None
+        self.condition = None
+
+    def effects_and_conditions(self):
+        conditions = [self.condition] if self.condition else []
+        return super(DurativeAction, self).effects_and_conditions() + conditions
 
 
 class DomainListener(pddlListener):
@@ -95,16 +320,22 @@ class DomainListener(pddlListener):
         self.objects = {}
         self.operators = {}
         self.scopes = []
-        self.negativescopes = []
 
     def enterActionDef(self, ctx):
         opname = ctx.actionSymbol().getText()
-        opvars = {}
-        self.scopes.append(Operator(opname))
+        self.scopes.append(Action(opname))
 
     def exitActionDef(self, ctx):
         action = self.scopes.pop()
         self.operators[action.operator_name] = action
+
+    def enterDurativeActionDef(self, ctx):
+        opname = ctx.actionSymbol().getText()
+        self.scopes.append(DurativeAction(opname))
+
+    def exitDurativeActionDef(self, ctx):
+        durative_action = self.scopes.pop()
+        self.operators[durative_action.operator_name] = durative_action
 
     def enterPredicatesDef(self, ctx):
         self.scopes.append(Operator(None))
@@ -120,71 +351,159 @@ class DomainListener(pddlListener):
         self.scopes.pop()
 
     def enterTypedVariableList(self, ctx):
-        # print("-> tvar")
+        if hasattr(self.scopes[-1], "variable_list"): # :parameter section, parent scope is of type Operator
+            variable_list = self.scopes[-1].variable_list
+        else:
+            o = Obj()
+            variable_list = o.variable_list
+            self.scopes[-1].add_by_type(o)
         for v in ctx.VARIABLE():
             vname = v.getText()
-            self.scopes[-1].variable_list[v.getText()] = None
+            variable_list[v.getText()] = None
         for vs in ctx.singleTypeVarList():
             t = vs.r_type().getText()
             for v in vs.VARIABLE():
                 vname = v.getText()
-                self.scopes[-1].variable_list[vname] = t
+                variable_list[vname] = t
 
     def enterAtomicTermFormula(self, ctx):
-        # print("-> terf")
-        neg = self.negativescopes[-1]
-        pred = []
-        for c in ctx.getChildren():
-            n = c.getText()
-            if n == '(' or n == ')':
-                continue
-            pred.append(n)
         scope = self.scopes[-1]
-        if not neg:
-            scope.addatom(Atom(pred))
-        else:
-            scope.addnegatom(Atom(pred))
+        scope.add_by_type(Atom(ctx))
 
     def enterPrecondition(self, ctx):
         self.scopes.append(Scope())
 
     def exitPrecondition(self, ctx):
         scope = self.scopes.pop()
-        self.scopes[-1].precondition_pos = set( scope.atoms )
-        self.scopes[-1].precondition_neg = set( scope.negatoms )
+        goals = scope.pop(Goal, [])
+        operator = self.scopes[-1]
+        operator.precondition = goals[0] if goals else None
 
-    def enterEffect(self, ctx):
+    def _enterEffect(self, ctx):
         self.scopes.append(Scope())
 
-    def exitEffect(self, ctx):
+    def _exitEffect(self, ctx):
         scope = self.scopes.pop()
-        self.scopes[-1].effect_pos = set( scope.atoms )
-        self.scopes[-1].effect_neg = set( scope.negatoms )
+        if isinstance(ctx.children[0], pddlParser.AtomicTermFormulaContext):
+            effect = Effect(atoms=scope[Atom])
+        elif isinstance(ctx.children[0], pddlParser.TimedEffectContext):
+            effect = scope[Effect][0]
+        else:
+            operator = get_operator(ctx, EffectOperator)
+            if operator == EffectOperator.AND:
+                effect = Effect(operator, scope.pop(Effect, []), atoms=scope.pop(Atom, []))
+            elif operator == EffectOperator.NOT:
+                atoms = scope[Atom]
+                effect = Effect(operator, atoms=atoms[0])
+            elif operator == EffectOperator.WHEN:
+                effect = Effect(operator, scope.pop(Effect)[0], goal=scope.pop(Goal)[0])
+            elif operator == EffectOperator.FORALL:
+                effect = Effect(operator, scope.pop(Effect)[0], obj=scope.pop(Obj)[0])
+            elif operator in [EffectOperator.AT_START, EffectOperator.AT_END]:
+                effect = Effect(operator, scope.pop(Effect)[0])
+            else:
+                raise AttributeError("Unsupported effect operand: {}".format(operator))
+        self.scopes[-1].add_by_type(effect)
 
-    def enterGoalDesc(self, ctx):
-        negscope = bool(self.negativescopes and self.negativescopes[-1])
-        for c in ctx.getChildren():
-            if c.getText() == 'not':
-                negscope = True
-                break
-        self.negativescopes.append(negscope)
+    def enterEffect(self, ctx):
+        self._enterEffect(ctx)
 
-    def exitGoalDesc(self, ctx):
-        self.negativescopes.pop()
+    def exitEffect(self, ctx):
+        self._exitEffect(ctx)
+
+    def enterDaEffect(self, ctx):
+        self._enterEffect(ctx)
+
+    def exitDaEffect(self, ctx):
+        self._exitEffect(ctx)
+
+    def enterTimedEffect(self, ctx):
+        self._enterEffect(ctx)
+
+    def exitTimedEffect(self, ctx):
+        self._exitEffect(ctx)
 
     def enterPEffect(self, ctx):
-        negscope = False
-        for c in ctx.getChildren():
-            if c.getText() == 'not':
-                negscope = True
-                break
-        self.negativescopes.append(negscope)
+        self._enterEffect(ctx)
 
     def exitPEffect(self, ctx):
-        self.negativescopes.pop()
+        self._exitEffect(ctx)
+
+    def _enterGoalDesc(self, ctx):
+        self.scopes.append(Scope())
+
+    def _exitGoalDesc(self, ctx):
+        scope = self.scopes.pop()
+        if isinstance(ctx.children[0], pddlParser.AtomicTermFormulaContext):
+            goal = Goal(atoms=scope.pop(Atom))
+        elif isinstance(ctx.children[0], pddlParser.PrefTimedGDContext):
+            goal = scope.pop(Goal)[0]
+        else:
+            operator = get_operator(ctx, GoalOperator)
+            if operator in [GoalOperator.AND, GoalOperator.OR, GoalOperator.IMPLY]:
+                goal = Goal(operator, scope[Goal])
+            elif operator == GoalOperator.NOT:
+                goal = Goal(operator, scope.pop(Goal)[0])
+            elif operator in [GoalOperator.FORALL, GoalOperator.EXISTS]:
+                goal = Goal(operator, scope.pop(Goal)[0], obj=scope.pop(Obj)[0])
+            elif operator in [GoalOperator.AT_START, GoalOperator.AT_END, GoalOperator.OVER_ALL]:
+                goal = Goal(operator, scope.pop(Goal)[0])
+            else:
+                raise AttributeError("Unsupported goal operand")
+        self.scopes[-1].add_by_type(goal)
+
+    def enterGoalDesc(self, ctx):
+        self._enterGoalDesc(ctx)
+
+    def exitGoalDesc(self, ctx):
+        self._exitGoalDesc(ctx)
+
+    def enterDaGD(self, ctx):
+        self._enterGoalDesc(ctx)
+
+    def exitDaGD(self, ctx):
+        self._exitGoalDesc(ctx)
+
+    def enterTimedGD(self, ctx):
+        self._enterGoalDesc(ctx)
+
+    def exitTimedGD(self, ctx):
+        self._exitGoalDesc(ctx)
+
+    def _enterDurationConstraint(self, ctx):
+        self.scopes.append(Scope())
+
+    def _exitDurationConstraint(self, ctx):
+        scope = self.scopes.pop()
+        operator = get_operator(ctx, DurationOperator)
+        if operator is None:
+            if not scope[Duration]:
+                return
+            duration = scope[Duration][0]
+        elif operator == DurationOperator.AND:
+            duration = Duration(operator, scope[Duration])
+        elif operator in [DurationOperator.AT_START, DurationOperator.AT_END]:
+            duration = Duration(operator, scope.pop(Duration)[0])
+        elif operator in [DurationOperator.SE, DurationOperator.GE, DurationOperator.EQ]:
+            value = ctx.children[-2].getText()
+            duration = Duration(operator, value=value)
+        else:
+            raise AttributeError("Unsupported duration operand")
+        self.scopes[-1].add_by_type(duration)
+
+    def enterDurationConstraint(self, ctx):
+        self._enterDurationConstraint(ctx)
+
+    def exitDurationConstraint(self, ctx):
+        self._exitDurationConstraint(ctx)
+
+    def enterSimpleDurationConstraint(self, ctx):
+        self._enterDurationConstraint(ctx)
+
+    def exitSimpleDurationConstraint(self, ctx):
+        self._exitDurationConstraint(ctx)
 
     def enterTypedNameList(self, ctx):
-        # print("-> tnam")
         for v in ctx.name():
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
@@ -201,15 +520,28 @@ class DomainListener(pddlListener):
         scope = self.scopes.pop()
         self.objects = scope.variable_list
 
+    def exitActionDefBody(self, ctx):
+        operator = self.scopes[-1]
+        effects = operator.pop(Effect, [])
+        operator.effect = effects[0] if effects else None
+
+    def exitDaDefBody(self, ctx):
+        operator = self.scopes[-1]
+        duration = operator.pop(Duration, [])
+        operator.duration = duration[0] if duration else None
+        condition = operator.pop(Goal, [])
+        operator.condition = condition[0] if condition else None
+        effects = operator.pop(Effect, [])
+        operator.effect = effects[0] if effects else None
+
     def exitDomain(self, ctx):
         if not self.objects and not self.typesdef:
             vs = set()
             for opn, oper in self.operators.items():
-                alls = oper.precondition_pos | oper.precondition_neg | oper.effect_pos | oper.effect_neg
-                for a in alls:
-                    for s in a.predicate:
-                        if s[0] != '?':
-                            vs.add( (s, None) )
+                for item in oper.effects_and_conditions():
+                    for atom in item.recursive_atoms():
+                        for var in atom.variables:
+                            vs.add( (var, None) )
             self.objects = dict( vs)
 
 
@@ -234,25 +566,12 @@ class ProblemListener(pddlListener):
         self.goals = set( self.scopes.pop().atoms )
 
     def enterAtomicNameFormula(self, ctx):
-        pred = []
-        for c in ctx.getChildren():
-            n = c.getText()
-            if n == '(' or n == ')':
-                continue
-            pred.append(n)
         scope = self.scopes[-1]
-        scope.addatom(Atom(pred))
+        scope.add_by_type(Atom(ctx))
 
     def enterAtomicTermFormula(self, ctx):
-        # with a NOT!
-        pred = []
-        for c in ctx.getChildren():
-            n = c.getText()
-            if n == '(' or n == ')':
-                continue
-            pred.append(n)
         scope = self.scopes[-1]
-        scope.addatom(Atom(pred))
+        scope.add_by_type(Atom(ctx))
 
     def enterTypedNameList(self, ctx):
         for v in ctx.name():
