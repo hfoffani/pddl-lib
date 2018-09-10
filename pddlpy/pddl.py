@@ -48,7 +48,7 @@ def get_operator(ctx, operator_cls):
     return operator_cls(operator_name)
 
 
-class Atom:
+class Atom(object):
 
     def __init__(self, ctx):
         self.predicate = None
@@ -105,7 +105,7 @@ class GoalOperator(Enum):
     OVER_ALL = "over all"
 
 
-class Goal:
+class Goal(object):
     atoms = None
     operator = None
     subgoals = None
@@ -160,7 +160,7 @@ class EffectOperator(Enum):
     AT_END = "at end"
 
 
-class Effect:
+class Effect(object):
     atoms = None
     operator = None
     subeffects = None
@@ -227,7 +227,7 @@ class DurationOperator(Enum):
     EQ = "= ?duration"
 
 
-class Duration:
+class Duration(object):
     operator = None
     subdurations = None
     value = None
