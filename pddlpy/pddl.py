@@ -72,6 +72,9 @@ class Atom(object):
     def __repr__(self):
         return "{} {}".format(self.predicate, list2str(self.variables))
 
+    def __eq__(self, other):
+        return isinstance(other, Atom) and other.predicate == self.predicate and other.variables == self.variables
+
     def ground(self, varvals):
         g = [ varvals[v] if v in varvals else v for v in self.predicate ]
         return tuple(g)
@@ -98,6 +101,9 @@ class Obj():
     def __str__(self):
         return ", ".join(["{}={}".format(name, value) if value else name
                           for name, value in self.variable_list.items()])
+
+    def __eq__(self, other):
+        return isinstance(other, Obj) and self.variable_list == other.variable_list
 
 
 class GoalOperator(Enum):
@@ -157,6 +163,10 @@ class Goal(object):
 
     def __str__(self):
         return self.__repr_()
+
+    def __eq__(self, other):
+        return isinstance(other, Goal) and \
+               self.operator == other.operator and self.subgoals == other.subgoals and self.obj == other.obj
 
 
 class EffectOperator(Enum):
@@ -222,6 +232,11 @@ class Effect(object):
 
     def __str__(self):
         return self.__repr_()
+
+    def __eq__(self, other):
+        return isinstance(other, Effect) and \
+               self.atom == other.atom and self.operator == other.operator and \
+               self.subeffects == other.subeffects and self.obj == other.obj and self.goal is other.goal
 
 
 class DurationOperator(Enum):
