@@ -113,42 +113,43 @@ class GoalOperator(Enum):
 
 
 class Goal(object):
-    atoms = None
+    atom = None
     operator = None
     subgoals = None
     obj = None
 
-    def __init__(self, operator=None, subgoals=None, atoms=None, obj=None):
+    def __init__(self, operator=None, subgoals=None, atom=None, obj=None):
         self.operator = operator
-        if atoms:
-            self.atoms = atoms
+        if atom:
+            assert isinstance(atom, Atom)
+            self.atom = atom
         elif operator in [GoalOperator.AND, GoalOperator.OR]:
             assert hasattr(subgoals, "__iter__") and all(isinstance(goal, Goal) for goal in subgoals)
             self.subgoals = set(subgoals)
         elif operator == GoalOperator.NOT:
             assert isinstance(subgoals, Goal)
-            self.subgoals = set([subgoals])
+            self.subgoals = {subgoals}
         elif operator == GoalOperator.IMPLY:
             assert hasattr(subgoals, "__len__") and len(subgoals) == 2 and all(isinstance(goal, Goal) for goal in subgoals)
             self.subgoals = tuple(subgoals)
         elif operator in [GoalOperator.EXISTS, GoalOperator.FORALL]:
             assert isinstance(obj, Obj) and isinstance(subgoals, Goal)
             self.obj = obj
-            self.subgoals = set([subgoals])
+            self.subgoals = {subgoals}
         elif operator in [GoalOperator.AT_START, GoalOperator.AT_END, GoalOperator.OVER_ALL]:
             assert isinstance(subgoals, Goal)
-            self.subgoals = set([subgoals])
+            self.subgoals = {subgoals}
 
     def recursive_atoms(self):
-        for atom in self.atoms or []:
-            yield atom
+        if self.atom:
+            yield self.atom
         for goal in self.subgoals or []:
             for atom in goal.recursive_atoms():
                 yield atom
 
     def __repr_(self):
-        if self.atoms:
-            return str(self.atoms)
+        if self.atom:
+            return str(self.atom)
         elif self.operator in [GoalOperator.EXISTS, GoalOperator.FORALL]:
             return "({op} ({var}) {goals})".format(op=self.operator, var=self.obj, goals=list2str(self.subgoals))
         else:
@@ -168,40 +169,38 @@ class EffectOperator(Enum):
 
 
 class Effect(object):
-    atoms = None
+    atom = None
     operator = None
     subeffects = None
     obj = None
     goal = None
 
-    def __init__(self, operator=None, subeffects=None, atoms=None, obj=None, goal=None):
+    def __init__(self, operator=None, subeffects=None, atom=None, obj=None, goal=None):
         self.operator = operator
         if operator is None:
-            assert all(isinstance(atom, Atom) for atom in atoms)
-            self.atoms = atoms
+            assert isinstance(atom, Atom)
+            self.atom = atom
         elif operator == EffectOperator.AND:
             assert all(isinstance(effect, Effect) for effect in subeffects)
-            assert all(isinstance(atom, Atom) for atom in atoms)
             self.subeffects = set(subeffects)
-            self.atoms = set(atoms)
         elif operator == EffectOperator.NOT:
-            assert isinstance(atoms, Atom)
-            self.atoms = set([atoms])
+            assert isinstance(subeffects, Effect)
+            self.subeffects = {subeffects}
         elif operator == EffectOperator.WHEN:
             assert isinstance(goal, Goal) and isinstance(subeffects, Effect)
             self.goal = goal
-            self.subeffects = set([subeffects])
+            self.subeffects = {subeffects}
         elif operator == EffectOperator.FORALL:
             assert isinstance(obj, Obj) and isinstance(subeffects, Effect)
             self.obj = obj
-            self.subeffects = set([subeffects])
+            self.subeffects = {subeffects}
         elif operator in [EffectOperator.AT_START, EffectOperator.AT_END]:
             assert isinstance(subeffects, Effect)
-            self.subeffects = set([subeffects])
+            self.subeffects = {subeffects}
 
     def recursive_atoms(self):
-        for atom in self.atoms or []:
-            yield atom
+        if self.atom:
+            yield self.atom
         for effect in self.subeffects or []:
             for atom in effect.recursive_atoms():
                 yield atom
@@ -211,15 +210,15 @@ class Effect(object):
 
     def __repr_(self):
         if self.operator is None:
-            return str(self.atoms)
+            return str(self.atom)
         elif self.operator == EffectOperator.FORALL:
             return "({op} ({var}) {effects})".format(op=self.operator, var=self.obj, effects=list2str(self.subeffects))
         elif self.operator == EffectOperator.WHEN:
             return "({op} {goal} {effects})".format(op=self.operator, goal=self.goal, effects=list2str(self.subeffects))
         elif self.operator == EffectOperator.NOT:
-            return "({op} {atoms})".format(op=self.operator, atoms=self.atoms)
+            return "({op} {atoms})".format(op=self.operator, atoms=self.atom)
         else:
-            return "({op} {effects})".format(op=self.operator, effects=list2str(self.subeffects | (self.atoms or set())))
+            return "({op} {effects})".format(op=self.operator, effects=list2str(self.subeffects | (self.atom or set())))
 
     def __str__(self):
         return self.__repr_()
@@ -392,16 +391,19 @@ class DomainListener(pddlListener):
     def _exitEffect(self, ctx):
         scope = self.scopes.pop()
         if isinstance(ctx.children[0], pddlParser.AtomicTermFormulaContext):
-            effect = Effect(atoms=scope[Atom])
+            effect = Effect(atom=scope.pop(Atom)[0])
         elif isinstance(ctx.children[0], pddlParser.TimedEffectContext):
             effect = scope[Effect][0]
         else:
             operator = get_operator(ctx, EffectOperator)
             if operator == EffectOperator.AND:
-                effect = Effect(operator, scope.pop(Effect, []), atoms=scope.pop(Atom, []))
+                effect = Effect(operator, scope.pop(Effect, []))
             elif operator == EffectOperator.NOT:
-                atoms = scope[Atom]
-                effect = Effect(operator, atoms=atoms[0])
+                atoms = scope.pop(Atom)
+                if atoms:
+                    effect = Effect(operator, Effect(atom=atoms[0]))
+                else:
+                    effect = scope.pop(Effect)[0]
             elif operator == EffectOperator.WHEN:
                 effect = Effect(operator, scope.pop(Effect)[0], goal=scope.pop(Goal)[0])
             elif operator == EffectOperator.FORALL:
@@ -442,7 +444,7 @@ class DomainListener(pddlListener):
     def _exitGoalDesc(self, ctx):
         scope = self.scopes.pop()
         if isinstance(ctx.children[0], pddlParser.AtomicTermFormulaContext):
-            goal = Goal(atoms=scope.pop(Atom))
+            goal = Goal(atom=scope.pop(Atom)[0])
         elif isinstance(ctx.children[0], pddlParser.PrefTimedGDContext):
             goal = scope.pop(Goal)[0]
         else:
