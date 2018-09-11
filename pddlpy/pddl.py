@@ -131,10 +131,10 @@ class Goal(object):
             self.atom = atom
         elif operator in [GoalOperator.AND, GoalOperator.OR]:
             assert hasattr(subgoals, "__iter__") and all(isinstance(goal, Goal) for goal in subgoals)
-            self.subgoals = set(subgoals)
+            self.subgoals = tuple(subgoals)
         elif operator == GoalOperator.NOT:
             assert isinstance(subgoals, Goal)
-            self.subgoals = {subgoals}
+            self.subgoals = (subgoals,)
         elif operator == GoalOperator.IMPLY:
             assert hasattr(subgoals, "__len__") and len(subgoals) == 2 and all(isinstance(goal, Goal) for goal in subgoals)
             self.subgoals = tuple(subgoals)
@@ -192,21 +192,21 @@ class Effect(object):
             self.atom = atom
         elif operator == EffectOperator.AND:
             assert all(isinstance(effect, Effect) for effect in subeffects)
-            self.subeffects = set(subeffects)
+            self.subeffects = tuple(subeffects)
         elif operator == EffectOperator.NOT:
             assert isinstance(subeffects, Effect)
-            self.subeffects = {subeffects}
+            self.subeffects = (subeffects,)
         elif operator == EffectOperator.WHEN:
             assert isinstance(goal, Goal) and isinstance(subeffects, Effect)
             self.goal = goal
-            self.subeffects = {subeffects}
+            self.subeffects = (subeffects,)
         elif operator == EffectOperator.FORALL:
             assert isinstance(obj, Obj) and isinstance(subeffects, Effect)
             self.obj = obj
-            self.subeffects = {subeffects}
+            self.subeffects = (subeffects,)
         elif operator in [EffectOperator.AT_START, EffectOperator.AT_END]:
             assert isinstance(subeffects, Effect)
-            self.subeffects = {subeffects}
+            self.subeffects = (subeffects,)
 
     def recursive_atoms(self):
         if self.atom:
@@ -264,7 +264,7 @@ class Duration(object):
             self.value = value
         elif operator in [DurationOperator.AT_START, DurationOperator.AT_END]:
             assert isinstance(subdurations, Duration)
-            self.subdurations = set([subdurations])
+            self.subdurations = {subdurations}
 
     def __repr_(self):
         if self.operator is None:
