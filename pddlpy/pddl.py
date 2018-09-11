@@ -50,9 +50,16 @@ def get_operator(ctx, operator_cls):
 
 class Atom(object):
 
-    def __init__(self, ctx):
+    def __init__(self, predicate, variables=None):
         self.predicate = None
         self.variables = []
+        if isinstance(predicate, pddlParser.AtomicTermFormulaContext):
+            self._init_from_ctx(predicate)
+        else:
+            self.predicate = predicate
+            self.variables = variables
+
+    def _init_from_ctx(self, ctx):
         from antlr4.tree.Tree import TerminalNodeImpl
         for child in ctx.getChildren():
             if isinstance(child, TerminalNodeImpl):
