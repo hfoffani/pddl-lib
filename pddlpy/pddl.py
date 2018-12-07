@@ -57,7 +57,7 @@ class Atom(object):
             self._init_from_ctx(predicate)
         else:
             self.predicate = predicate
-            self.variables = variables
+            self.variables = list(variables)
 
     def _init_from_ctx(self, ctx):
         from antlr4.tree.Tree import TerminalNodeImpl
