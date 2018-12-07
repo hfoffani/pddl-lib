@@ -225,10 +225,8 @@ class Effect(object):
             return "({op} ({var}) {effects})".format(op=self.operator, var=self.obj, effects=list2str(self.subeffects))
         elif self.operator == EffectOperator.WHEN:
             return "({op} {goal} {effects})".format(op=self.operator, goal=self.goal, effects=list2str(self.subeffects))
-        elif self.operator == EffectOperator.NOT:
-            return "({op} {atoms})".format(op=self.operator, atoms=self.atom)
         else:
-            return "({op} {effects})".format(op=self.operator, effects=list2str(self.subeffects | (self.atom or set())))
+            return "({op} {effects})".format(op=self.operator, effects=list2str(self.subeffects))
 
     def __str__(self):
         return self.__repr_()
