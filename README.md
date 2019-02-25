@@ -14,7 +14,7 @@ This library publishes one object class whose API exposes methods for obtaining:
 
 This is enough for the user to focus on the implementation of state-space or plan-space search algorithms.
 
-The development of this tool was inspired from Univerty of Edimburgh's Artificial Intelligence Planning course by Dr. Gerhard Wickler and Prof. Austin Tate. The terms used in this API (and the API itself) closely resembles the ones proposed by the lecturers.
+The development of this tool was inspired from Univerty of Edinburgh's Artificial Intelligence Planning course by Dr. Gerhard Wickler and Prof. Austin Tate. The terms used in this API (and the API itself) closely resembles the ones proposed by the lecturers.
 
 As of today it supports Python 3 and .NET. While project name is `pddl-lib` to emphasize its language agnosticy each target library has its own name. For Python is `pddlpy`. For .NET the library is `pddlnet.dll`.
 
