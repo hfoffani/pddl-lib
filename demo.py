@@ -17,13 +17,13 @@
 #
 
 import sys
-from  pddlpy import DomainProblem
+import pddlpy
 
 def main(argv):
     demonumber = int(argv[1])
-    domainfile = "../examples-pddl/domain-0%d.pddl" % demonumber
-    problemfile = "../examples-pddl/problem-0%d.pddl" % demonumber
-    domprob = DomainProblem(domainfile, problemfile)
+    domainfile = "./examples-pddl/domain-0%d.pddl" % demonumber
+    problemfile = "./examples-pddl/problem-0%d.pddl" % demonumber
+    domprob = pddlpy.DomainProblem(domainfile, problemfile)
     print()
     print("DOMAIN PROBLEM")
     print("objects")
