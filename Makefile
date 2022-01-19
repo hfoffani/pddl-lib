@@ -30,19 +30,19 @@ pytest: pyparser pddlpy/pddl.py
 	$(PYTHON) -m pddlpy.test
 
 pydist: pytest
-	$(PYTHON) setup.py bdist_wheel
-	$(PIP) install -e .
+	$(PYTHON) setup.py sdist bdist_wheel
 
 pypitest: pydist
-	$(PYTHON) setup.py register -r pypitest && \
-	$(PYTHON) setup.py bdist_wheel upload -r pypitest
+	echo hello
+	# $(PYTHON) setup.py register -r pypitest && \
+	# $(PYTHON) setup.py bdist_wheel upload -r pypitest
 
 pypipublish: pydist
-	$(PYTHON) setup.py register -r pypi && \
-	$(PYTHON) setup.py bdist_wheel upload -r pypi
+	echo hello
+	# $(PYTHON) setup.py register -r pypi && \
+	# $(PYTHON) setup.py bdist_wheel upload -r pypi
 
-pydemo: pydist
-	cd examples-python && \
+pydemo: pytest
 	$(PYTHON) demo.py 1 && \
 	$(PYTHON) demo.py 2 && \
 	$(PYTHON) demo.py 3
