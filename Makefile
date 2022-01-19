@@ -30,17 +30,13 @@ pytest: pyparser pddlpy/pddl.py
 	$(PYTHON) -m pddlpy.test
 
 pydist: pytest
-	$(PYTHON) setup.py sdist bdist_wheel
+	$(PYTHON) setup.py bdist_wheel
 
 pypitest: pydist
-	echo hello
-	# $(PYTHON) setup.py register -r pypitest && \
-	# $(PYTHON) setup.py bdist_wheel upload -r pypitest
+	$(PYTHON) -m twine upload --repository testpypi dist/`ls -t dist | head -1`
 
 pypipublish: pydist
-	echo hello
-	# $(PYTHON) setup.py register -r pypi && \
-	# $(PYTHON) setup.py bdist_wheel upload -r pypi
+	$(PYTHON) -m twine upload dist/`ls -t dist | head -1`
 
 pydemo: pytest
 	$(PYTHON) demo.py 1 && \
