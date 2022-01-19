@@ -16,7 +16,7 @@ This is enough for the user to focus on the implementation of state-space or pla
 
 The development of this tool was inspired from Univerty of Edinburgh's Artificial Intelligence Planning course by Dr. Gerhard Wickler and Prof. Austin Tate. The terms used in this API (and the API itself) closely resembles the ones proposed by the lecturers.
 
-As of today it supports Python 3 and .NET. While project name is `pddl-lib` to emphasize its language agnosticy each target library has its own name. For Python is `pddlpy`. For .NET the library is `pddlnet.dll`.
+As of today it supports Python 3.
 
 The orginal grammar file was authored by Zeyn Saigol from University of Birmingham. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
 
@@ -84,10 +84,6 @@ There are wonderful material at the the University of Edinburgh:
 * [Videos on YouTube](http://bit.ly/aiplanmooc)
 
 
-### Using the PDDL .NET library ###
-
-The .NET library is available from nuget as `pddlnet.dll`.
-
 
 ### Future development ###
 
@@ -95,7 +91,6 @@ The .NET library is available from nuget as `pddlnet.dll`.
 * Add more examples (a simple planner maybe?).
 * Add API documentation.
 * More unit tests.
-* Java version (it will be published in Java Central Repository).
 
 
 ### Adavanced ###
@@ -106,14 +101,12 @@ In case you want to tweak the grammar, add other target languages or modify the 
 
 * Install ANTLR version 4.
     I used `brew install antlr4` (a Mac). Your mileage may vary depending on your environment.
-* Install Python 3 (it works with Python 2 too).
+* Install Python 3
     For this I also used brew.
 * Install antlr4 runtime.
-    `pip install antlr4-python3-runtime` (or `antlr4-python2-runtime` if building for Python 2)
+    `pip install antlr4-python3-runtime`
 * The package is built using wheel.
     `pip install wheel`
-* mono development.
-* Antlr4.Runtime.Standard.dll
 
 #### Building
 
@@ -122,9 +115,6 @@ In case you want to tweak the grammar, add other target languages or modify the 
 * Run `make` (it includes tests.)
   If you are using Python 2 you will need to call `make pyversion=2`.
 
-To build the .NET library you must download the Antlr4.Runtime.Standard.dll from www.antlr4.org and
-place it under the pddlnet directory. Currently it works with 4.7.0
- 
  
 ### Contribution guidelines ###
 
