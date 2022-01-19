@@ -23,3 +23,6 @@ TestResult.xml
 *.zip
 
 pddlnet/output/
+
+.python-version
+*.pyc
