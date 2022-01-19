@@ -61,13 +61,8 @@ setup(
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.8',
     ],
 
     # What does your project relate to?
@@ -82,8 +77,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
-        'antlr4-python2-runtime>=4.7,<4.8;python_version<"3"',
-        'antlr4-python3-runtime>=4.7,<4.8;python_version>="3"',
+        'antlr4-python3-runtime>=4.9;python_version>="3"',
         ],
 
     # List additional groups of dependencies here (e.g. development dependencies).
