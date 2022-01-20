@@ -113,9 +113,8 @@ In case you want to tweak the grammar, add other target languages or modify the 
 * Checkout the repository.
 * Edit the Makefile to configure PATHs.
 * Run `make` (it includes tests.)
-  If you are using Python 2 you will need to call `make pyversion=2`.
 
- 
+
 ### Contribution guidelines ###
 
 I'd appreciate any feedback you send like pull requests, bug reports, etc.
