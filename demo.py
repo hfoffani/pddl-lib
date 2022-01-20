@@ -17,13 +17,19 @@
 #
 
 import sys
-from  pddlpy import DomainProblem
+import pddlpy
+import argparse
 
-def main(argv):
-    demonumber = int(argv[1])
-    domainfile = "../examples-pddl/domain-0%d.pddl" % demonumber
-    problemfile = "../examples-pddl/problem-0%d.pddl" % demonumber
-    domprob = DomainProblem(domainfile, problemfile)
+parser = argparse.ArgumentParser(description='Demo PDDLPY.')
+parser.add_argument('demonumber', metavar='N', type=int, nargs='+',
+                    help='the number(s) of the demo')
+
+def run_demo(demonumber):
+    print('===')
+    print(f'Run DEMO {demonumber}')
+    domainfile = "./examples-pddl/domain-0%d.pddl" % demonumber
+    problemfile = "./examples-pddl/problem-0%d.pddl" % demonumber
+    domprob = pddlpy.DomainProblem(domainfile, problemfile)
     print()
     print("DOMAIN PROBLEM")
     print("objects")
@@ -47,8 +53,10 @@ def main(argv):
             print( "\tpre-", o.precondition_neg )
             print( "\teff+", o.effect_pos )
             print( "\teff-", o.effect_neg )
+    print()
 
 
 if __name__ == '__main__':
-    main(sys.argv)
-
+    args = parser.parse_args()
+    for n in args.demonumber:
+        run_demo(n)
