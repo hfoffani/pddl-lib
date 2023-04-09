@@ -77,7 +77,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
-        'antlr4-python3-runtime>=4.9.3',
+        'antlr4-python3-runtime==4.12.0',
     ],
 
     # List additional groups of dependencies here (e.g. development dependencies).

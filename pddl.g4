@@ -68,6 +68,17 @@ pddlDoc : domain | problem;
 domain
     : '(' 'define' domainName
       requireDef?
+      contextDef?
+      typesDef?
+      constantsDef?
+      predicatesDef?
+      functionsDef?
+      constraints?
+      structureDef*
+      ')'
+    | '(' 'define' domainName
+      contextDef?
+      requireDef?
       typesDef?
       constantsDef?
       predicatesDef?
@@ -80,6 +91,15 @@ domain
 domainName
     : '(' 'domain' name ')'
     ;
+
+contextDef
+	: '(' ':context' namespaceBinding+ ')'
+	;
+
+
+namespaceBinding
+	: name '-' URI
+	;
 
 requireDef
 	: '(' ':requirements' REQUIRE_KEY+ ')'
@@ -357,8 +377,20 @@ fExpT
 /************* PROBLEMS ****************************/
 
 problem
-	: '(' 'define' problemDecl
-	  problemDomain
+    : '(' 'define' problemDecl
+      problemDomain
+      requireDef?
+      contextDef?
+      objectDecl?
+      init
+      goal
+      probConstraints?
+      metricSpec?
+      // lengthSpec? This is not defined anywhere in the BNF spec
+      ')'
+    | '(' 'define' problemDecl
+      contextDef?
+      problemDomain
       requireDef?
       objectDecl?
       init
@@ -475,6 +507,7 @@ REQUIRE_KEY
     | ':timed-initial-literals'
     | ':preferences'
     | ':constraints'
+    | ':semantics'
     ;
 
 /*
@@ -488,6 +521,8 @@ name
 	;
 
 NAME:    LETTER ANY_CHAR* ;
+
+URI:	 LETTER ~(' ' | '\r' | '\n' | '\t' | '(' | ')')* ;
 
 fragment LETTER:	'a'..'z' | 'A'..'Z';
 
