@@ -21,6 +21,10 @@ As of today it supports Python 3.8 and up.
 The orginal grammar file was authored by Zeyn Saigol from University of Birmingham. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
 
 
+### NOTICE ###
+
+Currently the main branch is broken. I will be publishing to PyPI from this branch. While the parser does recognize durations you cannot recover these tags from Python.
+
 
 ### What this project is not? ###
 
