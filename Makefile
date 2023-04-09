@@ -39,7 +39,4 @@ pypipublish: pydist
 	$(PYTHON) -m twine upload dist/`ls -t dist | head -1`
 
 pydemo: pytest
-	$(PYTHON) demo.py 1 && \
-	$(PYTHON) demo.py 2 && \
-	$(PYTHON) demo.py 3
-
+	for i in 1 2 3 4 6; do $(PYTHON) demo.py $$i ; done
