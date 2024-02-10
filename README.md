@@ -53,8 +53,8 @@ Using the library is easy.
 
 ```
 ~hernan$ python
-Python 3.8.0 (default, Nov 20 2019, 14:40:03) 
-[Clang 11.0.0 (clang-1100.0.33.12)] on darwin
+Python 3.11.7 (main, Feb 10 2024, 17:01:04)
+[Clang 15.0.0 (clang-1500.1.0.2.5)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
 >>>
 >>> import pddlpy
