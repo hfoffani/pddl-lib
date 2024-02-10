@@ -16,7 +16,7 @@ This is enough for the user to focus on the implementation of state-space or pla
 
 The development of this tool was inspired from Univerty of Edinburgh's Artificial Intelligence Planning course by Dr. Gerhard Wickler and Prof. Austin Tate. The terms used in this API (and the API itself) closely resembles the ones proposed by the lecturers.
 
-As of today it supports Python 3.8 and up.
+As of today it supports Python 3.11 and up.
 
 The orginal grammar file was authored by Zeyn Saigol from University of Birmingham. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
 
