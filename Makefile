@@ -1,7 +1,7 @@
 
 
-ANTLRDIR=/usr/local/Cellar/antlr/4.12.0
-ANTLRLIB=$(ANTLRDIR)/antlr-4.12.0-complete.jar
+ANTLRDIR=/opt/homebrew/Cellar/antlr/4.13.1
+ANTLRLIB=$(ANTLRDIR)/antlr-4.13.1-complete.jar
 ANTLR=$(ANTLRDIR)/bin/antlr
 GRUN=$(ANTLRDIR)/bin/grun
 
