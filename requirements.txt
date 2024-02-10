@@ -8,7 +8,7 @@ idna==3.3
 importlib-metadata==4.10.1
 keyring==23.5.0
 packaging==21.3
-pip==21.1
+pip==23.3
 pkginfo==1.8.2
 Pygments==2.11.2
 pyparsing==3.0.6
