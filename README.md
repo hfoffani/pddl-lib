@@ -16,10 +16,14 @@ This is enough for the user to focus on the implementation of state-space or pla
 
 The development of this tool was inspired from Univerty of Edinburgh's Artificial Intelligence Planning course by Dr. Gerhard Wickler and Prof. Austin Tate. The terms used in this API (and the API itself) closely resembles the ones proposed by the lecturers.
 
-As of today it supports Python 3.8 and up.
+As of today it supports Python 3.11 and up.
 
 The orginal grammar file was authored by Zeyn Saigol from University of Birmingham. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
 
+
+### NOTICE ###
+
+Currently the main branch is broken. I will be publishing to PyPI from this branch. While the parser does recognize durations you cannot recover these tags from Python.
 
 
 ### What this project is not? ###
@@ -49,8 +53,8 @@ Using the library is easy.
 
 ```
 ~hernan$ python
-Python 3.8.0 (default, Nov 20 2019, 14:40:03) 
-[Clang 11.0.0 (clang-1100.0.33.12)] on darwin
+Python 3.11.7 (main, Feb 10 2024, 17:01:04)
+[Clang 15.0.0 (clang-1500.1.0.2.5)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
 >>>
 >>> import pddlpy

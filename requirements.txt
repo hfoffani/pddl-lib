@@ -1,4 +1,4 @@
-antlr4-python3-runtime==4.9.3
+antlr4-python3-runtime==4.13.1
 bleach==4.1.0
 certifi==2023.7.22
 charset-normalizer==2.0.10

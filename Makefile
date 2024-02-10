@@ -1,7 +1,7 @@
 
 
-ANTLRDIR=/usr/local/Cellar/antlr/4.9.3
-ANTLRLIB=$(ANTLRDIR)/antlr-4.9.3-complete.jar
+ANTLRDIR=/opt/homebrew/Cellar/antlr/4.13.1
+ANTLRLIB=$(ANTLRDIR)/antlr-4.13.1-complete.jar
 ANTLR=$(ANTLRDIR)/bin/antlr
 GRUN=$(ANTLRDIR)/bin/grun
 
@@ -30,7 +30,7 @@ pytest: pyparser pddlpy/pddl.py
 	$(PYTHON) -m pddlpy.test
 
 pydist: pytest
-	$(PYTHON) setup.py bdist_wheel
+	$(PIP) wheel --no-deps -w dist .
 
 pypitest: pydist
 	$(PYTHON) -m twine upload --repository testpypi dist/`ls -t dist | head -1`
@@ -39,7 +39,4 @@ pypipublish: pydist
 	$(PYTHON) -m twine upload dist/`ls -t dist | head -1`
 
 pydemo: pytest
-	$(PYTHON) demo.py 1 && \
-	$(PYTHON) demo.py 2 && \
-	$(PYTHON) demo.py 3
-
+	for i in 1 2 3 4 6; do $(PYTHON) demo.py $$i ; done

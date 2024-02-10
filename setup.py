@@ -29,7 +29,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.3.3',
+    version='0.4.4',
 
     description='Python PDDL parser',
     long_description=long_description,
@@ -38,7 +38,7 @@ setup(
     url='https://github.com/hfoffani/pddl-lib',
 
     # Author details
-    author='Hernán Foffani',
+    author='Hernan Foffani',
     author_email='hfoffani@gmail.com',
 
     # Choose your license
@@ -62,7 +62,7 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.11',
     ],
 
     # What does your project relate to?
@@ -77,7 +77,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     install_requires=[
-        'antlr4-python3-runtime>=4.9.3',
+        'antlr4-python3-runtime==4.13.1',
     ],
 
     # List additional groups of dependencies here (e.g. development dependencies).
@@ -89,15 +89,32 @@ setup(
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
-    package_data={
-        # 'sample': ['package_data.dat'],
-    },
+    # include_package_data=True,
+    # package_data={
+    #     'examples': ['examples-pddl/domain-01.pddl'],
+    # },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages.
     # see http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
     # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
     # data_files=[('my_data', ['data/data_file'])],
+    data_files=[
+        ('examples',[
+            'examples-pddl/domain-01.pddl',
+            'examples-pddl/domain-02.pddl',
+            'examples-pddl/domain-03.pddl',
+            'examples-pddl/domain-04.pddl',
+            'examples-pddl/domain-05.pddl',
+            'examples-pddl/domain-06.pddl',
+            'examples-pddl/problem-01.pddl',
+            'examples-pddl/problem-02.pddl',
+            'examples-pddl/problem-03.pddl',
+            'examples-pddl/problem-04.pddl',
+            'examples-pddl/problem-05.pddl',
+            'examples-pddl/problem-06.pddl',
+        ]),
+    ],
 
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
