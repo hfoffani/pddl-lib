@@ -30,7 +30,7 @@ pytest: pyparser pddlpy/pddl.py
 	$(PYTHON) -m pddlpy.test
 
 pydist: pytest
-	$(PYTHON) setup.py bdist_wheel
+	$(PIP) wheel --no-deps -w dist .
 
 pypitest: pydist
 	$(PYTHON) -m twine upload --repository testpypi dist/`ls -t dist | head -1`
