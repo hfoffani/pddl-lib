@@ -8,7 +8,7 @@ idna==3.3
 importlib-metadata==4.10.1
 keyring==23.5.0
 packaging==21.3
-pip==21.1
+pip==23.3
 pkginfo==1.8.2
 Pygments==2.11.2
 pyparsing==3.0.6
@@ -16,7 +16,7 @@ readme-renderer==32.0
 requests==2.27.1
 requests-toolbelt==0.9.1
 rfc3986==2.0.0
-setuptools==41.2.0
+setuptools==65.5.1
 six==1.16.0
 tqdm==4.62.3
 twine==3.7.1
