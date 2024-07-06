@@ -1,6 +1,6 @@
 antlr4-python3-runtime==4.13.1
 bleach==4.1.0
-certifi==2023.7.22
+certifi==2024.7.4
 charset-normalizer==2.0.10
 colorama==0.4.4
 docutils==0.18.1
