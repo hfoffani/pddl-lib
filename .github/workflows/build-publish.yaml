@@ -2,13 +2,12 @@ name: Build and publish
 
 on:
   push:
-    branches:
-      - github-actions
+    branches: [ "public", "test" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: test
+    environment: ${{ github.ref_name }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.8
