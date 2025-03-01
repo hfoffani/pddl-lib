@@ -21,6 +21,14 @@ jobs:
           pip install build
       - name: Build package
         run: python -m build
+      - name: Debug variables and secrets per environment
+        run: |
+          echo "VARS_ACTION_TEST: ${{ vars.ACTION_TEST_VARS }}"
+          echo "SECR_ACTION_TEST: ${{ secrets.ACTIONS_TEST_SECRETS }}"
+          echo "VARS_IN_TEST: ${{ vars.VARS_TEST_OR_PROD }}"
+          echo "VARS_IN_PROD: ${{ vars.VARS_TEST_OR_PROD }}"
+          echo "SECR_IN_TEST: ${{ secrets.SECRETS_TEST_OR_PROD }}"
+          echo "SECR_IN_PROD: ${{ secrets.SECRETS_TEST_OR_PROD }}"
       # - name: Publish package
       #   uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       #   with:
