@@ -16,7 +16,7 @@ readme-renderer==32.0
 requests==2.32.0
 requests-toolbelt==0.9.1
 rfc3986==2.0.0
-setuptools==70.0.0
+setuptools==78.1.1
 six==1.16.0
 tqdm==4.66.3
 twine==3.7.1
