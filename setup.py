@@ -2,8 +2,13 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages  # Always prefer setuptools over distutils
+from setuptools.command.build_py import build_py
 from codecs import open  # To use a consistent encoding
 from os import path
+import subprocess
+import sys
+import urllib.request
+import os
 
 here = path.abspath(path.dirname(__file__))
 
@@ -21,6 +26,47 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
         if keep:
             l.append(line)
     long_description = "".join(l)
+
+
+class BuildPyCommand(build_py):
+    """Custom build command to compile ANTLR grammar before building."""
+
+    def run(self):
+        # ANTLR configuration
+        antlr_version = '4.13.1'
+        antlr_jar = f'antlr-{antlr_version}-complete.jar'
+        antlr_url = f'https://www.antlr.org/download/{antlr_jar}'
+
+        # Download ANTLR JAR if not present
+        if not os.path.exists(antlr_jar):
+            print(f'Downloading ANTLR {antlr_version}...')
+            try:
+                urllib.request.urlretrieve(antlr_url, antlr_jar)
+                print(f'Downloaded {antlr_jar}')
+            except Exception as e:
+                print(f'Warning: Could not download ANTLR JAR: {e}')
+                print('Assuming parser files are already generated...')
+
+        # Compile ANTLR grammar to Python
+        if os.path.exists('pddl.g4'):
+            print('Compiling ANTLR grammar to Python...')
+            try:
+                os.makedirs('pddlpy', exist_ok=True)
+                subprocess.check_call([
+                    'java', '-jar', antlr_jar,
+                    '-Dlanguage=Python3',
+                    '-o', 'pddlpy',
+                    'pddl.g4'
+                ])
+                print('ANTLR grammar compiled successfully')
+            except subprocess.CalledProcessError as e:
+                print(f'Warning: ANTLR compilation failed: {e}')
+                print('Assuming parser files are already generated...')
+            except FileNotFoundError:
+                print('Warning: Java not found. Assuming parser files are already generated...')
+
+        # Continue with standard build
+        build_py.run(self)
 
 
 setup(
@@ -123,6 +169,11 @@ setup(
         # 'console_scripts': [
         #     'sample=sample:main',
         # ],
+    },
+
+    # Custom build command to compile ANTLR grammar
+    cmdclass={
+        'build_py': BuildPyCommand,
     },
 )
 
