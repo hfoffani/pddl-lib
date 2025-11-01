@@ -41,6 +41,7 @@ class Scope():
     def __init__(self):
         self.atoms = []
         self.negatoms = []
+        self.variable_list = {}
 
     def addatom(self, atom):
         self.atoms.append(atom)

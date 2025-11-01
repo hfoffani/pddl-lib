@@ -1,16 +1,18 @@
 
 
-ANTLRDIR=/opt/homebrew/Cellar/antlr/4.13.1
-ANTLRLIB=$(ANTLRDIR)/antlr-4.13.1-complete.jar
-ANTLR=$(ANTLRDIR)/bin/antlr
-GRUN=$(ANTLRDIR)/bin/grun
+# ANTLR configuration (using 4.9.3 for Java 8 compatibility)
+ANTLRVERSION=4.9.3
+ANTLRJAR=antlr-$(ANTLRVERSION)-complete.jar
+ANTLRURL=https://www.antlr.org/download/$(ANTLRJAR)
+ANTLR=java -jar $(ANTLRJAR)
+GRUN=java -cp $(ANTLRJAR) org.antlr.v4.gui.TestRig
 
 
 ANTLRLANG=-Dlanguage=Python3
 PYTHON=python
 PIP=pip
 
-export CLASSPATH:=.:$(ANTLRLIB)
+export CLASSPATH:=.:$(ANTLRJAR)
 
 all: testgrammar pytest
 
