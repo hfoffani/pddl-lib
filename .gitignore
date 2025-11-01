@@ -26,3 +26,5 @@ pddlnet/output/
 
 .python-version
 *.pyc
+
+.vscode/settings.json
