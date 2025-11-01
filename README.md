@@ -1,4 +1,3 @@
-
 ## pddl-lib ##
 
 ### Description ###
@@ -20,24 +19,20 @@ As of today it supports Python 3.11 and up.
 
 The orginal grammar file was authored by Zeyn Saigol from University of Birmingham. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
 
-
 ### NOTICE ###
 
 Currently the main branch is broken. I will be publishing to PyPI from this branch. While the parser does recognize durations you cannot recover these tags from Python.
-
 
 ### What this project is not? ###
 
 This library doesn't include and won't include algorithms for solutions search.
 There are lots of projects and complete packages for planning available. This project is just a library that provides the user a simple PDDL helper API useful when she experiments with her own planning algorithms.
 
-
 ### Examples ###
 
 In this repostory you'll find some PDDL examples files useful for testing purposes.
 For instance, [domain-03.pddl](examples-pddl/domain-03.pddl)
 and [problem-03.pddl](examples-pddl/problem-03.pddl)
-
 
 ### Using the PDDL Python library ###
 
@@ -79,15 +74,12 @@ Type "help", "copyright", "credits" or "license" for more information.
 ```
 The pddl files are examples obtained from the course material.
 
-
 ### Other Resources ###
 
 There are wonderful material at the the University of Edinburgh:
 * [AI Planning MOOC Project Home Page](http://www.aiai.ed.ac.uk/project/plan/ooc)
 * [Index to access all course materials and videos](http://media.aiai.ed.ac.uk/Project/AIPLAN)
 * [Videos on YouTube](http://bit.ly/aiplanmooc)
-
-
 
 ### Future development ###
 
@@ -96,17 +88,14 @@ There are wonderful material at the the University of Edinburgh:
 * Add API documentation.
 * More unit tests.
 
-
 ### Adavanced ###
 
 In case you want to tweak the grammar, add other target languages or modify the library you will need build this project from the repository sources.
 
 #### Prerequisites
 
-* Install ANTLR version 4.
-    I used `brew install antlr4` (a Mac). Your mileage may vary depending on your environment.
+* Download [ANTLR version 4.13.2](https://www.antlr.org/download/antlr-4.13.2-complete.jar) to the project root directory.
 * Install Python 3
-    For this I also used brew.
 * Install antlr4 runtime.
     `pip install antlr4-python3-runtime`
 * The package is built using wheel.
@@ -118,29 +107,25 @@ In case you want to tweak the grammar, add other target languages or modify the 
 * Edit the Makefile to configure PATHs.
 * Run `make` (it includes tests.)
 
-
 ### Contribution guidelines ###
 
 I'd appreciate any feedback you send like pull requests, bug reports, etc.
 
 Please, use the issue tracker at will.
 
-
 ### Acknowledgments
 
-Michiaki Tatsubori [@tatsubori](https://github.com/tatsubori) added time-duration support. Thanks!
+* Michiaki Tatsubori [@tatsubori](https://github.com/tatsubori) added time-duration support.
+* Yichen Wei [@waymao](https://github.com/waymao) fixed an old bug.
 
+I'm very thankful!
 
 ### License ###
 
 This project is publish under the
 [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
 
-
 ### Who do I talk to? ###
 
 For questions or requests post an issue here or tweet me at
 [@herchu](http://twitter.com/herchu)
-
-
-
