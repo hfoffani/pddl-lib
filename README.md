@@ -115,7 +115,10 @@ Please, use the issue tracker at will.
 
 ### Acknowledgments
 
-Michiaki Tatsubori [@tatsubori](https://github.com/tatsubori) added time-duration support. Thanks!
+* Michiaki Tatsubori [@tatsubori](https://github.com/tatsubori) added time-duration support.
+* Yichen Wei [@waymao](https://github.com/waymao) fixed an old bug.
+
+I'm very thankful!
 
 ### License ###
 
