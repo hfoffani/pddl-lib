@@ -28,3 +28,4 @@ pddlnet/output/
 *.pyc
 
 .vscode/settings.json
+antlr-*-complete.jar

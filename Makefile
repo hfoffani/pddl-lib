@@ -1,7 +1,7 @@
 
 
-# ANTLR configuration (using 4.9.3 for Java 8 compatibility)
-ANTLRVERSION=4.9.3
+# ANTLR configuration (use 4.9.3 for Java 8 compatibility)
+ANTLRVERSION=4.13.2
 ANTLRJAR=antlr-$(ANTLRVERSION)-complete.jar
 ANTLRURL=https://www.antlr.org/download/$(ANTLRJAR)
 ANTLR=java -jar $(ANTLRJAR)

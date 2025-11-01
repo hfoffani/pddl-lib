@@ -32,8 +32,8 @@ class BuildPyCommand(build_py):
     """Custom build command to compile ANTLR grammar before building."""
 
     def run(self):
-        # ANTLR configuration - using 4.9.3 for Java 8 compatibility
-        antlr_version = '4.9.3'
+        # ANTLR configuration - use 4.13.2 for Java 8 compatibility
+        antlr_version = '4.13.2'
         antlr_jar = f'antlr-{antlr_version}-complete.jar'
         antlr_url = f'https://www.antlr.org/download/{antlr_jar}'
         antlr_jar_path = os.path.abspath(antlr_jar)
