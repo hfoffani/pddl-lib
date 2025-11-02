@@ -63,6 +63,17 @@ demo: test
 	@echo "Running demos..."
 	for i in 1 2 3 4 6; do $(PYTHON) demo.py $$i ; done
 
+# Test published package from TestPyPI using Docker
+testpublish:
+	@echo "Testing pddlpy installation from TestPyPI..."
+	@echo "Building Docker image..."
+	docker build -f testpublish/Dockerfile -t pddlpy-testpypi .
+	@echo ""
+	@echo "Running tests in Docker container..."
+	docker run --rm pddlpy-testpypi
+	@echo ""
+	@echo "✓ TestPyPI installation test completed"
+
 # Publishing targets (kept for backwards compatibility)
 pypitest: build
 	@echo "Publishing to TestPyPI... (credentials in ~/.pypirc)"
@@ -83,7 +94,8 @@ help:
 	@echo "  build        - Build distribution packages"
 	@echo "  clean        - Remove build artifacts"
 	@echo "  demo         - Run demo scripts"
+	@echo "  testpublish  - Test package installation from TestPyPI (Docker)"
 	@echo "  pypitest     - Publish to TestPyPI"
 	@echo "  pypipublish  - Publish to PyPI"
 
-.PHONY: all init testgrammar pyparser test build clean demo pypitest pypipublish help
+.PHONY: all init testgrammar pyparser test build clean demo testpublish pypitest pypipublish help
