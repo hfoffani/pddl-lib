@@ -1,4 +1,4 @@
-# Dockerfile to test pddlpy installation from TestPyPI
+# Dockerfile to test pddlpy installation from PyPI
 FROM python:3.11-slim
 
 # Set working directory
@@ -7,10 +7,10 @@ WORKDIR /test
 # Install pip and upgrade it
 RUN pip install --no-cache-dir --upgrade pip
 
-# Install pddlpy from TestPyPI
-# Note: TestPyPI may not have all dependencies, so we install antlr4-python3-runtime from PyPI first
+# Install pddlpy from PyPI
+# Note: PyPI may not have all dependencies, so we install antlr4-python3-runtime from PyPI first
 RUN pip install --no-cache-dir antlr4-python3-runtime==4.13.2 && \
-    pip install --no-cache-dir --index-url https://test.pypi.org/simple/ --no-deps pddlpy
+    pip install --no-cache-dir --index-url https://pypi.org/simple/ --no-deps pddlpy
 
 # Copy test files from parent directories
 COPY demo.py /test/
