@@ -65,12 +65,12 @@ demo: test
 
 # Publishing targets (kept for backwards compatibility)
 pypitest: build
-	@echo "Publishing to TestPyPI..."
-	$(UV) run twine upload --repository testpypi dist/`ls -t dist | head -1`
+	@echo "Publishing to TestPyPI... (credentials in ~/.pypirc)"
+	$(UV) run twine upload --repository testpypi --verbose dist/`ls -t dist | head -1`
 
 pypipublish: build
-	@echo "Publishing to PyPI..."
-	$(UV) run twine upload dist/`ls -t dist | head -1`
+	@echo "Publishing to PyPI... (credentials in ~/.pypirc)"
+	$(UV) run twine upload --verbose dist/`ls -t dist | head -1`
 
 # Help target
 help:
