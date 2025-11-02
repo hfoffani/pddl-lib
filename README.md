@@ -88,24 +88,35 @@ There are wonderful material at the the University of Edinburgh:
 * Add API documentation.
 * More unit tests.
 
-### Adavanced ###
+### Advanced ###
 
 In case you want to tweak the grammar, add other target languages or modify the library you will need build this project from the repository sources.
 
 #### Prerequisites
 
-* Download [ANTLR version 4.13.2](https://www.antlr.org/download/antlr-4.13.2-complete.jar) to the project root directory.
-* Install Python 3
-* Install antlr4 runtime.
-    `pip install antlr4-python3-runtime`
-* The package is built using wheel.
-    `pip install wheel`
+* Install [uv](https://docs.astral.sh/uv/) - a fast Python package installer and resolver
+* Install Python 3.11 or higher
+* Install Java (required for ANTLR grammar compilation)
 
 #### Building
 
-* Checkout the repository.
-* Edit the Makefile to configure PATHs.
-* Run `make` (it includes tests.)
+* Checkout the repository
+* Initialize the uv environment: `uv sync`
+* ANTLR JAR will be downloaded automatically when building
+* Run `make` or `make all` to test grammar and run Python tests
+* Run `make build` to build distribution packages
+
+#### Available Make Targets
+
+* `make all` - Run grammar tests and Python tests (default)
+* `make init` - Initialize uv environment
+* `make test` - Run Python tests only
+* `make build` - Build distribution packages (wheel and source dist)
+* `make clean` - Remove build artifacts
+* `make demo` - Run demo scripts
+* `make pypitest` - Publish to TestPyPI
+* `make pypipublish` - Publish to PyPI
+* `make help` - Show all available targets
 
 ### Contribution guidelines ###
 

@@ -29,3 +29,6 @@ pddlnet/output/
 
 .vscode/settings.json
 antlr-*-complete.jar
+
+# uv
+.venv
