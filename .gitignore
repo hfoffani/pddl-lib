@@ -32,3 +32,6 @@ antlr-*-complete.jar
 
 # uv
 .venv
+
+# AI
+.claude/
