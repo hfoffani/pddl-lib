@@ -33,5 +33,11 @@ antlr-*-complete.jar
 # uv
 .venv
 
+# test / coverage artifacts
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+
 # AI
 .claude/

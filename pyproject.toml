@@ -81,4 +81,5 @@ omit = [
     "pddlpy/pddlLexer.py",
     "pddlpy/pddlParser.py",
     "pddlpy/pddlListener.py",
+    "pddlpy/test.py",
 ]

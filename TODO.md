@@ -18,10 +18,12 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
 - [x] **Fix `make testgrammar` Java classpath** — currently fails; Java can't find the ANTLR4
       runtime. Add `antlr-4.13.2-complete.jar` to the classpath so grammar changes stay verifiable.
       *Used absolute jar path (`$(CURDIR)`) so it survives `cd tmp`; added `.` to GRUN classpath.*
-- [ ] **Drive line coverage toward 100%** — write tests covering every line of `pddl.py`.
+- [x] **Drive line coverage toward 100%** — write tests covering every line of `pddl.py`.
       Coverage is used here as a **bug-finder**: where a line can't be made to pass, mark the
       test `xfail` with the owning issue number. Failing tests are EXPECTED and document
       known/undiscovered bugs — do not delete or weaken them to go green.
+      *`pddlpy/pddl.py` at **100%** (23 passed, 1 xfail for #27/#23). The `__main__` guard is
+      `# pragma: no cover`; the legacy `pddlpy/test.py` scaffolding is omitted from coverage.*
 
 ### Parser & object-model bug fixes (each lands with a regression test)
 - [x] **#20 / #36 — keyword case-insensitivity** — `(:INIT ...)` and other uppercase keywords
