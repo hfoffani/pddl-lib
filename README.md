@@ -156,6 +156,13 @@ registry.register('mine', MyPlanner)
 plan = registry.get('mine').solve(dp)
 ```
 
+### Documentation ###
+
+* [`docs/object-model.md`](docs/object-model.md) — full reference for the
+  parser object model and the planning layer.
+* [`skills/pddlpy/SKILL.md`](skills/pddlpy/SKILL.md) — an Agent Skill so coding
+  agents can drive the library (parse, ground, plan).
+
 ### Other Resources ###
 
 There are wonderful material at the the University of Edinburgh:
