@@ -44,12 +44,17 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
       `test_trailing_comment_without_newline`.*
 
 ### Triage / investigation (Phase 0 scope)
-- [ ] **#27 — user-supplied files fail to parse** — reproduce; likely a duplicate of #20/#23
-      (file uses `:durative-actions`). Confirm and link or fix.
-- [ ] **#16 — `No module named '__builtin__'`** — Python 2 leftover; confirm it's gone on 3.11+
-      and close, or remove the offending import.
-- [ ] **#18 — `InvalidCastException` reading types** (.NET port) — confirm scope; the .NET/DLL
-      path may be out of scope for this Python repo → decide & label.
+- [x] **#27 — user-supplied files fail to parse** — reproduce; likely a duplicate of #20/#23
+      (file uses `:durative-actions`). Confirm and link or fix. *Confirmed = #23: a
+      durative-action file raises `IndexError` in `enterTypedVariableList` (no
+      `enterDurativeActionDef` scope is pushed). Vendored fixture + `xfail` test
+      (`test_durative_action_parses`); fix deferred to Phase 4.*
+- [x] **#16 — `No module named '__builtin__'`** — Python 2 leftover; confirm it's gone on 3.11+
+      and close, or remove the offending import. *No `__builtin__`/py2 leftovers anywhere in the
+      repo; guarded by `test_no_python2_builtin_import`. Close.*
+- [x] **#18 — `InvalidCastException` reading types** (.NET port) — confirm scope; the .NET/DLL
+      path may be out of scope for this Python repo → decide & label. *No .NET/C#/DLL artifacts in
+      this repo; out of scope for the Python library. Label out-of-scope and close.*
 
 ---
 
