@@ -12,8 +12,9 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
 - [x] **Stand up coverage tooling** — add `pytest` + `coverage`/`pytest-cov`, wire into the
       Makefile (`make coverage`), establish and print the baseline % for `pddlpy/pddl.py`.
       *Baseline: 83% for `pddlpy/pddl.py`.*
-- [ ] **Add a benchmark parse-corpus** — vendored canonical PDDL files (IPC blocksworld,
+- [x] **Add a benchmark parse-corpus** — vendored canonical PDDL files (IPC blocksworld,
       gripper, logistics) that MUST parse; the #36 regression guard.
+      *`tests/corpus/` + `tests/test_corpus.py` (9 tests).*
 - [ ] **Fix `make testgrammar` Java classpath** — currently fails; Java can't find the ANTLR4
       runtime. Add `antlr-4.13.2-complete.jar` to the classpath so grammar changes stay verifiable.
 - [ ] **Drive line coverage toward 100%** — write tests covering every line of `pddl.py`.
