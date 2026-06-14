@@ -274,15 +274,68 @@ class Operator():
                          self.effect_pos, self.effect_neg)
 
 
+class DurativeAction():
+    """Represents a durative action (#23). Distinct from Operator: conditions
+    are time-tagged 'at start' / 'over all' / 'at end', and effects 'at start'
+    / 'at end'. Can be grounded or ungrounded.
+
+    Attributes:
+        operator_name -- the name of the durative action.
+        variable_list -- {var: value} bindings (value None when ungrounded).
+        duration -- the action duration as a float (from (= ?duration N)),
+                    or None if not a simple numeric constraint.
+        condition_pos / condition_neg -- dicts keyed by 'start'/'over'/'end',
+                    each a set of (grounded: tuple / ungrounded: Atom) condition
+                    atoms.
+        effect_pos / effect_neg -- dicts keyed by 'start'/'end', each a set of
+                    effect atoms to add / delete at that time point.
+    """
+    CONDITION_TIMES = ('start', 'over', 'end')
+    EFFECT_TIMES = ('start', 'end')
+
+    def __init__(self, name):
+        self.operator_name = name
+        self.variable_list = {}
+        self.duration = None
+        self.condition_pos = {t: set() for t in self.CONDITION_TIMES}
+        self.condition_neg = {t: set() for t in self.CONDITION_TIMES}
+        self.effect_pos = {t: set() for t in self.EFFECT_TIMES}
+        self.effect_neg = {t: set() for t in self.EFFECT_TIMES}
+
+    def ground(self, varvals):
+        """Return a grounded copy with variables substituted and atoms turned
+        into tuples."""
+        g = DurativeAction(self.operator_name)
+        g.variable_list = dict(varvals)
+        g.duration = self.duration
+        for t in self.CONDITION_TIMES:
+            g.condition_pos[t] = set(a.ground(varvals) for a in self.condition_pos[t])
+            g.condition_neg[t] = set(a.ground(varvals) for a in self.condition_neg[t])
+        for t in self.EFFECT_TIMES:
+            g.effect_pos[t] = set(a.ground(varvals) for a in self.effect_pos[t])
+            g.effect_neg[t] = set(a.ground(varvals) for a in self.effect_neg[t])
+        return g
+
+    def __str__(self):
+        return ("Durative Action: %s\n\tVariables: %s\n\tDuration: %s\n\t"
+                "Conditions (+): %s\n\tConditions (-): %s\n\t"
+                "Effects (+): %s\n\tEffects (-): %s\n") % (
+            self.operator_name, self.variable_list, self.duration,
+            self.condition_pos, self.condition_neg,
+            self.effect_pos, self.effect_neg)
+
+
 class DomainListener(pddlListener):
     def __init__(self):
         self.typesdef = False
         self.objects = {}
         self.operators = {}
+        self.durative_operators = {}
         self.scopes = []
         self.negativescopes = []
         self.requirements = set()
         self.functions = {}
+        self._datimes = []      # stack of current 'start'/'over'/'end' tags
 
     def enterRequireDef(self, ctx):
         # Capture declared :requirements (e.g. ':strips', ':typing').
@@ -319,6 +372,50 @@ class DomainListener(pddlListener):
     def exitActionDef(self, ctx):
         action = self.scopes.pop()
         self.operators[action.operator_name] = action
+
+    # -- durative actions (#23) ------------------------------------------
+    def enterDurativeActionDef(self, ctx):
+        self.scopes.append(DurativeAction(ctx.actionSymbol().getText()))
+
+    def exitDurativeActionDef(self, ctx):
+        action = self.scopes.pop()
+        self.durative_operators[action.operator_name] = action
+
+    def enterSimpleDurationConstraint(self, ctx):
+        # Capture (= ?duration N) / (<= ?duration N) etc. when N is a literal.
+        durval = ctx.durValue()
+        if durval is not None and durval.NUMBER() is not None:
+            da = self.scopes[-1]
+            if isinstance(da, DurativeAction):
+                da.duration = float(durval.NUMBER().getText())
+
+    def enterTimedGD(self, ctx):
+        # (at start|end goalDesc) or (over all goalDesc): collect the condition
+        # atoms into a fresh Scope tagged with the time point.
+        if ctx.timeSpecifier() is not None:
+            self._datimes.append(ctx.timeSpecifier().getText().lower())
+        else:
+            self._datimes.append('over')
+        self.scopes.append(Scope())
+
+    def exitTimedGD(self, ctx):
+        scope = self.scopes.pop()
+        time = self._datimes.pop()
+        da = self.scopes[-1]
+        da.condition_pos[time] |= set(scope.atoms)
+        da.condition_neg[time] |= set(scope.negatoms)
+
+    def enterTimedEffect(self, ctx):
+        # (at start|end cEffect): collect the effect atoms into a fresh Scope.
+        self._datimes.append(ctx.timeSpecifier().getText().lower())
+        self.scopes.append(Scope())
+
+    def exitTimedEffect(self, ctx):
+        scope = self.scopes.pop()
+        time = self._datimes.pop()
+        da = self.scopes[-1]
+        da.effect_pos[time] |= set(scope.atoms)
+        da.effect_neg[time] |= set(scope.negatoms)
 
     def enterPredicatesDef(self, ctx):
         self.scopes.append(Operator(None))
@@ -462,6 +559,12 @@ class ProblemListener(pddlListener):
         self.goals = []
         self.scopes = []
         self.init_numeric = {}
+        self.metric = None
+
+    def enterMetricSpec(self, ctx):
+        # Capture the optimization metric, e.g. ('minimize', '(total-cost)').
+        self.metric = (ctx.optimization().getText().lower(),
+                       ctx.metricFExp().getText())
 
     def enterInit(self, ctx):
         self.scopes.append(Scope())
@@ -565,10 +668,17 @@ class DomainProblem():
         self.vargroundspace = {}
 
     def operators(self):
-        """Returns an iterator of the names of the actions defined in
-        the domain file.
+        """Returns an iterator of the names of the (instantaneous) actions
+        defined in the domain file. Durative actions are listed separately by
+        durative_operators().
         """
         return self.domain.operators.keys()
+
+    def durative_operators(self):
+        """Returns an iterator of the names of the durative actions (#23)
+        defined in the domain file.
+        """
+        return self.domain.durative_operators.keys()
 
     def requirements(self):
         """Returns the set of :requirements keywords declared in the domain
@@ -588,6 +698,13 @@ class DomainProblem():
         initial numeric value, e.g. {('fuel', 'truck'): 100.0}.
         """
         return dict(self.problem.init_numeric)
+
+    def metric(self):
+        """Returns the optimization metric as ``(optimization, expr_text)``,
+        e.g. ``('minimize', '(total-cost)')``, or ``None`` if the problem
+        declares no metric.
+        """
+        return self.problem.metric
 
     def ground_operator(self, op_name):
         """Returns an interator of Operator instances. Each item of the iterator
@@ -610,6 +727,13 @@ class DomainProblem():
             gop.precondition_num = [ c.ground( st ) for c in op.precondition_num ]
             gop.effect_num = [ e.ground( st ) for e in op.effect_num ]
             yield gop
+
+    def ground_durative_operator(self, op_name):
+        """Returns an iterator of grounded DurativeAction instances (#23)."""
+        op = self.domain.durative_operators[op_name]
+        self._set_operator_groundspace( op_name, op.variable_list.items() )
+        for ground in self._instantiate( op_name ):
+            yield op.ground( dict(ground) )
 
     def _typesymbols(self, t):
         return ( k for k,v in self.worldobjects().items() if v == t )

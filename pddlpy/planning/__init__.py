@@ -14,7 +14,14 @@ from .base import (
     validate_requirements,
 )
 from .registry import registry, register, get
-from .search import BFSPlanner, AStarPlanner, GBFSPlanner, STRIPS_CAPABILITIES
+from .search import (
+    BFSPlanner,
+    AStarPlanner,
+    GBFSPlanner,
+    UniformCostPlanner,
+    STRIPS_CAPABILITIES,
+)
+from .costs import action_cost, plan_cost, TOTAL_COST
 
 __all__ = [
     "State",
@@ -31,5 +38,9 @@ __all__ = [
     "BFSPlanner",
     "AStarPlanner",
     "GBFSPlanner",
+    "UniformCostPlanner",
     "STRIPS_CAPABILITIES",
+    "action_cost",
+    "plan_cost",
+    "TOTAL_COST",
 ]
