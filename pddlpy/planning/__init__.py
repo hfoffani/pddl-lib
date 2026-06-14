@@ -14,6 +14,7 @@ from .base import (
     validate_requirements,
 )
 from .registry import registry, register, get
+from .search import BFSPlanner, AStarPlanner, GBFSPlanner, STRIPS_CAPABILITIES
 
 __all__ = [
     "State",
@@ -27,4 +28,8 @@ __all__ = [
     "registry",
     "register",
     "get",
+    "BFSPlanner",
+    "AStarPlanner",
+    "GBFSPlanner",
+    "STRIPS_CAPABILITIES",
 ]
