@@ -12,9 +12,16 @@ Two guards run before search (fail fast, PRD §7):
 * **Capability negotiation**: every declared requirement must be in the
   planner's ``capabilities``; otherwise the planner refuses the task.
 """
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Dict, FrozenSet, Optional, Set
 
 from .grounding import GroundedTask
+
+if TYPE_CHECKING:
+    from pddlpy.pddl import DomainProblem
+    from .state import Plan
 
 
 class PlannerError(Exception):
@@ -27,16 +34,16 @@ class UnsupportedRequirementsError(PlannerError):
 
 # Map a detectable feature to the requirement keywords that permit it.
 # ':adl' is the umbrella requirement implying typing + negative + disjunctive.
-_FEATURE_REQUIREMENTS = {
+_FEATURE_REQUIREMENTS: Dict[str, Set[str]] = {
     "typing": {":typing", ":adl"},
     "negative-preconditions": {":negative-preconditions", ":adl"},
     "disjunctive-preconditions": {":disjunctive-preconditions", ":adl"},
 }
 
 
-def _used_features(domainproblem):
+def _used_features(domainproblem: "DomainProblem") -> Set[str]:
     """Detect which (enforceable) PDDL features a domain actually uses."""
-    features = set()
+    features: Set[str] = set()
     if domainproblem.domain.typesdef or any(
         t is not None for t in domainproblem.worldobjects().values()
     ):
@@ -49,7 +56,7 @@ def _used_features(domainproblem):
     return features
 
 
-def validate_requirements(domainproblem):
+def validate_requirements(domainproblem: "DomainProblem") -> None:
     """#9: ensure used features are declared in ``:requirements``.
 
     Only enforced when the domain declares at least one requirement (i.e. it
@@ -78,9 +85,9 @@ class Planner(ABC):
     """
 
     #: requirement keywords this planner supports
-    capabilities = frozenset()
+    capabilities: FrozenSet[str] = frozenset()
 
-    def check_capabilities(self, domainproblem):
+    def check_capabilities(self, domainproblem: "DomainProblem") -> None:
         """Raise if the domain declares a requirement beyond this planner's
         capabilities."""
         unsupported = domainproblem.requirements() - set(self.capabilities)
@@ -90,13 +97,13 @@ class Planner(ABC):
                 % (type(self).__name__, sorted(unsupported))
             )
 
-    def prepare(self, domainproblem):
+    def prepare(self, domainproblem: "DomainProblem") -> GroundedTask:
         """Run #9 + capability checks, then build the GroundedTask."""
         validate_requirements(domainproblem)
         self.check_capabilities(domainproblem)
         return GroundedTask(domainproblem)
 
     @abstractmethod
-    def solve(self, domainproblem):
+    def solve(self, domainproblem: "DomainProblem") -> "Optional[Plan]":
         """Return a ``Plan`` reaching the goal, or ``None`` if none exists."""
         raise NotImplementedError  # pragma: no cover - abstract

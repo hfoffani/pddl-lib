@@ -5,9 +5,20 @@ This is the clean resolution to #21: the parser exposes ground atoms as
 (grounded ``Operator`` precondition/effect sets). ``State`` normalizes both
 to tuples so that applicability and goal checks work without manual casting.
 """
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, Dict, Iterable, Iterator, List, Mapping, Optional, Tuple
+
+if TYPE_CHECKING:
+    from pddlpy.pddl import Atom, DomainProblem, Operator
+
+#: A ground atom, e.g. ``("on", "a", "b")``.
+GroundAtom = Tuple[str, ...]
+#: A numeric fluent valuation: ground function head -> value.
+Valuation = Dict[GroundAtom, float]
 
 
-def atom_tuple(atom):
+def atom_tuple(atom: "Atom | GroundAtom | Iterable[str]") -> GroundAtom:
     """Normalize a ground atom to a plain tuple of strings.
 
     Accepts either a tuple (already normalized, e.g. from a grounded
@@ -33,28 +44,35 @@ class State:
 
     __slots__ = ("_atoms", "_fluents", "_key")
 
-    def __init__(self, atoms=(), fluents=None):
-        self._atoms = frozenset(atom_tuple(a) for a in atoms)
-        self._fluents = dict(fluents or {})
-        self._key = (self._atoms, frozenset(self._fluents.items()))
+    def __init__(
+        self,
+        atoms: Iterable[Any] = (),
+        fluents: Optional[Mapping[GroundAtom, float]] = None,
+    ) -> None:
+        self._atoms: frozenset[GroundAtom] = frozenset(atom_tuple(a) for a in atoms)
+        self._fluents: Valuation = dict(fluents or {})
+        self._key: Tuple[frozenset[GroundAtom], frozenset] = (
+            self._atoms,
+            frozenset(self._fluents.items()),
+        )
 
     @property
-    def atoms(self):
+    def atoms(self) -> frozenset[GroundAtom]:
         return self._atoms
 
     @property
-    def fluents(self):
+    def fluents(self) -> Valuation:
         return self._fluents
 
     # -- constructors -----------------------------------------------------
     @classmethod
-    def from_problem(cls, domainproblem):
+    def from_problem(cls, domainproblem: "DomainProblem") -> "State":
         """Build the initial state (atoms + numeric fluents) from a parsed
         ``DomainProblem``."""
         return cls(domainproblem.initialstate(), domainproblem.initial_numeric())
 
     # -- planning operations (resolve #21) -------------------------------
-    def applicable(self, operator):
+    def applicable(self, operator: "Operator") -> bool:
         """True if a grounded ``operator`` is applicable in this state.
 
         Conjunctive semantics: all positive preconditions hold, no negative
@@ -69,7 +87,7 @@ class State:
             return False
         return all(c.holds(self._fluents) for c in operator.precondition_num)
 
-    def apply(self, operator):
+    def apply(self, operator: "Operator") -> "State":
         """Return the successor ``State`` after applying a grounded operator.
 
         Delete effects are removed first, then add effects are added
@@ -78,7 +96,7 @@ class State:
         """
         add = {atom_tuple(a) for a in operator.effect_pos}
         delete = {atom_tuple(a) for a in operator.effect_neg}
-        fluents = self._fluents
+        fluents: Valuation = self._fluents
         if operator.effect_num:
             updates = [eff.apply(self._fluents) for eff in operator.effect_num]
             fluents = dict(self._fluents)
@@ -86,27 +104,27 @@ class State:
                 fluents[key] = value
         return State((self._atoms - delete) | add, fluents)
 
-    def satisfies(self, goals):
+    def satisfies(self, goals: Iterable[Any]) -> bool:
         """True if every (positive) goal atom holds in this state."""
         return {atom_tuple(a) for a in goals} <= self._atoms
 
     # -- container protocol ----------------------------------------------
-    def __contains__(self, atom):
+    def __contains__(self, atom: Any) -> bool:
         return atom_tuple(atom) in self._atoms
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[GroundAtom]:
         return iter(self._atoms)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._atoms)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         return isinstance(other, State) and self._key == other._key
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self._key)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         if self._fluents:
             return "State(%s, %s)" % (sorted(self._atoms), dict(sorted(self._fluents.items())))
         return "State(%s)" % sorted(self._atoms)
@@ -122,21 +140,25 @@ class Plan:
 
     __slots__ = ("actions", "cost")
 
-    def __init__(self, actions=(), cost=None):
-        self.actions = tuple(actions)
-        self.cost = len(self.actions) if cost is None else cost
+    def __init__(
+        self,
+        actions: Iterable["Operator"] = (),
+        cost: Optional[float] = None,
+    ) -> None:
+        self.actions: Tuple["Operator", ...] = tuple(actions)
+        self.cost: float = len(self.actions) if cost is None else cost
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator["Operator"]:
         return iter(self.actions)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.actions)
 
-    def action_names(self):
+    def action_names(self) -> List[Tuple[str, Dict[str, Any]]]:
         """List of ``(operator_name, variable_bindings)`` for each action."""
         return [(a.operator_name, a.variable_list) for a in self.actions]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         steps = ", ".join(
             "%s(%s)" % (a.operator_name, ", ".join(str(v) for v in a.variable_list.values()))
             for a in self.actions

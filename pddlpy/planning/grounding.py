@@ -5,7 +5,14 @@ function over ``State``. Blind-search planners use only ``successors`` and
 ``is_goal``; a future heuristic planner reuses the same grounded action set
 without re-deriving it (PRD §5.2).
 """
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, Iterator, List, Tuple
+
 from .state import State
+
+if TYPE_CHECKING:
+    from pddlpy.pddl import DomainProblem, Operator
 
 
 class GroundedTask:
@@ -17,22 +24,22 @@ class GroundedTask:
         actions -- the list of all grounded ``Operator`` instances.
     """
 
-    def __init__(self, domainproblem):
+    def __init__(self, domainproblem: "DomainProblem") -> None:
         self.domainproblem = domainproblem
-        self.initial = State.from_problem(domainproblem)
+        self.initial: State = State.from_problem(domainproblem)
         self.goals = domainproblem.goals()
-        self.actions = [
+        self.actions: List["Operator"] = [
             gop
             for name in domainproblem.operators()
             for gop in domainproblem.ground_operator(name)
         ]
 
-    def successors(self, state):
+    def successors(self, state: State) -> Iterator[Tuple["Operator", State]]:
         """Yield ``(action, successor_state)`` for every applicable action."""
         for action in self.actions:
             if state.applicable(action):
                 yield action, state.apply(action)
 
-    def is_goal(self, state):
+    def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""
         return state.satisfies(self.goals)
