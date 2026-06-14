@@ -89,8 +89,12 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
       fluent valuation; BFS/A*/GBFS solve the numeric-transport domain. 100% coverage.*
 
 ## Phase 3 — Action costs
-- [ ] `total-cost` handling; `Plan` carries cost.
-- [ ] Cost-aware search in the reference planner.
+- [x] `total-cost` handling; `Plan` carries cost. *`:action-costs`/`:numeric-fluents` added to the
+      grammar; `(:metric ...)` captured (`DomainProblem.metric()`); `Plan.cost` = accumulated
+      `total-cost` (`costs.action_cost`/`plan_cost`, `TOTAL_COST`).*
+- [x] Cost-aware search in the reference planner. *`UniformCostPlanner` ("ucs") is cost-optimal;
+      on the travel domain UCS picks the cheaper 2-hop route (cost 2) vs BFS's 1-hop (cost 5).
+      100% coverage.*
 
 ## Phase 4 — Durative actions  *(#23)*
 - [ ] **Complete duration-tag recovery** — grammar parses durative actions but Python recovery

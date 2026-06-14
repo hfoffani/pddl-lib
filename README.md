@@ -114,6 +114,12 @@ operators carry `precondition_num` / `effect_num`, and `State` tracks a numeric
 valuation so the planners respect constraints like `(>= (fuel ?v) 10)` and
 effects like `(decrease (fuel ?v) 5)`.
 
+Action costs (`:action-costs`, `(increase (total-cost) ...)`, `(:metric minimize
+(total-cost))`) are supported too. `DomainProblem.metric()` exposes the metric,
+`Plan.cost` reports the accumulated `total-cost`, and `UniformCostPlanner`
+(`"ucs"`) is cost-optimal — where `BFSPlanner` minimizes the number of actions,
+`"ucs"` minimizes total cost.
+
 ```python
 >>> import pddlpy
 >>> from pddlpy.planning import get
@@ -150,14 +156,14 @@ There are wonderful material at the the University of Edinburgh:
 
 ### Future development ###
 
-* Action costs (`total-cost`) and cost-aware search.
 * Durative actions (recover duration tags into the object model).
 * Heuristic improvements for the reference planners.
 
 Done recently: case-insensitive keywords, `:requirements` capture/enforcement,
-a planner interface with BFS/A*/GBFS reference planners, numeric fluents
-(`:functions`, numeric preconditions/effects), and a measured test suite with
-full coverage of the object model and planning layer.
+a planner interface with BFS/A*/GBFS/UCS reference planners, numeric fluents
+(`:functions`, numeric preconditions/effects), action costs (`total-cost` +
+cost-aware search), and a measured test suite with full coverage of the object
+model and planning layer.
 
 ### Advanced ###
 
