@@ -4,7 +4,7 @@ import os
 import pytest
 
 from pddlpy import DomainProblem
-from pddlpy.pddl import Num, Fluent, BinOp, Neg, NumericConstraint, NumericEffect
+from pddlpy.pddl import BinOp, Fluent, Neg, Num, NumericConstraint, NumericEffect
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
 

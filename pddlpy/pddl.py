@@ -18,23 +18,49 @@
 #
 #
 
-from antlr4 import *
-from .pddlLexer import pddlLexer
-from .pddlParser import pddlParser
-from .pddlListener import pddlListener
+"""Core pddlpy object model and PDDL parser glue.
+
+Parses PDDL domain/problem files via the generated ANTLR listeners into a
+``DomainProblem`` exposing the initial state, goals, operators (instantaneous
+and durative), numeric functions and the optimization metric. See
+``docs/object-model.md`` for an overview and ``pddlpy.planning`` for the
+solver layer built on top of this model.
+"""
+from __future__ import annotations
 
 import itertools
 import operator as _operator
+from typing import Any, Dict, Iterator, List, Optional, Sequence, Tuple
+
+from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
+
+from .pddlLexer import pddlLexer
+from .pddlListener import pddlListener
+from .pddlParser import pddlParser
+
+#: A binding of variable names to values, e.g. {"?x": "a"}.
+VarVals = Dict[str, str]
+#: A ground atom as a tuple of strings, e.g. ("on", "a", "b").
+GroundAtom = Tuple[str, ...]
+#: A numeric fluent valuation: ground function head -> value.
+Valuation = Dict[GroundAtom, float]
 
 
 class Atom():
-    def __init__(self, predicate):
+    """A predicate applied to terms, e.g. ``(on ?x ?y)``.
+
+    ``predicate`` is a sequence ``[name, *terms]``; terms beginning with ``?``
+    are variables. ``ground(varvals)`` substitutes variables and returns a
+    plain tuple. Note: ``Atom`` has no value equality — compare grounded atoms
+    as tuples (see ``pddlpy.planning.atom_tuple``).
+    """
+    def __init__(self, predicate: Sequence[str]) -> None:
         self.predicate = predicate
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(tuple(self.predicate))
 
-    def ground(self, varvals):
+    def ground(self, varvals: VarVals) -> GroundAtom:
         g = [ varvals[v] if v in varvals else v for v in self.predicate ]
         return tuple(g)
 
@@ -47,37 +73,37 @@ class Atom():
 
 class Expr():
     """Base class for numeric expression nodes."""
-    def ground(self, varvals):
+    def ground(self, varvals: VarVals) -> "Expr":
         return self
 
-    def value(self, valuation):
+    def value(self, valuation: Valuation) -> float:
         raise NotImplementedError  # pragma: no cover - abstract
 
 
 class Num(Expr):
     """A numeric literal."""
-    def __init__(self, value):
+    def __init__(self, value: Any) -> None:
         self.num = float(value)
 
-    def value(self, valuation):
+    def value(self, valuation: Valuation) -> float:
         return self.num
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return repr(self.num)
 
 
 class Fluent(Expr):
     """A (possibly ungrounded) function head, e.g. ('fuel', '?v')."""
-    def __init__(self, head):
-        self.head = tuple(head)
+    def __init__(self, head: Sequence[str]) -> None:
+        self.head: GroundAtom = tuple(head)
 
-    def ground(self, varvals):
+    def ground(self, varvals: VarVals) -> "Fluent":
         return Fluent(tuple(varvals[s] if s in varvals else s for s in self.head))
 
-    def value(self, valuation):
+    def value(self, valuation: Valuation) -> float:
         return valuation.get(self.head, 0.0)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self.head)
 
 
@@ -86,33 +112,33 @@ class BinOp(Expr):
     _ops = {'+': _operator.add, '-': _operator.sub,
             '*': _operator.mul, '/': _operator.truediv}
 
-    def __init__(self, op, left, right):
+    def __init__(self, op: str, left: Expr, right: Expr) -> None:
         self.op = op
         self.left = left
         self.right = right
 
-    def ground(self, varvals):
+    def ground(self, varvals: VarVals) -> "BinOp":
         return BinOp(self.op, self.left.ground(varvals), self.right.ground(varvals))
 
-    def value(self, valuation):
+    def value(self, valuation: Valuation) -> float:
         return self._ops[self.op](self.left.value(valuation), self.right.value(valuation))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "(%s %r %r)" % (self.op, self.left, self.right)
 
 
 class Neg(Expr):
     """Unary minus."""
-    def __init__(self, operand):
+    def __init__(self, operand: Expr) -> None:
         self.operand = operand
 
-    def ground(self, varvals):
+    def ground(self, varvals: VarVals) -> "Neg":
         return Neg(self.operand.ground(varvals))
 
-    def value(self, valuation):
+    def value(self, valuation: Valuation) -> float:
         return -self.operand.value(valuation)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "(- %r)" % (self.operand,)
 
 
@@ -121,32 +147,32 @@ class NumericConstraint():
     _cmp = {'>': _operator.gt, '<': _operator.lt, '=': _operator.eq,
             '>=': _operator.ge, '<=': _operator.le}
 
-    def __init__(self, comp, lhs, rhs):
+    def __init__(self, comp: str, lhs: Expr, rhs: Expr) -> None:
         self.comp = comp
         self.lhs = lhs
         self.rhs = rhs
 
-    def ground(self, varvals):
+    def ground(self, varvals: VarVals) -> "NumericConstraint":
         return NumericConstraint(self.comp, self.lhs.ground(varvals), self.rhs.ground(varvals))
 
-    def holds(self, valuation):
+    def holds(self, valuation: Valuation) -> bool:
         return self._cmp[self.comp](self.lhs.value(valuation), self.rhs.value(valuation))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "(%s %r %r)" % (self.comp, self.lhs, self.rhs)
 
 
 class NumericEffect():
     """A numeric effect, e.g. (decrease (fuel ?v) (fuel-cost ?from ?to))."""
-    def __init__(self, op, head, expr):
+    def __init__(self, op: str, head: Fluent, expr: Expr) -> None:
         self.op = op
         self.head = head   # a Fluent
         self.expr = expr
 
-    def ground(self, varvals):
+    def ground(self, varvals: VarVals) -> "NumericEffect":
         return NumericEffect(self.op, self.head.ground(varvals), self.expr.ground(varvals))
 
-    def apply(self, valuation):
+    def apply(self, valuation: Valuation) -> Tuple[GroundAtom, float]:
         """Return (ground_head_tuple, new_value) given the current valuation."""
         key = self.head.head
         rhs = self.expr.value(valuation)
@@ -168,13 +194,13 @@ class NumericEffect():
         return "(%s %r %r)" % (self.op, self.head, self.expr)
 
 
-def _parse_fhead(ctx):
+def _parse_fhead(ctx: Any) -> GroundAtom:
     """Build a function-head tuple from an FHeadContext."""
     name = ctx.functionSymbol().getText()
     return tuple([name] + [t.getText() for t in ctx.term()])
 
 
-def _nth_fexp(ctx, i):
+def _nth_fexp(ctx: Any, i: int) -> Any:
     """Return the i-th fExp child of ctx. ANTLR generates a single-value
     accessor when fExp occurs once in a rule and a list accessor when it
     occurs more than once; this smooths over both."""
@@ -182,7 +208,7 @@ def _nth_fexp(ctx, i):
     return fe[i] if isinstance(fe, list) else fe
 
 
-def _parse_fexp(ctx):
+def _parse_fexp(ctx: Any) -> Expr:
     """Build an Expr from an FExpContext."""
     if ctx.NUMBER() is not None:
         return Num(ctx.NUMBER().getText())
@@ -196,7 +222,7 @@ def _parse_fexp(ctx):
     return Neg(_parse_fexp(_nth_fexp(ctx, 0)))
 
 
-def _parse_fcomp(ctx):
+def _parse_fcomp(ctx: Any) -> NumericConstraint:
     """Build a NumericConstraint from an FCompContext."""
     return NumericConstraint(ctx.binaryComp().getText(),
                              _parse_fexp(_nth_fexp(ctx, 0)),
@@ -250,18 +276,18 @@ class Operator():
         effect_num -- a list of NumericEffect numeric effects (#11),
                             e.g. (decrease (fuel ?v) 5).
     """
-    def __init__(self, name):
+    def __init__(self, name: Optional[str]) -> None:
         self.operator_name = name
-        self.variable_list = {}
-        self.precondition_pos = set()
-        self.precondition_neg = set()
+        self.variable_list: Dict[str, Optional[str]] = {}
+        self.precondition_pos: set = set()
+        self.precondition_neg: set = set()
         self.precondition_connective = 'and'
-        self.effect_pos = set()
-        self.effect_neg = set()
-        self.precondition_num = []
-        self.effect_num = []
+        self.effect_pos: set = set()
+        self.effect_neg: set = set()
+        self.precondition_num: List[NumericConstraint] = []
+        self.effect_num: List[NumericEffect] = []
 
-    def __str__(self):
+    def __str__(self) -> str:
         templ = "Operator Name: %s\n\tVariables: %s\n\t" + \
                 "Precondition Connective: %s\n\t" + \
                 "Positive Preconditions: %s\n\t" + \
@@ -293,16 +319,16 @@ class DurativeAction():
     CONDITION_TIMES = ('start', 'over', 'end')
     EFFECT_TIMES = ('start', 'end')
 
-    def __init__(self, name):
+    def __init__(self, name: Optional[str]) -> None:
         self.operator_name = name
-        self.variable_list = {}
-        self.duration = None
-        self.condition_pos = {t: set() for t in self.CONDITION_TIMES}
-        self.condition_neg = {t: set() for t in self.CONDITION_TIMES}
-        self.effect_pos = {t: set() for t in self.EFFECT_TIMES}
-        self.effect_neg = {t: set() for t in self.EFFECT_TIMES}
+        self.variable_list: Dict[str, Optional[str]] = {}
+        self.duration: Optional[float] = None
+        self.condition_pos: Dict[str, set] = {t: set() for t in self.CONDITION_TIMES}
+        self.condition_neg: Dict[str, set] = {t: set() for t in self.CONDITION_TIMES}
+        self.effect_pos: Dict[str, set] = {t: set() for t in self.EFFECT_TIMES}
+        self.effect_neg: Dict[str, set] = {t: set() for t in self.EFFECT_TIMES}
 
-    def ground(self, varvals):
+    def ground(self, varvals: VarVals) -> "DurativeAction":
         """Return a grounded copy with variables substituted and atoms turned
         into tuples."""
         g = DurativeAction(self.operator_name)
@@ -316,7 +342,7 @@ class DurativeAction():
             g.effect_neg[t] = set(a.ground(varvals) for a in self.effect_neg[t])
         return g
 
-    def __str__(self):
+    def __str__(self) -> str:
         return ("Durative Action: %s\n\tVariables: %s\n\tDuration: %s\n\t"
                 "Conditions (+): %s\n\tConditions (-): %s\n\t"
                 "Effects (+): %s\n\tEffects (-): %s\n") % (
@@ -326,6 +352,9 @@ class DurativeAction():
 
 
 class DomainListener(pddlListener):
+    """ANTLR walk listener that builds the domain side of the model: types,
+    constants, predicates, :functions, :requirements, and the (instantaneous
+    and durative) action definitions."""
     def __init__(self):
         self.typesdef = False
         self.objects = {}
@@ -366,7 +395,6 @@ class DomainListener(pddlListener):
 
     def enterActionDef(self, ctx):
         opname = ctx.actionSymbol().getText()
-        opvars = {}
         self.scopes.append(Operator(opname))
 
     def exitActionDef(self, ctx):
@@ -421,7 +449,7 @@ class DomainListener(pddlListener):
         self.scopes.append(Operator(None))
 
     def exitPredicatesDef(self, ctx):
-        dummyop = self.scopes.pop()
+        self.scopes.pop()
 
     def enterTypesDef(self, ctx):
         self.scopes.append(Obj())
@@ -552,6 +580,9 @@ class DomainListener(pddlListener):
 
 
 class ProblemListener(pddlListener):
+    """ANTLR walk listener that builds the problem side of the model: objects,
+    the initial state (symbolic atoms and numeric assignments), the goal, and
+    the optimization metric."""
 
     def __init__(self):
         self.objects = {}
@@ -636,7 +667,7 @@ class ProblemListener(pddlListener):
 
 class DomainProblem():
 
-    def __init__(self, domainfile, problemfile):
+    def __init__(self, domainfile: str, problemfile: str) -> None:
         """Parses a PDDL domain and problem files and
         returns an object representing them.
 
@@ -665,48 +696,48 @@ class DomainProblem():
         # a dict where keys are op names and values
         # a dict where keys are var names and values
         # a list of possible symbols.
-        self.vargroundspace = {}
+        self.vargroundspace: Dict[str, Dict[str, List[str]]] = {}
 
-    def operators(self):
+    def operators(self) -> Any:
         """Returns an iterator of the names of the (instantaneous) actions
         defined in the domain file. Durative actions are listed separately by
         durative_operators().
         """
         return self.domain.operators.keys()
 
-    def durative_operators(self):
+    def durative_operators(self) -> Any:
         """Returns an iterator of the names of the durative actions (#23)
         defined in the domain file.
         """
         return self.domain.durative_operators.keys()
 
-    def requirements(self):
+    def requirements(self) -> set:
         """Returns the set of :requirements keywords declared in the domain
         (e.g. {':strips', ':typing'}), normalized to lowercase. Empty if the
         domain declares none.
         """
         return set(self.domain.requirements)
 
-    def functions(self):
+    def functions(self) -> Dict[str, List[Tuple[str, Optional[str]]]]:
         """Returns a dict mapping each declared :functions name to its ordered
         list of (param_name, type) pairs. Empty if the domain declares none.
         """
         return dict(self.domain.functions)
 
-    def initial_numeric(self):
+    def initial_numeric(self) -> Valuation:
         """Returns a dict mapping each ground function head tuple to its
         initial numeric value, e.g. {('fuel', 'truck'): 100.0}.
         """
         return dict(self.problem.init_numeric)
 
-    def metric(self):
+    def metric(self) -> Optional[Tuple[str, str]]:
         """Returns the optimization metric as ``(optimization, expr_text)``,
         e.g. ``('minimize', '(total-cost)')``, or ``None`` if the problem
         declares no metric.
         """
         return self.problem.metric
 
-    def ground_operator(self, op_name):
+    def ground_operator(self, op_name: str) -> Iterator[Operator]:
         """Returns an interator of Operator instances. Each item of the iterator
         is a grounded instance.
 
@@ -728,7 +759,7 @@ class DomainProblem():
             gop.effect_num = [ e.ground( st ) for e in op.effect_num ]
             yield gop
 
-    def ground_durative_operator(self, op_name):
+    def ground_durative_operator(self, op_name: str) -> Iterator[DurativeAction]:
         """Returns an iterator of grounded DurativeAction instances (#23)."""
         op = self.domain.durative_operators[op_name]
         self._set_operator_groundspace( op_name, op.variable_list.items() )
@@ -754,19 +785,19 @@ class DomainProblem():
         # cartesian product.
         return itertools.product(*expanded)
 
-    def initialstate(self):
-        """Returns a set of atoms (tuples of strings) corresponding to the intial
+    def initialstate(self) -> set:
+        """Returns a set of atoms (Atom objects) corresponding to the initial
         state defined in the problem file.
         """
         return self.problem.initialstate
 
-    def goals(self):
-        """Returns a set of atoms (tuples of strings) corresponding to the goals
+    def goals(self) -> set:
+        """Returns a set of atoms (Atom objects) corresponding to the goals
         defined in the problem file.
         """
         return self.problem.goals
 
-    def worldobjects(self):
+    def worldobjects(self) -> Dict[str, Optional[str]]:
         """Returns a dictionary of key value pairs where the key is the name of
         an object and the value is it's type (None in case is untyped.)
         """

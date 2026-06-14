@@ -1,5 +1,7 @@
 import unittest
+
 from pddlpy import DomainProblem
+
 
 class TestStringMethods(unittest.TestCase):
     domainfile = "examples-pddl/domain-0%d.pddl" % 1
@@ -7,7 +9,6 @@ class TestStringMethods(unittest.TestCase):
 
     def test_ground(self):
         domprob = DomainProblem(self.domainfile, self.problemfile)
-        freeop = domprob.domain.operators["op2"]
         all_grounded_opers = domprob.ground_operator("op2")
         for gop in all_grounded_opers:
             if gop.precondition_pos == set( [('S','R','C'),('S','R','S')] ):

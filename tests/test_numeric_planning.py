@@ -5,7 +5,7 @@ import os
 import pytest
 
 from pddlpy import DomainProblem
-from pddlpy.planning import State, GroundedTask, BFSPlanner, AStarPlanner, GBFSPlanner, get
+from pddlpy.planning import AStarPlanner, BFSPlanner, GBFSPlanner, GroundedTask, State
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
 

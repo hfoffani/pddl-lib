@@ -69,6 +69,8 @@ dev = [
     "build>=1.0.0",
     "pytest>=8.0.0",
     "pytest-cov>=5.0.0",
+    "ruff>=0.6.0",
+    "mypy>=1.11.0",
 ]
 
 [tool.pytest.ini_options]
@@ -83,3 +85,33 @@ omit = [
     "pddlpy/pddlListener.py",
     "pddlpy/test.py",
 ]
+
+# Generated ANTLR parser files are machine output, not ours — exclude them
+# from linting and type checking everywhere.
+[tool.ruff]
+line-length = 100
+extend-exclude = [
+    "pddlpy/pddlLexer.py",
+    "pddlpy/pddlParser.py",
+    "pddlpy/pddlListener.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+# E501 (line length) is noisy on the existing model code; the formatter
+# handles wrapping when desired.
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["pddlpy"]
+# antlr4 runtime ships no type stubs.
+ignore_missing_imports = true
+# Generated parser files are excluded from type checking.
+exclude = '(pddlLexer|pddlParser|pddlListener)\.py$'
+
+# The planning layer is fully typed; hold it to a higher standard.
+[[tool.mypy.overrides]]
+module = "pddlpy.planning.*"
+disallow_untyped_defs = true
+warn_return_any = true

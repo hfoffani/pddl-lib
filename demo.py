@@ -16,9 +16,9 @@
 #
 #
 
-import sys
-import pddlpy
 import argparse
+
+import pddlpy
 
 parser = argparse.ArgumentParser(description='Demo PDDLPY.')
 parser.add_argument('demonumber', metavar='N', type=int, nargs='+',
