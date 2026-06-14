@@ -97,10 +97,15 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
       100% coverage.*
 
 ## Phase 4 — Durative actions  *(#23)*
-- [ ] **Complete duration-tag recovery** — grammar parses durative actions but Python recovery
-      is incomplete (the known issue in CLAUDE.md).
-- [ ] **`DurativeAction` type** — time-tagged conditions/effects (`at start / over all / at end`).
-- [ ] Decide temporal state representation; temporal-capable planner (or document non-coverage).
+- [x] **Complete duration-tag recovery** — grammar parses durative actions but Python recovery
+      is incomplete (the known issue in CLAUDE.md). *Fixed: durative actions no longer crash the
+      listener; duration recovered (`DurativeAction.duration`). Resolves #23/#27.*
+- [x] **`DurativeAction` type** — time-tagged conditions/effects (`at start / over all / at end`).
+      *`DurativeAction` with `condition_pos/neg` (start/over/end) and `effect_pos/neg` (start/end);
+      `DomainProblem.durative_operators()` + `ground_durative_operator()`. 100% coverage.*
+- [x] Decide temporal state representation; temporal-capable planner (or document non-coverage).
+      *Documented non-coverage: the reference planners are non-temporal and do not solve durative
+      domains (PRD §4/§8). The object model fully recovers durative actions.*
 
 ---
 
