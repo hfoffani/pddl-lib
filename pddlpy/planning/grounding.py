@@ -7,7 +7,7 @@ without re-deriving it (PRD §5.2).
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Iterator, List, Tuple
+from typing import TYPE_CHECKING, Iterator, List, Tuple
 
 from .state import State
 

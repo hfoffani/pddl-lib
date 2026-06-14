@@ -21,6 +21,7 @@ from .grounding import GroundedTask
 
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem
+
     from .state import Plan
 
 

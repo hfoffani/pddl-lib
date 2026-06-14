@@ -17,6 +17,7 @@ def test_no_python2_builtin_import():
     """#16: importing the library must not pull in the py2-only
     `__builtin__` module."""
     import importlib
+
     import pddlpy.pddl as pddl
 
     importlib.reload(pddl)  # exercises the module's imports

@@ -4,7 +4,7 @@ casting."""
 import os
 
 from pddlpy import DomainProblem
-from pddlpy.planning import State, Plan
+from pddlpy.planning import Plan, State
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
 

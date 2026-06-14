@@ -53,6 +53,16 @@ coverage: pyparser pddlpy/pddl.py
 	@echo "Running tests with coverage..."
 	$(PYTHON) -m pytest --cov=pddlpy --cov-report=term-missing
 
+# Lint with ruff (generated ANTLR files are excluded via pyproject)
+lint:
+	@echo "Linting with ruff..."
+	$(PYTHON) -m ruff check pddlpy tests demo.py
+
+# Type-check with mypy
+typecheck: pyparser pddlpy/pddl.py
+	@echo "Type checking with mypy..."
+	$(PYTHON) -m mypy
+
 # Build distribution with uv
 build: test
 	@echo "Building distribution..."
@@ -99,6 +109,8 @@ help:
 	@echo "  pyparser     - Generate Python parser from grammar"
 	@echo "  test         - Run Python tests"
 	@echo "  coverage     - Run tests with coverage report"
+	@echo "  lint         - Lint with ruff"
+	@echo "  typecheck    - Type-check with mypy"
 	@echo "  build        - Build distribution packages"
 	@echo "  clean        - Remove build artifacts"
 	@echo "  demo         - Run demo scripts"
@@ -106,4 +118,4 @@ help:
 	@echo "  pypitest     - Publish to TestPyPI"
 	@echo "  pypipublish  - Publish to PyPI"
 
-.PHONY: all init testgrammar pyparser test coverage build clean demo testpublish pypitest pypipublish help
+.PHONY: all init testgrammar pyparser test coverage lint typecheck build clean demo testpublish pypitest pypipublish help

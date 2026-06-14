@@ -18,17 +18,25 @@
 #
 #
 
+"""Core pddlpy object model and PDDL parser glue.
+
+Parses PDDL domain/problem files via the generated ANTLR listeners into a
+``DomainProblem`` exposing the initial state, goals, operators (instantaneous
+and durative), numeric functions and the optimization metric. See
+``docs/object-model.md`` for an overview and ``pddlpy.planning`` for the
+solver layer built on top of this model.
+"""
 from __future__ import annotations
-
-from typing import (Any, Dict, Iterator, List, Optional, Sequence, Tuple)
-
-from antlr4 import *
-from .pddlLexer import pddlLexer
-from .pddlParser import pddlParser
-from .pddlListener import pddlListener
 
 import itertools
 import operator as _operator
+from typing import Any, Dict, Iterator, List, Optional, Sequence, Tuple
+
+from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
+
+from .pddlLexer import pddlLexer
+from .pddlListener import pddlListener
+from .pddlParser import pddlParser
 
 #: A binding of variable names to values, e.g. {"?x": "a"}.
 VarVals = Dict[str, str]
@@ -39,6 +47,13 @@ Valuation = Dict[GroundAtom, float]
 
 
 class Atom():
+    """A predicate applied to terms, e.g. ``(on ?x ?y)``.
+
+    ``predicate`` is a sequence ``[name, *terms]``; terms beginning with ``?``
+    are variables. ``ground(varvals)`` substitutes variables and returns a
+    plain tuple. Note: ``Atom`` has no value equality — compare grounded atoms
+    as tuples (see ``pddlpy.planning.atom_tuple``).
+    """
     def __init__(self, predicate: Sequence[str]) -> None:
         self.predicate = predicate
 
@@ -337,6 +352,9 @@ class DurativeAction():
 
 
 class DomainListener(pddlListener):
+    """ANTLR walk listener that builds the domain side of the model: types,
+    constants, predicates, :functions, :requirements, and the (instantaneous
+    and durative) action definitions."""
     def __init__(self):
         self.typesdef = False
         self.objects = {}
@@ -377,7 +395,6 @@ class DomainListener(pddlListener):
 
     def enterActionDef(self, ctx):
         opname = ctx.actionSymbol().getText()
-        opvars = {}
         self.scopes.append(Operator(opname))
 
     def exitActionDef(self, ctx):
@@ -432,7 +449,7 @@ class DomainListener(pddlListener):
         self.scopes.append(Operator(None))
 
     def exitPredicatesDef(self, ctx):
-        dummyop = self.scopes.pop()
+        self.scopes.pop()
 
     def enterTypesDef(self, ctx):
         self.scopes.append(Obj())
@@ -563,6 +580,9 @@ class DomainListener(pddlListener):
 
 
 class ProblemListener(pddlListener):
+    """ANTLR walk listener that builds the problem side of the model: objects,
+    the initial state (symbolic atoms and numeric assignments), the goal, and
+    the optimization metric."""
 
     def __init__(self):
         self.objects = {}

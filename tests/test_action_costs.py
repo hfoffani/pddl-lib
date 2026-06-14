@@ -3,15 +3,14 @@ import os
 
 from pddlpy import DomainProblem
 from pddlpy.planning import (
-    State,
-    GroundedTask,
+    TOTAL_COST,
     BFSPlanner,
-    AStarPlanner,
+    GroundedTask,
+    State,
     UniformCostPlanner,
     action_cost,
-    plan_cost,
-    TOTAL_COST,
     get,
+    plan_cost,
     registry,
 )
 
