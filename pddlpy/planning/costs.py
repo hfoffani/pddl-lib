@@ -13,7 +13,8 @@ from typing import TYPE_CHECKING, Sequence
 
 if TYPE_CHECKING:
     from pddlpy.pddl import Operator
-    from .state import GroundAtom, State
+
+    from .state import State
 
 #: The reserved cost fluent head.
 TOTAL_COST = ("total-cost",)

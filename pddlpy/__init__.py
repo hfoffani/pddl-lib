@@ -20,3 +20,5 @@
 
 from .pddl import DomainProblem
 
+__all__ = ["DomainProblem"]
+

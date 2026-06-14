@@ -5,14 +5,13 @@ import pytest
 
 from pddlpy import DomainProblem
 from pddlpy.planning import (
-    State,
-    GroundedTask,
-    BFSPlanner,
     AStarPlanner,
+    BFSPlanner,
     GBFSPlanner,
+    GroundedTask,
     UnsupportedRequirementsError,
-    registry,
     get,
+    registry,
 )
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")

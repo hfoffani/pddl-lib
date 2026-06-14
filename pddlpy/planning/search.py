@@ -18,12 +18,13 @@ from collections import deque
 from typing import TYPE_CHECKING, Dict, FrozenSet, List, Optional, Tuple
 
 from .base import Planner
-from .state import Plan, State, atom_tuple
-from .registry import register
 from .costs import action_cost, plan_cost
+from .registry import register
+from .state import Plan, State, atom_tuple
 
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem, Operator
+
     from .state import GroundAtom
 
 #: Parent-pointer map used to reconstruct a plan.

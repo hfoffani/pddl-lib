@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Dict, Iterable, Iterator, List, Mapping, Optional, Tuple
 
 if TYPE_CHECKING:
-    from pddlpy.pddl import Atom, DomainProblem, Operator
+    from pddlpy.pddl import DomainProblem, Operator
 
 #: A ground atom, e.g. ``("on", "a", "b")``.
 GroundAtom = Tuple[str, ...]
@@ -18,7 +18,7 @@ GroundAtom = Tuple[str, ...]
 Valuation = Dict[GroundAtom, float]
 
 
-def atom_tuple(atom: "Atom | GroundAtom | Iterable[str]") -> GroundAtom:
+def atom_tuple(atom: Any) -> GroundAtom:
     """Normalize a ground atom to a plain tuple of strings.
 
     Accepts either a tuple (already normalized, e.g. from a grounded
@@ -154,7 +154,7 @@ class Plan:
     def __len__(self) -> int:
         return len(self.actions)
 
-    def action_names(self) -> List[Tuple[str, Dict[str, Any]]]:
+    def action_names(self) -> List[Tuple[Optional[str], Dict[str, Optional[str]]]]:
         """List of ``(operator_name, variable_bindings)`` for each action."""
         return [(a.operator_name, a.variable_list) for a in self.actions]
 

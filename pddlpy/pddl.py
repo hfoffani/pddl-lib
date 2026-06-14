@@ -20,15 +20,15 @@
 
 from __future__ import annotations
 
-from typing import (Any, Dict, Iterator, List, Optional, Sequence, Tuple)
-
-from antlr4 import *
-from .pddlLexer import pddlLexer
-from .pddlParser import pddlParser
-from .pddlListener import pddlListener
-
 import itertools
 import operator as _operator
+from typing import Any, Dict, Iterator, List, Optional, Sequence, Tuple
+
+from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
+
+from .pddlLexer import pddlLexer
+from .pddlListener import pddlListener
+from .pddlParser import pddlParser
 
 #: A binding of variable names to values, e.g. {"?x": "a"}.
 VarVals = Dict[str, str]
@@ -377,7 +377,6 @@ class DomainListener(pddlListener):
 
     def enterActionDef(self, ctx):
         opname = ctx.actionSymbol().getText()
-        opvars = {}
         self.scopes.append(Operator(opname))
 
     def exitActionDef(self, ctx):
@@ -432,7 +431,7 @@ class DomainListener(pddlListener):
         self.scopes.append(Operator(None))
 
     def exitPredicatesDef(self, ctx):
-        dummyop = self.scopes.pop()
+        self.scopes.pop()
 
     def enterTypesDef(self, ctx):
         self.scopes.append(Obj())

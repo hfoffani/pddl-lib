@@ -7,8 +7,8 @@ from pddlpy import DomainProblem
 from pddlpy.planning import (
     Planner,
     UnsupportedRequirementsError,
-    validate_requirements,
     registry,
+    validate_requirements,
 )
 from pddlpy.planning.base import _used_features
 

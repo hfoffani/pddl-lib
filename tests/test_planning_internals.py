@@ -3,9 +3,9 @@ best-first failure path, and negative-precondition feature detection."""
 import os
 
 from pddlpy import DomainProblem
-from pddlpy.planning import State, Plan, AStarPlanner, GBFSPlanner
-from pddlpy.planning.state import atom_tuple
+from pddlpy.planning import AStarPlanner, GBFSPlanner, Plan, State
 from pddlpy.planning.base import _used_features
+from pddlpy.planning.state import atom_tuple
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
 
