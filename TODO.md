@@ -15,8 +15,9 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
 - [x] **Add a benchmark parse-corpus** — vendored canonical PDDL files (IPC blocksworld,
       gripper, logistics) that MUST parse; the #36 regression guard.
       *`tests/corpus/` + `tests/test_corpus.py` (9 tests).*
-- [ ] **Fix `make testgrammar` Java classpath** — currently fails; Java can't find the ANTLR4
+- [x] **Fix `make testgrammar` Java classpath** — currently fails; Java can't find the ANTLR4
       runtime. Add `antlr-4.13.2-complete.jar` to the classpath so grammar changes stay verifiable.
+      *Used absolute jar path (`$(CURDIR)`) so it survives `cd tmp`; added `.` to GRUN classpath.*
 - [ ] **Drive line coverage toward 100%** — write tests covering every line of `pddl.py`.
       Coverage is used here as a **bug-finder**: where a line can't be made to pass, mark the
       test `xfail` with the owning issue number. Failing tests are EXPECTED and document

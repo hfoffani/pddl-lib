@@ -2,16 +2,18 @@
 # ANTLR configuration
 ANTLRVERSION=4.13.2
 ANTLRJAR=antlr-$(ANTLRVERSION)-complete.jar
+# Absolute path so the jar stays on the classpath after `cd tmp`.
+ANTLRJARABS=$(CURDIR)/$(ANTLRJAR)
 ANTLRURL=https://www.antlr.org/download/$(ANTLRJAR)
 ANTLR=java -jar $(ANTLRJAR)
-GRUN=java -cp $(ANTLRJAR) org.antlr.v4.gui.TestRig
+GRUN=java -cp ".:$(ANTLRJARABS)" org.antlr.v4.gui.TestRig
 
 ANTLRLANG=-Dlanguage=Python3
 UV=uv
 PYTHON=uv run python
 PIP=uv pip
 
-export CLASSPATH:=.:$(ANTLRJAR)
+export CLASSPATH:=.:$(ANTLRJARABS)
 
 # Default target: test grammar and run Python tests
 all: testgrammar test
