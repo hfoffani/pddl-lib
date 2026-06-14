@@ -71,7 +71,7 @@ class _BestFirstPlanner(Planner):
     capabilities = STRIPS_CAPABILITIES
 
     def _priority(self, g, h):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover - abstract
 
     def solve(self, domainproblem):
         task = self.prepare(domainproblem)
@@ -87,7 +87,7 @@ class _BestFirstPlanner(Planner):
             if task.is_goal(state):
                 return Plan(_reconstruct(came_from, state))
             if g > best_g.get(state, g):
-                continue  # stale entry
+                continue  # pragma: no cover - stale heap entry (lazy deletion)
             for action, succ in task.successors(state):
                 ng = g + 1
                 if ng < best_g.get(succ, ng + 1):

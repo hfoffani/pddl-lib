@@ -25,8 +25,7 @@ While the parser does recognize durations you cannot recover these tags from Pyt
 
 ### What this project is not? ###
 
-This library doesn't include and won't include algorithms for solutions search.
-There are lots of projects and complete packages for planning available. This project is just a library that provides the user a simple PDDL helper API useful when she experiments with her own planning algorithms.
+The core of this library is a PDDL parser and object model — a simple helper API for users experimenting with their own planning algorithms. It ships a small **reference planner layer** (see _Planning API_ below) whose only job is to prove a stable, pluggable solver interface; it is **not** intended to compete with full planning systems such as Fast Downward or LAMA. For serious solving there are lots of complete packages available.
 
 ### Examples ###
 
@@ -79,6 +78,63 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 The pddl files are examples obtained from the course material.
 
+You can also read the domain's declared requirements:
+
+```python
+>>> domprob.requirements()
+{':strips', ':typing'}
+```
+
+### Planning API ###
+
+Above the parser/object model sits an optional, strictly-layered planning
+package (`pddlpy.planning`). It imports from the object model but never from
+the grammar; the object model imports nothing from it.
+
+It provides:
+
+* `State` — an immutable, hashable set of ground atoms. `State.from_problem(dp)`
+  builds the initial state; `state.applicable(operator)` and
+  `state.apply(operator)` check/advance a grounded operator without any manual
+  `Atom`/tuple casting; `state.satisfies(goals)` tests the goal.
+* `Plan` — an ordered sequence of grounded actions with a `cost`.
+* `GroundedTask` — grounds every operator once and exposes a `successors(state)`
+  function and `is_goal(state)`; the shared component every planner reuses.
+* `Planner` — the abstract solver contract, `solve(domainproblem) -> Plan | None`.
+  Each planner declares `capabilities` (the `:requirements` it supports) and
+  **fails fast** with `UnsupportedRequirementsError` when handed a domain
+  beyond its subset.
+* `registry` — register and look up planners by name.
+* Three reference planners over STRIPS: `BFSPlanner` (`"bfs"`), `AStarPlanner`
+  (`"astar"`, goal-count heuristic) and `GBFSPlanner` (`"gbfs"`).
+
+```python
+>>> import pddlpy
+>>> from pddlpy.planning import get
+>>> dp = pddlpy.DomainProblem('blocksworld-domain.pddl', 'blocksworld-problem.pddl')
+>>> plan = get('astar').solve(dp)
+>>> plan.cost
+4
+>>> plan.action_names()
+[('pick-up', {'?x': 'b'}), ('stack', {'?x': 'b', '?y': 'c'}),
+ ('pick-up', {'?x': 'a'}), ('stack', {'?x': 'a', '?y': 'b'})]
+```
+
+Registering your own planner needs no changes to the layers below:
+
+```python
+from pddlpy.planning import Planner, registry
+
+class MyPlanner(Planner):
+    capabilities = frozenset({':strips', ':typing'})
+    def solve(self, domainproblem):
+        task = self.prepare(domainproblem)   # runs requirement + capability checks
+        ...
+
+registry.register('mine', MyPlanner)
+plan = registry.get('mine').solve(dp)
+```
+
 ### Other Resources ###
 
 There are wonderful material at the the University of Edinburgh:
@@ -88,10 +144,14 @@ There are wonderful material at the the University of Edinburgh:
 
 ### Future development ###
 
-* Implement the `:requirements` directive.
-* Add more examples (time durataion, a simple planner maybe?).
-* Add API documentation.
-* More unit tests.
+* Numeric fluents (`:functions`, numeric preconditions/effects).
+* Action costs (`total-cost`) and cost-aware search.
+* Durative actions (recover duration tags into the object model).
+* Heuristic improvements for the reference planners.
+
+Done recently: case-insensitive keywords, `:requirements` capture/enforcement,
+a planner interface with BFS/A*/GBFS reference planners, and a measured test
+suite with full coverage of the object model.
 
 ### Advanced ###
 

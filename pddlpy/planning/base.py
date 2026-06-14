@@ -99,4 +99,4 @@ class Planner(ABC):
     @abstractmethod
     def solve(self, domainproblem):
         """Return a ``Plan`` reaching the goal, or ``None`` if none exists."""
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover - abstract

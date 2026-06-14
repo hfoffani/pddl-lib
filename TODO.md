@@ -61,18 +61,25 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
 ---
 
 ## Phase 1 — Planner interface + reference planner (STRIPS)  *(addresses #1)*
-- [ ] **Define `Planner` ABC + `Plan` / `State` types** (PRD §5).
-- [ ] **#21 — type mismatch `initialstate()` vs `precondition_pos`** — `Atom` vs tuple makes
+- [x] **Define `Planner` ABC + `Plan` / `State` types** (PRD §5). *`pddlpy/planning/`:
+      `Planner` ABC (`solve(domainproblem) -> Plan | None`), `State`, `Plan`.*
+- [x] **#21 — type mismatch `initialstate()` vs `precondition_pos`** — `Atom` vs tuple makes
       `issubset` always false. Resolve via the new `State` type so `operator.applicable(state)`
       works without manual casting. Linchpin: same change is both the bug fix and the planner's
-      core data structure.
-- [ ] **Factor out grounding + successor generation** as shared components below the planner.
-- [ ] **Implement a blind-search reference planner** — BFS first, then A* / GBFS.
-- [ ] **Capability metadata + registry** (PRD §7); fail fast on unsupported `:requirements`.
-- [ ] **#9 — enforce `:requirements`** — validate domain feature use against declared requirements.
-- [ ] **Boundary enforcement test** — planner imports nothing from grammar; model imports no
-      planner code (import-linter rule or test).
-- [ ] **#2 — API docs** — document the planner + model API (or defer per Open Question §9).
+      core data structure. *`State` normalizes Atom/tuple; `state.applicable(op)` / `state.apply(op)`.*
+- [x] **Factor out grounding + successor generation** as shared components below the planner.
+      *`GroundedTask` (grounds once; `successors(state)` + `is_goal(state)`).*
+- [x] **Implement a blind-search reference planner** — BFS first, then A* / GBFS.
+      *`BFSPlanner`, `AStarPlanner` (goal-count), `GBFSPlanner`; solve blocksworld + gripper.*
+- [x] **Capability metadata + registry** (PRD §7); fail fast on unsupported `:requirements`.
+      *`Planner.capabilities` + `check_capabilities`; `PlannerRegistry` (`register`/`get`).*
+- [x] **#9 — enforce `:requirements`** — validate domain feature use against declared requirements.
+      *Capture in model (`DomainProblem.requirements()`); `validate_requirements()` enforces
+      typing/negative/disjunctive use vs declarations.*
+- [x] **Boundary enforcement test** — planner imports nothing from grammar; model imports no
+      planner code (import-linter rule or test). *`tests/test_layering.py` (static AST import scan).*
+- [x] **#2 — API docs** — document the planner + model API (or defer per Open Question §9).
+      *Docstrings throughout + README "Planning API" section; full docs site deferred.*
 
 ## Phase 2 — Numeric fluents  *(#11)*
 - [ ] Parse `:functions`, numeric preconditions, numeric effects.
