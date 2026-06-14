@@ -2,16 +2,18 @@
 # ANTLR configuration
 ANTLRVERSION=4.13.2
 ANTLRJAR=antlr-$(ANTLRVERSION)-complete.jar
+# Absolute path so the jar stays on the classpath after `cd tmp`.
+ANTLRJARABS=$(CURDIR)/$(ANTLRJAR)
 ANTLRURL=https://www.antlr.org/download/$(ANTLRJAR)
 ANTLR=java -jar $(ANTLRJAR)
-GRUN=java -cp $(ANTLRJAR) org.antlr.v4.gui.TestRig
+GRUN=java -cp ".:$(ANTLRJARABS)" org.antlr.v4.gui.TestRig
 
 ANTLRLANG=-Dlanguage=Python3
 UV=uv
 PYTHON=uv run python
 PIP=uv pip
 
-export CLASSPATH:=.:$(ANTLRJAR)
+export CLASSPATH:=.:$(ANTLRJARABS)
 
 # Default target: test grammar and run Python tests
 all: testgrammar test
@@ -44,7 +46,12 @@ pyparser: $(ANTLRJAR) pddl.g4
 # Run Python tests
 test: pyparser pddlpy/pddl.py
 	@echo "Running Python tests..."
-	$(PYTHON) -m pddlpy.test
+	$(PYTHON) -m pytest
+
+# Run tests with coverage report for pddlpy/pddl.py
+coverage: pyparser pddlpy/pddl.py
+	@echo "Running tests with coverage..."
+	$(PYTHON) -m pytest --cov=pddlpy --cov-report=term-missing
 
 # Build distribution with uv
 build: test
@@ -91,6 +98,7 @@ help:
 	@echo "  testgrammar  - Test ANTLR grammar with Java"
 	@echo "  pyparser     - Generate Python parser from grammar"
 	@echo "  test         - Run Python tests"
+	@echo "  coverage     - Run tests with coverage report"
 	@echo "  build        - Build distribution packages"
 	@echo "  clean        - Remove build artifacts"
 	@echo "  demo         - Run demo scripts"
@@ -98,4 +106,4 @@ help:
 	@echo "  pypitest     - Publish to TestPyPI"
 	@echo "  pypipublish  - Publish to PyPI"
 
-.PHONY: all init testgrammar pyparser test build clean demo testpublish pypitest pypipublish help
+.PHONY: all init testgrammar pyparser test coverage build clean demo testpublish pypitest pypipublish help

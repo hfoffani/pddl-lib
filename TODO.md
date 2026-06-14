@@ -9,38 +9,54 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
 ## Phase 0 — Foundation: correctness + coverage  *(gating)*
 
 ### Test & verification infrastructure (do first — it's the safety net for the fixes below)
-- [ ] **Stand up coverage tooling** — add `pytest` + `coverage`/`pytest-cov`, wire into the
+- [x] **Stand up coverage tooling** — add `pytest` + `coverage`/`pytest-cov`, wire into the
       Makefile (`make coverage`), establish and print the baseline % for `pddlpy/pddl.py`.
-- [ ] **Add a benchmark parse-corpus** — vendored canonical PDDL files (IPC blocksworld,
+      *Baseline: 83% for `pddlpy/pddl.py`.*
+- [x] **Add a benchmark parse-corpus** — vendored canonical PDDL files (IPC blocksworld,
       gripper, logistics) that MUST parse; the #36 regression guard.
-- [ ] **Fix `make testgrammar` Java classpath** — currently fails; Java can't find the ANTLR4
+      *`tests/corpus/` + `tests/test_corpus.py` (9 tests).*
+- [x] **Fix `make testgrammar` Java classpath** — currently fails; Java can't find the ANTLR4
       runtime. Add `antlr-4.13.2-complete.jar` to the classpath so grammar changes stay verifiable.
-- [ ] **Drive line coverage toward 100%** — write tests covering every line of `pddl.py`.
+      *Used absolute jar path (`$(CURDIR)`) so it survives `cd tmp`; added `.` to GRUN classpath.*
+- [x] **Drive line coverage toward 100%** — write tests covering every line of `pddl.py`.
       Coverage is used here as a **bug-finder**: where a line can't be made to pass, mark the
       test `xfail` with the owning issue number. Failing tests are EXPECTED and document
       known/undiscovered bugs — do not delete or weaken them to go green.
+      *`pddlpy/pddl.py` at **100%** (23 passed, 1 xfail for #27/#23). The `__main__` guard is
+      `# pragma: no cover`; the legacy `pddlpy/test.py` scaffolding is omitted from coverage.*
 
 ### Parser & object-model bug fixes (each lands with a regression test)
-- [ ] **#20 / #36 — keyword case-insensitivity** — `(:INIT ...)` and other uppercase keywords
+- [x] **#20 / #36 — keyword case-insensitivity** — `(:INIT ...)` and other uppercase keywords
       in standard IPC files are not recognized; `initialstate()` returns empty with no error.
       Make grammar keywords case-insensitive. *Confirmed reproducible on IPC blocksworld.*
       **Highest impact: unblocks parsing of real-world files.**
-- [ ] **#26 — grounding cross-operator cache bug** — `vargroundspace` cached per first operator;
+      *Fixed via grammar `options { caseInsensitive = true; }`; identifiers keep their case.
+      Regression test `test_uppercase_keywords_parse`.*
+- [x] **#26 — grounding cross-operator cache bug** — `vargroundspace` cached per first operator;
       grounding a second operator reuses the first's bindings. Key the cache correctly per
-      operator's own variable types.
-- [ ] **#13 — OR preconditions silently flattened to AND** — at minimum **preserve the
+      operator's own variable types. *Already keyed per operator name (`vargroundspace[opname]`);
+      verified independent + order-independent grounding and locked in with `tests/test_grounding.py`.*
+- [x] **#13 — OR preconditions silently flattened to AND** — at minimum **preserve the
       connective** so `or` is distinguishable from `and` and no longer silently mis-modeled.
       Full and/or/not tree + DNF evaluation is deferred to keep the phase short (see #10).
-- [ ] **#19 — comment on last line breaks parsing** — adopt the suggested `LINE_COMMENT` rule
-      that accepts `EOF` as a terminator.
+      *Added `Operator.precondition_connective` ('and'|'or'), propagated to grounded operators;
+      tests in `tests/test_precondition_connective.py`.*
+- [x] **#19 — comment on last line breaks parsing** — adopt the suggested `LINE_COMMENT` rule
+      that accepts `EOF` as a terminator. *`('\r'? '\n' | EOF)`; regression test
+      `test_trailing_comment_without_newline`.*
 
 ### Triage / investigation (Phase 0 scope)
-- [ ] **#27 — user-supplied files fail to parse** — reproduce; likely a duplicate of #20/#23
-      (file uses `:durative-actions`). Confirm and link or fix.
-- [ ] **#16 — `No module named '__builtin__'`** — Python 2 leftover; confirm it's gone on 3.11+
-      and close, or remove the offending import.
-- [ ] **#18 — `InvalidCastException` reading types** (.NET port) — confirm scope; the .NET/DLL
-      path may be out of scope for this Python repo → decide & label.
+- [x] **#27 — user-supplied files fail to parse** — reproduce; likely a duplicate of #20/#23
+      (file uses `:durative-actions`). Confirm and link or fix. *Confirmed = #23: a
+      durative-action file raises `IndexError` in `enterTypedVariableList` (no
+      `enterDurativeActionDef` scope is pushed). Vendored fixture + `xfail` test
+      (`test_durative_action_parses`); fix deferred to Phase 4.*
+- [x] **#16 — `No module named '__builtin__'`** — Python 2 leftover; confirm it's gone on 3.11+
+      and close, or remove the offending import. *No `__builtin__`/py2 leftovers anywhere in the
+      repo; guarded by `test_no_python2_builtin_import`. Close.*
+- [x] **#18 — `InvalidCastException` reading types** (.NET port) — confirm scope; the .NET/DLL
+      path may be out of scope for this Python repo → decide & label. *No .NET/C#/DLL artifacts in
+      this repo; out of scope for the Python library. Label out-of-scope and close.*
 
 ---
 

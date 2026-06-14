@@ -67,4 +67,19 @@ packages = ["pddlpy"]
 dev = [
     "twine>=5.0.0",
     "build>=1.0.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["pddlpy", "tests"]
+python_files = ["test.py", "test_*.py"]
+
+[tool.coverage.run]
+source = ["pddlpy"]
+omit = [
+    "pddlpy/pddlLexer.py",
+    "pddlpy/pddlParser.py",
+    "pddlpy/pddlListener.py",
+    "pddlpy/test.py",
 ]
