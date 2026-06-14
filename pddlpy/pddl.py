@@ -51,7 +51,7 @@ class Expr():
         return self
 
     def value(self, valuation):
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover - abstract
 
 
 class Num(Expr):

@@ -98,6 +98,53 @@ def test_numeric_effect_apply(op, expected):
     assert new == pytest.approx(expected)
 
 
+ARITH_DOMAIN = """(define (domain arith)
+ (:requirements :strips :typing :fluents)
+ (:types loc)
+ (:predicates (at ?l - loc))
+ (:functions (fuel) (extra ?x))
+ (:action go
+   :parameters (?from - loc ?to - loc)
+   :precondition (and (at ?from) (>= (fuel) (+ 5 (- 2))))
+   :effect (and (not (at ?from)) (at ?to) (decrease (fuel) 3))))"""
+
+ARITH_PROBLEM = """(define (problem ap) (:domain arith)
+ (:objects x y - loc)
+ (:init (at x) (= (fuel) 10))
+ (:goal (at y)))"""
+
+
+def test_arithmetic_expressions_parse_ground_and_eval(tmp_path):
+    domain = tmp_path / "d.pddl"
+    problem = tmp_path / "p.pddl"
+    domain.write_text(ARITH_DOMAIN)
+    problem.write_text(ARITH_PROBLEM)
+    dp = DomainProblem(str(domain), str(problem))
+
+    # untyped function parameter is captured (extra ?x -> type None)
+    assert dp.functions()["extra"] == [("?x", None)]
+    assert dp.functions()["fuel"] == []
+
+    grounded = next(dp.ground_operator("go"))
+    constraint = grounded.precondition_num[0]
+    # rhs is (+ 5 (- 2)) -> 3.0, evaluated after grounding the expression tree
+    assert constraint.rhs.value({}) == 3.0
+    assert constraint.lhs.value({("fuel",): 10.0}) == 10.0
+    assert constraint.holds({("fuel",): 10.0})  # 10 >= 3
+    # numeric effect with a literal grounds and applies
+    key, new = grounded.effect_num[0].apply({("fuel",): 10.0})
+    assert key == ("fuel",)
+    assert new == 7.0
+
+
+def test_numeric_state_repr():
+    from pddlpy.planning import State
+
+    state = State([("at", "x")], {("fuel",): 10.0})
+    text = repr(state)
+    assert "fuel" in text and "at" in text
+
+
 def test_expr_repr():
     assert repr(Num(3)) == "3.0"
     assert repr(Fluent(("fuel", "truck"))) == "('fuel', 'truck')"

@@ -108,6 +108,12 @@ It provides:
 * Three reference planners over STRIPS: `BFSPlanner` (`"bfs"`), `AStarPlanner`
   (`"astar"`, goal-count heuristic) and `GBFSPlanner` (`"gbfs"`).
 
+Numeric fluents (`:functions`, numeric preconditions/effects) are supported:
+`DomainProblem.functions()` and `initial_numeric()` expose them, grounded
+operators carry `precondition_num` / `effect_num`, and `State` tracks a numeric
+valuation so the planners respect constraints like `(>= (fuel ?v) 10)` and
+effects like `(decrease (fuel ?v) 5)`.
+
 ```python
 >>> import pddlpy
 >>> from pddlpy.planning import get
@@ -144,14 +150,14 @@ There are wonderful material at the the University of Edinburgh:
 
 ### Future development ###
 
-* Numeric fluents (`:functions`, numeric preconditions/effects).
 * Action costs (`total-cost`) and cost-aware search.
 * Durative actions (recover duration tags into the object model).
 * Heuristic improvements for the reference planners.
 
 Done recently: case-insensitive keywords, `:requirements` capture/enforcement,
-a planner interface with BFS/A*/GBFS reference planners, and a measured test
-suite with full coverage of the object model.
+a planner interface with BFS/A*/GBFS reference planners, numeric fluents
+(`:functions`, numeric preconditions/effects), and a measured test suite with
+full coverage of the object model and planning layer.
 
 ### Advanced ###
 

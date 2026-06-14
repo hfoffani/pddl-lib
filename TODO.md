@@ -82,8 +82,11 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
       *Docstrings throughout + README "Planning API" section; full docs site deferred.*
 
 ## Phase 2 — Numeric fluents  *(#11)*
-- [ ] Parse `:functions`, numeric preconditions, numeric effects.
-- [ ] Object model: effect expressions; extend successor generation to evaluate them.
+- [x] Parse `:functions`, numeric preconditions, numeric effects. *`DomainProblem.functions()` +
+      `initial_numeric()`; operators carry `precondition_num`/`effect_num`; numeric init captured.*
+- [x] Object model: effect expressions; extend successor generation to evaluate them.
+      *`Expr` tree (Num/Fluent/BinOp/Neg), `NumericConstraint`, `NumericEffect`; `State` carries a
+      fluent valuation; BFS/A*/GBFS solve the numeric-transport domain. 100% coverage.*
 
 ## Phase 3 — Action costs
 - [ ] `total-cost` handling; `Plan` carries cost.
