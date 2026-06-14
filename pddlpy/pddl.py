@@ -68,6 +68,13 @@ class Operator():
                             positive preconditions.
         precondition_neg -- a set of atoms corresponding to the
                             negative preconditions.
+        precondition_connective -- the top-level logical connective of the
+                            precondition, either 'and' (the default) or 'or'.
+                            For a disjunctive precondition this is 'or' so that
+                            it is no longer silently modeled as a conjunction
+                            (#13). Note: full and/or/not tree evaluation is not
+                            yet implemented; the atoms are still flattened into
+                            the positive/negative sets.
         effect_pos -- a set of atoms to add.
         effect_neg -- a set of atoms to delete.
     """
@@ -76,16 +83,19 @@ class Operator():
         self.variable_list = {}
         self.precondition_pos = set()
         self.precondition_neg = set()
+        self.precondition_connective = 'and'
         self.effect_pos = set()
         self.effect_neg = set()
 
     def __str__(self):
         templ = "Operator Name: %s\n\tVariables: %s\n\t" + \
+                "Precondition Connective: %s\n\t" + \
                 "Positive Preconditions: %s\n\t" + \
                 "Negative Preconditions: %s\n\t" + \
                 "Positive Effects: %s\n\t" + \
                 "Negative Effects: %s\n"
         return templ % ( self.operator_name, self.variable_list,
+                         self.precondition_connective,
                          self.precondition_pos, self.precondition_neg,
                          self.effect_pos, self.effect_neg)
 
@@ -153,6 +163,17 @@ class DomainListener(pddlListener):
         scope = self.scopes.pop()
         self.scopes[-1].precondition_pos = set( scope.atoms )
         self.scopes[-1].precondition_neg = set( scope.negatoms )
+        self.scopes[-1].precondition_connective = self._connective( ctx.goalDesc() )
+
+    @staticmethod
+    def _connective(goaldesc_ctx):
+        # Top-level connective of a goalDesc: 'and' (default), or 'or' for a
+        # disjunctive precondition (#13). Keywords are case-insensitive.
+        if goaldesc_ctx is not None and goaldesc_ctx.getChildCount() >= 2:
+            tok = goaldesc_ctx.getChild(1).getText().lower()
+            if tok == 'or':
+                return 'or'
+        return 'and'
 
     def enterEffect(self, ctx):
         self.scopes.append(Scope())
@@ -336,6 +357,7 @@ class DomainProblem():
             st = dict(ground)
             gop = Operator(op_name)
             gop.variable_list = st
+            gop.precondition_connective = op.precondition_connective
             gop.precondition_pos = set( [ a.ground( st ) for a in op.precondition_pos ] )
             gop.precondition_neg = set( [ a.ground( st ) for a in op.precondition_neg ] )
             gop.effect_pos = set( [ a.ground( st ) for a in op.effect_pos ] )

@@ -34,9 +34,11 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
       grounding a second operator reuses the first's bindings. Key the cache correctly per
       operator's own variable types. *Already keyed per operator name (`vargroundspace[opname]`);
       verified independent + order-independent grounding and locked in with `tests/test_grounding.py`.*
-- [ ] **#13 — OR preconditions silently flattened to AND** — at minimum **preserve the
+- [x] **#13 — OR preconditions silently flattened to AND** — at minimum **preserve the
       connective** so `or` is distinguishable from `and` and no longer silently mis-modeled.
       Full and/or/not tree + DNF evaluation is deferred to keep the phase short (see #10).
+      *Added `Operator.precondition_connective` ('and'|'or'), propagated to grounded operators;
+      tests in `tests/test_precondition_connective.py`.*
 - [x] **#19 — comment on last line breaks parsing** — adopt the suggested `LINE_COMMENT` rule
       that accepts `EOF` as a terminator. *`('\r'? '\n' | EOF)`; regression test
       `test_trailing_comment_without_newline`.*
