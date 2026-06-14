@@ -24,6 +24,7 @@ from .pddlParser import pddlParser
 from .pddlListener import pddlListener
 
 import itertools
+import operator as _operator
 
 
 class Atom():
@@ -37,10 +38,177 @@ class Atom():
         g = [ varvals[v] if v in varvals else v for v in self.predicate ]
         return tuple(g)
 
+
+# --------------------------------------------------------------------------
+# Numeric fluents (#11): expression tree + numeric constraints/effects.
+# Expressions ground variables like Atoms and evaluate against a valuation
+# (a mapping from a ground function head tuple to a number).
+# --------------------------------------------------------------------------
+
+class Expr():
+    """Base class for numeric expression nodes."""
+    def ground(self, varvals):
+        return self
+
+    def value(self, valuation):
+        raise NotImplementedError
+
+
+class Num(Expr):
+    """A numeric literal."""
+    def __init__(self, value):
+        self.num = float(value)
+
+    def value(self, valuation):
+        return self.num
+
+    def __repr__(self):
+        return repr(self.num)
+
+
+class Fluent(Expr):
+    """A (possibly ungrounded) function head, e.g. ('fuel', '?v')."""
+    def __init__(self, head):
+        self.head = tuple(head)
+
+    def ground(self, varvals):
+        return Fluent(tuple(varvals[s] if s in varvals else s for s in self.head))
+
+    def value(self, valuation):
+        return valuation.get(self.head, 0.0)
+
+    def __repr__(self):
+        return str(self.head)
+
+
+class BinOp(Expr):
+    """A binary arithmetic operation (+, -, *, /)."""
+    _ops = {'+': _operator.add, '-': _operator.sub,
+            '*': _operator.mul, '/': _operator.truediv}
+
+    def __init__(self, op, left, right):
+        self.op = op
+        self.left = left
+        self.right = right
+
+    def ground(self, varvals):
+        return BinOp(self.op, self.left.ground(varvals), self.right.ground(varvals))
+
+    def value(self, valuation):
+        return self._ops[self.op](self.left.value(valuation), self.right.value(valuation))
+
+    def __repr__(self):
+        return "(%s %r %r)" % (self.op, self.left, self.right)
+
+
+class Neg(Expr):
+    """Unary minus."""
+    def __init__(self, operand):
+        self.operand = operand
+
+    def ground(self, varvals):
+        return Neg(self.operand.ground(varvals))
+
+    def value(self, valuation):
+        return -self.operand.value(valuation)
+
+    def __repr__(self):
+        return "(- %r)" % (self.operand,)
+
+
+class NumericConstraint():
+    """A numeric precondition, e.g. (>= (fuel ?v) (fuel-cost ?from ?to))."""
+    _cmp = {'>': _operator.gt, '<': _operator.lt, '=': _operator.eq,
+            '>=': _operator.ge, '<=': _operator.le}
+
+    def __init__(self, comp, lhs, rhs):
+        self.comp = comp
+        self.lhs = lhs
+        self.rhs = rhs
+
+    def ground(self, varvals):
+        return NumericConstraint(self.comp, self.lhs.ground(varvals), self.rhs.ground(varvals))
+
+    def holds(self, valuation):
+        return self._cmp[self.comp](self.lhs.value(valuation), self.rhs.value(valuation))
+
+    def __repr__(self):
+        return "(%s %r %r)" % (self.comp, self.lhs, self.rhs)
+
+
+class NumericEffect():
+    """A numeric effect, e.g. (decrease (fuel ?v) (fuel-cost ?from ?to))."""
+    def __init__(self, op, head, expr):
+        self.op = op
+        self.head = head   # a Fluent
+        self.expr = expr
+
+    def ground(self, varvals):
+        return NumericEffect(self.op, self.head.ground(varvals), self.expr.ground(varvals))
+
+    def apply(self, valuation):
+        """Return (ground_head_tuple, new_value) given the current valuation."""
+        key = self.head.head
+        rhs = self.expr.value(valuation)
+        if self.op == 'assign':
+            new = rhs
+        elif self.op == 'increase':
+            new = valuation.get(key, 0.0) + rhs
+        elif self.op == 'decrease':
+            new = valuation.get(key, 0.0) - rhs
+        elif self.op == 'scale-up':
+            new = valuation.get(key, 0.0) * rhs
+        elif self.op == 'scale-down':
+            new = valuation.get(key, 0.0) / rhs
+        else:  # pragma: no cover - grammar restricts assignOp to the above
+            raise ValueError("unknown assign op: %s" % self.op)
+        return key, new
+
+    def __repr__(self):
+        return "(%s %r %r)" % (self.op, self.head, self.expr)
+
+
+def _parse_fhead(ctx):
+    """Build a function-head tuple from an FHeadContext."""
+    name = ctx.functionSymbol().getText()
+    return tuple([name] + [t.getText() for t in ctx.term()])
+
+
+def _nth_fexp(ctx, i):
+    """Return the i-th fExp child of ctx. ANTLR generates a single-value
+    accessor when fExp occurs once in a rule and a list accessor when it
+    occurs more than once; this smooths over both."""
+    fe = ctx.fExp()
+    return fe[i] if isinstance(fe, list) else fe
+
+
+def _parse_fexp(ctx):
+    """Build an Expr from an FExpContext."""
+    if ctx.NUMBER() is not None:
+        return Num(ctx.NUMBER().getText())
+    if ctx.fHead() is not None:
+        return Fluent(_parse_fhead(ctx.fHead()))
+    if ctx.binaryOp() is not None:
+        return BinOp(ctx.binaryOp().getText(),
+                     _parse_fexp(_nth_fexp(ctx, 0)),
+                     _parse_fexp(ctx.fExp2().fExp()))
+    # '(' '-' fExp ')'
+    return Neg(_parse_fexp(_nth_fexp(ctx, 0)))
+
+
+def _parse_fcomp(ctx):
+    """Build a NumericConstraint from an FCompContext."""
+    return NumericConstraint(ctx.binaryComp().getText(),
+                             _parse_fexp(_nth_fexp(ctx, 0)),
+                             _parse_fexp(_nth_fexp(ctx, 1)))
+
+
 class Scope():
     def __init__(self):
         self.atoms = []
         self.negatoms = []
+        self.numerics = []      # NumericConstraint (preconditions)
+        self.numeffects = []    # NumericEffect
         self.variable_list = {}
 
     def addatom(self, atom):
@@ -77,6 +245,10 @@ class Operator():
                             the positive/negative sets.
         effect_pos -- a set of atoms to add.
         effect_neg -- a set of atoms to delete.
+        precondition_num -- a list of NumericConstraint numeric preconditions
+                            (#11), e.g. (>= (fuel ?v) 10).
+        effect_num -- a list of NumericEffect numeric effects (#11),
+                            e.g. (decrease (fuel ?v) 5).
     """
     def __init__(self, name):
         self.operator_name = name
@@ -86,6 +258,8 @@ class Operator():
         self.precondition_connective = 'and'
         self.effect_pos = set()
         self.effect_neg = set()
+        self.precondition_num = []
+        self.effect_num = []
 
     def __str__(self):
         templ = "Operator Name: %s\n\tVariables: %s\n\t" + \
@@ -108,12 +282,34 @@ class DomainListener(pddlListener):
         self.scopes = []
         self.negativescopes = []
         self.requirements = set()
+        self.functions = {}
 
     def enterRequireDef(self, ctx):
         # Capture declared :requirements (e.g. ':strips', ':typing').
         # Keywords are case-insensitive, so normalize to lowercase.
         for rk in ctx.REQUIRE_KEY():
             self.requirements.add(rk.getText().lower())
+
+    def enterFunctionsDef(self, ctx):
+        # Push a throwaway scope so typedVariableList (function parameters)
+        # has somewhere to write without crashing the listener.
+        self.scopes.append(Obj())
+
+    def exitFunctionsDef(self, ctx):
+        self.scopes.pop()
+
+    def enterAtomicFunctionSkeleton(self, ctx):
+        # Capture a :functions declaration: name -> ordered list of param types.
+        name = ctx.functionSymbol().getText()
+        tvl = ctx.typedVariableList()
+        params = []
+        for v in tvl.VARIABLE():
+            params.append((v.getText(), None))
+        for vs in tvl.singleTypeVarList():
+            t = vs.r_type().getText()
+            for v in vs.VARIABLE():
+                params.append((v.getText(), t))
+        self.functions[name] = params
 
     def enterActionDef(self, ctx):
         opname = ctx.actionSymbol().getText()
@@ -171,6 +367,13 @@ class DomainListener(pddlListener):
         self.scopes[-1].precondition_pos = set( scope.atoms )
         self.scopes[-1].precondition_neg = set( scope.negatoms )
         self.scopes[-1].precondition_connective = self._connective( ctx.goalDesc() )
+        self.scopes[-1].precondition_num = list( scope.numerics )
+
+    def enterFComp(self, ctx):
+        # A numeric comparison precondition, e.g. (>= (fuel ?v) 10).
+        scope = self.scopes[-1]
+        if hasattr(scope, 'numerics'):
+            scope.numerics.append(_parse_fcomp(ctx))
 
     @staticmethod
     def _connective(goaldesc_ctx):
@@ -189,6 +392,7 @@ class DomainListener(pddlListener):
         scope = self.scopes.pop()
         self.scopes[-1].effect_pos = set( scope.atoms )
         self.scopes[-1].effect_neg = set( scope.negatoms )
+        self.scopes[-1].effect_num = list( scope.numeffects )
 
     def enterGoalDesc(self, ctx):
         negscope = bool(self.negativescopes and self.negativescopes[-1])
@@ -202,6 +406,14 @@ class DomainListener(pddlListener):
         self.negativescopes.pop()
 
     def enterPEffect(self, ctx):
+        # A numeric assignment effect, e.g. (decrease (fuel ?v) 5).
+        if ctx.assignOp() is not None:
+            scope = self.scopes[-1]
+            if hasattr(scope, 'numeffects'):
+                effect = NumericEffect(ctx.assignOp().getText().lower(),
+                                       Fluent(_parse_fhead(ctx.fHead())),
+                                       _parse_fexp(_nth_fexp(ctx, 0)))
+                scope.numeffects.append(effect)
         negscope = False
         for c in ctx.getChildren():
             if c.getText() == 'not':
@@ -249,12 +461,19 @@ class ProblemListener(pddlListener):
         self.initialstate = []
         self.goals = []
         self.scopes = []
+        self.init_numeric = {}
 
     def enterInit(self, ctx):
         self.scopes.append(Scope())
 
     def exitInit(self, ctx):
         self.initialstate = set( self.scopes.pop().atoms )
+
+    def enterInitEl(self, ctx):
+        # Numeric init assignment: (= (fhead ...) NUMBER).
+        if ctx.fHead() is not None and ctx.NUMBER() is not None:
+            head = _parse_fhead(ctx.fHead())
+            self.init_numeric[head] = float(ctx.NUMBER().getText())
 
     def enterGoal(self, ctx):
         self.scopes.append(Scope())
@@ -358,6 +577,18 @@ class DomainProblem():
         """
         return set(self.domain.requirements)
 
+    def functions(self):
+        """Returns a dict mapping each declared :functions name to its ordered
+        list of (param_name, type) pairs. Empty if the domain declares none.
+        """
+        return dict(self.domain.functions)
+
+    def initial_numeric(self):
+        """Returns a dict mapping each ground function head tuple to its
+        initial numeric value, e.g. {('fuel', 'truck'): 100.0}.
+        """
+        return dict(self.problem.init_numeric)
+
     def ground_operator(self, op_name):
         """Returns an interator of Operator instances. Each item of the iterator
         is a grounded instance.
@@ -376,6 +607,8 @@ class DomainProblem():
             gop.precondition_neg = set( [ a.ground( st ) for a in op.precondition_neg ] )
             gop.effect_pos = set( [ a.ground( st ) for a in op.effect_pos ] )
             gop.effect_neg = set( [ a.ground( st ) for a in op.effect_neg ] )
+            gop.precondition_num = [ c.ground( st ) for c in op.precondition_num ]
+            gop.effect_num = [ e.ground( st ) for e in op.effect_num ]
             yield gop
 
     def _typesymbols(self, t):
