@@ -61,32 +61,51 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
 ---
 
 ## Phase 1 — Planner interface + reference planner (STRIPS)  *(addresses #1)*
-- [ ] **Define `Planner` ABC + `Plan` / `State` types** (PRD §5).
-- [ ] **#21 — type mismatch `initialstate()` vs `precondition_pos`** — `Atom` vs tuple makes
+- [x] **Define `Planner` ABC + `Plan` / `State` types** (PRD §5). *`pddlpy/planning/`:
+      `Planner` ABC (`solve(domainproblem) -> Plan | None`), `State`, `Plan`.*
+- [x] **#21 — type mismatch `initialstate()` vs `precondition_pos`** — `Atom` vs tuple makes
       `issubset` always false. Resolve via the new `State` type so `operator.applicable(state)`
       works without manual casting. Linchpin: same change is both the bug fix and the planner's
-      core data structure.
-- [ ] **Factor out grounding + successor generation** as shared components below the planner.
-- [ ] **Implement a blind-search reference planner** — BFS first, then A* / GBFS.
-- [ ] **Capability metadata + registry** (PRD §7); fail fast on unsupported `:requirements`.
-- [ ] **#9 — enforce `:requirements`** — validate domain feature use against declared requirements.
-- [ ] **Boundary enforcement test** — planner imports nothing from grammar; model imports no
-      planner code (import-linter rule or test).
-- [ ] **#2 — API docs** — document the planner + model API (or defer per Open Question §9).
+      core data structure. *`State` normalizes Atom/tuple; `state.applicable(op)` / `state.apply(op)`.*
+- [x] **Factor out grounding + successor generation** as shared components below the planner.
+      *`GroundedTask` (grounds once; `successors(state)` + `is_goal(state)`).*
+- [x] **Implement a blind-search reference planner** — BFS first, then A* / GBFS.
+      *`BFSPlanner`, `AStarPlanner` (goal-count), `GBFSPlanner`; solve blocksworld + gripper.*
+- [x] **Capability metadata + registry** (PRD §7); fail fast on unsupported `:requirements`.
+      *`Planner.capabilities` + `check_capabilities`; `PlannerRegistry` (`register`/`get`).*
+- [x] **#9 — enforce `:requirements`** — validate domain feature use against declared requirements.
+      *Capture in model (`DomainProblem.requirements()`); `validate_requirements()` enforces
+      typing/negative/disjunctive use vs declarations.*
+- [x] **Boundary enforcement test** — planner imports nothing from grammar; model imports no
+      planner code (import-linter rule or test). *`tests/test_layering.py` (static AST import scan).*
+- [x] **#2 — API docs** — document the planner + model API (or defer per Open Question §9).
+      *Docstrings throughout + README "Planning API" section; full docs site deferred.*
 
 ## Phase 2 — Numeric fluents  *(#11)*
-- [ ] Parse `:functions`, numeric preconditions, numeric effects.
-- [ ] Object model: effect expressions; extend successor generation to evaluate them.
+- [x] Parse `:functions`, numeric preconditions, numeric effects. *`DomainProblem.functions()` +
+      `initial_numeric()`; operators carry `precondition_num`/`effect_num`; numeric init captured.*
+- [x] Object model: effect expressions; extend successor generation to evaluate them.
+      *`Expr` tree (Num/Fluent/BinOp/Neg), `NumericConstraint`, `NumericEffect`; `State` carries a
+      fluent valuation; BFS/A*/GBFS solve the numeric-transport domain. 100% coverage.*
 
 ## Phase 3 — Action costs
-- [ ] `total-cost` handling; `Plan` carries cost.
-- [ ] Cost-aware search in the reference planner.
+- [x] `total-cost` handling; `Plan` carries cost. *`:action-costs`/`:numeric-fluents` added to the
+      grammar; `(:metric ...)` captured (`DomainProblem.metric()`); `Plan.cost` = accumulated
+      `total-cost` (`costs.action_cost`/`plan_cost`, `TOTAL_COST`).*
+- [x] Cost-aware search in the reference planner. *`UniformCostPlanner` ("ucs") is cost-optimal;
+      on the travel domain UCS picks the cheaper 2-hop route (cost 2) vs BFS's 1-hop (cost 5).
+      100% coverage.*
 
 ## Phase 4 — Durative actions  *(#23)*
-- [ ] **Complete duration-tag recovery** — grammar parses durative actions but Python recovery
-      is incomplete (the known issue in CLAUDE.md).
-- [ ] **`DurativeAction` type** — time-tagged conditions/effects (`at start / over all / at end`).
-- [ ] Decide temporal state representation; temporal-capable planner (or document non-coverage).
+- [x] **Complete duration-tag recovery** — grammar parses durative actions but Python recovery
+      is incomplete (the known issue in CLAUDE.md). *Fixed: durative actions no longer crash the
+      listener; duration recovered (`DurativeAction.duration`). Resolves #23/#27.*
+- [x] **`DurativeAction` type** — time-tagged conditions/effects (`at start / over all / at end`).
+      *`DurativeAction` with `condition_pos/neg` (start/over/end) and `effect_pos/neg` (start/end);
+      `DomainProblem.durative_operators()` + `ground_durative_operator()`. 100% coverage.*
+- [x] Decide temporal state representation; temporal-capable planner (or document non-coverage).
+      *Documented non-coverage: the reference planners are non-temporal and do not solve durative
+      domains (PRD §4/§8). The object model fully recovers durative actions.*
 
 ---
 

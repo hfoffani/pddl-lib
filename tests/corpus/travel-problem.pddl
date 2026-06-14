@@ -1,0 +1,12 @@
+(define (problem travel-01)
+  (:domain travel)
+  (:objects a b c - place)
+  (:init
+    (at a)
+    (connected a b) (connected b c) (connected a c)
+    (= (total-cost) 0)
+    (= (distance a b) 1)
+    (= (distance b c) 1)
+    (= (distance a c) 5))
+  (:goal (at c))
+  (:metric minimize (total-cost)))
