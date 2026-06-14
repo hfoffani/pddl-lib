@@ -107,6 +107,13 @@ class DomainListener(pddlListener):
         self.operators = {}
         self.scopes = []
         self.negativescopes = []
+        self.requirements = set()
+
+    def enterRequireDef(self, ctx):
+        # Capture declared :requirements (e.g. ':strips', ':typing').
+        # Keywords are case-insensitive, so normalize to lowercase.
+        for rk in ctx.REQUIRE_KEY():
+            self.requirements.add(rk.getText().lower())
 
     def enterActionDef(self, ctx):
         opname = ctx.actionSymbol().getText()
@@ -343,6 +350,13 @@ class DomainProblem():
         the domain file.
         """
         return self.domain.operators.keys()
+
+    def requirements(self):
+        """Returns the set of :requirements keywords declared in the domain
+        (e.g. {':strips', ':typing'}), normalized to lowercase. Empty if the
+        domain declares none.
+        """
+        return set(self.domain.requirements)
 
     def ground_operator(self, op_name):
         """Returns an interator of Operator instances. Each item of the iterator
