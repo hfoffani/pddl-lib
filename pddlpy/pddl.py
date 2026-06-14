@@ -462,6 +462,12 @@ class ProblemListener(pddlListener):
         self.goals = []
         self.scopes = []
         self.init_numeric = {}
+        self.metric = None
+
+    def enterMetricSpec(self, ctx):
+        # Capture the optimization metric, e.g. ('minimize', '(total-cost)').
+        self.metric = (ctx.optimization().getText().lower(),
+                       ctx.metricFExp().getText())
 
     def enterInit(self, ctx):
         self.scopes.append(Scope())
@@ -588,6 +594,13 @@ class DomainProblem():
         initial numeric value, e.g. {('fuel', 'truck'): 100.0}.
         """
         return dict(self.problem.init_numeric)
+
+    def metric(self):
+        """Returns the optimization metric as ``(optimization, expr_text)``,
+        e.g. ``('minimize', '(total-cost)')``, or ``None`` if the problem
+        declares no metric.
+        """
+        return self.problem.metric
 
     def ground_operator(self, op_name):
         """Returns an interator of Operator instances. Each item of the iterator

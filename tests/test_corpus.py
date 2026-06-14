@@ -29,6 +29,7 @@ BENCHMARKS = [
         },
     ),
     ("numeric-transport", {"drive"}),
+    ("travel", {"move"}),
 ]
 
 
