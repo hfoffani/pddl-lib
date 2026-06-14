@@ -16,9 +16,12 @@ from .base import Planner
 from .state import Plan, atom_tuple
 from .registry import register
 
-#: Requirements the reference STRIPS planners can handle.
+#: Requirements the reference planners can handle. Numeric fluents (#11) are
+#: supported because State evaluates numeric preconditions/effects during
+#: successor generation; the goal-count heuristic ignores them (still
+#: admissible for the symbolic goal).
 STRIPS_CAPABILITIES = frozenset(
-    {":strips", ":typing", ":negative-preconditions", ":equality"}
+    {":strips", ":typing", ":negative-preconditions", ":equality", ":fluents"}
 )
 
 
