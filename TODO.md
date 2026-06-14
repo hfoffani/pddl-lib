@@ -9,8 +9,9 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
 ## Phase 0 — Foundation: correctness + coverage  *(gating)*
 
 ### Test & verification infrastructure (do first — it's the safety net for the fixes below)
-- [ ] **Stand up coverage tooling** — add `pytest` + `coverage`/`pytest-cov`, wire into the
+- [x] **Stand up coverage tooling** — add `pytest` + `coverage`/`pytest-cov`, wire into the
       Makefile (`make coverage`), establish and print the baseline % for `pddlpy/pddl.py`.
+      *Baseline: 83% for `pddlpy/pddl.py`.*
 - [ ] **Add a benchmark parse-corpus** — vendored canonical PDDL files (IPC blocksworld,
       gripper, logistics) that MUST parse; the #36 regression guard.
 - [ ] **Fix `make testgrammar` Java classpath** — currently fails; Java can't find the ANTLR4
