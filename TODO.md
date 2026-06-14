@@ -30,9 +30,10 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
       **Highest impact: unblocks parsing of real-world files.**
       *Fixed via grammar `options { caseInsensitive = true; }`; identifiers keep their case.
       Regression test `test_uppercase_keywords_parse`.*
-- [ ] **#26 — grounding cross-operator cache bug** — `vargroundspace` cached per first operator;
+- [x] **#26 — grounding cross-operator cache bug** — `vargroundspace` cached per first operator;
       grounding a second operator reuses the first's bindings. Key the cache correctly per
-      operator's own variable types.
+      operator's own variable types. *Already keyed per operator name (`vargroundspace[opname]`);
+      verified independent + order-independent grounding and locked in with `tests/test_grounding.py`.*
 - [ ] **#13 — OR preconditions silently flattened to AND** — at minimum **preserve the
       connective** so `or` is distinguishable from `and` and no longer silently mis-modeled.
       Full and/or/not tree + DNF evaluation is deferred to keep the phase short (see #10).
