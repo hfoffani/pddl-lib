@@ -6,9 +6,11 @@ Sits strictly above the domain/problem object model: it imports from
 imports nothing from this package.
 """
 from .state import State, Plan, atom_tuple
+from .grounding import GroundedTask
 
 __all__ = [
     "State",
     "Plan",
     "atom_tuple",
+    "GroundedTask",
 ]
