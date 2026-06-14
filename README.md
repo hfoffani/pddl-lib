@@ -21,7 +21,7 @@ The orginal grammar file was authored by Zeyn Saigol from University of Birmingh
 
 ### NOTICE ###
 
-Currently the main branch is broken. I will be publishing to PyPI from this branch. While the parser does recognize durations you cannot recover these tags from Python.
+While the parser does recognize durations you cannot recover these tags from Python.
 
 ### What this project is not? ###
 
@@ -72,6 +72,11 @@ Type "help", "copyright", "credits" or "license" for more information.
 {('atl', 'robq', 'loc2'), ('adjacent', 'loc2', 'loc2')}
 >>>
 ```
+> Note: `initialstate()` and `goals()` return a set of `Atom` objects, not
+> tuples. Their `repr` looks like a tuple (as shown above), but use
+> `atom.predicate` to get the list of symbols. By contrast, a *grounded*
+> operator's `precondition_pos`/`effect_pos`/etc. are real tuples.
+
 The pddl files are examples obtained from the course material.
 
 ### Other Resources ###
