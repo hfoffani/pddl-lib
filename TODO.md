@@ -82,18 +82,30 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
       *Docstrings throughout + README "Planning API" section; full docs site deferred.*
 
 ## Phase 2 — Numeric fluents  *(#11)*
-- [ ] Parse `:functions`, numeric preconditions, numeric effects.
-- [ ] Object model: effect expressions; extend successor generation to evaluate them.
+- [x] Parse `:functions`, numeric preconditions, numeric effects. *`DomainProblem.functions()` +
+      `initial_numeric()`; operators carry `precondition_num`/`effect_num`; numeric init captured.*
+- [x] Object model: effect expressions; extend successor generation to evaluate them.
+      *`Expr` tree (Num/Fluent/BinOp/Neg), `NumericConstraint`, `NumericEffect`; `State` carries a
+      fluent valuation; BFS/A*/GBFS solve the numeric-transport domain. 100% coverage.*
 
 ## Phase 3 — Action costs
-- [ ] `total-cost` handling; `Plan` carries cost.
-- [ ] Cost-aware search in the reference planner.
+- [x] `total-cost` handling; `Plan` carries cost. *`:action-costs`/`:numeric-fluents` added to the
+      grammar; `(:metric ...)` captured (`DomainProblem.metric()`); `Plan.cost` = accumulated
+      `total-cost` (`costs.action_cost`/`plan_cost`, `TOTAL_COST`).*
+- [x] Cost-aware search in the reference planner. *`UniformCostPlanner` ("ucs") is cost-optimal;
+      on the travel domain UCS picks the cheaper 2-hop route (cost 2) vs BFS's 1-hop (cost 5).
+      100% coverage.*
 
 ## Phase 4 — Durative actions  *(#23)*
-- [ ] **Complete duration-tag recovery** — grammar parses durative actions but Python recovery
-      is incomplete (the known issue in CLAUDE.md).
-- [ ] **`DurativeAction` type** — time-tagged conditions/effects (`at start / over all / at end`).
-- [ ] Decide temporal state representation; temporal-capable planner (or document non-coverage).
+- [x] **Complete duration-tag recovery** — grammar parses durative actions but Python recovery
+      is incomplete (the known issue in CLAUDE.md). *Fixed: durative actions no longer crash the
+      listener; duration recovered (`DurativeAction.duration`). Resolves #23/#27.*
+- [x] **`DurativeAction` type** — time-tagged conditions/effects (`at start / over all / at end`).
+      *`DurativeAction` with `condition_pos/neg` (start/over/end) and `effect_pos/neg` (start/end);
+      `DomainProblem.durative_operators()` + `ground_durative_operator()`. 100% coverage.*
+- [x] Decide temporal state representation; temporal-capable planner (or document non-coverage).
+      *Documented non-coverage: the reference planners are non-temporal and do not solve durative
+      domains (PRD §4/§8). The object model fully recovers durative actions.*
 
 ---
 

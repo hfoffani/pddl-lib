@@ -28,6 +28,8 @@ BENCHMARKS = [
             "fly-airplane",
         },
     ),
+    ("numeric-transport", {"drive"}),
+    ("travel", {"move"}),
 ]
 
 

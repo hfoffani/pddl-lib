@@ -506,6 +506,8 @@ REQUIRE_KEY
     | ':quantified-preconditions'
     | ':conditional-effects'
     | ':fluents'
+    | ':numeric-fluents'
+    | ':action-costs'
     | ':adl'
     | ':durative-actions'
     | ':derived-predicates'

@@ -1,12 +1,14 @@
 """Blind- and heuristic-search reference planners over STRIPS.
 
 These prove the ``Planner`` contract; they are not performance entrants
-(PRD §4). All three reuse the shared ``GroundedTask`` successor function.
+(PRD §4). All reuse the shared ``GroundedTask`` successor function.
 
-* ``BFSPlanner``   — breadth-first; optimal for unit-cost STRIPS.
-* ``AStarPlanner`` — A* with the goal-count heuristic; optimal & admissible
-  for unit costs.
-* ``GBFSPlanner``  — greedy best-first; fast but not optimal.
+* ``BFSPlanner``        — breadth-first; optimal for unit-cost STRIPS.
+* ``AStarPlanner``      — A* with the goal-count heuristic; optimal &
+  admissible for unit costs.
+* ``GBFSPlanner``       — greedy best-first; fast but not optimal.
+* ``UniformCostPlanner`` — Dijkstra over action costs; cost-optimal for
+  action-cost domains (#3).
 """
 import heapq
 import itertools
@@ -15,10 +17,15 @@ from collections import deque
 from .base import Planner
 from .state import Plan, atom_tuple
 from .registry import register
+from .costs import action_cost, plan_cost
 
-#: Requirements the reference STRIPS planners can handle.
+#: Requirements the reference planners can handle. Numeric fluents (#11) and
+#: action costs (#3) are supported because State evaluates numeric
+#: preconditions/effects during successor generation; the goal-count heuristic
+#: ignores them (still admissible for the symbolic goal).
 STRIPS_CAPABILITIES = frozenset(
-    {":strips", ":typing", ":negative-preconditions", ":equality"}
+    {":strips", ":typing", ":negative-preconditions", ":equality",
+     ":fluents", ":numeric-fluents", ":action-costs"}
 )
 
 
@@ -59,19 +66,26 @@ class BFSPlanner(Planner):
                     continue
                 came_from[succ] = (state, action)
                 if task.is_goal(succ):
-                    return Plan(_reconstruct(came_from, succ))
+                    actions = _reconstruct(came_from, succ)
+                    return Plan(actions, cost=plan_cost(succ, actions))
                 visited.add(succ)
                 frontier.append(succ)
         return None
 
 
 class _BestFirstPlanner(Planner):
-    """Shared best-first core; subclasses define the node priority."""
+    """Shared best-first core; subclasses define the node priority and the
+    per-step cost."""
 
     capabilities = STRIPS_CAPABILITIES
 
     def _priority(self, g, h):
         raise NotImplementedError  # pragma: no cover - abstract
+
+    def _step_cost(self, action, state):
+        """Cost of one transition. Unit by default; cost-aware planners
+        override."""
+        return 1
 
     def solve(self, domainproblem):
         task = self.prepare(domainproblem)
@@ -85,11 +99,12 @@ class _BestFirstPlanner(Planner):
         while frontier:
             _, g, _, state = heapq.heappop(frontier)
             if task.is_goal(state):
-                return Plan(_reconstruct(came_from, state))
+                actions = _reconstruct(came_from, state)
+                return Plan(actions, cost=plan_cost(state, actions))
             if g > best_g.get(state, g):
                 continue  # pragma: no cover - stale heap entry (lazy deletion)
             for action, succ in task.successors(state):
-                ng = g + 1
+                ng = g + self._step_cost(action, state)
                 if ng < best_g.get(succ, ng + 1):
                     best_g[succ] = ng
                     came_from[succ] = (state, action)
@@ -101,7 +116,7 @@ class _BestFirstPlanner(Planner):
 
 
 class AStarPlanner(_BestFirstPlanner):
-    """A* with the goal-count heuristic (f = g + h)."""
+    """A* with the goal-count heuristic (f = g + h), unit step cost."""
 
     def _priority(self, g, h):
         return g + h
@@ -114,6 +129,19 @@ class GBFSPlanner(_BestFirstPlanner):
         return h
 
 
+class UniformCostPlanner(_BestFirstPlanner):
+    """Dijkstra over action costs (f = g, h ignored). Cost-optimal for
+    action-cost domains (#3); falls back to unit cost when a domain declares
+    none."""
+
+    def _priority(self, g, h):
+        return g
+
+    def _step_cost(self, action, state):
+        return action_cost(action, state)
+
+
 register("bfs", BFSPlanner)
 register("astar", AStarPlanner)
 register("gbfs", GBFSPlanner)
+register("ucs", UniformCostPlanner)

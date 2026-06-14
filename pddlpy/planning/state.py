@@ -23,49 +23,68 @@ def atom_tuple(atom):
 
 
 class State:
-    """An immutable, hashable set of ground atoms.
+    """An immutable, hashable planning state.
 
-    Atoms are stored as tuples of strings, e.g. ``("on", "a", "b")``.
-    Suitable as a key in search open/closed sets.
+    Holds a set of ground atoms (tuples of strings, e.g. ``("on", "a", "b")``)
+    and, for numeric domains (#11), a valuation mapping ground function heads
+    to numbers, e.g. ``{("fuel", "truck"): 100.0}``. Suitable as a key in
+    search open/closed sets.
     """
 
-    __slots__ = ("_atoms",)
+    __slots__ = ("_atoms", "_fluents", "_key")
 
-    def __init__(self, atoms=()):
+    def __init__(self, atoms=(), fluents=None):
         self._atoms = frozenset(atom_tuple(a) for a in atoms)
+        self._fluents = dict(fluents or {})
+        self._key = (self._atoms, frozenset(self._fluents.items()))
 
     @property
     def atoms(self):
         return self._atoms
 
+    @property
+    def fluents(self):
+        return self._fluents
+
     # -- constructors -----------------------------------------------------
     @classmethod
     def from_problem(cls, domainproblem):
-        """Build the initial state from a parsed ``DomainProblem``."""
-        return cls(domainproblem.initialstate())
+        """Build the initial state (atoms + numeric fluents) from a parsed
+        ``DomainProblem``."""
+        return cls(domainproblem.initialstate(), domainproblem.initial_numeric())
 
     # -- planning operations (resolve #21) -------------------------------
     def applicable(self, operator):
         """True if a grounded ``operator`` is applicable in this state.
 
-        Conjunctive semantics: all positive preconditions hold and no
-        negative precondition holds. Disjunctive preconditions
+        Conjunctive semantics: all positive preconditions hold, no negative
+        precondition holds, and every numeric precondition is satisfied under
+        the current fluent valuation. Disjunctive preconditions
         (``precondition_connective == 'or'``) are not modeled here; the
         reference planners gate such domains via capability negotiation.
         """
         pos = {atom_tuple(a) for a in operator.precondition_pos}
         neg = {atom_tuple(a) for a in operator.precondition_neg}
-        return pos <= self._atoms and neg.isdisjoint(self._atoms)
+        if not (pos <= self._atoms and neg.isdisjoint(self._atoms)):
+            return False
+        return all(c.holds(self._fluents) for c in operator.precondition_num)
 
     def apply(self, operator):
         """Return the successor ``State`` after applying a grounded operator.
 
         Delete effects are removed first, then add effects are added
-        (add-after-delete), matching STRIPS semantics.
+        (add-after-delete), matching STRIPS semantics. Numeric effects are
+        evaluated against the pre-state valuation (simultaneous semantics).
         """
         add = {atom_tuple(a) for a in operator.effect_pos}
         delete = {atom_tuple(a) for a in operator.effect_neg}
-        return State((self._atoms - delete) | add)
+        fluents = self._fluents
+        if operator.effect_num:
+            updates = [eff.apply(self._fluents) for eff in operator.effect_num]
+            fluents = dict(self._fluents)
+            for key, value in updates:
+                fluents[key] = value
+        return State((self._atoms - delete) | add, fluents)
 
     def satisfies(self, goals):
         """True if every (positive) goal atom holds in this state."""
@@ -82,12 +101,14 @@ class State:
         return len(self._atoms)
 
     def __eq__(self, other):
-        return isinstance(other, State) and self._atoms == other._atoms
+        return isinstance(other, State) and self._key == other._key
 
     def __hash__(self):
-        return hash(self._atoms)
+        return hash(self._key)
 
     def __repr__(self):
+        if self._fluents:
+            return "State(%s, %s)" % (sorted(self._atoms), dict(sorted(self._fluents.items())))
         return "State(%s)" % sorted(self._atoms)
 
 

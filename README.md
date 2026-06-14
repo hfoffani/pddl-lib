@@ -21,7 +21,9 @@ The orginal grammar file was authored by Zeyn Saigol from University of Birmingh
 
 ### NOTICE ###
 
-While the parser does recognize durations you cannot recover these tags from Python.
+Durative actions are now recovered into the object model (see _Planning API_).
+The reference planners, however, are non-temporal and do not solve durative
+domains — that is documented as out of scope for this round.
 
 ### What this project is not? ###
 
@@ -108,6 +110,25 @@ It provides:
 * Three reference planners over STRIPS: `BFSPlanner` (`"bfs"`), `AStarPlanner`
   (`"astar"`, goal-count heuristic) and `GBFSPlanner` (`"gbfs"`).
 
+Numeric fluents (`:functions`, numeric preconditions/effects) are supported:
+`DomainProblem.functions()` and `initial_numeric()` expose them, grounded
+operators carry `precondition_num` / `effect_num`, and `State` tracks a numeric
+valuation so the planners respect constraints like `(>= (fuel ?v) 10)` and
+effects like `(decrease (fuel ?v) 5)`.
+
+Action costs (`:action-costs`, `(increase (total-cost) ...)`, `(:metric minimize
+(total-cost))`) are supported too. `DomainProblem.metric()` exposes the metric,
+`Plan.cost` reports the accumulated `total-cost`, and `UniformCostPlanner`
+(`"ucs"`) is cost-optimal — where `BFSPlanner` minimizes the number of actions,
+`"ucs"` minimizes total cost.
+
+Durative actions (`:durative-actions`) are recovered into a `DurativeAction`
+type with time-tagged conditions (`at start` / `over all` / `at end`) and
+effects (`at start` / `at end`) plus a duration. `DomainProblem.durative_operators()`
+and `ground_durative_operator(name)` expose them. The reference planners are
+non-temporal, so they do not solve durative domains — this is documented as out
+of scope for now.
+
 ```python
 >>> import pddlpy
 >>> from pddlpy.planning import get
@@ -144,14 +165,15 @@ There are wonderful material at the the University of Edinburgh:
 
 ### Future development ###
 
-* Numeric fluents (`:functions`, numeric preconditions/effects).
-* Action costs (`total-cost`) and cost-aware search.
-* Durative actions (recover duration tags into the object model).
+* A temporal planner that solves durative-action domains.
 * Heuristic improvements for the reference planners.
+* ADL (conditional effects, quantifiers) and a full and/or/not precondition tree.
 
 Done recently: case-insensitive keywords, `:requirements` capture/enforcement,
-a planner interface with BFS/A*/GBFS reference planners, and a measured test
-suite with full coverage of the object model.
+a planner interface with BFS/A*/GBFS/UCS reference planners, numeric fluents
+(`:functions`, numeric preconditions/effects), action costs (`total-cost` +
+cost-aware search), durative-action recovery into the object model, and a
+measured test suite with full coverage of the object model and planning layer.
 
 ### Advanced ###
 
