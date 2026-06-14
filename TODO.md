@@ -24,10 +24,12 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
       known/undiscovered bugs — do not delete or weaken them to go green.
 
 ### Parser & object-model bug fixes (each lands with a regression test)
-- [ ] **#20 / #36 — keyword case-insensitivity** — `(:INIT ...)` and other uppercase keywords
+- [x] **#20 / #36 — keyword case-insensitivity** — `(:INIT ...)` and other uppercase keywords
       in standard IPC files are not recognized; `initialstate()` returns empty with no error.
       Make grammar keywords case-insensitive. *Confirmed reproducible on IPC blocksworld.*
       **Highest impact: unblocks parsing of real-world files.**
+      *Fixed via grammar `options { caseInsensitive = true; }`; identifiers keep their case.
+      Regression test `test_uppercase_keywords_parse`.*
 - [ ] **#26 — grounding cross-operator cache bug** — `vargroundspace` cached per first operator;
       grounding a second operator reuses the first's bindings. Key the cache correctly per
       operator's own variable types.

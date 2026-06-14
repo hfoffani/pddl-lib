@@ -15,6 +15,11 @@
 
 grammar pddl;
 
+// PDDL keywords are case-insensitive (#20 / #36). caseInsensitive makes
+// literal keyword tokens match any case while preserving the original
+// text of identifiers (object/predicate names stay case-sensitive).
+options { caseInsensitive = true; }
+
 tokens {
     DOMAIN,
     DOMAIN_NAME,
@@ -524,7 +529,9 @@ NAME:    LETTER ANY_CHAR* ;
 
 URI:	 LETTER ~(' ' | '\r' | '\n' | '\t' | '(' | ')')* ;
 
-fragment LETTER:	'a'..'z' | 'A'..'Z';
+// caseInsensitive matching folds A-Z into a-z; the original text is
+// preserved, so identifiers remain case-sensitive in getText().
+fragment LETTER:	'a'..'z';
 
 fragment ANY_CHAR: LETTER | '0'..'9' | '-' | '_';
 

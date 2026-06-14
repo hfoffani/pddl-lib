@@ -52,3 +52,21 @@ def test_initial_state_non_empty(benchmark):
 def test_goals_non_empty(benchmark):
     dp, _ = benchmark
     assert len(dp.goals()) > 0
+
+
+def test_uppercase_keywords_parse():
+    """#20 / #36: uppercase PDDL keywords ((:INIT ...), (DEFINE ...)) must
+    parse identically to lowercase, while identifiers keep their case."""
+    domainfile = os.path.join(CORPUS, "blocksworld-domain.pddl")
+    upper = DomainProblem(
+        domainfile, os.path.join(CORPUS, "blocksworld-upper-problem.pddl")
+    )
+    lower = DomainProblem(
+        domainfile, os.path.join(CORPUS, "blocksworld-problem.pddl")
+    )
+    # initialstate()/goals() hold Atom objects without value equality (#21),
+    # so compare by their string (tuple) representation.
+    as_strs = lambda atoms: sorted(str(a) for a in atoms)
+    assert as_strs(upper.initialstate()) == as_strs(lower.initialstate())
+    assert as_strs(upper.goals()) == as_strs(lower.goals())
+    assert len(upper.initialstate()) == 7
