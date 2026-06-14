@@ -8,8 +8,6 @@
 """
 import os
 
-import pytest
-
 from pddlpy import DomainProblem
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
@@ -25,16 +23,13 @@ def test_no_python2_builtin_import():
     assert "__builtin__" not in dir(pddl)
 
 
-@pytest.mark.xfail(
-    reason="#27/#23: durative-action recovery incomplete; no enterDurativeActionDef "
-    "scope is pushed, so enterTypedVariableList raises IndexError. Deferred to Phase 4.",
-    raises=IndexError,
-    strict=True,
-)
 def test_durative_action_parses():
+    # #27/#23: fixed in Phase 4. Durative actions used to crash the listener
+    # with IndexError; they now parse into the DurativeAction model and are
+    # listed under durative_operators() (not operators()).
     dp = DomainProblem(
         os.path.join(CORPUS, "durative-action-domain.pddl"),
         os.path.join(CORPUS, "durative-action-problem.pddl"),
     )
-    assert "go" in set(dp.operators())
+    assert "go" in set(dp.durative_operators())
     assert len(dp.goals()) > 0
