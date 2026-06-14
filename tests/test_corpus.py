@@ -70,3 +70,24 @@ def test_uppercase_keywords_parse():
     assert as_strs(upper.initialstate()) == as_strs(lower.initialstate())
     assert as_strs(upper.goals()) == as_strs(lower.goals())
     assert len(upper.initialstate()) == 7
+
+
+def test_trailing_comment_without_newline(tmp_path):
+    """#19: a comment on the final line with no trailing newline must not
+    break the lexer."""
+    problem = tmp_path / "p.pddl"
+    # Written with no trailing newline after the comment.
+    problem.write_text(
+        "(define (problem p)\n"
+        "  (:domain blocksworld)\n"
+        "  (:objects a b)\n"
+        "  (:init (clear a))\n"
+        "  (:goal (and (on a b))))\n"
+        "; trailing comment with no newline",
+        newline="",
+    )
+    assert not problem.read_text().endswith("\n")
+    domainfile = os.path.join(CORPUS, "blocksworld-domain.pddl")
+    dp = DomainProblem(domainfile, str(problem))
+    assert len(dp.initialstate()) == 1
+    assert len(dp.goals()) == 1

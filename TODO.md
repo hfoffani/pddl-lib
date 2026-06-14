@@ -36,8 +36,9 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
 - [ ] **#13 — OR preconditions silently flattened to AND** — at minimum **preserve the
       connective** so `or` is distinguishable from `and` and no longer silently mis-modeled.
       Full and/or/not tree + DNF evaluation is deferred to keep the phase short (see #10).
-- [ ] **#19 — comment on last line breaks parsing** — adopt the suggested `LINE_COMMENT` rule
-      that accepts `EOF` as a terminator.
+- [x] **#19 — comment on last line breaks parsing** — adopt the suggested `LINE_COMMENT` rule
+      that accepts `EOF` as a terminator. *`('\r'? '\n' | EOF)`; regression test
+      `test_trailing_comment_without_newline`.*
 
 ### Triage / investigation (Phase 0 scope)
 - [ ] **#27 — user-supplied files fail to parse** — reproduce; likely a duplicate of #20/#23

@@ -542,7 +542,7 @@ NUMBER : DIGIT+ ('.' DIGIT+)? ;
 fragment DIGIT: '0'..'9';
 
 LINE_COMMENT
-    : ';' ~('\n'|'\r')* '\r'? '\n' -> skip
+    : ';' ~('\n'|'\r')* ('\r'? '\n' | EOF) -> skip
     ;
 
 WHITESPACE
