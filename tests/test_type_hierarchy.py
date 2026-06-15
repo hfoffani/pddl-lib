@@ -5,6 +5,7 @@ hierarchy is exposed via the API.
 import os
 
 from pddlpy import DomainProblem
+from pddlpy.binding import CartesianBinder
 from pddlpy.planning import BFSPlanner, GroundedTask
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
@@ -53,7 +54,13 @@ def test_subtypes_of_leaf_and_unknown():
 # -- supertype parameters bind subtype objects (the core fix) -----------------
 
 def test_supertype_param_binds_subtype_objects():
-    dp = _dp("logistics")
+    # Ground with the cartesian binder so the count is independent of the
+    # default static pruning (#12): this asserts #22 type-completeness.
+    dp = DomainProblem(
+        os.path.join(CORPUS, "logistics-domain.pddl"),
+        os.path.join(CORPUS, "logistics-problem.pddl"),
+        binder=CartesianBinder(),
+    )
     grounds = list(dp.ground_operator("drive-truck"))
     # ?loc-from / ?loc-to are typed `location`; objects are airports + locations.
     locs = {op.variable_list["?loc-from"] for op in grounds}

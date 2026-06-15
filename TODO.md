@@ -111,7 +111,14 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
 
 ## Backlog / decisions
 - [ ] **#10 — ADL** (conditional effects, quantifiers) — schedule after #13's precondition tree.
-- [ ] **#12 — better variable binding** — revisit once grounding (#26) is fixed; may be subsumed.
+- [x] **#12 — better variable binding** — revisit once grounding (#26) is fixed; may be subsumed.
+      *Factored grounding behind a pluggable `VariableBinder` (`pddlpy/binding.py`): default
+      `StaticPrunedBinder` joins static positive preconditions against the initial state (sound:
+      static predicates never change) and filters static negatives, yielding a subset of the
+      cartesian bindings — e.g. logistics `drive-truck` 16 vs 64. `CartesianBinder` keeps the
+      full product; users pass `binder=` or set `dp.binder`. Disjunctive preconditions fall back
+      to cartesian. Retires the per-operator `vargroundspace` cache. Builds on #22's subtype-aware
+      candidates.*
 - [x] **#22 — type super-sets** — typing hierarchy enhancement; Phase 2-ish. *Capture the
       `:types` subtype→supertype map (`DomainProblem.types()`/`subtypes_of()`); subtype-aware
       grounding (`_is_subtype`) so a supertype-typed param binds objects of any transitive
