@@ -28,12 +28,12 @@ solver layer built on top of this model.
 """
 from __future__ import annotations
 
-import itertools
 import operator as _operator
-from typing import Any, Dict, Iterator, List, Optional, Sequence, Tuple
+from typing import Any, Dict, Iterator, List, Optional, Sequence, Tuple, cast
 
 from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
 
+from .binding import CartesianBinder, StaticPrunedBinder, VariableBinder
 from .pddlLexer import pddlLexer
 from .pddlListener import pddlListener
 from .pddlParser import pddlParser
@@ -366,6 +366,7 @@ class DomainListener(pddlListener):
         self.scopes = []
         self.negativescopes = []
         self.requirements = set()
+        self.predicates = set()  # declared predicate names (#12)
         self.functions = {}
         self._datimes = []      # stack of current 'start'/'over'/'end' tags
 
@@ -453,6 +454,11 @@ class DomainListener(pddlListener):
 
     def exitPredicatesDef(self, ctx):
         self.scopes.pop()
+
+    def enterAtomicFormulaSkeleton(self, ctx):
+        # Record each declared predicate name (#12): a predicate that no action
+        # ever modifies is static, which lets the grounder prune bindings.
+        self.predicates.add(ctx.predicate().getText())
 
     def enterTypesDef(self, ctx):
         self.scopes.append(Obj())
@@ -674,12 +680,16 @@ class ProblemListener(pddlListener):
 
 class DomainProblem():
 
-    def __init__(self, domainfile: str, problemfile: str) -> None:
+    def __init__(self, domainfile: str, problemfile: str,
+                 binder: Optional[VariableBinder] = None) -> None:
         """Parses a PDDL domain and problem files and
         returns an object representing them.
 
         domainfile -- path for the PDDL domain file
         problemfile -- path for the PDDL problem file
+        binder -- variable binding strategy for ground_operator (#12); defaults
+                  to StaticPrunedBinder. Pass a custom VariableBinder, or set
+                  the .binder attribute later, to override grounding.
         """
         # domain
         inp = FileStream(domainfile)
@@ -699,11 +709,8 @@ class DomainProblem():
         self.problem = ProblemListener()
         walker = ParseTreeWalker()
         walker.walk(self.problem, tree)
-        # variable ground space for each operator.
-        # a dict where keys are op names and values
-        # a dict where keys are var names and values
-        # a list of possible symbols.
-        self.vargroundspace: Dict[str, Dict[str, List[str]]] = {}
+        # Variable binding strategy used by ground_operator (#12).
+        self.binder: VariableBinder = binder if binder is not None else StaticPrunedBinder()
 
     def operators(self) -> Any:
         """Returns an iterator of the names of the (instantaneous) actions
@@ -751,12 +758,10 @@ class DomainProblem():
         returns -- An iterator of Operator instances.
         """
         op = self.domain.operators[op_name]
-        self._set_operator_groundspace( op_name, op.variable_list.items() )
-        for ground in self._instantiate( op_name ):
-            # print('grounded', ground)
-            st = dict(ground)
+        for st in self.binder.bind( self, op ):
             gop = Operator(op_name)
-            gop.variable_list = st
+            # grounded values are object names; widen to the field's lifted type
+            gop.variable_list = cast(Dict[str, Optional[str]], st)
             gop.precondition_connective = op.precondition_connective
             gop.precondition_pos = set( [ a.ground( st ) for a in op.precondition_pos ] )
             gop.precondition_neg = set( [ a.ground( st ) for a in op.precondition_neg ] )
@@ -767,11 +772,14 @@ class DomainProblem():
             yield gop
 
     def ground_durative_operator(self, op_name: str) -> Iterator[DurativeAction]:
-        """Returns an iterator of grounded DurativeAction instances (#23)."""
+        """Returns an iterator of grounded DurativeAction instances (#23).
+
+        Durative actions always use the cartesian binder: their conditions are
+        time-tagged and static-precondition pruning does not apply.
+        """
         op = self.domain.durative_operators[op_name]
-        self._set_operator_groundspace( op_name, op.variable_list.items() )
-        for ground in self._instantiate( op_name ):
-            yield op.ground( dict(ground) )
+        for st in CartesianBinder().bind( self, op ):
+            yield op.ground( st )
 
     def _is_subtype(self, ot, t):
         """True if object-type ``ot`` satisfies a parameter typed ``t`` (#22):
@@ -792,8 +800,28 @@ class DomainProblem():
             ot = self.domain.types.get(ot)
         return False
 
-    def _typesymbols(self, t):
-        return ( k for k,v in self.worldobjects().items() if self._is_subtype(v, t) )
+    def candidate_objects(self, t) -> List[str]:
+        """Returns the objects that can bind a parameter of type ``t``: any
+        object whose type is ``t`` or a (transitive) subtype of it (#22).
+        Used by the variable binders (#12).
+        """
+        return [ k for k,v in self.worldobjects().items() if self._is_subtype(v, t) ]
+
+    def static_predicates(self) -> set:
+        """Returns the set of static predicate names (#12): predicates declared
+        in the domain that no action (instantaneous or durative) ever adds or
+        deletes. Their truth is fixed by the initial state, so the grounder can
+        use them to prune bindings that can never become applicable.
+        """
+        modified = set()
+        for op in self.domain.operators.values():
+            for a in op.effect_pos | op.effect_neg:
+                modified.add(a.predicate[0])
+        for da in self.domain.durative_operators.values():
+            for time in da.EFFECT_TIMES:
+                for a in da.effect_pos[time] | da.effect_neg[time]:
+                    modified.add(a.predicate[0])
+        return set(self.domain.predicates) - modified
 
     def types(self) -> Dict[str, Optional[str]]:
         """Returns the declared type hierarchy as a dict mapping each subtype to
@@ -820,22 +848,6 @@ class DomainProblem():
                     result.add(sub)
                     changed = True
         return result
-
-    def _set_operator_groundspace(self, opname, variables):
-        # cache the variables ground space for each operator.
-        if opname not in self.vargroundspace:
-            d = self.vargroundspace.setdefault(opname, {})
-            for vname, t in variables:
-                for symb in self._typesymbols(t):
-                    d.setdefault(vname, []).append(symb)
-
-    def _instantiate(self, opname):
-        d = self.vargroundspace[opname]
-        # expands the dict to something like:
-        #[ [('?x1','A'),('?x1','B')..], [('?x2','M'),('?x2','N')..],..]
-        expanded = [ [ (vname, symb) for symb in d[vname] ] for vname in d ]
-        # cartesian product.
-        return itertools.product(*expanded)
 
     def initialstate(self) -> set:
         """Returns a set of atoms (Atom objects) corresponding to the initial

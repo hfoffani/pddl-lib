@@ -87,6 +87,42 @@ You can also read the domain's declared requirements:
 {':strips', ':typing'}
 ```
 
+#### Type hierarchies and variable binding
+
+A `:types` hierarchy (e.g. `airport - location`, `location - object`) is
+honoured: a parameter typed with a supertype binds objects of any transitive
+subtype, so multi-level domains such as logistics ground and solve. The
+hierarchy is also exposed directly:
+
+```python
+>>> domprob.types()          # subtype -> direct supertype
+{'airport': 'location', 'location': 'object', ...}
+>>> domprob.subtypes_of('object')   # all transitive subtypes
+{'location', 'airport', ...}
+```
+
+Grounding is performed by a pluggable variable **binder**. The default
+`StaticPrunedBinder` prunes parameter bindings that can never be applicable by
+joining the operator's *static* preconditions (predicates no action ever
+modifies) against the initial state — sound, since a static predicate's truth
+is fixed for the whole search. Pass `binder=CartesianBinder()` for the plain
+full product, or supply your own:
+
+```python
+from pddlpy import DomainProblem
+from pddlpy.binding import CartesianBinder, VariableBinder
+
+dp = DomainProblem('domain.pddl', 'problem.pddl', binder=CartesianBinder())
+
+class MyBinder(VariableBinder):
+    def bind(self, dp, operator):
+        # yield {param_name: object_name} dicts; helpers: dp.candidate_objects(t),
+        # dp.static_predicates(), dp.initialstate(), dp.worldobjects()
+        ...
+
+dp.binder = MyBinder()
+```
+
 ### Planning API ###
 
 Above the parser/object model sits an optional, strictly-layered planning
