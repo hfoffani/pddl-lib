@@ -358,6 +358,9 @@ class DomainListener(pddlListener):
     def __init__(self):
         self.typesdef = False
         self.objects = {}
+        # type hierarchy: maps each declared subtype to its direct supertype
+        # (#22). E.g. (:types airport - location) yields {'airport': 'location'}.
+        self.types = {}
         self.operators = {}
         self.durative_operators = {}
         self.scopes = []
@@ -456,7 +459,11 @@ class DomainListener(pddlListener):
 
     def exitTypesDef(self, ctx):
         self.typesdef = True
-        self.scopes.pop()
+        # Keep the subtype -> supertype map (#22) instead of discarding it. The
+        # Obj scope collected it as variable_list via enterTypedNameList; a type
+        # with no declared parent maps to None.
+        scope = self.scopes.pop()
+        self.types = dict(scope.variable_list)
 
     def enterTypedVariableList(self, ctx):
         # print("-> tvar")
@@ -766,8 +773,53 @@ class DomainProblem():
         for ground in self._instantiate( op_name ):
             yield op.ground( dict(ground) )
 
+    def _is_subtype(self, ot, t):
+        """True if object-type ``ot`` satisfies a parameter typed ``t`` (#22):
+        either they are equal or ``ot`` is a transitive subtype of ``t``. The
+        equality check comes first so untyped domains (``None == None``) and
+        flat-typed domains keep working unchanged.
+        """
+        # An untyped parameter (t is None) binds only untyped objects, matching
+        # the original exact-match behaviour; do not let a typed object climb to
+        # the implicit None root and match an untyped parameter.
+        if t is None:
+            return ot is None
+        seen = set()
+        while ot is not None and ot not in seen:
+            if ot == t:
+                return True
+            seen.add(ot)
+            ot = self.domain.types.get(ot)
+        return False
+
     def _typesymbols(self, t):
-        return ( k for k,v in self.worldobjects().items() if v == t )
+        return ( k for k,v in self.worldobjects().items() if self._is_subtype(v, t) )
+
+    def types(self) -> Dict[str, Optional[str]]:
+        """Returns the declared type hierarchy as a dict mapping each subtype to
+        its direct supertype (#22), e.g. ``{'airport': 'location', 'location':
+        'object'}``. A type with no declared parent maps to ``None``. Empty if
+        the domain declares no ``:types``.
+        """
+        return dict(self.domain.types)
+
+    def subtypes_of(self, t: str) -> set:
+        """Returns the set of all transitive subtypes of ``t`` (#22), excluding
+        ``t`` itself. E.g. for the logistics hierarchy ``subtypes_of('physobj')``
+        is ``{'package', 'vehicle', 'truck', 'airplane'}``.
+        """
+        hierarchy = self.domain.types
+        result = set()
+        changed = True
+        while changed:
+            changed = False
+            for sub, sup in hierarchy.items():
+                if sub in result:
+                    continue
+                if sup == t or sup in result:
+                    result.add(sub)
+                    changed = True
+        return result
 
     def _set_operator_groundspace(self, opname, variables):
         # cache the variables ground space for each operator.

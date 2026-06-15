@@ -112,7 +112,10 @@ numbers link to GitHub. Do not start a later phase until the prior phase's tests
 ## Backlog / decisions
 - [ ] **#10 — ADL** (conditional effects, quantifiers) — schedule after #13's precondition tree.
 - [ ] **#12 — better variable binding** — revisit once grounding (#26) is fixed; may be subsumed.
-- [ ] **#22 — type super-sets** — typing hierarchy enhancement; Phase 2-ish.
+- [x] **#22 — type super-sets** — typing hierarchy enhancement; Phase 2-ish. *Capture the
+      `:types` subtype→supertype map (`DomainProblem.types()`/`subtypes_of()`); subtype-aware
+      grounding (`_is_subtype`) so a supertype-typed param binds objects of any transitive
+      subtype. logistics now grounds + solves. `(either ...)` union types still unhandled.*
 - [ ] **#35 — HDDL parser** — decided **out of scope** (PRD §4). Reply and close.
 
 ## Done / merged
