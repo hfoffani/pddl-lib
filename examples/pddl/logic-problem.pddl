@@ -1,0 +1,5 @@
+(define (problem logic-1)
+  (:domain logic)
+  (:objects front)
+  (:init (has-key front))
+  (:goal (open front)))

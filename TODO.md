@@ -22,16 +22,19 @@ left for 1.0 is durative finalization, examples, triage, and the PyPI release.
 - [x] **Tests** — add validation/applicability tests; **remove stale `xfail`/"Phase 4" markers**.
       *`tests/test_durative_state.py` (16 tests, 100% cover of `durative.py`); cleaned the stale
       triage docstring. No `@xfail` markers remained.*
-- [ ] Keep documenting that durative *solving* (temporal planning) is out of scope.
-      *(README update — pending, lands with #80.)*
+- [x] Keep documenting that durative *solving* (temporal planning) is out of scope.
+      *README durative section + example showcase table both state "not temporally solved".*
 
 ### #80 — More examples + README chapter
-- [ ] Example: types / type hierarchies
-- [ ] Example: planners (bfs/astar/gbfs/ucs + registry)
-- [ ] Example: logical operators (and/or/not preconditions)
-- [ ] Example: numeric fluents + action costs
-- [ ] Example: durative actions (model + applicability; note: not solved)
-- [ ] README chapter with a table linking each example, increasing complexity
+- [x] Example: parsing basics (core object model) — *`examples/01_parsing_basics.py`*
+- [x] Example: types / type hierarchies — *`examples/02_type_hierarchy.py`*
+- [x] Example: logical operators (and/or/not preconditions) — *`examples/03_logical_operators.py`*
+- [x] Example: planners (bfs/astar + registry) — *`examples/04_planners.py`*
+- [x] Example: numeric fluents + action costs — *`examples/05_numeric_and_costs.py`*
+- [x] Example: durative actions (model + applicability; not solved) — *`examples/06_durative.py`*
+- [x] README chapter with a table linking each example, increasing complexity
+- [x] Self-contained PDDL under `examples/pddl/`; `make examples` target; smoke test
+      (`tests/test_examples.py`) runs every example. *Suite 150 passing, 100% coverage.*
 - [ ] ("running as a tool" / "LLM interface" examples — **deferred** post-1.0 with the thin CLI)
 
 ### #81 — Release v1.0 to PyPI

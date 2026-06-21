@@ -35,6 +35,22 @@ In this repostory you'll find some PDDL examples files useful for testing purpos
 For instance, [domain-03.pddl](examples-pddl/domain-03.pddl)
 and [problem-03.pddl](examples-pddl/problem-03.pddl)
 
+#### Example showcase
+
+The [`examples/`](examples/) directory holds a set of self-contained, runnable
+scripts of increasing complexity, each demonstrating one capability against a
+bundled PDDL domain in [`examples/pddl/`](examples/pddl/). Run them all with
+`make examples`, or one at a time, e.g. `uv run python examples/01_parsing_basics.py`.
+
+| # | Example | What it shows | Capability |
+|---|---------|---------------|------------|
+| 01 | [01_parsing_basics.py](examples/01_parsing_basics.py) | Parse a typed domain/problem; read objects, init, goals, operators and grounded operators | Core object model |
+| 02 | [02_type_hierarchy.py](examples/02_type_hierarchy.py) | Multi-level `:types`, `types()` / `subtypes_of()`, supertype binding in grounding | Type hierarchies (#22) |
+| 03 | [03_logical_operators.py](examples/03_logical_operators.py) | Top-level `and` / `or` connective and negative preconditions in the model | Logical operators (#13) |
+| 04 | [04_planners.py](examples/04_planners.py) | The planner registry and BFS / A\* reference planners solving blocksworld and gripper | Planners (#1) |
+| 05 | [05_numeric_and_costs.py](examples/05_numeric_and_costs.py) | Numeric fluents (fuel-aware planning) and action costs (UCS cost-optimality) | Numeric fluents (#11) + action costs (#3) |
+| 06 | [06_durative.py](examples/06_durative.py) | Durative model, `DurativeState` `at start` applicability and validation — **not** temporally solved | Durative actions (#23) |
+
 ### Using the PDDL Python library ###
 
 To use this library the recommended way is to install it via PIP:

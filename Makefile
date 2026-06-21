@@ -80,6 +80,11 @@ demo: test
 	@echo "Running demos..."
 	for i in 1 2 3 4 6; do $(PYTHON) demo.py $$i ; done
 
+# Run the example showcase (examples/)
+examples: pyparser pddlpy/pddl.py
+	@echo "Running examples..."
+	for f in examples/[0-9][0-9]_*.py ; do echo "=== $$f ===" ; $(PYTHON) $$f ; done
+
 # Test published package from TestPyPI using Docker
 testpublish:
 	@echo "Testing pddlpy installation from TestPyPI..."
@@ -114,6 +119,7 @@ help:
 	@echo "  build        - Build distribution packages"
 	@echo "  clean        - Remove build artifacts"
 	@echo "  demo         - Run demo scripts"
+	@echo "  examples     - Run the example showcase (examples/)"
 	@echo "  testpublish  - Test package installation from TestPyPI (Docker)"
 	@echo "  pypitest     - Publish to TestPyPI"
 	@echo "  pypipublish  - Publish to PyPI"
