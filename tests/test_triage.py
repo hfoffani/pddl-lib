@@ -2,9 +2,9 @@
 
 - #16 (`No module named '__builtin__'`): Python 2 leftover. Confirmed gone
   on 3.11+; guarded so it cannot creep back in.
-- #27 / #23: user-supplied durative-action files fail to parse. Confirmed a
-  duplicate of #23 (durative-action recovery is incomplete); xfail until
-  Phase 4 implements it.
+- #27 / #23: user-supplied durative-action files used to fail to parse.
+  Confirmed a duplicate of #23; now fixed — durative actions parse into the
+  DurativeAction model (see test_durative*.py for the full coverage).
 """
 import os
 

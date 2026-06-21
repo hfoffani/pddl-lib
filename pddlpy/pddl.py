@@ -29,7 +29,7 @@ solver layer built on top of this model.
 from __future__ import annotations
 
 import operator as _operator
-from typing import Any, Dict, Iterator, List, Optional, Sequence, Tuple, cast
+from typing import Any, Dict, Iterator, List, Optional, Sequence, Set, Tuple, cast
 
 from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
 
@@ -731,6 +731,12 @@ class DomainProblem():
         domain declares none.
         """
         return set(self.domain.requirements)
+
+    def predicates(self) -> Set[str]:
+        """Returns the set of predicate names declared in the domain's
+        :predicates section, e.g. {'at', 'road', 'visited'}.
+        """
+        return set(self.domain.predicates)
 
     def functions(self) -> Dict[str, List[Tuple[str, Optional[str]]]]:
         """Returns a dict mapping each declared :functions name to its ordered

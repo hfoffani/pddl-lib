@@ -1,222 +1,135 @@
-# PRD: Parser Hardening, Planner Interface & PDDL Feature Expansion
+# PRD: Road to pddlpy 1.0
 
-> **Status:** Refined draft
+> **Status:** Active — supersedes the earlier "foundation-first" draft, which was written
+> against a stale snapshot. The foundation is already done (see §1).
 > **Owner:** Hernán
-> **Project:** `pddlpy` (Python PDDL parser + object model)
+> **Temporary file:** describes *what to do* for the 1.0 release. Retire after 1.0 ships.
+> Current capabilities always live in `README.md`; live status lives in `TODO.md`.
 
 ---
 
-## 1. Context
+## 1. Where we actually are (verified on `main`)
 
-The library provides a PDDL pipeline:
+The library is far more complete than a "parser only" tool. Verified present and tested:
 
-```
-ANTLR4 grammar → parse tree → listener → domain/problem object model
-```
+- **Parser + object model:** STRIPS, typing **with multi-level hierarchy** (`types()`,
+  `subtypes_of()`), pluggable variable binding (`StaticPrunedBinder`/`CartesianBinder`),
+  `:requirements` capture, case-insensitive keywords (standard IPC files parse).
+- **Precondition connectives** (and/or/not) handled — not silently flattened.
+- **Numeric fluents** (`:functions`, numeric preconditions/effects).
+- **Action costs** (`total-cost`, `:metric`), cost-optimal `ucs`.
+- **Planning layer** (`pddlpy.planning`, strictly layered): `State`, `Plan`, `GroundedTask`,
+  `Planner` ABC + `registry`, capability negotiation (`UnsupportedRequirementsError`), and
+  four reference planners — `bfs`, `astar`, `gbfs`, `ucs`.
+- **Durative actions:** parsed and **grounded** into a `DurativeAction` type with time-tagged
+  conditions (`at start`/`over all`/`at end`) and effects, plus duration. Even the previously
+  failing issue-#27 file now parses, grounds, and exposes its tags.
+- **Quality:** 127 tests, **100% line coverage** (804 statements, 0 missed), layering enforced
+  by `test_layering.py`.
 
-It parses STRIPS + typing into a `DomainProblem` / `Operator` / `Atom` model. It does
-**not** yet solve anything — the object model is the ceiling — and, despite the prior
-draft's claim, it does **not** reliably validate: standard IPC benchmarks fail to parse
-and several constructs are silently mis-handled (see §2). There is **1** unit test.
+**Implication:** the prior PRD's Phases 0–3 are shipped. 1.0 is a short, polish-and-release
+effort, not a feature build-out.
 
-This PRD covers three tracks, in dependency order:
+## 2. Goal
 
-0. **Harden the foundation** — fix the parser/model correctness bugs that block real use,
-   and build a test+coverage safety net so the layers above can be trusted.
-1. **Introduce a planner/solver layer** with a stable, pluggable interface.
-2. **Expand the supported PDDL subset** beyond STRIPS (numeric fluents, action costs,
-   durative actions), the object model evolving to support each.
+Ship a credible, stable **1.0.0** to PyPI **soon**. "1.0" is a promise of a stable public API
+and reliable behaviour for the subset we claim — it is **not** a promise of every PDDL feature.
 
-The guiding constraint remains a **strict layered architecture** — each layer depends only
-on the one below it, no leakage upward.
+## 3. Version horizon (agreed)
 
-```
-┌─────────────────────────────────────┐
-│  Planner interface (solve)           │  ← new   (Phase 1)
-├─────────────────────────────────────┤
-│  Domain / Problem object model       │  ← fix + extend  (Phase 0, then 2–4)
-├─────────────────────────────────────┤
-│  ANTLR4 grammar + parser/listener    │  ← fix + extend  (Phase 0, then 2–4)
-└─────────────────────────────────────┘
-```
+| Version | Theme | Tickets |
+|---------|-------|---------|
+| **1.0** | Finalize durative (validation/applicability), examples, docs, release | #23, #80, #81 |
+| **2.0** | **ADL** — conditional effects (`when`), quantifiers (`forall`/`exists`), full and/or/not tree | #10 |
+| **3.0 / future** | **HDDL** (HTN formalism) | #35 |
+| Future | Temporal planner that *solves* durative-action domains | — |
 
----
-
-## 2. Foundation problems (why Phase 0 exists)
-
-The previous PRD assumed a "working, validating pipeline" and went straight to a planner.
-Verification shows the foundation is not yet planner-ready. A planner stands precisely on
-correct grounding, correct preconditions, and comparable states — the things currently
-broken:
-
-| # | Symptom | Impact on a planner |
-|---|---------|---------------------|
-| #36 / #20 | Keywords are case-sensitive; `(:INIT ...)` in standard IPC files isn't recognized. `initialstate()` comes back **empty, no error**. Reproduced on IPC blocksworld. | Phase 0-style "solve blocksworld/gripper" fails at the parse step. Silent. |
-| #13 | `or` preconditions are flattened into the same flat positive/negative sets as `and`. No way to tell them apart. | Planner explores wrong state space; no error raised. |
-| #26 | `vargroundspace` is cached across operators; grounding a second operator reuses the first's variable bindings. | Successor generation produces invalid actions. |
-| #21 | `precondition_pos` holds tuples while `initialstate()` holds `Atom`s; they can't be compared/`issubset`. | Cannot check applicability — the core planner inner loop. |
-| #19 | A comment on the final line (no trailing newline) breaks parsing. | Real files fail to load. |
-
-**Conclusion:** building the planner before fixing these means building on sand. Phase 0
-fixes the parsing and grounding bugs (#36/#20, #26, #19, #13) and locks them in with tests +
-coverage before any planner code is written. **#21 is resolved in Phase 1**, where it is
-inseparable from the `State` type the planner needs (§5.3).
+ADL (#10) and HDDL (#35) are **out of scope for 1.0**. A temporal planner is out of scope
+indefinitely (the reference planners are non-temporal by design).
 
 ---
 
-## 3. Goals
+## 4. 1.0 scope — what to do
 
-- **Parse the standard STRIPS PDDL corpus correctly** (IPC blocksworld, gripper, logistics),
-  with keyword case-insensitivity and the grounding/precondition bugs fixed.
-- Establish a **measured test-coverage baseline** and drive line coverage toward 100%, using
-  failing/xfail tests to *document* remaining bugs rather than hide them.
-- Define an **abstract solver interface** so multiple planners can be registered and swapped
-  without changing the parser or object model.
-- Ship at least one **working reference planner** against STRIPS to prove the interface.
-- Keep layer boundaries strict and enforced (no planner reaching into parse trees; object
-  model imports no planner code).
-- Establish an extension path for numeric fluents, action costs, and durative actions that
-  does not require redesigning the interface each time.
+### 4.1 Durative actions — complete the "middle" slice (#23)
 
-## 4. Non-Goals
+Parsing, the `DurativeAction` object model, and grounding are **done**. For 1.0, add the
+**semantic / applicability** layer — **no temporal scheduler, no temporal planner**:
 
-- Competing with Fast Downward / LAMA on performance. The reference planner proves the
-  contract, it is not a benchmark entrant.
-- Full PDDL 3.x (preferences, constraints, trajectory constraints) this round.
-- HDDL (#35) — explicitly out of scope; record the decision and close.
-- A CLI / service / MCP wrapper. Out of scope until the library API stabilizes.
+- **Validation:** duration is well-formed and positive; time-tagged conditions/effects are
+  consistent and reference declared predicates/parameters; raise a clear error otherwise.
+- **Applicability:** given a state, check whether a grounded `DurativeAction`'s **`at start`**
+  conditions hold — analogous to `State.applicable(operator)` for instantaneous actions, but
+  **without** building a timeline or scheduling overlapping actions. For 1.0 we check **only
+  `at start`**; `over all` / `at end` applicability is documented as not yet evaluated.
+- **Surface:** a small dedicated **`DurativeState`** type in `pddlpy.planning`, mirroring the
+  existing `State.applicable` / `State.apply` ergonomics, kept layering-clean (imports the
+  object model, never the grammar).
+- Remove the now-stale `xfail`/"incomplete, Phase 4" markers in `tests/test_triage.py` /
+  `tests/test_durative.py`; add tests for the new validation/applicability.
+- **Explicitly keep documenting** that durative *solving* (temporal planning) is out of scope.
 
----
+### 4.2 More examples + README chapter (#80)
 
-## 5. Planner Interface Design (Phase 1)
+Add worked examples of increasing complexity for the capabilities users may not realise exist,
+and a README chapter with a table linking each:
 
-### 5.1 Baseline contract
+- Types / type hierarchies
+- Planners (bfs/astar/gbfs/ucs, registry)
+- Logical operators (and/or/not preconditions)
+- Numeric fluents and action costs
+- Durative actions (model + the new applicability check; note: not solved)
 
-```python
-class Planner(ABC):
-    @abstractmethod
-    def solve(self, domain: Domain, problem: Problem) -> Plan | None:
-        ...
-```
+> `#80` also lists "running as a tool" and an "LLM interface." There is no CLI/tool or LLM
+> surface today, and a thin CLI is **deferred to post-1.0** (decision §6), so those two
+> examples are **deferred** as well. Keep 1.0 examples to capabilities that already exist.
 
-- Returns a `Plan` (ordered actions, optionally timestamps/costs) or `None` if no plan exists.
-- `Domain` / `Problem` are the **already-fixed, validated** Phase 0 objects.
+### 4.3 Release engineering (#81)
 
-### 5.2 Interface granularity — decision
+- Bump `pyproject.toml` to `1.0.0`; set the `Development Status` classifier to
+  `5 - Production/Stable` (one-line change).
+- QA pass: `make` green, coverage still 100%, build wheel/sdist, smoke-test the wheel.
+- Publish to TestPyPI (`make pypitest`), verify install, then PyPI (`make pypipublish`).
+- Tag the release; short changelog of everything shipped since 0.4.x.
 
-Keep `solve(domain, problem) -> Plan` as the *public* contract, but internally factor out
-**grounding** and **successor generation** (`apply(state, action) -> state`) as shared,
-reusable components below the planner. A blind-search planner uses only the successor
-function; a future heuristic planner (FF/LAMA-style) reuses the same grounded representation
-without re-deriving it. This is feasible only once #26 (grounding) and #21 (state/atom
-typing) are fixed in Phase 0.
+### 4.4 Issue triage for a clean 1.0
 
-### 5.3 State representation
+- **Close as fixed (with the covering test):** #36 (case-insensitive parse), #16 (py2 import
+  gone), #19/#21/#26 (verify against current code, then close), #27 (dup of #23, now parses).
+- **Label out of scope / milestone:** #10 → 2.0, #35 → 3.0/future.
+- Confirm none of the above silently regressed before closing.
 
-Introduce an immutable, hashable `State` so search can build closed/open sets. This is also
-the clean resolution to #21 — `Operator.applicable(state)` and `state.apply(operator)` instead
-of ad-hoc tuple/`Atom` comparison.
+### 4.5 Docs
 
-### 5.4 Registration
-
-```python
-registry.register("bfs", BFSPlanner)
-registry.register("astar", AStarPlanner)
-planner = registry.get("astar")
-plan = planner.solve(domain, problem)
-```
-
-Capability metadata (costs? durations?) lets the caller pick a compatible planner — see §7.
+- Keep `README.md` describing **current** capabilities only (it already does); update it as
+  4.1/4.2 land — never ahead of the code.
+- `docs/object-model.md` updated for the durative applicability surface.
 
 ---
 
-## 6. Object Model Evolution
+## 5. Out of scope for 1.0
 
-| Feature            | Object model impact |
-|--------------------|---------------------|
-| STRIPS (current)   | `Operator` with add/delete sets, positive/negative preconditions |
-| OR / ADL (partial) | Precondition tree (and/or/not) instead of flat sets — needed to fix #13 honestly |
-| Numeric fluents    | Effects become expressions, not add/delete; `:functions`; numeric preconditions (#11) |
-| Action costs       | Special case of numeric fluents (`total-cost`); plan carries a cost |
-| Durative actions   | Distinct `DurativeAction` type; conditions/effects tagged `at start / over all / at end` (#23) |
+- ADL conditional effects / quantifiers (#10 → 2.0).
+- HDDL (#35 → 3.0/future).
+- Temporal planning / scheduling for durative actions (future).
+- Performance work / competing with Fast Downward / LAMA.
 
-**Design notes:** durative actions are *not* an extension of `Operator` — model them as a
-distinct type (state-transition model becomes temporal). Numeric fluents are the lower-risk
-intermediate step, land them before durations. Fixing #13 (OR) properly forces a precondition
-**tree** rather than flat sets; do this in Phase 0/early so the planner is built against the
-real shape, not refactored later.
+## 6. Resolved decisions
 
----
+- **Durative applicability surface:** a small dedicated **`DurativeState`** type in
+  `pddlpy.planning`.
+- **`over all` / `at end`:** for 1.0, check **`at start` only**; document the rest as not yet
+  evaluated.
+- **Thin CLI in 1.0:** **deferred** to post-1.0 → the #80 "running as a tool" / "LLM interface"
+  examples are deferred with it.
+- **Stability classifier:** **`5 - Production/Stable`**.
 
-## 7. Capability Negotiation
+(No open questions remain for 1.0.)
 
-Domains and planners declare capabilities, validated against PDDL `:requirements` (#9):
+## 7. Acceptance criteria (1.0)
 
-- The object model already knows what features a domain uses.
-- Each planner declares what it supports.
-- `solve()` / the registry **fails fast** with a clear error when a planner is handed a domain
-  beyond its subset (e.g. a STRIPS-only planner given durative actions).
-
----
-
-## 8. Phased Roadmap
-
-**Phase 0 — Foundation: correctness + coverage** *(new, gating)*
-- Fix keyword case-insensitivity (#20) → unblocks IPC parsing (#36).
-- Fix last-line comment handling (#19).
-- Fix grounding cross-operator cache bug (#26).
-- Preserve the OR/AND/NOT precondition connective (#13) — at minimum stop silently flattening
-  to AND. (Full ADL/DNF deferred to keep the phase short — see §6, #10.)
-- Stand up coverage tooling; add a benchmark parse-corpus; drive coverage toward 100% with
-  xfail markers documenting any bug not yet fixed.
-- Fix the broken `make testgrammar` Java classpath so grammar changes stay verifiable.
-
-**Phase 1 — Interface + reference planner (STRIPS)**
-- Define `Planner` ABC and `Plan` / `State` types.
-- Resolve state/atom type mismatch (#21) via the `State` type — comparable `State`/`Atom`
-  semantics so `operator.applicable(state)` works without manual casting.
-- Factor out grounding + successor generation as shared components.
-- Implement a blind-search reference planner (BFS, then A* / GBFS).
-- Capability metadata + registry.
-
-**Phase 2 — Numeric fluents** (#11)
-- Parse `:functions`, numeric preconditions, numeric effects.
-- Object model: effect expressions. Extend successor generation to evaluate them.
-
-**Phase 3 — Action costs**
-- `total-cost` handling; `Plan` carries cost. Cost-aware search.
-
-**Phase 4 — Durative actions** (#23)
-- `DurativeAction` type; time-tagged conditions/effects. Temporal state representation.
-- Temporal-capable planner, or document that the reference planner does not cover this.
-
----
-
-## 9. Open Questions
-
-- **Grounded vs lifted at the boundary:** does `solve` receive lifted actions and ground
-  internally, or is grounding a separate pre-pass the caller can invoke?
-- **OR depth in Phase 0:** full precondition tree + DNF evaluation now, or just preserve the
-  connective and defer full ADL (#10) to a later phase?
-- **Plan validation:** integrate a VAL-style validator to check produced plans? (We validate
-  domain/problem; validating *plans* closes the loop.)
-- **External planners:** does the same interface eventually wrap Fast Downward / LAMA via
-  subprocess, or a separate adapter layer? Affects how `Plan` and errors are modeled.
-- **API docs (#2):** generate docs in this round, or defer until the API stabilizes post-Phase 1?
-
-## 10. Acceptance Criteria
-
-**Phase 0**
-- IPC blocksworld and gripper domain+problem pairs parse correctly; `initialstate()` and
-  `goals()` are non-empty and match the files. (#36 regression test.)
-- Grounding two different operators yields correct, independent variable bindings. (#26.)
-- Coverage is measured and reported; line coverage at/near 100%, with every still-failing/xfail
-  test traceable to a documented bug.
-
-**Phase 1**
-- A `Planner` ABC exists with `solve(domain, problem) -> Plan | None`.
-- An operator's preconditions can be checked against a `State` without manual casting. (#21.)
-- At least one planner solves canonical STRIPS problems (blocksworld, gripper) correctly.
-- No planner module imports from the parser/grammar layer; the object model imports no planner
-  code (enforced by an import-linter rule or test).
-- A second planner registers and runs on the same problem without changing the layers below.
+- Durative actions: grounded actions can be validated and checked for `at start` applicability
+  via `DurativeState`; new tests pass; no stale `xfail` markers remain.
+- README has an examples chapter/table; each linked example runs.
+- `1.0.0` is installable from PyPI; `make` green; coverage 100%.
+- #36/#16/#19/#21/#26/#27 closed; #10 and #35 labelled to their milestones.

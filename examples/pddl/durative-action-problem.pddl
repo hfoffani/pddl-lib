@@ -1,0 +1,5 @@
+(define (problem dap)
+  (:domain da)
+  (:objects a b - loc)
+  (:init (at a) (road a b))
+  (:goal (visited b)))
