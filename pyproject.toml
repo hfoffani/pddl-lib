@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pddlpy"
-version = "0.4.5"
+version = "1.0.0"
 description = "Python PDDL parser"
 readme = "README.md"
 license = {text = "MIT"}
@@ -13,7 +13,7 @@ authors = [
 ]
 keywords = ["pddl", "planning", "parser"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Build Tools",
     "License :: OSI Approved :: MIT License",
