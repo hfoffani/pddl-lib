@@ -44,8 +44,10 @@ left for 1.0 is durative finalization, examples, triage, and the PyPI release.
 - [ ] Tag release + short changelog since 0.4.x
 
 ### Issue triage (clean slate for 1.0)
-- [ ] Verify against current code, then **close**: #36, #16, #19, #21, #26, #27 (dup of #23)
-- [ ] Label **out of scope / milestone**: #10 → 2.0, #35 → 3.0/future
+- [x] Verify against current code, then **close**: #36, #16, #19, #21, #26, #27 (dup of #23).
+      *All verified fixed on `main` and now closed.*
+- [x] Scope to **milestone**: #10 → 2.0, #35 → 3.0. *Milestones 2.0 (#5) / 3.0 (#6) created;
+      #10 and #35 assigned with explanatory comments.*
 
 ### Docs
 - [ ] Update `README.md` as durative applicability + examples land (current capabilities only)
