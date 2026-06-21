@@ -10,16 +10,20 @@ left for 1.0 is durative finalization, examples, triage, and the PyPI release.
 ## 1.0 — must ship
 
 ### #23 — Durative actions: validation + applicability (the "middle" slice)
-- [ ] **Validation** — duration well-formed & positive; time-tagged conditions/effects
+- [x] **Validation** — duration well-formed & positive; time-tagged conditions/effects
       reference declared predicates/parameters; clear error otherwise.
-- [ ] **Applicability** — check a grounded `DurativeAction`'s **`at start`** conditions against
+      *`validate_durative_action` / `validate_durative_actions` + `DurativeValidationError`;
+      `DomainProblem.predicates()` accessor added.*
+- [x] **Applicability** — check a grounded `DurativeAction`'s **`at start`** conditions against
       a state, mirroring `State.applicable(operator)`. `over all`/`at end` not evaluated in 1.0.
-      **No scheduler, no temporal planner.**
-- [ ] **Surface:** small dedicated **`DurativeState`** type in `pddlpy.planning`; keep layering
-      clean (imports object model, never the grammar).
-- [ ] **Tests** — add validation/applicability tests; **remove stale `xfail`/"Phase 4" markers**
-      in `tests/test_triage.py` and `tests/test_durative.py`.
+      **No scheduler, no temporal planner.** *`DurativeState.applicable`.*
+- [x] **Surface:** small dedicated **`DurativeState`** type in `pddlpy.planning`; keep layering
+      clean (imports object model, never the grammar). *`pddlpy/planning/durative.py`.*
+- [x] **Tests** — add validation/applicability tests; **remove stale `xfail`/"Phase 4" markers**.
+      *`tests/test_durative_state.py` (16 tests, 100% cover of `durative.py`); cleaned the stale
+      triage docstring. No `@xfail` markers remained.*
 - [ ] Keep documenting that durative *solving* (temporal planning) is out of scope.
+      *(README update — pending, lands with #80.)*
 
 ### #80 — More examples + README chapter
 - [ ] Example: types / type hierarchies

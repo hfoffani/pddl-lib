@@ -12,6 +12,12 @@ from .base import (
     validate_requirements,
 )
 from .costs import TOTAL_COST, action_cost, plan_cost
+from .durative import (
+    DurativeState,
+    DurativeValidationError,
+    validate_durative_action,
+    validate_durative_actions,
+)
 from .grounding import GroundedTask
 from .registry import get, register, registry
 from .search import (
@@ -27,6 +33,10 @@ __all__ = [
     "State",
     "Plan",
     "atom_tuple",
+    "DurativeState",
+    "DurativeValidationError",
+    "validate_durative_action",
+    "validate_durative_actions",
     "GroundedTask",
     "Planner",
     "PlannerError",
