@@ -35,7 +35,9 @@ left for 1.0 is durative finalization, examples, triage, and the PyPI release.
 - [x] README chapter with a table linking each example, increasing complexity
 - [x] Self-contained PDDL under `examples/pddl/`; `make examples` target; smoke test
       (`tests/test_examples.py`) runs every example. *Suite 150 passing, 100% coverage.*
-- [ ] ("running as a tool" / "LLM interface" examples — **deferred** post-1.0 with the thin CLI)
+- [x] "running as a tool" / "LLM interface" — these are **features, not demos**: split into
+      #85 (CLI tool) and #86 (LLM/MCP runtime). #80 closed as demo-complete; each gets its
+      example once the feature lands. (#85/#86 unscheduled backlog.)
 
 ### #81 — Release v1.0 to PyPI
 - [ ] Bump `pyproject.toml` → `1.0.0`; set `Development Status` classifier to `5 - Production/Stable`
@@ -64,7 +66,9 @@ left for 1.0 is durative finalization, examples, triage, and the PyPI release.
 - [ ] HTN / HDDL parser — separate formalism; decide as a distinct effort
 
 ## Future (no milestone)
-- [ ] Temporal planner that *solves* durative-action domains
+- [ ] Temporal planner that *solves* durative-action domains (#84, milestone 1.5)
+- [ ] CLI: run pddlpy as a command-line tool (#85)
+- [ ] LLM / MCP runtime interface (#86)
 - [ ] Heuristic improvements for the reference planners
 
 ---
