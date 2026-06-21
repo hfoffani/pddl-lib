@@ -66,6 +66,7 @@ typecheck: pyparser pddlpy/pddl.py
 # Build distribution with uv
 build: test
 	@echo "Building distribution..."
+	rm -rf dist/
 	$(UV) build
 
 # Clean build artifacts
@@ -96,14 +97,17 @@ testpublish:
 	@echo ""
 	@echo "✓ TestPyPI installation test completed"
 
-# Publishing targets (kept for backwards compatibility)
+# Publishing targets. `build` rebuilds dist/ from scratch, so dist/* is exactly
+# the current version's sdist + wheel (both are uploaded, not just one).
 pypitest: build
 	@echo "Publishing to TestPyPI... (credentials in ~/.pypirc)"
-	$(UV) run twine upload --repository testpypi --verbose dist/`ls -t dist | head -1`
+	$(UV) run twine check dist/*
+	$(UV) run twine upload --repository testpypi --verbose dist/*
 
 pypipublish: build
 	@echo "Publishing to PyPI... (credentials in ~/.pypirc)"
-	$(UV) run twine upload --verbose dist/`ls -t dist | head -1`
+	$(UV) run twine check dist/*
+	$(UV) run twine upload --verbose dist/*
 
 # Help target
 help:
