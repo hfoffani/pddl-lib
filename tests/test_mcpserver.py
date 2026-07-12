@@ -5,7 +5,7 @@ import os
 import pytest
 
 from pddlpy import mcpserver
-from pddlpy.mcpserver import ground, parse, server, solve
+from pddlpy.mcpserver import ground, parse, server, solve, validate
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
 
@@ -63,9 +63,13 @@ def test_solve_unknown_planner():
 
 # --- through the MCP layer -------------------------------------------------
 
+def test_validate_clean_pair():
+    assert validate(*_files("blocksworld")) == {"valid": True, "issues": []}
+
+
 def test_tools_registered():
     tools = asyncio.run(server.list_tools())
-    assert sorted(t.name for t in tools) == ["ground", "parse", "solve"]
+    assert sorted(t.name for t in tools) == ["ground", "parse", "solve", "validate"]
     for t in tools:
         assert t.description  # every tool documents itself
 

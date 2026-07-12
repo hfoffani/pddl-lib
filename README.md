@@ -215,15 +215,24 @@ subcommands, all emitting JSON on stdout — handy for shell pipelines and
 for agents that shouldn't have to write Python:
 
 ```bash
-pddlpy parse  domain.pddl problem.pddl            # object-model summary
-pddlpy ground domain.pddl problem.pddl pick-up    # grounded instances of one action
-pddlpy solve  domain.pddl problem.pddl --planner ucs
+pddlpy parse    domain.pddl problem.pddl            # object-model summary
+pddlpy ground   domain.pddl problem.pddl pick-up    # grounded instances of one action
+pddlpy solve    domain.pddl problem.pddl --planner ucs
+pddlpy validate domain.pddl problem.pddl            # diagnostics (see below)
 ```
 
 `solve` defaults to `astar`; `--planner` accepts any registered planner
 (`bfs`, `astar`, `gbfs`, `ucs`). Exit codes: `0` success, `1` search
-completed without finding a plan, `2` bad input (missing file, unknown
-operator, unsupported `:requirements`).
+completed without finding a plan / `validate` found issues, `2` bad input
+(missing file, unknown operator, unsupported `:requirements`).
+
+`validate` (#94) checks a pair for the mistakes that typically slip through
+a bare parse — collected syntax errors (ANTLR error-recovers, so `parse`
+alone won't stop on them), atoms over undeclared predicates, ground atoms
+naming unknown objects, operators grounding to zero instances, and malformed
+durative actions. It reports `{valid, issues: [{severity, check, message}]}`
+and is designed as the feedback step of an agentic write-PDDL → validate →
+fix → solve loop (e.g. translating a natural-language problem to PDDL).
 
 ```bash
 $ pddlpy solve blocksworld-domain.pddl blocksworld-problem.pddl | jq .cost
@@ -233,9 +242,9 @@ $ pddlpy solve blocksworld-domain.pddl blocksworld-problem.pddl | jq .cost
 ### MCP server ###
 
 For LLMs and agents, pddlpy ships a [Model Context Protocol](https://modelcontextprotocol.io)
-server (#86) exposing the same three operations as tools — `parse`, `ground`
-and `solve` — with structured JSON results. It is the runtime counterpart of
-the static Agent Skill in [`skills/pddlpy/`](skills/pddlpy/SKILL.md).
+server (#86) exposing the same operations as tools — `parse`, `ground`,
+`solve` and `validate` — with structured JSON results. It is the runtime
+counterpart of the static Agent Skill in [`skills/pddlpy/`](skills/pddlpy/SKILL.md).
 
 ```bash
 pip install "pddlpy[mcp]"    # the mcp SDK is an optional extra
@@ -253,7 +262,9 @@ Client configuration (e.g. Claude Desktop / Claude Code):
 ```
 
 Tools take filesystem paths to the domain/problem files; `solve` accepts an
-optional `planner` argument (`bfs`, `astar`, `gbfs`, `ucs`).
+optional `planner` argument (`bfs`, `astar`, `gbfs`, `ucs`). For agents
+translating natural language to PDDL, `validate` provides the fix-loop
+feedback (syntax, undeclared predicates, unknown objects, zero groundings).
 
 ### Documentation ###
 

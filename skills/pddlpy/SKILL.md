@@ -24,10 +24,18 @@ parse/ground/solve questions, prefer it over writing Python — JSON on stdout,
 pipeable to `jq`:
 
 ```bash
-pddlpy parse  domain.pddl problem.pddl              # object-model summary
-pddlpy ground domain.pddl problem.pddl move         # grounded instances of one action
-pddlpy solve  domain.pddl problem.pddl --planner ucs   # default planner: astar
+pddlpy parse    domain.pddl problem.pddl            # object-model summary
+pddlpy ground   domain.pddl problem.pddl move       # grounded instances of one action
+pddlpy solve    domain.pddl problem.pddl --planner ucs   # default planner: astar
+pddlpy validate domain.pddl problem.pddl            # diagnostics for PDDL you wrote
 ```
+
+**If you write or edit PDDL yourself** (e.g. translating a problem from
+natural language), run `validate` before `solve` and fix what it reports:
+it collects syntax errors (a bare parse error-recovers past them), atoms
+over undeclared predicates, unknown objects, operators grounding to zero
+instances, and malformed durative actions. Exit `0` = clean, `1` = issues
+in the JSON `issues` list.
 
 In this repo run it as `uv run pddlpy ...`; outside, `uvx pddlpy ...` works
 once a release containing the CLI is on PyPI. Exit codes: `0` success, `1`

@@ -137,6 +137,36 @@ def test_solve_unsupported_requirements(capsys, tmp_path):
     assert "pddlpy: error:" in err
 
 
+# --- validate ------------------------------------------------------------
+
+def test_validate_clean_pair(capsys):
+    code, out, err = _run(capsys, "validate", *_files("blocksworld"))
+    assert code == 0 and err == ""
+    assert out == {"valid": True, "issues": []}
+
+
+def test_validate_reports_issues_with_exit_1(capsys, tmp_path):
+    domain = tmp_path / "d.pddl"
+    problem = tmp_path / "p.pddl"
+    domain.write_text(
+        "(define (domain toy) (:predicates (p ?x))"
+        " (:action a :parameters (?x) :precondition (p ?x) :effect (r ?x)))"
+    )
+    problem.write_text(
+        "(define (problem t) (:domain toy) (:objects o1) (:init (p o1)) (:goal (p o1)))"
+    )
+    code, out, _ = _run(capsys, "validate", str(domain), str(problem))
+    assert code == 1
+    assert out["valid"] is False
+    assert out["issues"][0]["check"] == "undeclared_predicate"
+
+
+def test_validate_missing_file(capsys):
+    code, out, err = _run(capsys, "validate", "nosuch-d.pddl", "nosuch-p.pddl")
+    assert code == 2 and out is None
+    assert "pddlpy: error:" in err
+
+
 def test_solve_unknown_planner_rejected_by_argparse(capsys):
     with pytest.raises(SystemExit) as exc:
         main(["solve", *_files("blocksworld"), "--planner", "nosuch"])
