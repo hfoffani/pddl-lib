@@ -12,8 +12,14 @@ and action costs; durative actions are parsed but not solved.
 ## Setup
 
 ```bash
-uv sync          # install (project uses uv)
+pip install pddlpy              # library + `pddlpy` CLI (or: uv pip install pddlpy)
+pip install "pddlpy[mcp]"       # optional: also the MCP server (`pddlpy-mcp`)
 ```
+
+The CLI/MCP/validate surface needs pddlpy >= 1.1; `uvx pddlpy ...` runs the
+CLI with zero install. Working inside a checkout of the
+[pddl-lib repo](https://github.com/hfoffani/pddl-lib) instead: `uv sync`,
+then prefix commands with `uv run`.
 
 Import: `from pddlpy import DomainProblem` and `from pddlpy.planning import get`.
 
@@ -37,13 +43,12 @@ over undeclared predicates, unknown objects, operators grounding to zero
 instances, and malformed durative actions. Exit `0` = clean, `1` = issues
 in the JSON `issues` list.
 
-In this repo run it as `uv run pddlpy ...`; outside, `uvx pddlpy ...` works
-once a release containing the CLI is on PyPI. Exit codes: `0` success, `1`
-search found no plan, `2` bad input (missing file, unknown operator/planner,
-unsupported `:requirements`). Drop to the Python API below when you need
-`State`/`GroundedTask`, custom binders, or anything the three subcommands
-don't cover. (There is also an MCP server, `pddlpy-mcp`, exposing the same
-three operations as tools — `pip install "pddlpy[mcp]"`.)
+Exit codes: `0` success, `1` search found no plan / validate found issues,
+`2` bad input (missing file, unknown operator/planner, unsupported
+`:requirements`). Drop to the Python API below when you need
+`State`/`GroundedTask`, custom binders, or anything the subcommands don't
+cover. (The MCP server `pddlpy-mcp` exposes the same four operations as
+tools over stdio.)
 
 ## Parse a domain + problem
 
@@ -112,7 +117,7 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
 - Uppercase keywords (`(:INIT ...)`) are fine — keywords are case-insensitive;
   identifiers keep their case.
 
-## Commands
+## Developing pddl-lib itself (repo checkout only)
 
 ```bash
 make            # grammar + python tests
@@ -121,4 +126,5 @@ make lint       # ruff
 make typecheck  # mypy
 ```
 
-See `docs/object-model.md` for the full model reference.
+Full model reference:
+[docs/object-model.md](https://github.com/hfoffani/pddl-lib/blob/main/docs/object-model.md).
