@@ -230,6 +230,31 @@ $ pddlpy solve blocksworld-domain.pddl blocksworld-problem.pddl | jq .cost
 4
 ```
 
+### MCP server ###
+
+For LLMs and agents, pddlpy ships a [Model Context Protocol](https://modelcontextprotocol.io)
+server (#86) exposing the same three operations as tools — `parse`, `ground`
+and `solve` — with structured JSON results. It is the runtime counterpart of
+the static Agent Skill in [`skills/pddlpy/`](skills/pddlpy/SKILL.md).
+
+```bash
+pip install "pddlpy[mcp]"    # the mcp SDK is an optional extra
+pddlpy-mcp                   # runs on stdio
+```
+
+Client configuration (e.g. Claude Desktop / Claude Code):
+
+```json
+{
+  "mcpServers": {
+    "pddlpy": { "command": "pddlpy-mcp" }
+  }
+}
+```
+
+Tools take filesystem paths to the domain/problem files; `solve` accepts an
+optional `planner` argument (`bfs`, `astar`, `gbfs`, `ucs`).
+
 ### Documentation ###
 
 * [`docs/object-model.md`](docs/object-model.md) — full reference for the

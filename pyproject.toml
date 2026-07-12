@@ -28,11 +28,17 @@ dependencies = [
 
 [project.scripts]
 pddlpy = "pddlpy.cli:main"
+pddlpy-mcp = "pddlpy.mcpserver:main"
 
 [project.urls]
 Homepage = "https://github.com/hfoffani/pddl-lib"
 Repository = "https://github.com/hfoffani/pddl-lib"
 Issues = "https://github.com/hfoffani/pddl-lib/issues"
+
+[project.optional-dependencies]
+mcp = [
+    "mcp>=1.2",
+]
 
 [tool.hatch.build]
 exclude = [
@@ -74,6 +80,7 @@ dev = [
     "pytest-cov>=5.0.0",
     "ruff>=0.6.0",
     "mypy>=1.11.0",
+    "mcp>=1.2",
 ]
 
 [tool.pytest.ini_options]
