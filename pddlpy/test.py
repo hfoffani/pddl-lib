@@ -11,10 +11,17 @@ class TestStringMethods(unittest.TestCase):
         domprob = DomainProblem(self.domainfile, self.problemfile)
         all_grounded_opers = domprob.ground_operator("op2")
         for gop in all_grounded_opers:
-            if gop.precondition_pos == set( [('S','R','C'),('S','R','S')] ):
+            if gop.precondition_pos == set( [('S','B','C'),('S','B','A')] ):
                 self.assertTrue(True)
                 return
         self.assertFalse("Missed a value")
+
+    def test_worldobjects_excludes_predicate_names(self):
+        # Untyped domain/problem without :objects: world objects come from
+        # the constants in :init and :goal, never from predicate names.
+        domprob = DomainProblem(self.domainfile, self.problemfile)
+        self.assertEqual(domprob.worldobjects(),
+                         {'A': None, 'B': None, 'C': None})
 
 if __name__ == '__main__':
     unittest.main()

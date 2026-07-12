@@ -66,6 +66,9 @@ def test_ground_operator(capsys):
     assert code == 0
     assert out["operator"] == "pick-up"
     groundings = out["groundings"]
+    # one grounding per world object -- predicate names must not bind ?x
+    assert len(groundings) == 3
+    assert {g["parameters"]["?x"] for g in groundings} == {"a", "b", "c"}
     g = next(g for g in groundings if g["parameters"] == {"?x": "a"})
     assert g["name"] == "pick-up"
     assert g["precondition_connective"] == "and"

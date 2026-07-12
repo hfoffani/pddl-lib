@@ -76,6 +76,20 @@ def test_uppercase_keywords_parse():
     assert len(upper.initialstate()) == 7
 
 
+def test_untyped_worldobjects_exclude_predicate_names():
+    """Untyped domains must not leak predicate names into worldobjects():
+    blocksworld declares no :types and no :constants, so world objects are
+    exactly the :objects of the problem."""
+    dp = DomainProblem(
+        os.path.join(CORPUS, "blocksworld-domain.pddl"),
+        os.path.join(CORPUS, "blocksworld-problem.pddl"),
+    )
+    assert dp.worldobjects() == {"a": None, "b": None, "c": None}
+    groundings = list(dp.ground_operator("pick-up"))
+    assert len(groundings) == 3
+    assert {g.variable_list["?x"] for g in groundings} == {"a", "b", "c"}
+
+
 def test_trailing_comment_without_newline(tmp_path):
     """#19: a comment on the final line with no trailing newline must not
     break the lexer."""
