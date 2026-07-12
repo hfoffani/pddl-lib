@@ -40,4 +40,6 @@ htmlcov/
 .pytest_cache/
 
 # AI
-.claude/e2e/llm/transcripts/*.md
+.claude/
+e2e/llm/transcripts/*.md
+
