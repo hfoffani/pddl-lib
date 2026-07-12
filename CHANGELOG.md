@@ -3,6 +3,25 @@
 All notable changes to `pddlpy` are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [1.1.1] - 2026-07-12
+
+### Fixed
+- **UTF-8 PDDL files parse** (#103): ANTLR's `FileStream` defaults to ASCII,
+  so any non-ASCII byte — even in a comment like `; camión` — raised
+  `UnicodeDecodeError` before parsing started. Files are now read as UTF-8
+  (a strict ASCII superset; existing files parse unchanged).
+
+### Added
+- **LLM ↔ pddlpy worked example** (#99): `docs/llm-interaction.md` — natural
+  language → PDDL → `pddlpy solve` → natural language, on a small cost-optimal
+  routing problem where the intuitive answer is wrong; courier example PDDL
+  under `examples/pddl/`, linked from the README with LLM+P / PlanBench
+  references. The `run-pddlpy` dev skill is hidden from public skills
+  discovery (`metadata.internal`).
+
+### Quality
+- 191 tests, 100% line coverage maintained.
+
 ## [1.1.0] - 2026-07-12
 
 The "standalone tool" release: pddlpy is now drivable from the shell, by MCP
@@ -81,5 +100,6 @@ public API (`Development Status :: 5 - Production/Stable`).
 - 150 tests, 100% line coverage; layering between grammar / model / planner enforced
   by a test. Python 3.11+.
 
+[1.1.1]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.1
 [1.1.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.0
 [1.0.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.0.0
