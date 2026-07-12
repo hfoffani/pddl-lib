@@ -694,7 +694,9 @@ class DomainProblem():
                   the .binder attribute later, to override grounding.
         """
         # domain
-        inp = FileStream(domainfile)
+        # ANTLR's FileStream defaults to ASCII; PDDL files may carry UTF-8
+        # (typically in comments) -- see #103.
+        inp = FileStream(domainfile, encoding="utf-8")
         lexer = pddlLexer(inp)
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)
@@ -703,7 +705,7 @@ class DomainProblem():
         walker = ParseTreeWalker()
         walker.walk(self.domain, tree)
         # problem
-        inp = FileStream(problemfile)
+        inp = FileStream(problemfile, encoding="utf-8")
         lexer = pddlLexer(inp)
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)
