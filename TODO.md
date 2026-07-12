@@ -2,8 +2,8 @@
 
 Live status for the 1.0 release (see `PRD.md` for the detailed spec). Temporary file.
 
-**Snapshot:** foundation + classical planner are done. 127 tests, **100% coverage**. What's
-left for 1.0 is durative finalization, examples, triage, and the PyPI release.
+**Snapshot:** **1.0.0 shipped** — live on PyPI, tagged `v1.0.0`, CHANGELOG added.
+150 tests, **100% coverage**. Only leftover: the `docs/object-model.md` durative note.
 
 ---
 
@@ -37,11 +37,12 @@ left for 1.0 is durative finalization, examples, triage, and the PyPI release.
       (`tests/test_examples.py`) runs every example. *Suite 150 passing, 100% coverage.*
 - [ ] ("running as a tool" / "LLM interface" examples — **deferred** post-1.0 with the thin CLI)
 
-### #81 — Release v1.0 to PyPI
-- [ ] Bump `pyproject.toml` → `1.0.0`; set `Development Status` classifier to `5 - Production/Stable`
-- [ ] QA: `make` green, coverage 100%, build wheel/sdist, smoke-test the wheel
-- [ ] Publish TestPyPI (`make pypitest`) → verify install → PyPI (`make pypipublish`)
-- [ ] Tag release + short changelog since 0.4.x
+### #81 — Release v1.0 to PyPI — **done** (PR #87, closed)
+- [x] Bump `pyproject.toml` → `1.0.0`; set `Development Status` classifier to `5 - Production/Stable`
+- [x] QA: `make` green, coverage 100%, build wheel/sdist, smoke-test the wheel
+- [x] Publish TestPyPI (`make pypitest`) → verify install → PyPI (`make pypipublish`).
+      *1.0.0 is the latest release on PyPI.*
+- [x] Tag release + short changelog since 0.4.x. *Tag `v1.0.0`; `CHANGELOG.md` added.*
 
 ### Issue triage (clean slate for 1.0)
 - [x] Verify against current code, then **close**: #36, #16, #19, #21, #26, #27 (dup of #23).
@@ -50,8 +51,10 @@ left for 1.0 is durative finalization, examples, triage, and the PyPI release.
       #10 and #35 assigned with explanatory comments.*
 
 ### Docs
-- [ ] Update `README.md` as durative applicability + examples land (current capabilities only)
+- [x] Update `README.md` as durative applicability + examples land (current capabilities only).
+      *Durative section, example showcase table, `DurativeState` mentioned.*
 - [ ] Update `docs/object-model.md` for the durative applicability surface
+      (*`DurativeState` / `validate_durative_action` not yet documented there*)
 
 ---
 
@@ -80,4 +83,4 @@ left for 1.0 is durative finalization, examples, triage, and the PyPI release.
 
 ---
 
-*Last updated: 2026-06-21*
+*Last updated: 2026-07-12*
