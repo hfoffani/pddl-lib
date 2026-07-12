@@ -1,6 +1,8 @@
 ---
 name: run-pddlpy
 description: Run, test, build, or smoke-check the pddlpy PDDL parser library. Use when asked to run pddlpy/pddl-lib, parse a PDDL domain/problem, exercise the DomainProblem API, ground operators, regenerate the ANTLR parser, or build the wheel.
+metadata:
+  internal: true
 ---
 
 # Run pddlpy
