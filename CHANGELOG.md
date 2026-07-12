@@ -3,6 +3,19 @@
 All notable changes to `pddlpy` are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [1.1.2] - 2026-07-12
+
+Infrastructure release — no library changes.
+
+### Changed
+- **Publishing moved entirely to GitHub Actions** (#96): pushing a `v*` tag
+  builds and uploads to TestPyPI then PyPI via [Trusted
+  Publishing](https://docs.pypi.org/trusted-publishers/) (OIDC — no stored
+  credentials). The local `make pypitest`/`make pypipublish` targets and the
+  `twine`/`build` dev dependencies were removed; this is the first release
+  published by the pipeline itself.
+- **CI on every PR**: grammar + tests, a 100%-coverage gate, ruff, mypy.
+
 ## [1.1.1] - 2026-07-12
 
 ### Fixed
@@ -100,6 +113,7 @@ public API (`Development Status :: 5 - Production/Stable`).
 - 150 tests, 100% line coverage; layering between grammar / model / planner enforced
   by a test. Python 3.11+.
 
+[1.1.2]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.2
 [1.1.1]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.1
 [1.1.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.0
 [1.0.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.0.0
