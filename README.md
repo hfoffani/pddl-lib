@@ -208,6 +208,28 @@ registry.register('mine', MyPlanner)
 plan = registry.get('mine').solve(dp)
 ```
 
+### Command-line interface ###
+
+Installing the package also installs a `pddlpy` command (#85) with three
+subcommands, all emitting JSON on stdout — handy for shell pipelines and
+for agents that shouldn't have to write Python:
+
+```bash
+pddlpy parse  domain.pddl problem.pddl            # object-model summary
+pddlpy ground domain.pddl problem.pddl pick-up    # grounded instances of one action
+pddlpy solve  domain.pddl problem.pddl --planner ucs
+```
+
+`solve` defaults to `astar`; `--planner` accepts any registered planner
+(`bfs`, `astar`, `gbfs`, `ucs`). Exit codes: `0` success, `1` search
+completed without finding a plan, `2` bad input (missing file, unknown
+operator, unsupported `:requirements`).
+
+```bash
+$ pddlpy solve blocksworld-domain.pddl blocksworld-problem.pddl | jq .cost
+4
+```
+
 ### Documentation ###
 
 * [`docs/object-model.md`](docs/object-model.md) — full reference for the
