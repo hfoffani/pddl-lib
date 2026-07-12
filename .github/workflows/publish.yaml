@@ -1,0 +1,71 @@
+# Publishing to PyPI happens ONLY here (#96): push a v* tag and this
+# workflow builds once, publishes to TestPyPI, then to PyPI. Auth is
+# PyPI Trusted Publishing (OIDC) — no tokens stored anywhere. Requires
+# one-time setup: GitHub environments `testpypi` and `pypi`, and a
+# trusted-publisher entry for this repo/workflow/environment on
+# test.pypi.org and pypi.org respectively.
+name: Publish to PyPI
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: astral-sh/setup-uv@v5
+      - name: Tag must match pyproject version
+        run: |
+          V=$(grep -m1 '^version' pyproject.toml | cut -d'"' -f2)
+          if [ "v$V" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match pyproject version $V"
+            exit 1
+          fi
+      - name: Generate ANTLR parser
+        run: make pyparser
+      - name: Run tests
+        run: uv run --group dev pytest -q
+      - name: Build wheel + sdist
+        run: uv build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish-testpypi:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/project/pddlpy/
+    permissions:
+      id-token: write # OIDC for Trusted Publishing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+  publish-pypi:
+    needs: publish-testpypi
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/pddlpy/
+    permissions:
+      id-token: write # OIDC for Trusted Publishing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

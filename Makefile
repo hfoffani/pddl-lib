@@ -97,17 +97,9 @@ testpublish:
 	@echo ""
 	@echo "✓ TestPyPI installation test completed"
 
-# Publishing targets. `build` rebuilds dist/ from scratch, so dist/* is exactly
-# the current version's sdist + wheel (both are uploaded, not just one).
-pypitest: build
-	@echo "Publishing to TestPyPI... (credentials in ~/.pypirc)"
-	$(UV) run twine check dist/*
-	$(UV) run twine upload --repository testpypi --verbose dist/*
-
-pypipublish: build
-	@echo "Publishing to PyPI... (credentials in ~/.pypirc)"
-	$(UV) run twine check dist/*
-	$(UV) run twine upload --verbose dist/*
+# Publishing happens ONLY via GitHub Actions (#96): push a v* tag and
+# .github/workflows/publish.yaml builds and uploads to TestPyPI then PyPI
+# using Trusted Publishing. There is no local publish target on purpose.
 
 # Help target
 help:
@@ -125,7 +117,5 @@ help:
 	@echo "  demo         - Run demo scripts"
 	@echo "  examples     - Run the example showcase (examples/)"
 	@echo "  testpublish  - Test package installation from TestPyPI (Docker)"
-	@echo "  pypitest     - Publish to TestPyPI"
-	@echo "  pypipublish  - Publish to PyPI"
 
-.PHONY: all init testgrammar pyparser test coverage lint typecheck build clean demo testpublish pypitest pypipublish help
+.PHONY: all init testgrammar pyparser test coverage lint typecheck build clean demo testpublish help
