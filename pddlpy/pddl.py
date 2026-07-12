@@ -586,7 +586,8 @@ class DomainListener(pddlListener):
             for opn, oper in self.operators.items():
                 alls = oper.precondition_pos | oper.precondition_neg | oper.effect_pos | oper.effect_neg
                 for a in alls:
-                    for s in a.predicate:
+                    # skip a.predicate[0]: it is the predicate name, not an argument
+                    for s in a.predicate[1:]:
                         if s[0] != '?':
                             vs.add( (s, None) )
             self.objects = dict( vs)
@@ -669,11 +670,12 @@ class ProblemListener(pddlListener):
     def exitProblem(self, ctx):
         if not self.objects:
             vs = set()
+            # skip a.predicate[0]: it is the predicate name, not an argument
             for a in self.initialstate:
-                for s in a.predicate:
+                for s in a.predicate[1:]:
                     vs.add( (s, None) )
             for a in self.goals:
-                for s in a.predicate:
+                for s in a.predicate[1:]:
                     vs.add( (s, None) )
             self.objects = dict( vs )
 

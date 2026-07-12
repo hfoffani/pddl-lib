@@ -45,6 +45,29 @@ def test_negative_precondition(tmp_path):
     assert ("q", "?x") in eff_neg
 
 
+def test_untyped_domain_inline_constants(tmp_path):
+    # A domain with no :constants and no :types falls back to harvesting
+    # constants that appear inline as action arguments -- but never the
+    # predicate names themselves.
+    domain = tmp_path / "d.pddl"
+    problem = tmp_path / "p.pddl"
+    domain.write_text(
+        """(define (domain idom)
+ (:requirements :strips)
+ (:predicates (at ?x ?l) (moved ?x))
+ (:action go-home :parameters (?x)
+   :precondition (at ?x home)
+   :effect (moved ?x)))"""
+    )
+    problem.write_text(
+        """(define (problem iprob) (:domain idom)
+ (:objects o1)
+ (:init (at o1 home)) (:goal (moved o1)))"""
+    )
+    dp = DomainProblem(str(domain), str(problem))
+    assert dp.worldobjects() == {"home": None, "o1": None}
+
+
 def test_operator_str(tmp_path):
     dp = _domprob(tmp_path)
     text = str(dp.domain.operators["a"])
