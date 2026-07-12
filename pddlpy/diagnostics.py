@@ -39,7 +39,7 @@ def _syntax_errors(path: str, rule: str) -> List[str]:
     """Parse ``path`` with the grammar rule ``rule`` ('domain' or 'problem')
     and return the collected syntax errors."""
     collector = _CollectingErrorListener()
-    lexer = pddlLexer(FileStream(path))
+    lexer = pddlLexer(FileStream(path, encoding="utf-8"))  # UTF-8 PDDL, #103
     lexer.removeErrorListeners()
     lexer.addErrorListener(collector)
     parser = pddlParser(CommonTokenStream(lexer))
