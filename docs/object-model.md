@@ -36,6 +36,9 @@ The entry point. Parses both files and exposes:
 | `durative_operators()` | names of the durative actions (#23) |
 | `ground_durative_operator(name)` | iterator of grounded `DurativeAction` |
 | `worldobjects()` | `{object: type or None}` |
+| `predicates()` | set of declared predicate names |
+| `types()` | `{type: supertype or None}` — the `:types` hierarchy (#22) |
+| `subtypes_of(t)` | `t` plus all its transitive subtypes |
 | `requirements()` | declared `:requirements` (e.g. `{":strips", ":typing"}`) |
 | `functions()` | `:functions` → ordered `(param, type)` list |
 | `initial_numeric()` | `{ground function head: value}` |
@@ -80,6 +83,37 @@ solved by the reference planners (they are non-temporal).
 - **Reference planners** — `bfs`, `astar` (goal-count heuristic), `gbfs`,
   `ucs` (cost-optimal, #3).
 
+### Durative surface (#23)
+
+The semantic layer on top of `DurativeAction` — validation and `at start`
+applicability, deliberately short of a temporal planner:
+
+- **`validate_durative_action(action, declared_predicates=None)`** — raises
+  `DurativeValidationError` unless the duration is present and strictly
+  positive, every `?variable` in a condition/effect is a declared parameter,
+  and (when `declared_predicates` is passed, e.g. `dp.predicates()`) every
+  referenced predicate is declared.
+- **`validate_durative_actions(dp)`** — validates every durative action in a
+  `DomainProblem` against its declared predicates; no-op without durative
+  actions.
+- **`DurativeState`** — small immutable set of ground atoms
+  (`DurativeState.from_problem(dp)`). `state.applicable(action)` checks only
+  the grounded action's **`at start`** conditions, mirroring
+  `State.applicable(op)`. No numeric valuation, no timeline: `over all` /
+  `at end` are not evaluated, and durative *solving* stays out of scope.
+
+```python
+from pddlpy import DomainProblem
+from pddlpy.planning import DurativeState, validate_durative_actions
+
+dp = DomainProblem("domain.pddl", "problem.pddl")
+validate_durative_actions(dp)
+state = DurativeState.from_problem(dp)
+startable = [a for name in dp.durative_operators()
+             for a in dp.ground_durative_operator(name)
+             if state.applicable(a)]
+```
+
 ```python
 from pddlpy import DomainProblem
 from pddlpy.planning import get
@@ -91,11 +125,10 @@ print(plan.cost, plan.action_names())
 
 ## Known limitations
 
-- **Type hierarchies (#22):** grounding matches a parameter's declared type
-  exactly, so multi-level type hierarchies (e.g. logistics) do not fully
-  ground. Single-level typing (gripper) and untyped domains (blocksworld)
-  work.
+- **Union types:** the `:types` hierarchy is supported (#22) — a parameter
+  typed with a supertype binds objects of any transitive subtype — but
+  `(either ...)` union types are not handled.
 - **Disjunctive/ADL preconditions:** the `or` connective is preserved but not
   evaluated; the reference planners reject such domains via capability checks.
-- **Durative actions:** recovered into the model but not solved (non-temporal
-  planners).
+- **Durative actions:** validated and checked for `at start` applicability
+  (see above), but not solved — the reference planners are non-temporal.

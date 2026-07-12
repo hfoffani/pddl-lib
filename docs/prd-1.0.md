@@ -1,10 +1,11 @@
 # PRD: Road to pddlpy 1.0
 
-> **Status:** Active — supersedes the earlier "foundation-first" draft, which was written
-> against a stale snapshot. The foundation is already done (see §1).
+> **Status:** Archived — 1.0.0 shipped to PyPI (tag `v1.0.0`). Kept as the historical
+> design spec because code docstrings reference its sections (e.g. "PRD §5.4").
 > **Owner:** Hernán
-> **Temporary file:** describes *what to do* for the 1.0 release. Retire after 1.0 ships.
-> Current capabilities always live in `README.md`; live status lives in `TODO.md`.
+> Current capabilities live in `README.md`; future work is tracked in GitHub
+> issues and milestones (2.0 ADL #10, 3.0 HDDL #35, CLI #85, LLM/MCP #86,
+> temporal solving #84).
 
 ---
 
