@@ -28,6 +28,14 @@ from .search import (
     UniformCostPlanner,
 )
 from .state import Plan, State, atom_tuple
+from .temporal import (
+    TEMPORAL_CAPABILITIES,
+    ScheduledAction,
+    TemporalPlan,
+    TemporalPlanner,
+    TemporalTask,
+    apply_durative,
+)
 
 __all__ = [
     "State",
@@ -53,4 +61,10 @@ __all__ = [
     "action_cost",
     "plan_cost",
     "TOTAL_COST",
+    "TemporalPlanner",
+    "TemporalPlan",
+    "TemporalTask",
+    "ScheduledAction",
+    "apply_durative",
+    "TEMPORAL_CAPABILITIES",
 ]
