@@ -17,6 +17,10 @@ jobs:
           distribution: temurin
           java-version: "17"
       - uses: astral-sh/setup-uv@v5
+      # Generate the ANTLR parser BEFORE uv sync: the editable build
+      # force-includes pddlpy/pddlLexer.py etc., which are gitignored.
+      - name: Generate ANTLR parser
+        run: make pyparser
       - name: Install dependencies
         run: uv sync --all-extras
       - name: Grammar + tests
