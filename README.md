@@ -331,9 +331,13 @@ In case you want to tweak the grammar, add other target languages or modify the 
 * `make build` - Build distribution packages (wheel and source dist)
 * `make clean` - Remove build artifacts
 * `make demo` - Run demo scripts
-* `make pypitest` - Publish to TestPyPI
-* `make pypipublish` - Publish to PyPI
 * `make help` - Show all available targets
+
+Publishing to PyPI is done exclusively by GitHub Actions when a `v*` tag is
+pushed (TestPyPI first, then PyPI, via [Trusted
+Publishing](https://docs.pypi.org/trusted-publishers/)) — see
+[`.github/workflows/publish.yaml`](.github/workflows/publish.yaml). CI (tests,
+100%-coverage gate, lint, typecheck) runs on every pull request.
 
 ### Contribution guidelines ###
 

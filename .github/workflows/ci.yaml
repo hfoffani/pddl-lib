@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Java is needed to compile the ANTLR grammar and regenerate the
+      # parser (the generated pddlLexer/Parser/Listener are gitignored).
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: astral-sh/setup-uv@v5
+      - name: Install dependencies
+        run: uv sync --all-extras
+      - name: Grammar + tests
+        run: make
+      - name: Coverage gate (100%)
+        run: uv run pytest -q --cov=pddlpy --cov-fail-under=100
+      - name: Lint
+        run: make lint
+      - name: Typecheck
+        run: make typecheck
