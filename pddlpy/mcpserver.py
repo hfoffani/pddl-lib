@@ -14,6 +14,7 @@ from typing import Any, Dict
 
 from mcp.server.fastmcp import FastMCP
 
+from pddlpy.diagnostics import diagnose
 from pddlpy.pddl import DomainProblem
 from pddlpy.planning import get, registry
 from pddlpy.serialize import domain_problem_dict, operator_dict, plan_dict
@@ -64,6 +65,16 @@ def solve(domain_file: str, problem_file: str, planner: str = "astar") -> Dict[s
     dp = DomainProblem(domain_file, problem_file)
     plan = get(planner).solve(dp)
     return {"planner": planner, **plan_dict(plan)}
+
+
+@server.tool()
+def validate(domain_file: str, problem_file: str) -> Dict[str, Any]:
+    """Check a PDDL domain/problem pair for common translation errors:
+    syntax errors, atoms over undeclared predicates, ground atoms naming
+    unknown objects, operators grounding to zero instances, and malformed
+    durative actions. Returns {valid, issues:[{severity, check, message}]}.
+    Run this after writing or editing PDDL, before ground/solve."""
+    return diagnose(domain_file, problem_file)
 
 
 def main() -> None:

@@ -2,12 +2,14 @@
 
 Three subcommands over a domain/problem pair, all emitting JSON on stdout:
 
-    pddlpy parse  DOMAIN PROBLEM             # object-model summary
-    pddlpy ground DOMAIN PROBLEM OPERATOR    # grounded instances of one action
-    pddlpy solve  DOMAIN PROBLEM [--planner NAME]
+    pddlpy parse    DOMAIN PROBLEM             # object-model summary
+    pddlpy ground   DOMAIN PROBLEM OPERATOR    # grounded instances of one action
+    pddlpy solve    DOMAIN PROBLEM [--planner NAME]
+    pddlpy validate DOMAIN PROBLEM             # diagnostics (#94)
 
-Exit codes: 0 success; 1 solve ran but found no plan; 2 bad input
-(missing file, unknown operator/planner, unsupported :requirements).
+Exit codes: 0 success; 1 solve found no plan / validate found issues;
+2 bad input (missing file, unknown operator/planner, unsupported
+:requirements).
 """
 from __future__ import annotations
 
@@ -16,6 +18,7 @@ import json
 import sys
 from typing import List, Optional
 
+from pddlpy.diagnostics import diagnose
 from pddlpy.pddl import DomainProblem
 from pddlpy.planning import PlannerError, get, registry
 from pddlpy.serialize import domain_problem_dict, operator_dict, plan_dict
@@ -32,6 +35,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("parse", "summarize the parsed domain/problem pair"),
         ("ground", "list the grounded instances of one operator"),
         ("solve", "search for a plan"),
+        ("validate", "check the pair for common translation errors"),
     ):
         cmd = sub.add_parser(name, help=help_)
         cmd.add_argument("domain", help="path to the domain PDDL file")
@@ -50,6 +54,15 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Optional[List[str]] = None) -> int:
     args = build_parser().parse_args(argv)
+
+    if args.command == "validate":
+        try:
+            result = diagnose(args.domain, args.problem)
+        except FileNotFoundError as exc:
+            print("pddlpy: error: %s" % exc, file=sys.stderr)
+            return 2
+        print(json.dumps(result, indent=2))
+        return 0 if not result["issues"] else 1
 
     try:
         dp = DomainProblem(args.domain, args.problem)
