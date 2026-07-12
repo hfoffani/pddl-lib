@@ -266,10 +266,23 @@ optional `planner` argument (`bfs`, `astar`, `gbfs`, `ucs`). For agents
 translating natural language to PDDL, `validate` provides the fix-loop
 feedback (syntax, undeclared predicates, unknown objects, zero groundings).
 
+**Why pair an LLM with a solver at all?** LLMs translate problems into PDDL
+very well but are unreliable at producing (let alone *optimal*) plans;
+delegating the search to a classical solver combines the strengths of both.
+[`docs/llm-interaction.md`](docs/llm-interaction.md) walks through a complete
+worked example — natural language → PDDL → `pddlpy solve` → natural language —
+on a small cost-optimal routing problem where the intuitive answer is wrong.
+Background reading: *LLM+P* ([arXiv:2304.11477](https://arxiv.org/abs/2304.11477)),
+the paper behind this pipeline, and *PlanBench*
+([arXiv:2206.10498](https://arxiv.org/abs/2206.10498)) on why direct LLM
+planning falls short.
+
 ### Documentation ###
 
 * [`docs/object-model.md`](docs/object-model.md) — full reference for the
   parser object model and the planning layer.
+* [`docs/llm-interaction.md`](docs/llm-interaction.md) — worked example of an
+  LLM and pddlpy dividing the work: translate, solve, translate back (#99).
 * [`skills/pddlpy/SKILL.md`](skills/pddlpy/SKILL.md) — an Agent Skill so coding
   agents can drive the library (parse, ground, plan).
 
