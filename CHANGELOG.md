@@ -3,6 +3,39 @@
 All notable changes to `pddlpy` are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-07-12
+
+The "standalone tool" release: pddlpy is now drivable from the shell, by MCP
+clients, and by coding agents — not only as a Python library.
+
+### Added
+- **CLI** (#85): a `pddlpy` console command with JSON output —
+  `pddlpy parse|ground|solve|validate DOMAIN PROBLEM`. `solve` takes
+  `--planner` (`bfs`/`astar`/`gbfs`/`ucs`, default `astar`). Exit codes:
+  `0` success, `1` no plan found / validation issues, `2` bad input.
+  Zero-install via `uvx pddlpy ...`.
+- **MCP server** (#86): `pddlpy-mcp` (stdio) exposing `parse`, `ground`,
+  `solve` and `validate` as Model Context Protocol tools with structured
+  JSON results. The `mcp` SDK is an optional extra: `pip install "pddlpy[mcp]"`.
+- **`validate` diagnostics** (#94): `pddlpy.diagnostics.diagnose()` bundles
+  collected ANTLR syntax errors, atoms over undeclared predicates, ground
+  atoms naming unknown objects, operators grounding to zero instances
+  (warning), and durative-action validation — the feedback step for agentic
+  natural-language → PDDL translation loops.
+- **`pddlpy.serialize`**: JSON-friendly dict renderings of `DomainProblem`,
+  grounded `Operator` and `Plan`, shared by the CLI and the MCP server.
+- **Agent Skill**: `skills/pddlpy/SKILL.md` reworked for standalone use
+  (installable via `npx skills add hfoffani/pddl-lib`), documenting the CLI
+  fast path and the write → validate → fix → solve loop.
+
+### Fixed
+- `worldobjects()` no longer includes predicate names as objects in untyped
+  domains, which inflated grounding (e.g. blocksworld `pick-up` grounded to
+  8 instances instead of 3) (#96).
+
+### Quality
+- 187 tests, 100% line coverage maintained.
+
 ## [1.0.0] - 2026-06-21
 
 First stable release. The library grew from a STRIPS parser into a parser +
@@ -48,4 +81,5 @@ public API (`Development Status :: 5 - Production/Stable`).
 - 150 tests, 100% line coverage; layering between grammar / model / planner enforced
   by a test. Python 3.11+.
 
+[1.1.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.0
 [1.0.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.0.0
