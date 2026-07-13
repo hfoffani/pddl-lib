@@ -248,9 +248,17 @@ async def main() -> int:
                         break
                     for tc in calls:
                         fn = tc["function"]
-                        fargs = json.loads(fn["arguments"])
-                        result = await run_tool(session, workdir, fn["name"], fargs)
-                        convo.tool_results.append((fn["name"], fargs, result))
+                        # Small models emit malformed JSON arguments; answer
+                        # with an error result instead of crashing the run.
+                        try:
+                            fargs = json.loads(fn["arguments"])
+                            result = await run_tool(session, workdir,
+                                                    fn["name"], fargs)
+                            convo.tool_results.append((fn["name"], fargs, result))
+                        except (json.JSONDecodeError, KeyError, TypeError) as exc:
+                            result = ("Error: tool call arguments were not valid "
+                                      "JSON (%s). Repeat the call with valid, "
+                                      "complete JSON arguments." % exc)
                         convo.messages.append({"role": "tool",
                                                "tool_call_id": tc["id"],
                                                "content": result})

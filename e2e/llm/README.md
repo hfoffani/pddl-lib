@@ -36,6 +36,17 @@ same MCP server through the agent's own harness:
 The driver prints where it saved the transcript; judge soundness with the
 same criteria (validate used, cost 7.0, route narrated).
 
+## Observed results
+
+| Model | Rounds | Outcome |
+|---|---|---|
+| `qwen/qwen-2.5-72b-instruct` | 2 | R1 **unsound** (double-escaped newlines, invented `:cost` syntax → harness hardened). R2 **sound**: wrote clean PDDL, recovered from a real `solve` rejection (missing `:typing`), narrated the optimum — now the transcript in `docs/llm-interaction.md`. |
+| `meta-llama/llama-3.1-8b-instruct` | 3 | All **unsound**, each differently: mangled the map + drifted into pseudo-code instead of tool calls; emitted malformed JSON tool arguments (now answered with an error result instead of crashing); fired 7 tool calls in one batch without reading any result. |
+
+The gap is the point: the 72B model *uses* the fix loop, the 8B model can't
+drive it — and the soundness gate correctly refused every unsound round.
+Below ~8B, the missing skill isn't PDDL, it's sustained tool use.
+
 ## Iterating (issue steps 5–8)
 
 Repeat runs (vary model / round) until a transcript is sound *and reads
