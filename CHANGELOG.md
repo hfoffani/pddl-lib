@@ -3,9 +3,19 @@
 All notable changes to `pddlpy` are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.2.0] - 2026-07-13
+
+The planning release: durative actions are *solved* and the expressiveness
+climbs from STRIPS to ADL.
 
 ### Added
+- **ADL support** (#10): conditional effects (`when`), universal effects,
+  quantified (`forall`/`exists`) and full-boolean (`and`/`or`/`not`/`imply`)
+  preconditions, and `=` equality — parsed into Condition/Effect trees,
+  grounded (quantifiers expand over typed world objects), and **evaluated by
+  the reference planners** via capability negotiation (`:adl` and its
+  sub-requirements). Plain STRIPS keeps its static-pruned fast path. Remaining
+  gap (documented): ADL structure inside `(:goal ...)` is still flattened.
 - **Temporal planner** (#84): `get("temporal")` *solves* durative-action
   domains. It enforces the full time-tagged contract — `at start`, `over all`
   (invariant across the duration), and `at end` — applying start effects at the
@@ -15,6 +25,14 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   times and durations and whose `makespan` is the plan cost. Registered with
   the `:durative-actions` capability. Required concurrency (mandatory overlap)
   remains out of scope.
+- **Real LLM transcript in the docs** (#99, #106): `docs/llm-interaction.md`
+  now walks through a captured qwen-2.5-72b conversation (write PDDL →
+  `validate` → recover from a real `solve` rejection → narrate the `ucs`
+  optimum), backed by the manual end-to-end harness in `e2e/llm/` with an
+  automated soundness gate and observed-results notes for small models.
+
+### Quality
+- 232 tests, 100% line coverage maintained.
 
 ## [1.1.2] - 2026-07-12
 
@@ -126,6 +144,7 @@ public API (`Development Status :: 5 - Production/Stable`).
 - 150 tests, 100% line coverage; layering between grammar / model / planner enforced
   by a test. Python 3.11+.
 
+[1.2.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.0
 [1.1.2]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.2
 [1.1.1]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.1
 [1.1.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.0
