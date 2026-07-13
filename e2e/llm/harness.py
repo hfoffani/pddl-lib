@@ -53,7 +53,13 @@ your arithmetic is not a proof. Instead:
 2. Call validate on the two files and fix any reported issue.
 3. Call solve with planner "ucs" (cost-optimal).
 4. Answer the user in plain language: the cheapest route and its total cost,
-   based ONLY on the solver's output."""
+   based ONLY on the solver's output.
+
+PDDL action-costs syntax reminder: declare `(:functions (total-cost) (toll
+?a - place ?b - place))` in the domain; the action effect uses `(increase
+(total-cost) (toll ?from ?to))`; the problem's :init sets `(= (toll a b) 5)`
+and `(= (total-cost) 0)`; end the problem with
+`(:metric minimize (total-cost))`. There is no `:cost` field."""
 
 
 def mcp_tools_to_openai(tools) -> list:
@@ -125,8 +131,13 @@ async def run_tool(session: ClientSession, workdir: pathlib.Path,
     """Execute one tool call (local write_file or MCP) and return result text."""
     if name == "write_file":
         base = os.path.basename(args["filename"])
+        content = args["content"]
+        # Weaker models double-escape newlines inside JSON tool arguments;
+        # if the "file" is one line full of literal \n sequences, decode them.
+        if "\n" not in content and "\\n" in content:
+            content = content.replace("\\n", "\n").replace("\\t", "\t")
         path = workdir / base
-        path.write_text(args["content"], encoding="utf-8")
+        path.write_text(content, encoding="utf-8")
         return json.dumps({"path": str(path)})
     result = await session.call_tool(name, args)
     if result.structuredContent is not None:
@@ -194,7 +205,7 @@ async def main() -> int:
     ap.add_argument("--model", default="qwen/qwen-2.5-72b-instruct")
     ap.add_argument("--server-cmd", default='uvx --from pddlpy[mcp] pddlpy-mcp',
                     help="MCP server command (default: published pddlpy via uvx)")
-    ap.add_argument("--max-turns", type=int, default=12)
+    ap.add_argument("--max-turns", type=int, default=20)
     ap.add_argument("--dry-run", action="store_true",
                     help="replay scripted turns; no API key needed")
     args = ap.parse_args()
