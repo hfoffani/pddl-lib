@@ -1,4 +1,4 @@
-# An LLM and pddlpy, working together (#99)
+# An LLM and pddlpy, working together (#99, #106)
 
 LLMs are excellent **translators** and unreliable **planners**. They turn a
 problem told in plain language into formal PDDL very well, but producing the
@@ -7,141 +7,152 @@ plausible-sounding answer is not the same as the *cheapest* one. A classical
 solver is the opposite: it cannot read your problem, but its answer comes
 with a guarantee.
 
-This page walks through the division of labour: **the LLM translates, pddlpy
-solves, the LLM translates back.** The point is deliberately model-agnostic.
-Frontier models keep getting better at planning, and this library does not
-compete with them — it doesn't have to. Whether you drive it from a
-top-of-the-line model or a small open-source one running locally, the solver
-contributes the same thing the LLM cannot: a **provably optimal** answer.
-The weaker the model, the more the solver adds; the stronger the model, the
-cheaper it is to let the solver settle what would otherwise need a long,
-unverifiable chain of reasoning.
+This page shows the division of labour on a real, captured conversation:
+**the LLM translates, pddlpy solves, the LLM translates back.** The point is
+deliberately model-agnostic. Frontier models keep getting better at planning,
+and this library does not compete with them — it doesn't have to. Whether you
+drive it from a top-of-the-line model or a small open-source one running
+locally, the solver contributes the same thing the LLM cannot: a **provably
+optimal** answer. The weaker the model, the more the solver adds; the
+stronger the model, the cheaper it is to let the solver settle what would
+otherwise need a long, unverifiable chain of reasoning.
 
-> **What is simulated and what is real.** The conversation below is a
-> *simulation* — a scripted illustration of the back-and-forth, not a
-> transcript of one specific model (any LLM wired to the
-> [CLI](../README.md#command-line-interface), the
-> [MCP server](../README.md#mcp-server) or the
-> [Agent Skill](../skills/pddlpy/SKILL.md) can play this role). Every
-> **command and output, however, is real**: the PDDL files live in
-> [`examples/pddl/`](../examples/pddl/), the outputs were produced by
-> `pddlpy` 1.1, and a unit test keeps them honest.
+> **How this was captured.** Everything below is a *real transcript* —
+> model **`qwen/qwen-2.5-72b-instruct`**, captured **2026-07-13** by the
+> manual end-to-end harness in [`e2e/llm/`](../e2e/llm/) (the raw capture is
+> [committed next to it](../e2e/llm/transcripts/qwen_qwen-2.5-72b-instruct-20260713-102438.md)).
+> The model received the problem plus tools: a local `write_file` and the
+> pddlpy **MCP server** (`uvx --from "pddlpy[mcp]" pddlpy-mcp` — the
+> published package in a transient environment). Tool outputs are verbatim;
+> PDDL is re-indented for readability, nothing else edited. An earlier round
+> with the same model was *unsound* — it invented PDDL cost syntax and never
+> reached a valid plan — which is the thesis in miniature: the tools, not
+> the model, carry the guarantee.
 
 ## 1. The user states the problem
 
-> **User:** A courier is at the **depot** and must deliver a parcel to
-> **town**, spending as little as possible on tolls. The direct highway
-> costs **10**. There's a route through the **junction**: 5 to get there,
-> then 6 into town. And there's a back-road chain: **riverside** (2), then
-> the **old bridge** (2), then into town (3). Roads are one-way. What's the
-> cheapest route?
+> **User:** A courier is at the depot and must deliver a parcel to town,
+> spending as little as possible on tolls. The direct highway costs 10.
+> There's a route through the junction: 5 to get there, then 6 into town.
+> And there's a back-road chain: riverside (2), then the old bridge (2),
+> then into town (3). Roads are one-way. What's the cheapest route?
 
 Small as it is, this is an *optimization* problem. An answer is only correct
-if no cheaper route exists — something you can't see from the answer itself.
+if no cheaper route exists — something you can't see from the answer itself,
+and exactly the kind of question direct LLM planning gets confidently wrong
+(see the [references](#references)). So the system prompt tells the model:
+*"Do not compute the plan yourself — your arithmetic is not a proof."*
 
-## 2. The LLM answers directly (and why you shouldn't settle for that)
+## 2. The model translates the problem to PDDL
 
-> **LLM (answering from intuition):** Take the route through the junction:
-> 5 + 6 = **11**, cheaper than the 10 highway... actually, comparing again,
-> take the **direct highway for 10** — it beats the junction route.
-
-The highway *does* beat the junction route — the decoy did its job — and yet
-**10 is not the answer**: the three-hop back road costs 2 + 2 + 3 = **7**. On
-five places you can check this by hand. On fifty, you cannot, and the LLM's
-answer doesn't come with a proof either way. (This failure mode is
-well-documented; see the [references](#references) below.)
-
-## 3. The LLM translates the problem to PDDL instead
-
-> **LLM:** Rather than trusting my arithmetic, let me write this down
-> formally and let a solver find the optimum.
-
-It emits two files — a *domain* (what actions exist) and a *problem* (this
-particular map and goal): [`courier-domain.pddl`](../examples/pddl/courier-domain.pddl)
-and [`courier-problem.pddl`](../examples/pddl/courier-problem.pddl). The
-essence:
+Its first tool calls write two files. The domain:
 
 ```lisp
-(:action drive
-  :parameters (?from - place ?to - place)
-  :precondition (and (at ?from) (road ?from ?to))
-  :effect (and (not (at ?from)) (at ?to)
-               (increase (total-cost) (toll ?from ?to))))
+(define (domain courier)
+  (:requirements :strips :action-costs :fluents)
+  (:types location - object)
+  (:predicates
+    (at ?l - location)
+    (road ?from - location ?to - location))
+  (:functions
+    (total-cost)
+    (toll ?from - location ?to - location))
+  (:action drive
+    :parameters (?from - location ?to - location)
+    :precondition (and (at ?from) (road ?from ?to))
+    :effect (and (not (at ?from)) (at ?to)
+                 (increase (total-cost) (toll ?from ?to)))))
 ```
+
+and the problem — a faithful translation of the map, ending in
+`(:metric minimize (total-cost))`:
 
 ```lisp
-(:init (at depot)
-  (road depot town)          (= (toll depot town) 10)
-  (road depot junction)      (= (toll depot junction) 5)
-  (road junction town)       (= (toll junction town) 6)
-  (road depot riverside)     (= (toll depot riverside) 2)
-  (road riverside oldbridge) (= (toll riverside oldbridge) 2)
-  (road oldbridge town)      (= (toll oldbridge town) 3)
-  (= (total-cost) 0))
-(:goal (at town))
-(:metric minimize (total-cost))
+(define (problem courier-delivery) (:domain courier)
+  (:objects depot town junction riverside oldbridge - location)
+  (:init
+    (at depot)
+    (road depot town)          (= (toll depot town) 10)
+    (road depot junction)     (= (toll depot junction) 5)
+    (road junction town)      (= (toll junction town) 6)
+    (road depot riverside)    (= (toll depot riverside) 2)
+    (road riverside oldbridge) (= (toll riverside oldbridge) 2)
+    (road oldbridge town)     (= (toll oldbridge town) 3)
+    (= (total-cost) 0))
+  (:goal (at town))
+  (:metric minimize (total-cost)))
 ```
 
-## 4. The LLM checks its own translation
+## 3. The toolchain pushes back — and the model fixes it
 
-Freshly written PDDL deserves a lint before a solve — a typo'd predicate or
-an undeclared object would otherwise surface as a confusing "no plan":
+The model calls `validate` (clean) and then `solve` with the cost-optimal
+`ucs` planner. The solver *refuses*:
 
-```console
-$ pddlpy validate courier-domain.pddl courier-problem.pddl
-{
-  "valid": true,
-  "issues": []
-}
+```json
+{"valid": true, "issues": []}
+```
+```
+Error executing tool solve: domain uses typing but does not declare a
+matching requirement (one of [':adl', ':typing'])
 ```
 
-(Had it mistyped `raod`, `validate` would exit `1` and name the undeclared
-predicate — the fix-loop for agent-written PDDL. See the
-[README](../README.md#command-line-interface).)
+The domain used `(:types ...)` without declaring `:typing` — caught by
+pddlpy's requirements enforcement (#9). The model reads the error and
+responds, verbatim:
 
-## 5. The solver finds the optimum
+> **Assistant:** I've encountered an error indicating that the domain file
+> does not declare the `:typing` requirement, which is necessary for the
+> planner to recognize the types I've defined. I will correct this and
+> re-run the validation and solve steps.
 
-`ucs` is uniform-cost search: cost-optimal for `:action-costs` domains.
+It rewrites one line — `(:requirements :strips :action-costs :fluents
+:typing)` — re-validates, and re-solves. This machine-checkable fix loop is
+the whole reason `validate` and structured errors exist (#94): the model
+never needs a human to tell it what's wrong.
 
-```console
-$ pddlpy solve courier-domain.pddl courier-problem.pddl --planner ucs
-{
-  "planner": "ucs",
-  "solved": true,
-  "cost": 7.0,
-  "length": 3,
-  "steps": [
-    {"action": "drive", "args": {"?from": "depot",     "?to": "riverside"}},
-    {"action": "drive", "args": {"?from": "riverside", "?to": "oldbridge"}},
-    {"action": "drive", "args": {"?from": "oldbridge", "?to": "town"}}
-  ]
-}
+## 4. The solver finds the optimum
+
+```json
+{"planner": "ucs", "solved": true, "cost": 7.0, "length": 3,
+ "steps": [{"action": "drive", "args": {"?from": "depot",     "?to": "riverside"}},
+           {"action": "drive", "args": {"?from": "riverside", "?to": "oldbridge"}},
+           {"action": "drive", "args": {"?from": "oldbridge", "?to": "town"}}]}
 ```
 
-Not an opinion: no cheaper plan exists in this model.
+Not an opinion: no cheaper plan exists in this model. The intuitive answers —
+the direct highway (10) and the junction route (5+6 = 11) — both lose to the
+three-hop back road (2+2+3 = 7).
 
-## 6. The LLM translates the plan back
+## 5. The model translates the plan back
 
-> **LLM:** The cheapest delivery costs **7 tolls**, not 10: drive from the
-> depot to **riverside** (2), cross the **old bridge** (2), and continue
-> into **town** (3). The direct highway (10) and the junction route (11)
-> are both more expensive.
+> **Assistant:** The cheapest route for the courier to deliver the parcel to
+> town is via the back-road chain: from the depot to riverside, then to the
+> old bridge, and finally into town. The total cost of this route is 7 toll
+> units.
 
-This last step is the easy direction — turning three JSON steps back into a
-sentence — and it's where the LLM shines regardless of its size.
+That closing step — three JSON steps into a sentence — is the easy direction,
+where an LLM of any size shines.
 
 ## Running it yourself
 
-The same loop works over any of the three surfaces:
+The curated reference version of this domain lives in
+[`examples/pddl/`](../examples/pddl/) (`courier-domain.pddl` /
+`courier-problem.pddl`), pinned by a unit test:
 
 ```bash
 uvx pddlpy validate courier-domain.pddl courier-problem.pddl   # zero-install CLI
 uvx pddlpy solve    courier-domain.pddl courier-problem.pddl --planner ucs
 ```
 
-or give an agent the `validate` / `solve` tools via the MCP server
-(`pddlpy-mcp`), or install the Agent Skill
-(`npx skills add hfoffani/pddl-lib`) so a coding agent knows this recipe.
+To reproduce the *conversation* (needs an OpenRouter key; non-deterministic):
+
+```bash
+export OPENROUTER_API_KEY=...
+make e2e-llm MODEL=qwen/qwen-2.5-72b-instruct
+```
+
+or give any agent the same tools via the MCP server (`pddlpy-mcp`) or the
+Agent Skill (`npx skills add hfoffani/pddl-lib`).
 
 ## References
 
