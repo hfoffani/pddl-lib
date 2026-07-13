@@ -3,6 +3,19 @@
 All notable changes to `pddlpy` are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **Temporal planner** (#84): `get("temporal")` *solves* durative-action
+  domains. It enforces the full time-tagged contract — `at start`, `over all`
+  (invariant across the duration), and `at end` — applying start effects at the
+  start point and end effects at start+duration, under **sequential** semantics
+  (actions never overlap; instantaneous actions participate as zero-duration
+  steps). Returns a `TemporalPlan` whose `ScheduledAction` steps carry start
+  times and durations and whose `makespan` is the plan cost. Registered with
+  the `:durative-actions` capability. Required concurrency (mandatory overlap)
+  remains out of scope.
+
 ## [1.1.2] - 2026-07-12
 
 Infrastructure release — no library changes.

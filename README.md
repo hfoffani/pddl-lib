@@ -21,9 +21,9 @@ The orginal grammar file was authored by Zeyn Saigol from University of Birmingh
 
 ### NOTICE ###
 
-Durative actions are now recovered into the object model (see _Planning API_).
-The reference planners, however, are non-temporal and do not solve durative
-domains — that is documented as out of scope for this round.
+Durative actions are recovered into the object model and now *solved*: the
+`temporal` planner (#84) schedules durative-action domains sequentially. The
+reference STRIPS planners remain non-temporal; see _Planning API_.
 
 ### What this project is not? ###
 
@@ -177,9 +177,27 @@ Action costs (`:action-costs`, `(increase (total-cost) ...)`, `(:metric minimize
 Durative actions (`:durative-actions`) are recovered into a `DurativeAction`
 type with time-tagged conditions (`at start` / `over all` / `at end`) and
 effects (`at start` / `at end`) plus a duration. `DomainProblem.durative_operators()`
-and `ground_durative_operator(name)` expose them. The reference planners are
-non-temporal, so they do not solve durative domains — this is documented as out
-of scope for now.
+and `ground_durative_operator(name)` expose them.
+
+The `temporal` planner (#84) *solves* these domains. It enforces the full
+time-tagged contract — `at start` at the start point, `over all` as an
+invariant across the duration, and `at end` at start+duration — under
+**sequential** semantics (actions never overlap; instantaneous actions
+participate as zero-duration steps). It returns a `TemporalPlan` whose `steps`
+carry per-action start times and durations and whose `makespan` is the plan
+cost. Required concurrency (mandatory overlap, e.g. match/cellar) is out of
+scope.
+
+```python
+>>> import pddlpy
+>>> from pddlpy.planning import get
+>>> dp = pddlpy.DomainProblem('weld-domain.pddl', 'weld-problem.pddl')
+>>> plan = get('temporal').solve(dp)
+>>> plan.makespan
+6.0
+>>> [(s.start, s.action.operator_name, s.duration) for s in plan.steps]
+[(0.0, 'steady-weld', 6.0)]
+```
 
 ```python
 >>> import pddlpy
@@ -295,7 +313,7 @@ There are wonderful material at the the University of Edinburgh:
 
 ### Future development ###
 
-* A temporal planner that solves durative-action domains.
+* Concurrent temporal planning (required action overlap, e.g. match/cellar).
 * Heuristic improvements for the reference planners.
 * ADL on the goal side (`or`/`forall`/`exists` inside `(:goal ...)`) and
   `(either ...)` union types.
@@ -306,8 +324,9 @@ reference planners — plus case-insensitive keywords, `:requirements`
 capture/enforcement,
 a planner interface with BFS/A*/GBFS/UCS reference planners, numeric fluents
 (`:functions`, numeric preconditions/effects), action costs (`total-cost` +
-cost-aware search), durative-action recovery into the object model, and a
-measured test suite with full coverage of the object model and planning layer.
+cost-aware search), durative-action recovery into the object model, a
+sequential `temporal` planner that schedules durative-action domains (#84), and
+a measured test suite with full coverage of the object model and planning layer.
 
 ### Advanced ###
 

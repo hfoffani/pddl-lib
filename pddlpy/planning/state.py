@@ -7,10 +7,25 @@ to tuples so that applicability and goal checks work without manual casting.
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Iterable, Iterator, List, Mapping, Optional, Tuple
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Mapping,
+    Optional,
+    Tuple,
+    Union,
+)
 
 if TYPE_CHECKING:
-    from pddlpy.pddl import DomainProblem, Operator
+    from pddlpy.pddl import DomainProblem, DurativeAction, Operator
+
+    #: Any grounded action a plan step can carry — instantaneous or durative
+    #: (#84); both expose ``operator_name`` and ``variable_list``.
+    PlanAction = Union[Operator, DurativeAction]
 
 #: A ground atom, e.g. ``("on", "a", "b")``.
 GroundAtom = Tuple[str, ...]
@@ -145,22 +160,22 @@ class State:
 class Plan:
     """An ordered sequence of grounded actions that reaches a goal.
 
-    ``actions`` is a tuple of grounded ``Operator`` instances. ``cost`` is
-    the plan cost (defaults to the number of actions; action-cost domains
-    override this in a later phase).
+    ``actions`` is a tuple of grounded ``Operator`` (or, for temporal plans,
+    ``DurativeAction``) instances. ``cost`` is the plan cost (defaults to the
+    number of actions; action-cost domains override this in a later phase).
     """
 
     __slots__ = ("actions", "cost")
 
     def __init__(
         self,
-        actions: Iterable["Operator"] = (),
+        actions: Iterable["PlanAction"] = (),
         cost: Optional[float] = None,
     ) -> None:
-        self.actions: Tuple["Operator", ...] = tuple(actions)
+        self.actions: Tuple["PlanAction", ...] = tuple(actions)
         self.cost: float = len(self.actions) if cost is None else cost
 
-    def __iter__(self) -> Iterator["Operator"]:
+    def __iter__(self) -> Iterator["PlanAction"]:
         return iter(self.actions)
 
     def __len__(self) -> int:
