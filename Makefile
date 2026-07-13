@@ -86,6 +86,12 @@ examples: pyparser pddlpy/pddl.py
 	@echo "Running examples..."
 	for f in examples/[0-9][0-9]_*.py ; do echo "=== $$f ===" ; $(PYTHON) $$f ; done
 
+# LLM + solver end-to-end (#106): MANUAL, non-deterministic, never in CI.
+# Needs OPENROUTER_API_KEY (or use `--dry-run` via the script directly).
+MODEL?=qwen/qwen-2.5-72b-instruct
+e2e-llm:
+	$(UV) run --with mcp,httpx python e2e/llm/harness.py --model $(MODEL)
+
 # Test published package from TestPyPI using Docker
 testpublish:
 	@echo "Testing pddlpy installation from TestPyPI..."
@@ -117,5 +123,6 @@ help:
 	@echo "  demo         - Run demo scripts"
 	@echo "  examples     - Run the example showcase (examples/)"
 	@echo "  testpublish  - Test package installation from TestPyPI (Docker)"
+	@echo "  e2e-llm      - Manual LLM+solver end-to-end (MODEL=..., needs OPENROUTER_API_KEY)"
 
-.PHONY: all init testgrammar pyparser test coverage lint typecheck build clean demo testpublish help
+.PHONY: all init testgrammar pyparser test coverage lint typecheck build clean demo testpublish e2e-llm help

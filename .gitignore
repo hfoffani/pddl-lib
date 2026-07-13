@@ -41,3 +41,5 @@ htmlcov/
 
 # AI
 .claude/
+e2e/llm/transcripts/*.md
+
