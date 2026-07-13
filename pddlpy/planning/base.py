@@ -34,26 +34,37 @@ class UnsupportedRequirementsError(PlannerError):
 
 
 # Map a detectable feature to the requirement keywords that permit it.
-# ':adl' is the umbrella requirement implying typing + negative + disjunctive.
+# ':adl' is the umbrella requirement implying the full ADL feature set.
 _FEATURE_REQUIREMENTS: Dict[str, Set[str]] = {
     "typing": {":typing", ":adl"},
     "negative-preconditions": {":negative-preconditions", ":adl"},
     "disjunctive-preconditions": {":disjunctive-preconditions", ":adl"},
+    "equality": {":equality", ":adl"},
+    "existential-preconditions":
+        {":existential-preconditions", ":quantified-preconditions", ":adl"},
+    "universal-preconditions":
+        {":universal-preconditions", ":quantified-preconditions", ":adl"},
+    "conditional-effects": {":conditional-effects", ":adl"},
 }
 
 
 def _used_features(domainproblem: "DomainProblem") -> Set[str]:
-    """Detect which (enforceable) PDDL features a domain actually uses."""
+    """Detect which (enforceable) PDDL features a domain actually uses.
+
+    Beyond typing, the ADL features (#10) are read off the operators'
+    precondition and effect trees: negation, disjunction, equality,
+    quantifiers, and conditional/universal effects.
+    """
     features: Set[str] = set()
     if domainproblem.domain.typesdef or any(
         t is not None for t in domainproblem.worldobjects().values()
     ):
         features.add("typing")
     for op in domainproblem.domain.operators.values():
-        if op.precondition_neg:
-            features.add("negative-preconditions")
-        if op.precondition_connective == "or":
-            features.add("disjunctive-preconditions")
+        if op.precondition_tree is not None:
+            features |= op.precondition_tree.features()
+        if op.effect_tree is not None:
+            features |= op.effect_tree.features()
     return features
 
 

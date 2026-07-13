@@ -88,10 +88,12 @@ class StaticPrunedBinder(VariableBinder):
 
     def bind(self, dp, operator) -> Iterator[Dict[str, str]]:
         # Pruning assumes the positive preconditions must all hold (a
-        # conjunction). For a disjunctive precondition (#13) the flattened atoms
-        # are alternatives, not conjuncts, so static joining would be unsound —
-        # fall back to the full cartesian product.
-        if operator.precondition_connective != 'and':
+        # conjunction). If the precondition is anything richer than a plain
+        # conjunction of literals/numerics — a disjunction (#13), a quantifier,
+        # an equality, or a nested negation (#10) — the flat positive atoms are
+        # not guaranteed conjuncts, so static joining would be unsound: fall
+        # back to the full cartesian product.
+        if not getattr(operator, 'simple_conjunction', True):
             yield from CartesianBinder().bind(dp, operator)
             return
 

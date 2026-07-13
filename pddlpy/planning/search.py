@@ -39,6 +39,17 @@ STRIPS_CAPABILITIES: FrozenSet[str] = frozenset(
      ":fluents", ":numeric-fluents", ":action-costs"}
 )
 
+#: ADL (#10) adds full boolean/quantified/equality preconditions and
+#: conditional/universal effects. State.applicable evaluates the grounded
+#: precondition tree and State.apply fires conditional effects, so the
+#: reference planners can now solve ADL domains. Durative actions
+#: (:durative-actions) and derived predicates remain out of scope.
+ADL_CAPABILITIES: FrozenSet[str] = STRIPS_CAPABILITIES | frozenset(
+    {":adl", ":disjunctive-preconditions", ":conditional-effects",
+     ":universal-preconditions", ":existential-preconditions",
+     ":quantified-preconditions"}
+)
+
 
 def _reconstruct(came_from: _CameFrom, state: State) -> List["Operator"]:
     """Walk parent pointers back to the start, returning the action list."""
@@ -60,7 +71,7 @@ def goal_count(goal_atoms: "FrozenSet[GroundAtom]", state: State) -> int:
 class BFSPlanner(Planner):
     """Breadth-first search. Returns a shortest (fewest-action) plan."""
 
-    capabilities = STRIPS_CAPABILITIES
+    capabilities = ADL_CAPABILITIES
 
     def solve(self, domainproblem: "DomainProblem") -> Optional[Plan]:
         task = self.prepare(domainproblem)
@@ -88,7 +99,7 @@ class _BestFirstPlanner(Planner):
     """Shared best-first core; subclasses define the node priority and the
     per-step cost."""
 
-    capabilities = STRIPS_CAPABILITIES
+    capabilities = ADL_CAPABILITIES
 
     def _priority(self, g: float, h: float) -> float:
         raise NotImplementedError  # pragma: no cover - abstract

@@ -90,12 +90,16 @@ class State:
     def applicable(self, operator: "Operator") -> bool:
         """True if a grounded ``operator`` is applicable in this state.
 
-        Conjunctive semantics: all positive preconditions hold, no negative
-        precondition holds, and every numeric precondition is satisfied under
-        the current fluent valuation. Disjunctive preconditions
-        (``precondition_connective == 'or'``) are not modeled here; the
-        reference planners gate such domains via capability negotiation.
+        When the operator carries a grounded ADL precondition tree (#10) it is
+        the authoritative test: the full and/or/not/imply/=/forall/exists
+        structure — and any numeric comparison — is evaluated against this
+        state. Operators built without a tree fall back to the legacy STRIPS
+        conjunctive check (all positive preconditions hold, no negative one
+        holds, every numeric precondition satisfied).
         """
+        precondition = getattr(operator, "precondition", None)
+        if precondition is not None:
+            return bool(precondition.holds(self._atoms, self._fluents))
         pos = {atom_tuple(a) for a in operator.precondition_pos}
         neg = {atom_tuple(a) for a in operator.precondition_neg}
         if not (pos <= self._atoms and neg.isdisjoint(self._atoms)):
@@ -111,9 +115,17 @@ class State:
         """
         add = {atom_tuple(a) for a in operator.effect_pos}
         delete = {atom_tuple(a) for a in operator.effect_neg}
+        num_effects = list(operator.effect_num)
+        # ADL conditional effects (#10): a (when C E) / universal effect fires
+        # only if its guard C holds in the pre-state (simultaneous semantics).
+        for ce in getattr(operator, "conditional_effects", ()):
+            if ce.condition.holds(self._atoms, self._fluents):
+                add |= {atom_tuple(a) for a in ce.add}
+                delete |= {atom_tuple(a) for a in ce.dele}
+                num_effects.extend(ce.num)
         fluents: Valuation = self._fluents
-        if operator.effect_num:
-            updates = [eff.apply(self._fluents) for eff in operator.effect_num]
+        if num_effects:
+            updates = [eff.apply(self._fluents) for eff in num_effects]
             fluents = dict(self._fluents)
             for key, value in updates:
                 fluents[key] = value

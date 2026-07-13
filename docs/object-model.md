@@ -52,10 +52,34 @@ tuple. **`Atom` has no value equality** — `initialstate()`/`goals()` hold
 tuples. Normalize with `pddlpy.planning.atom_tuple` (or compare `repr`s).
 
 ### `Operator`
-An instantaneous action, grounded or not. Fields: `operator_name`,
-`variable_list`, `precondition_pos`/`precondition_neg`,
+An instantaneous action, grounded or not. The flat STRIPS-style fields —
+`operator_name`, `variable_list`, `precondition_pos`/`precondition_neg`,
 `precondition_connective` (`'and'`/`'or'`, #13), `effect_pos`/`effect_neg`,
-and the numeric `precondition_num`/`effect_num` (#11).
+and the numeric `precondition_num`/`effect_num` (#11) — summarise the
+unconditional conjunctive part of an action and remain the fast path for plain
+STRIPS domains.
+
+**ADL (#10).** For full boolean / quantified / equality preconditions and
+conditional / universal effects, an `Operator` also carries structured trees:
+
+- `precondition_tree` (lifted) and `precondition` (grounded) — a `Condition`
+  tree of `Lit` / `Not` / `And` / `Or` / `Equality` / `NumericCond` /
+  `Exists` / `Forall`. `condition.holds(atoms, fluents)` evaluates the whole
+  tree, so `or`, `imply`, `=` and quantifiers are **evaluated**, not merely
+  preserved. `State.applicable` uses the grounded tree when present.
+- `effect_tree` (lifted) and `conditional_effects` (grounded) — an `Effect`
+  tree (`AddDel` / `NumEff` / `EffAnd` / `When` / `Universal`). Grounding
+  compiles it into the unconditional `effect_pos`/`effect_neg`/`effect_num`
+  plus a list of `CondEffect` guards that `State.apply` fires only when their
+  condition holds in the pre-state.
+
+Quantifiers are grounded by **expansion over the world objects**:
+`(forall (?x - t) φ)` becomes the `And` of `φ` instantiated for every object of
+type `t` (vacuously *true* when there are none), and `(exists …)` the
+corresponding `Or` (vacuously *false*). The `simple_conjunction` flag records
+whether the precondition is a plain conjunction of literals/numerics; anything
+richer makes the grounder fall back from static pruning to the full cartesian
+product so no applicable binding is dropped.
 
 ### Numeric fluents (#11)
 `Expr` tree — `Num`, `Fluent`, `BinOp`, `Neg` — each with
@@ -164,8 +188,11 @@ a follow-up to this planner.
 - **Union types:** the `:types` hierarchy is supported (#22) — a parameter
   typed with a supertype binds objects of any transitive subtype — but
   `(either ...)` union types are not handled.
-- **Disjunctive/ADL preconditions:** the `or` connective is preserved but not
-  evaluated; the reference planners reject such domains via capability checks.
+- **ADL (#10):** conditional/universal effects, quantified and full-boolean
+  preconditions and `=` equality are parsed, grounded and **solved** by the
+  reference planners. One gap remains: ADL structure on the **goal** side of a
+  problem (`or`/`forall`/`exists` in `(:goal …)`) is still flattened to a
+  conjunction of atoms.
 - **Durative actions:** solved sequentially by the `temporal` planner (#84);
   the reference STRIPS planners remain non-temporal. **Required concurrency**
   (mandatory action overlap) and PDDL+ processes/events are out of scope.

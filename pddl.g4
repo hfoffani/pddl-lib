@@ -223,6 +223,7 @@ goalDesc
 	| '(' 'imply' goalDesc goalDesc ')'
 	| '(' 'exists' '(' typedVariableList ')' goalDesc ')'
 	| '(' 'forall' '(' typedVariableList ')' goalDesc ')'
+	| '(' '=' term term ')'
     | fComp
     ;
 
