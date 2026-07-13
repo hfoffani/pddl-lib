@@ -66,8 +66,8 @@ evaluates a numeric precondition; `NumericEffect.apply(valuation)` returns the
 ### `DurativeAction` (#23)
 A durative action with time-tagged `condition_pos`/`condition_neg` keyed by
 `'start'`/`'over'`/`'end'`, `effect_pos`/`effect_neg` keyed by
-`'start'`/`'end'`, and a `duration`. Recovered into the model but **not**
-solved by the reference planners (they are non-temporal).
+`'start'`/`'end'`, and a `duration`. Recovered into the model; the reference
+planners are non-temporal, but the `temporal` planner (below) schedules them.
 
 ## Planning layer (`pddlpy.planning`)
 
@@ -123,6 +123,42 @@ plan = get("astar").solve(dp)
 print(plan.cost, plan.action_names())
 ```
 
+### Temporal planner (#84)
+
+The `temporal` planner *solves* durative-action domains, enforcing the full
+time-tagged contract that `DurativeState` (at-start only) cannot. It declares
+the `:durative-actions` capability and returns a `TemporalPlan`.
+
+- **`apply_durative(state, action)`** — applies one grounded `DurativeAction`
+  under **sequential** semantics: it checks `at start` in `state`, applies the
+  start effects, then checks the `over all` invariant and the `at end`
+  conditions against that mid-state (with no concurrency it persists for the
+  whole duration), and finally applies the end effects at `start + duration`.
+  Returns the successor `State`, or `None` if any condition fails.
+- **`TemporalPlanner`** (`get("temporal")`) — uniform-cost search over
+  accumulated duration; instantaneous actions participate as zero-duration
+  steps, so mixed domains work. Returns a makespan-minimal sequential schedule.
+- **`TemporalPlan`** — a `Plan` whose `steps` are `ScheduledAction`s
+  (`action`, `start`, `duration`, `end`); its `makespan` doubles as the plan
+  `cost`.
+
+```python
+from pddlpy import DomainProblem
+from pddlpy.planning import get
+
+dp = DomainProblem("durative-domain.pddl", "durative-problem.pddl")
+plan = get("temporal").solve(dp)
+if plan is not None:
+    print("makespan", plan.makespan)
+    for step in plan.steps:
+        print(step.start, step.action.operator_name, step.duration)
+```
+
+Because semantics are sequential (v1), actions never overlap: `over all` and
+`at end` are constrained only by the action's own start effects. **Required
+concurrency** (actions that must overlap, e.g. match/cellar) is out of scope —
+a follow-up to this planner.
+
 ## Known limitations
 
 - **Union types:** the `:types` hierarchy is supported (#22) — a parameter
@@ -130,5 +166,6 @@ print(plan.cost, plan.action_names())
   `(either ...)` union types are not handled.
 - **Disjunctive/ADL preconditions:** the `or` connective is preserved but not
   evaluated; the reference planners reject such domains via capability checks.
-- **Durative actions:** validated and checked for `at start` applicability
-  (see above), but not solved — the reference planners are non-temporal.
+- **Durative actions:** solved sequentially by the `temporal` planner (#84);
+  the reference STRIPS planners remain non-temporal. **Required concurrency**
+  (mandatory action overlap) and PDDL+ processes/events are out of scope.
