@@ -57,9 +57,14 @@ def _condition_atoms(dp: DomainProblem) -> Iterator[Tuple[str, Any]]:
     for atom in dp.goals():
         yield ":goal", atom
     for name, op in dp.domain.operators.items():
-        for group in (op.precondition_pos, op.precondition_neg,
-                      op.effect_pos, op.effect_neg):
-            for atom in group:
+        # Walk the ADL precondition/effect trees so atoms nested inside
+        # or/forall/exists/when/= are checked too (#10), not just the flat
+        # unconditional summary sets.
+        if op.precondition_tree is not None:
+            for atom in op.precondition_tree.atoms():
+                yield "action %r" % name, atom
+        if op.effect_tree is not None:
+            for atom in op.effect_tree.atoms():
                 yield "action %r" % name, atom
     for name, dop in dp.domain.durative_operators.items():
         for timed in (dop.condition_pos, dop.condition_neg):

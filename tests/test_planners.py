@@ -100,12 +100,12 @@ def test_registry_solves():
 
 
 def test_planner_rejects_unsupported_domain(tmp_path):
-    # A domain declaring :disjunctive-preconditions is beyond the STRIPS
+    # ADL is now supported (#10); :durative-actions is still beyond the blind
     # planners' capabilities -> fail fast.
     domain = tmp_path / "d.pddl"
     problem = tmp_path / "p.pddl"
     domain.write_text(
-        "(define (domain d) (:requirements :strips :disjunctive-preconditions)\n"
+        "(define (domain d) (:requirements :strips :durative-actions)\n"
         " (:predicates (p ?x) (q ?x))\n"
         " (:action a :parameters (?x) :precondition (or (p ?x) (q ?x)) :effect (not (p ?x))))"
     )

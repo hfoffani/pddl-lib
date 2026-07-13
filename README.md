@@ -297,9 +297,13 @@ There are wonderful material at the the University of Edinburgh:
 
 * A temporal planner that solves durative-action domains.
 * Heuristic improvements for the reference planners.
-* ADL (conditional effects, quantifiers) and a full and/or/not precondition tree.
+* ADL on the goal side (`or`/`forall`/`exists` inside `(:goal ...)`) and
+  `(either ...)` union types.
 
-Done recently: case-insensitive keywords, `:requirements` capture/enforcement,
+Done recently: ADL support (#10) — conditional/universal effects, quantified
+and full-boolean preconditions and `=` equality, evaluated end-to-end by the
+reference planners — plus case-insensitive keywords, `:requirements`
+capture/enforcement,
 a planner interface with BFS/A*/GBFS/UCS reference planners, numeric fluents
 (`:functions`, numeric preconditions/effects), action costs (`total-cost` +
 cost-aware search), durative-action recovery into the object model, and a

@@ -128,8 +128,10 @@ def test_solve_no_plan(capsys, tmp_path):
 def test_solve_unsupported_requirements(capsys, tmp_path):
     domain = tmp_path / "d.pddl"
     problem = tmp_path / "p.pddl"
+    # :durative-actions is beyond the blind planners' capabilities (ADL is now
+    # supported, #10); the solve must still fail fast.
     domain.write_text(
-        "(define (domain toy) (:requirements :adl) (:predicates (p))"
+        "(define (domain toy) (:requirements :durative-actions) (:predicates (p))"
         " (:action a :parameters () :precondition (p) :effect (p)))"
     )
     problem.write_text(
