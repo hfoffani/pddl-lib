@@ -3,6 +3,20 @@
 All notable changes to `pddlpy` are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [1.2.1] - 2026-07-14
+
+Patch release found in the v1.2.0 post-release check.
+
+### Fixed
+- **CLI/MCP temporal output** (#119): `pddlpy solve --planner temporal` and
+  the MCP `solve` tool now render the `TemporalPlan` schedule — each step
+  carries `start`, `duration` and `end`, and the result a top-level
+  `makespan` (the generic `cost` is kept for compatibility). Previously the
+  JSON showed only `{action, args}` per step and the schedule was lost.
+
+### Quality
+- 234 tests, 100% line coverage maintained.
+
 ## [1.2.0] - 2026-07-13
 
 The planning release: durative actions are *solved* and the expressiveness
@@ -144,6 +158,7 @@ public API (`Development Status :: 5 - Production/Stable`).
 - 150 tests, 100% line coverage; layering between grammar / model / planner enforced
   by a test. Python 3.11+.
 
+[1.2.1]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.1
 [1.2.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.0
 [1.1.2]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.2
 [1.1.1]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.1
