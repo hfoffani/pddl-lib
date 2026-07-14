@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import Any, Dict, Iterable, List, Optional
 
 from pddlpy.pddl import DomainProblem, Operator
-from pddlpy.planning import Plan, atom_tuple
+from pddlpy.planning import Plan, TemporalPlan, atom_tuple
 
 
 def atoms_list(atoms: Iterable[Any]) -> List[List[str]]:
@@ -59,9 +59,31 @@ def operator_dict(op: Operator) -> Dict[str, Any]:
 
 
 def plan_dict(plan: Optional[Plan]) -> Dict[str, Any]:
-    """A plan (or the absence of one, when ``plan`` is ``None``)."""
+    """A plan (or the absence of one, when ``plan`` is ``None``).
+
+    A :class:`TemporalPlan` (#84) additionally carries its schedule (#119):
+    each step gains ``start``, ``duration`` and ``end``, and the dict gains a
+    top-level ``makespan`` (which also remains the ``cost``).
+    """
     if plan is None:
         return {"solved": False, "cost": None, "length": None, "steps": None}
+    if isinstance(plan, TemporalPlan):
+        return {
+            "solved": True,
+            "cost": plan.cost,
+            "makespan": plan.makespan,
+            "length": len(plan),
+            "steps": [
+                {
+                    "action": s.action.operator_name,
+                    "args": dict(s.action.variable_list),
+                    "start": s.start,
+                    "duration": s.duration,
+                    "end": s.end,
+                }
+                for s in plan.steps
+            ],
+        }
     return {
         "solved": True,
         "cost": plan.cost,

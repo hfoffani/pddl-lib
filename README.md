@@ -240,7 +240,18 @@ pddlpy validate domain.pddl problem.pddl            # diagnostics (see below)
 ```
 
 `solve` defaults to `astar`; `--planner` accepts any registered planner
-(`bfs`, `astar`, `gbfs`, `ucs`). Exit codes: `0` success, `1` search
+(`bfs`, `astar`, `gbfs`, `ucs`, `temporal`). With `--planner temporal` the
+JSON carries the schedule (#119): each step gains `start`, `duration` and
+`end`, and the result a top-level `makespan`:
+
+```bash
+$ pddlpy solve weld-domain.pddl weld-problem.pddl --planner temporal
+{"planner": "temporal", "solved": true, "cost": 6.0, "makespan": 6.0,
+ "length": 1, "steps": [{"action": "steady-weld", "args": {"?p": "p1"},
+ "start": 0.0, "duration": 6.0, "end": 6.0}]}
+```
+
+Exit codes: `0` success, `1` search
 completed without finding a plan / `validate` found issues, `2` bad input
 (missing file, unknown operator, unsupported `:requirements`).
 

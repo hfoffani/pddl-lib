@@ -108,6 +108,20 @@ def test_solve_cost_aware(capsys):
     assert out["solved"] is True and out["cost"] > 0
 
 
+def test_solve_temporal_schedule(capsys):
+    # #119: TemporalPlan steps carry the schedule, plus a top-level makespan.
+    code, out, _ = _run(
+        capsys, "solve", *_files("temporal-weld"), "--planner", "temporal"
+    )
+    assert code == 0
+    assert out["solved"] is True
+    assert out["makespan"] == out["cost"] == 6.0
+    step = out["steps"][0]
+    assert set(step) == {"action", "args", "start", "duration", "end"}
+    assert step["action"] == "steady-weld" and step["args"] == {"?p": "p1"}
+    assert step["start"] == 0.0 and step["duration"] == 6.0 and step["end"] == 6.0
+
+
 def test_solve_no_plan(capsys, tmp_path):
     domain = tmp_path / "d.pddl"
     problem = tmp_path / "p.pddl"
