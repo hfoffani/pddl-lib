@@ -164,7 +164,9 @@ the `:durative-actions` capability and returns a `TemporalPlan`.
   steps, so mixed domains work. Returns a makespan-minimal sequential schedule.
 - **`TemporalPlan`** — a `Plan` whose `steps` are `ScheduledAction`s
   (`action`, `start`, `duration`, `end`); its `makespan` doubles as the plan
-  `cost`.
+  `cost`. The CLI and MCP `solve` render the schedule too (#119): each JSON
+  step carries `start`/`duration`/`end` and the result a top-level
+  `makespan` alongside `cost`.
 
 ```python
 from pddlpy import DomainProblem

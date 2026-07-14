@@ -44,6 +44,14 @@ def test_solve_default_planner():
     assert out["length"] == len(out["steps"]) > 0
 
 
+def test_solve_temporal_schedule():
+    # #119: the solve tool surfaces TemporalPlan schedules.
+    out = solve(*_files("temporal-weld"), planner="temporal")
+    assert out["solved"] is True and out["makespan"] == out["cost"]
+    step = out["steps"][0]
+    assert step["end"] == step["start"] + step["duration"]
+
+
 def test_solve_no_plan(tmp_path):
     domain = tmp_path / "d.pddl"
     problem = tmp_path / "p.pddl"
