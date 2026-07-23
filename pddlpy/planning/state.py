@@ -208,6 +208,15 @@ class Plan:
     def __len__(self) -> int:
         return len(self.actions)
 
+    def __bool__(self) -> bool:
+        """Always true: a Plan is a solution, even the empty one.
+
+        Planners return ``None`` when there is no solution, so ``if plan:``
+        must not treat the zero-step plan for an already-satisfied goal as
+        a failure.
+        """
+        return True
+
     def action_names(self) -> List[Tuple[Optional[str], Dict[str, Optional[str]]]]:
         """List of ``(operator_name, variable_bindings)`` for each action."""
         return [(a.operator_name, a.variable_list) for a in self.actions]

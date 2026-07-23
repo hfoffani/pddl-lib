@@ -86,3 +86,10 @@ def test_apply_numeric():
     ])
     assert after == {f: 6.0, g: 2.0, h: 3.5, ("k",): 6.0}
     assert before == {f: 2.0, g: 8.0, h: 1.0}  # pre-state untouched
+
+
+def test_empty_plan_is_truthy():
+    """A zero-step plan solves an already-satisfied goal; it is not a failure."""
+    plan = Plan()
+    assert len(plan) == 0
+    assert plan
