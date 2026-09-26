@@ -22,8 +22,8 @@ from pddlpy.serialize import domain_problem_dict, operator_dict, plan_dict
 server = FastMCP(
     "pddlpy",
     instructions=(
-        "Parse, ground and solve PDDL domain/problem pairs. All tools take "
-        "filesystem paths to a domain file and a problem file."
+        "Parse, validate, ground and solve PDDL domain/problem pairs. All tools "
+        "take filesystem paths to a domain file and a problem file."
     ),
 )
 
@@ -40,7 +40,9 @@ def parse(domain_file: str, problem_file: str) -> Dict[str, Any]:
 @server.tool()
 def ground(domain_file: str, problem_file: str, operator: str) -> Dict[str, Any]:
     """Ground one operator of a PDDL domain/problem pair and return every
-    grounded instance with its parameters, preconditions and effects."""
+    grounded instance with its parameters, preconditions and effects. Fails
+    with the list of known operators if ``operator`` is not in the domain.
+    Untyped domains can ground to many instances (objects^parameters)."""
     dp = DomainProblem(domain_file, problem_file)
     if operator not in dp.operators():
         raise ValueError(
@@ -55,9 +57,12 @@ def ground(domain_file: str, problem_file: str, operator: str) -> Dict[str, Any]
 @server.tool()
 def solve(domain_file: str, problem_file: str, planner: str = "astar") -> Dict[str, Any]:
     """Search for a plan on a PDDL domain/problem pair. ``planner`` is one of
-    the registered planners (bfs, astar, gbfs, ucs; default astar). Returns
-    the plan (solved/cost/length/steps), with ``solved: false`` when the
-    search exhausts without reaching the goal."""
+    the registered planners: bfs, astar (default), gbfs, ucs (cost-optimal for
+    :action-costs), or temporal (required for :durative-actions; steps carry
+    start/duration/end and the result a ``makespan``). Returns the plan
+    (solved/cost/length/steps), with ``solved: false`` when the search
+    exhausts without reaching the goal. Fails if the domain declares
+    :requirements the chosen planner does not support."""
     if planner not in registry.names():
         raise ValueError(
             "unknown planner %r; known: %s" % (planner, registry.names())
