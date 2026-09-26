@@ -1,13 +1,13 @@
 ---
 name: pddlpy
-description: Parse PDDL domain/problem files and solve them with pddlpy, via the pddlpy CLI (JSON output) or the Python API. Use when working with PDDL planning files — parsing a domain/problem, inspecting the initial state/goals/operators, grounding actions, evaluating numeric fluents or action costs, or running a reference planner (BFS/A*/GBFS/UCS) to produce a plan.
+description: Parse PDDL domain/problem files and solve them with pddlpy, via the pddlpy CLI (JSON output) or the Python API. Use when working with PDDL planning files — parsing a domain/problem, inspecting the initial state/goals/operators, grounding actions, evaluating numeric fluents or action costs, or running a reference planner (BFS/A*/GBFS/UCS, or temporal for durative actions) to produce a plan.
 ---
 
 # pddlpy
 
 `pddlpy` parses PDDL into an object model and solves STRIPS-family problems
-with built-in reference planners. It supports STRIPS, typing, numeric fluents,
-and action costs; durative actions are parsed but not solved.
+with built-in reference planners. It supports STRIPS, typing, ADL, numeric
+fluents, action costs, and durative actions (sequential temporal planning).
 
 ## Setup
 
@@ -25,7 +25,7 @@ Import: `from pddlpy import DomainProblem` and `from pddlpy.planning import get`
 
 ## Quick path: the CLI (no Python needed)
 
-Installing the package also installs a `pddlpy` command (#85). For one-off
+Installing the package also installs a `pddlpy` command. For one-off
 parse/ground/solve questions, prefer it over writing Python — JSON on stdout,
 pipeable to `jq`:
 
@@ -87,7 +87,8 @@ if plan is not None:
 
 Planner choice: `bfs` (fewest actions), `astar` (goal-count heuristic, optimal
 for unit costs), `gbfs` (greedy, fast), `ucs` (cost-optimal for `:action-costs`
-domains). A planner raises `UnsupportedRequirementsError` if a domain declares
+domains), `temporal` (durative actions; returns a schedule with start times and
+a `makespan`). A planner raises `UnsupportedRequirementsError` if a domain declares
 `:requirements` it does not support.
 
 ## Work with states directly
@@ -108,12 +109,12 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
 - `initialstate()`/`goals()` return `Atom` objects with **no value equality**.
   A grounded operator's pre/effects are plain tuples. Normalize with
   `from pddlpy.planning import atom_tuple` (or compare `repr`s / use `State`).
-- **Type hierarchies (#22)** are supported: a parameter typed with a supertype
+- **Type hierarchies** are supported: a parameter typed with a supertype
   binds objects of any transitive subtype (`dp.types()` / `dp.subtypes_of(t)`
   expose the hierarchy). Only `(either ...)` union types are unhandled.
 - **Durative actions** (`:durative-actions`) parse into `DurativeAction`
-  (`dp.durative_operators()`), but the reference planners are non-temporal and
-  will not solve them.
+  (`dp.durative_operators()`) and are solved only by `temporal`, under
+  sequential semantics: domains that require overlapping actions are not solved.
 - Uppercase keywords (`(:INIT ...)`) are fine — keywords are case-insensitive;
   identifiers keep their case.
 
