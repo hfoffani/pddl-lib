@@ -7,10 +7,9 @@ metadata:
 
 # Run pddlpy
 
-`pddlpy` is a **Python library** (no GUI, no server): an ANTLR4-based PDDL
-parser exposing `DomainProblem` (parse domain+problem, read objects / initial
-state / goals / operators, and ground operators). You drive it by
-**importing and calling it** — the harness is
+`pddlpy` is an ANTLR4-based PDDL parser and planner: a Python library
+(`DomainProblem`), a `pddlpy` CLI, and an optional `pddlpy-mcp` stdio server.
+To smoke-check the library, drive it by **importing and calling it**. The harness is
 `.claude/skills/run-pddlpy/smoke.py`, which exercises the whole public API
 against the bundled `examples-pddl/` files and asserts invariants.
 
@@ -33,8 +32,9 @@ The generated parser (`pddlpy/pddlLexer.py`, `pddlParser.py`,
 `import pddlpy` will fail until you generate it:
 
 ```bash
-uv sync          # create .venv, install antlr4 runtime
-make pyparser    # generate pddlLexer/pddlParser/pddlListener into pddlpy/ (needs Java)
+make pyparser    # FIRST: generate pddlLexer/pddlParser/pddlListener (needs Java);
+                 # the editable build in `uv sync` fails without them
+uv sync          # create .venv, install deps
 ```
 
 ## Run (agent path) — the smoke driver
@@ -68,8 +68,8 @@ print(next(iter(dp.ground_operator('move'))))
 ## Test
 
 ```bash
-make            # grammar test (Java GRUN) + python unittest — the full suite
-uv run python -m pddlpy.test    # python unit test only (no Java)
+make            # grammar test (Java GRUN) + pytest suite — the full suite
+uv run pytest   # python tests only (no Java, parser must already be generated)
 make demo       # run demo.py over examples 1,2,3,4,6 (human-readable dump)
 ```
 

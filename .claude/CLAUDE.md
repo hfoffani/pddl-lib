@@ -8,7 +8,7 @@ Four deliverables: the `pddlpy` library, a CLI (`pddlpy`), an MCP server
 ## Quick Commands
 ```bash
 uv sync           # Setup environment (fresh clone: run `make pyparser` FIRST)
-make              # Run all tests (grammar + python, 191 tests)
+make              # Run all tests (grammar + python)
 make pyparser     # Regenerate parser from pddl.g4 (needs Java)
 make lint         # ruff
 make typecheck    # mypy
@@ -23,7 +23,7 @@ uv run pddlpy-mcp # MCP server on stdio
 - `pddl.g4` — ANTLR4 grammar definition
 - `pddlpy/pddl.py` — Object model (DomainProblem, Operator, Atom, DurativeAction)
 - `pddlpy/binding.py` — Pluggable variable binders (StaticPrunedBinder default)
-- `pddlpy/planning/` — State/Plan/GroundedTask, Planner ABC + registry, bfs/astar/gbfs/ucs
+- `pddlpy/planning/` — State/Plan/GroundedTask, Planner ABC + registry, bfs/astar/gbfs/ucs/temporal
 - `pddlpy/cli.py` + `pddlpy/serialize.py` — CLI (#85) and its JSON renderings
 - `pddlpy/mcpserver.py` — MCP server, tools parse/ground/solve/validate (#86)
 - `pddlpy/diagnostics.py` — `diagnose()` behind `validate` (#94)
@@ -50,7 +50,7 @@ dp = DomainProblem("domain.pddl", "problem.pddl")
 dp.initialstate(); dp.goals()        # sets of Atom (NO value equality — use
                                      # pddlpy.planning.atom_tuple to compare)
 dp.ground_operator("move")           # grounded Operators (tuples inside)
-plan = get("astar").solve(dp)        # or bfs/gbfs/ucs; None if unsolvable
+plan = get("astar").solve(dp)        # or bfs/gbfs/ucs/temporal; None if unsolvable
 ```
 
 ## Dev Workflow
@@ -77,8 +77,9 @@ plan = get("astar").solve(dp)        # or bfs/gbfs/ucs; None if unsolvable
 
 ## Known Issue
 None outstanding. Type hierarchies (#22) supported (supertype binds transitive
-subtypes); `(either ...)` union types remain unhandled. Durative actions parse
-and validate but are not temporally solved (#84 tracks a future temporal planner).
+subtypes); `(either ...)` union types remain unhandled. Durative actions are
+solved by the `temporal` planner under sequential semantics only (no required
+concurrency).
 
 ## Style
 - Follow YAGNI principle.
