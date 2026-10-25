@@ -1,107 +1,223 @@
 ## pddl-lib ##
 
-### Description ###
+pddl-py (`pip install pddlpy`) is a PDDL toolkit for Python. It parses PDDL
+domain and problem files with an ANTLR 4 grammar, builds an object model,
+checks the files for common mistakes, and solves them with small reference
+planners. You can drive it from Python, from the `pddlpy` command line, or
+through an MCP server that LLM agents call as tools.
 
-A PDDL library that, by using an ANTLR 4 grammar to parse PDDL files, provides a very simple interface to interact with domain-problems.
-This library publishes one object class whose API exposes methods for obtaining:
+It runs on Python 3.11 and up.
 
-* The initial state.
-* The goals.
-* The list of operators.
-* The positive and negative preconditions and the positive and negative effects.
-* The _grounded_ states of a given operator (grounded variables, preconditions and effects).
+### Project direction ###
 
-This is enough for the user to focus on the implementation of state-space or plan-space search algorithms.
+I started pddl-py in 2015 as a PDDL parser with a simple object model, so
+planning students and researchers could plug in their own search algorithms.
+That is still in here and it still works.
 
-The development of this tool was inspired from Univerty of Edinburgh's Artificial Intelligence Planning course by Dr. Gerhard Wickler and Prof. Austin Tate. The terms used in this API (and the API itself) closely resembles the ones proposed by the lecturers.
+What changed is who calls it. LLMs now write well-formed PDDL, but they are
+unreliable at producing correct or optimal plans, at tracking state over many
+steps, and at proving that a problem has no plan. Those are exactly the jobs a
+PDDL tool does well. So the primary goal of pddl-py is now to be the
+conformant PDDL toolkit that agents call to fill those gaps: parse, validate,
+simulate and solve, through the CLI and the MCP server.
 
-As of today it supports Python 3.11 and up.
+Researchers and app developers stay first-class users of the Python API. I am
+not dropping that audience, I am adding a new one and letting it set the
+priorities.
 
-The orginal grammar file was authored by Zeyn Saigol from University of Birmingham. I cleaned up it, made it language agnostic and upgraded to ANTLR 4.
+A few things follow from this:
 
-### NOTICE ###
+* **Conformance target.** PDDL 1.2, 2.1, 2.2, 3.0 and 3.1. Support is partial
+  today, and I publish it per `:requirements` keyword in the
+  [table below](#supported-requirements), including what does not work.
+* **Priorities.** I add requirements in the order that helps LLM use most.
+* **Not a Fast Downward competitor.** The reference planners stay small and
+  readable. Hard search will go to external solvers, not to a bigger planner
+  inside this package.
 
-Durative actions are recovered into the object model and now *solved*: the
-`temporal` planner (#84) schedules durative-action domains sequentially. The
-reference STRIPS planners remain non-temporal; see _Planning API_.
+### Install ###
 
-### What this project is not? ###
-
-The core of this library is a PDDL parser and object model — a simple helper API for users experimenting with their own planning algorithms. It ships a small **reference planner layer** (see _Planning API_ below) whose only job is to prove a stable, pluggable solver interface; it is **not** intended to compete with full planning systems such as Fast Downward or LAMA. For serious solving there are lots of complete packages available.
-
-### Examples ###
-
-In this repostory you'll find some PDDL examples files useful for testing purposes.
-For instance, [domain-03.pddl](examples-pddl/domain-03.pddl)
-and [problem-03.pddl](examples-pddl/problem-03.pddl)
-
-#### Example showcase
-
-The [`examples/`](examples/) directory holds a set of self-contained, runnable
-scripts of increasing complexity, each demonstrating one capability against a
-bundled PDDL domain in [`examples/pddl/`](examples/pddl/). Run them all with
-`make examples`, or one at a time, e.g. `uv run python examples/01_parsing_basics.py`.
-
-| # | Example | What it shows | Capability |
-|---|---------|---------------|------------|
-| 01 | [01_parsing_basics.py](examples/01_parsing_basics.py) | Parse a typed domain/problem; read objects, init, goals, operators and grounded operators | Core object model |
-| 02 | [02_type_hierarchy.py](examples/02_type_hierarchy.py) | Multi-level `:types`, `types()` / `subtypes_of()`, supertype binding in grounding | Type hierarchies (#22) |
-| 03 | [03_logical_operators.py](examples/03_logical_operators.py) | Top-level `and` / `or` connective and negative preconditions in the model | Logical operators (#13) |
-| 04 | [04_planners.py](examples/04_planners.py) | The planner registry and BFS / A\* reference planners solving blocksworld and gripper | Planners (#1) |
-| 05 | [05_numeric_and_costs.py](examples/05_numeric_and_costs.py) | Numeric fluents (fuel-aware planning) and action costs (UCS cost-optimality) | Numeric fluents (#11) + action costs (#3) |
-| 06 | [06_durative.py](examples/06_durative.py) | Durative model, `DurativeState` `at start` applicability and validation — **not** temporally solved | Durative actions (#23) |
-
-### Using the PDDL Python library ###
-
-To use this library the recommended way is to install it via PIP:
-```
-pip install pddlpy
+```bash
+pip install pddlpy            # library + `pddlpy` CLI
+pip install "pddlpy[mcp]"     # also the MCP server (`pddlpy-mcp`)
 ```
 
-It would download `pddlpy` and its dependencies (`antlr4-python3-runtime`) from PYPI and install them.
-And that's it. You are ready to go.
+The only runtime dependency is `antlr4-python3-runtime`; `mcp` is an optional
+extra. Java is not needed to install or use the package.
 
-Using the library is easy.
+### Command-line interface ###
 
+The `pddlpy` command has four subcommands. All of them print JSON on stdout,
+so an agent or a shell pipeline can use them without writing Python:
+
+```bash
+pddlpy parse    domain.pddl problem.pddl            # object-model summary
+pddlpy ground   domain.pddl problem.pddl pick-up    # grounded instances of one action
+pddlpy solve    domain.pddl problem.pddl --planner ucs
+pddlpy validate domain.pddl problem.pddl            # diagnostics (see below)
 ```
-~hernan$ python
-Python 3.11.7 (main, Feb 10 2024, 17:01:04)
-[Clang 15.0.0 (clang-1500.1.0.2.5)] on darwin
-Type "help", "copyright", "credits" or "license" for more information.
->>>
->>> import pddlpy
->>> domprob = pddlpy.DomainProblem('domain-03.pddl', 'problem-03.pddl')
->>>
 
->>> domprob.initialstate()
-{('unloaded', 'robr'), ('adjacent', 'loc2', 'loc1'), ('unloaded', 'robq'), ('in', 'conta', 'loc1'), ('in', 'contb', 'loc2'), ('atl', 'robr', 'loc1'), ('atl', 'robq', 'loc2'), ('adjacent', 'loc1', 'loc2')}
->>>
+`solve` defaults to `astar`. `--planner` takes any registered planner: `bfs`,
+`astar`, `gbfs`, `ucs` or `temporal`.
 
->>> list( domprob.operators() )
-['move', 'load', 'unload']
->>>
-
->>> list( domprob.ground_operator('move') )
-[<pddlpy.pddl.Operator object at 0x1089830a0>, <pddlpy.pddl.Operator object at 0x108983130>, <pddlpy.pddl.Operator object at 0x108983190>, <pddlpy.pddl.Operator object at 0x1089830d0>, <pddlpy.pddl.Operator object at 0x1089831c0>, <pddlpy.pddl.Operator object at 0x1089835b0>, <pddlpy.pddl.Operator object at 0x1089835e0>, <pddlpy.pddl.Operator object at 0x108983610>]
->>>
-
->>> list( domprob.ground_operator('move') )[0].precondition_pos
-{('atl', 'robq', 'loc2'), ('adjacent', 'loc2', 'loc2')}
->>>
+```bash
+$ pddlpy solve tests/corpus/blocksworld-domain.pddl tests/corpus/blocksworld-problem.pddl | jq .cost
+4
 ```
-> Note: `initialstate()` and `goals()` return a set of `Atom` objects, not
-> tuples. Their `repr` looks like a tuple (as shown above), but use
-> `atom.predicate` to get the list of symbols. By contrast, a *grounded*
-> operator's `precondition_pos`/`effect_pos`/etc. are real tuples.
 
-The pddl files are examples obtained from the course material.
+With `--planner temporal` each step also carries `start`, `duration` and
+`end`, and the result has a top-level `makespan`:
 
-You can also read the domain's declared requirements:
+```bash
+$ pddlpy solve tests/corpus/temporal-weld-domain.pddl tests/corpus/temporal-weld-problem.pddl --planner temporal | jq -c .
+{"planner":"temporal","solved":true,"cost":6.0,"makespan":6.0,"length":1,"steps":[{"action":"steady-weld","args":{"?p":"p1"},"start":0.0,"duration":6.0,"end":6.0}]}
+```
+
+Exit codes: `0` success, `1` the search finished without a plan or `validate`
+found issues, `2` bad input (missing file, unknown operator, unsupported
+`:requirements`).
+
+`validate` is the feedback step for a write PDDL, validate, fix, solve loop.
+A bare parse is not enough because ANTLR recovers from syntax errors and only
+prints them to stderr. `validate` collects those syntax errors and also reports
+atoms over undeclared predicates, ground atoms that name unknown objects,
+operators that ground to zero instances, and malformed durative actions. For
+example, after a typo in a blocksworld problem (`on-table` instead of
+`ontable`):
+
+```bash
+$ pddlpy validate domain.pddl problem.pddl
+{
+  "valid": false,
+  "issues": [
+    {
+      "severity": "error",
+      "check": "undeclared_predicate",
+      "message": "predicate 'on-table' is not declared in :predicates (used in :init)"
+    }
+  ]
+}
+```
+
+### MCP server ###
+
+The [Model Context Protocol](https://modelcontextprotocol.io) server exposes
+the same four operations as tools: `parse`, `ground`, `solve` and `validate`.
+They return the same JSON as the CLI.
+
+```bash
+pip install "pddlpy[mcp]"
+pddlpy-mcp                   # runs on stdio
+```
+
+Client configuration (e.g. Claude Desktop / Claude Code):
+
+```json
+{
+  "mcpServers": {
+    "pddlpy": { "command": "pddlpy-mcp" }
+  }
+}
+```
+
+The tools take filesystem paths to the domain and problem files. `solve` takes
+an optional `planner` argument (`bfs`, `astar`, `gbfs`, `ucs` or `temporal`;
+default `astar`). For an agent that translates natural language into PDDL,
+`validate` gives the feedback for the fix loop.
+
+For agents that work from files instead of MCP, there is also an Agent Skill in
+[`skills/pddlpy/`](skills/pddlpy/SKILL.md).
+
+**Why pair an LLM with a solver at all?** LLMs translate problems into PDDL
+well but are unreliable at producing plans, let alone optimal ones. Handing the
+search to a solver uses each for what it is good at.
+[`docs/llm-interaction.md`](docs/llm-interaction.md) walks through a complete
+example (natural language, PDDL, `pddlpy solve`, natural language) on a small
+cost-optimal routing problem where the intuitive answer is wrong.
+Background reading: *LLM+P* ([arXiv:2304.11477](https://arxiv.org/abs/2304.11477)),
+the paper behind this pipeline, and *PlanBench*
+([arXiv:2206.10498](https://arxiv.org/abs/2206.10498)) on why direct LLM
+planning falls short.
+
+### Supported :requirements ###
+
+This is the state of the code today, checked against the parser and the
+planners, not a wish list.
+
+* **Parse**: the grammar accepts it and the object model captures it.
+  `validate` runs its checks on everything that parses.
+* **Solve**: the planners that accept the requirement and handle it.
+  A planner refuses a domain that declares a requirement it does not support
+  (`UnsupportedRequirementsError`, CLI exit `2`). `gbfs` accepts the same set
+  as `astar`.
+
+| Requirement | PDDL | Parse | Solve | Notes |
+|---|---|---|---|---|
+| `:strips` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | |
+| `:typing` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | Multi-level hierarchies; a supertype parameter binds every transitive subtype. `(either ...)` parses but binds no objects (`validate` reports zero groundings). |
+| `:negative-preconditions` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | Preconditions only, see goals below. |
+| `:disjunctive-preconditions` | 1.2 | yes | bfs, astar, gbfs, ucs | Preconditions only. temporal refuses it. |
+| `:equality` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | |
+| `:existential-preconditions` | 1.2 | yes | bfs, astar, gbfs, ucs | temporal refuses it. |
+| `:universal-preconditions` | 1.2 | yes | bfs, astar, gbfs, ucs | temporal refuses it. |
+| `:quantified-preconditions` | 1.2 | yes | bfs, astar, gbfs, ucs | temporal refuses it. |
+| `:conditional-effects` | 1.2 | yes | bfs, astar, gbfs, ucs | `when` and `forall` effects. temporal refuses it. |
+| `:adl` | 1.2 | yes | bfs, astar, gbfs, ucs | Covers the rows above. temporal refuses it. |
+| `:fluents`, `:numeric-fluents` | 2.1, 3.1 | yes | bfs, astar, gbfs, ucs | Numeric preconditions and `assign` / `increase` / `decrease` / `scale-up` / `scale-down` effects. Numeric goals are dropped. temporal accepts the requirement but only applies numeric conditions and effects on instantaneous actions; on durative actions it ignores them. |
+| `:durative-actions` | 2.1 | yes | temporal | Sequential semantics only: actions never overlap, so domains that need concurrency are not solved. The duration must be a number, e.g. `(= ?duration 4)`; `(= ?duration (f))` is rejected. Not combinable with the ADL requirements (temporal refuses those). |
+| `:duration-inequalities` | 2.1 | no | none | Declaring it is a syntax error. Without the key, `(and (>= ?duration 1) (<= ?duration 3))` parses, but the last bound becomes a fixed duration. |
+| `:continuous-effects` | 2.1 | no | none | The key and `#t` are not recognized (syntax error). |
+| `:derived-predicates` | 2.2 | no | none | The key is recognized, but `(:derived ...)` blocks do not parse. |
+| `:timed-initial-literals` | 2.2 | wrong | none | `(at 5 (p))` in `:init` parses, but the literal goes into the initial state as true at time 0. Every planner refuses the key; if a domain omits it, plans can be wrong. |
+| `:preferences` | 3.0 | no | none | The key is recognized; `preference` in goals or `:action` preconditions does not parse (it does
+parse inside durative-action conditions, and is ignored there). Planners refuse the key. |
+| `:constraints` | 3.0 | no | none | Declaring the key is a syntax error, and a `(:constraints ...)` block in the domain or problem crashes the loader. |
+| `:action-costs` | 3.1 | yes | ucs (cost-optimal); bfs, astar, gbfs, temporal | `(increase (total-cost) ...)` and `(:metric minimize (total-cost))`. Every planner reports `Plan.cost`, but only ucs minimizes it. temporal minimizes makespan. |
+| `:object-fluents` | 3.1 | no | none | Not recognized (syntax error). |
+| `:domain-axioms`, `:subgoals-through-axioms`, `:safety-constraints`, `:expression-evaluation`, `:open-world`, `:true-negation`, `:ucpop` | 1.2 | no | none | Not recognized (syntax error). |
+
+**Goals.** Every planner reads `(:goal ...)` as a conjunction of positive
+atoms. Other goal forms parse without an error but are misread: `(not (p))`
+becomes the goal `(p)`, `or` is treated as `and`, the body of `exists` /
+`forall` is kept with its variables unbound, and numeric comparisons are
+dropped. `validate` only catches the `exists` / `forall` case, as an unknown
+object `?x`. Goal-side ADL is first in the
+requirements part of the roadmap.
+
+**Declared vs. used.** When a domain declares any `:requirements`, `solve`
+also checks that the features it uses (typing, negation, disjunction,
+equality, quantifiers, conditional effects) are declared, and refuses the
+domain otherwise. Domains with no `:requirements` at all are accepted as they
+are. `validate` does not run this check.
+
+### Python API ###
 
 ```python
->>> domprob.requirements()
-{':strips', ':typing'}
+>>> import pddlpy
+>>> domprob = pddlpy.DomainProblem('examples-pddl/domain-03.pddl', 'examples-pddl/problem-03.pddl')
+>>> sorted(map(repr, domprob.initialstate()))
+["('adjacent', 'loc1', 'loc2')", "('adjacent', 'loc2', 'loc1')", "('atl', 'robq', 'loc2')", "('atl', 'robr', 'loc1')", "('in', 'conta', 'loc1')", "('in', 'contb', 'loc2')", "('unloaded', 'robq')", "('unloaded', 'robr')"]
+>>> list(domprob.operators())
+['move', 'load', 'unload']
+>>> moves = sorted(domprob.ground_operator('move'), key=lambda op: sorted(op.variable_list.items()))
+>>> len(moves)
+4
+>>> moves[0].variable_list
+{'?from': 'loc1', '?to': 'loc2', '?r': 'robq'}
+>>> sorted(moves[0].precondition_pos)
+[('adjacent', 'loc1', 'loc2'), ('atl', 'robq', 'loc1')]
+>>> sorted(domprob.requirements())
+[':strips', ':typing']
 ```
+
+> Note: `initialstate()` and `goals()` return a set of `Atom` objects, not
+> tuples. Their `repr` looks like a tuple, but `Atom` has no value equality:
+> use `atom.predicate` to get the list of symbols, or
+> `pddlpy.planning.atom_tuple` to compare. A *grounded* operator's
+> `precondition_pos` / `effect_pos` / etc. are real tuples.
+
+The files in [`examples-pddl/`](examples-pddl/) come from the course material
+mentioned in [History](#history-and-acknowledgments).
 
 #### Type hierarchies and variable binding
 
@@ -111,18 +227,20 @@ subtype, so multi-level domains such as logistics ground and solve. The
 hierarchy is also exposed directly:
 
 ```python
->>> domprob.types()          # subtype -> direct supertype
-{'airport': 'location', 'location': 'object', ...}
->>> domprob.subtypes_of('object')   # all transitive subtypes
-{'location', 'airport', ...}
+>>> dp = pddlpy.DomainProblem('tests/corpus/logistics-domain.pddl', 'tests/corpus/logistics-problem.pddl')
+>>> dp.types()          # subtype -> direct supertype
+{'truck': 'vehicle', 'airplane': 'vehicle', 'package': 'physobj', 'vehicle': 'physobj', 'airport': 'location', 'city': 'object', 'location': 'object', 'physobj': 'object'}
+>>> sorted(dp.subtypes_of('object'))   # all transitive subtypes
+['airplane', 'airport', 'city', 'location', 'package', 'physobj', 'truck', 'vehicle']
 ```
 
-Grounding is performed by a pluggable variable **binder**. The default
-`StaticPrunedBinder` prunes parameter bindings that can never be applicable by
-joining the operator's *static* preconditions (predicates no action ever
-modifies) against the initial state — sound, since a static predicate's truth
-is fixed for the whole search. Pass `binder=CartesianBinder()` for the plain
-full product, or supply your own:
+A pluggable variable **binder** does the grounding. The default
+`StaticPrunedBinder` drops parameter bindings that can never apply, by joining
+the operator's *static* preconditions (predicates no action changes) against
+the initial state. That is sound because a static predicate's truth never
+changes during search. It is why `move` above grounds to 4 instances instead
+of the 8 of the full product. Pass `binder=CartesianBinder()` for the full
+product, or supply your own:
 
 ```python
 from pddlpy import DomainProblem
@@ -139,76 +257,69 @@ class MyBinder(VariableBinder):
 dp.binder = MyBinder()
 ```
 
-### Planning API ###
+#### Planning API
 
-Above the parser/object model sits an optional, strictly-layered planning
-package (`pddlpy.planning`). It imports from the object model but never from
-the grammar; the object model imports nothing from it.
+The planning package (`pddlpy.planning`) sits on top of the object model. It
+imports the object model but never the grammar, and the object model imports
+nothing from it.
 
 It provides:
 
-* `State` — an immutable, hashable set of ground atoms. `State.from_problem(dp)`
-  builds the initial state; `state.applicable(operator)` and
-  `state.apply(operator)` check/advance a grounded operator without any manual
-  `Atom`/tuple casting; `state.satisfies(goals)` tests the goal.
-* `Plan` — an ordered sequence of grounded actions with a `cost`.
-* `GroundedTask` — grounds every operator once and exposes a `successors(state)`
-  function and `is_goal(state)`; the shared component every planner reuses.
-* `Planner` — the abstract solver contract, `solve(domainproblem) -> Plan | None`.
+* `State`: an immutable, hashable set of ground atoms plus a numeric valuation.
+  `State.from_problem(dp)` builds the initial state; `state.applicable(operator)`
+  and `state.apply(operator)` check and advance a grounded operator without
+  manual `Atom`/tuple casting; `state.satisfies(goals)` tests the goal.
+* `Plan`: an ordered sequence of grounded actions with a `cost`.
+* `GroundedTask`: grounds every operator once and exposes `successors(state)`
+  and `is_goal(state)`. Every planner reuses it.
+* `Planner`: the abstract solver contract, `solve(domainproblem) -> Plan | None`.
   Each planner declares `capabilities` (the `:requirements` it supports) and
-  **fails fast** with `UnsupportedRequirementsError` when handed a domain
-  beyond its subset.
-* `registry` — register and look up planners by name.
-* Three reference planners over STRIPS: `BFSPlanner` (`"bfs"`), `AStarPlanner`
-  (`"astar"`, goal-count heuristic) and `GBFSPlanner` (`"gbfs"`).
-
-Numeric fluents (`:functions`, numeric preconditions/effects) are supported:
-`DomainProblem.functions()` and `initial_numeric()` expose them, grounded
-operators carry `precondition_num` / `effect_num`, and `State` tracks a numeric
-valuation so the planners respect constraints like `(>= (fuel ?v) 10)` and
-effects like `(decrease (fuel ?v) 5)`.
-
-Action costs (`:action-costs`, `(increase (total-cost) ...)`, `(:metric minimize
-(total-cost))`) are supported too. `DomainProblem.metric()` exposes the metric,
-`Plan.cost` reports the accumulated `total-cost`, and `UniformCostPlanner`
-(`"ucs"`) is cost-optimal — where `BFSPlanner` minimizes the number of actions,
-`"ucs"` minimizes total cost.
-
-Durative actions (`:durative-actions`) are recovered into a `DurativeAction`
-type with time-tagged conditions (`at start` / `over all` / `at end`) and
-effects (`at start` / `at end`) plus a duration. `DomainProblem.durative_operators()`
-and `ground_durative_operator(name)` expose them.
-
-The `temporal` planner (#84) *solves* these domains. It enforces the full
-time-tagged contract — `at start` at the start point, `over all` as an
-invariant across the duration, and `at end` at start+duration — under
-**sequential** semantics (actions never overlap; instantaneous actions
-participate as zero-duration steps). It returns a `TemporalPlan` whose `steps`
-carry per-action start times and durations and whose `makespan` is the plan
-cost. Required concurrency (mandatory overlap, e.g. match/cellar) is out of
-scope.
+  fails fast with `UnsupportedRequirementsError` when handed a domain beyond
+  them.
+* `registry`: register and look up planners by name.
+* Five reference planners: `BFSPlanner` (`"bfs"`, fewest actions),
+  `AStarPlanner` (`"astar"`, goal-count heuristic), `GBFSPlanner` (`"gbfs"`,
+  greedy), `UniformCostPlanner` (`"ucs"`, cost-optimal) and `TemporalPlanner`
+  (`"temporal"`, durative actions).
 
 ```python
->>> import pddlpy
 >>> from pddlpy.planning import get
->>> dp = pddlpy.DomainProblem('weld-domain.pddl', 'weld-problem.pddl')
->>> plan = get('temporal').solve(dp)
->>> plan.makespan
-6.0
->>> [(s.start, s.action.operator_name, s.duration) for s in plan.steps]
-[(0.0, 'steady-weld', 6.0)]
-```
-
-```python
->>> import pddlpy
->>> from pddlpy.planning import get
->>> dp = pddlpy.DomainProblem('blocksworld-domain.pddl', 'blocksworld-problem.pddl')
+>>> dp = pddlpy.DomainProblem('tests/corpus/blocksworld-domain.pddl', 'tests/corpus/blocksworld-problem.pddl')
 >>> plan = get('astar').solve(dp)
 >>> plan.cost
 4
 >>> plan.action_names()
 [('pick-up', {'?x': 'b'}), ('stack', {'?x': 'b', '?y': 'c'}),
  ('pick-up', {'?x': 'a'}), ('stack', {'?x': 'a', '?y': 'b'})]
+```
+
+Numeric fluents: `DomainProblem.functions()` and `initial_numeric()` expose
+them, grounded operators carry `precondition_num` / `effect_num`, and `State`
+tracks the numeric valuation, so the planners respect constraints like
+`(>= (fuel ?v) 10)` and effects like `(decrease (fuel ?v) 5)`.
+
+Action costs: `DomainProblem.metric()` exposes the metric and `Plan.cost`
+reports the accumulated `total-cost`. `bfs` minimizes the number of actions;
+`ucs` minimizes total cost.
+
+Durative actions are parsed into a `DurativeAction` with time-tagged
+conditions (`at start` / `over all` / `at end`), effects (`at start` /
+`at end`) and a duration. `DomainProblem.durative_operators()` and
+`ground_durative_operator(name)` expose them. The `temporal` planner solves
+these domains. It checks `at start` conditions at the start point, `over all`
+as an invariant across the duration, and `at end` at start + duration, under
+sequential semantics: actions never overlap, and instantaneous actions run as
+zero-duration steps. It returns a `TemporalPlan` whose `steps` carry start
+times and durations, and whose `makespan` is the plan cost. See the
+[requirements table](#supported-requirements) for its limits.
+
+```python
+>>> dp = pddlpy.DomainProblem('tests/corpus/temporal-weld-domain.pddl', 'tests/corpus/temporal-weld-problem.pddl')
+>>> plan = get('temporal').solve(dp)
+>>> plan.makespan
+6.0
+>>> [(s.start, s.action.operator_name, s.duration) for s in plan.steps]
+[(0.0, 'steady-weld', 6.0)]
 ```
 
 Registering your own planner needs no changes to the layers below:
@@ -226,165 +337,126 @@ registry.register('mine', MyPlanner)
 plan = registry.get('mine').solve(dp)
 ```
 
-### Command-line interface ###
+### Examples ###
 
-Installing the package also installs a `pddlpy` command (#85) with three
-subcommands, all emitting JSON on stdout — handy for shell pipelines and
-for agents that shouldn't have to write Python:
+The [`examples/`](examples/) directory has self-contained, runnable scripts
+of increasing complexity. Each one shows one capability against a bundled PDDL
+domain in [`examples/pddl/`](examples/pddl/). Run them all with
+`make examples`, or one at a time, e.g. `uv run python examples/01_parsing_basics.py`.
 
-```bash
-pddlpy parse    domain.pddl problem.pddl            # object-model summary
-pddlpy ground   domain.pddl problem.pddl pick-up    # grounded instances of one action
-pddlpy solve    domain.pddl problem.pddl --planner ucs
-pddlpy validate domain.pddl problem.pddl            # diagnostics (see below)
-```
+| # | Example | What it shows | Capability |
+|---|---------|---------------|------------|
+| 01 | [01_parsing_basics.py](examples/01_parsing_basics.py) | Parse a typed domain/problem; read objects, init, goals, operators and grounded operators | Core object model |
+| 02 | [02_type_hierarchy.py](examples/02_type_hierarchy.py) | Multi-level `:types`, `types()` / `subtypes_of()`, supertype binding in grounding | Type hierarchies (#22) |
+| 03 | [03_logical_operators.py](examples/03_logical_operators.py) | Top-level `and` / `or` connective and negative preconditions in the model | Logical operators (#13) |
+| 04 | [04_planners.py](examples/04_planners.py) | The planner registry and BFS / A\* reference planners solving blocksworld and gripper | Planners (#1) |
+| 05 | [05_numeric_and_costs.py](examples/05_numeric_and_costs.py) | Numeric fluents (fuel-aware planning) and action costs (UCS cost-optimality) | Numeric fluents (#11) + action costs (#3) |
+| 06 | [06_durative.py](examples/06_durative.py) | Durative model, `DurativeState` `at start` applicability and validation. To solve durative domains use the `temporal` planner (see _Planning API_) | Durative actions (#23) |
 
-`solve` defaults to `astar`; `--planner` accepts any registered planner
-(`bfs`, `astar`, `gbfs`, `ucs`, `temporal`). With `--planner temporal` the
-JSON carries the schedule (#119): each step gains `start`, `duration` and
-`end`, and the result a top-level `makespan`:
-
-```bash
-$ pddlpy solve weld-domain.pddl weld-problem.pddl --planner temporal
-{"planner": "temporal", "solved": true, "cost": 6.0, "makespan": 6.0,
- "length": 1, "steps": [{"action": "steady-weld", "args": {"?p": "p1"},
- "start": 0.0, "duration": 6.0, "end": 6.0}]}
-```
-
-Exit codes: `0` success, `1` search
-completed without finding a plan / `validate` found issues, `2` bad input
-(missing file, unknown operator, unsupported `:requirements`).
-
-`validate` (#94) checks a pair for the mistakes that typically slip through
-a bare parse — collected syntax errors (ANTLR error-recovers, so `parse`
-alone won't stop on them), atoms over undeclared predicates, ground atoms
-naming unknown objects, operators grounding to zero instances, and malformed
-durative actions. It reports `{valid, issues: [{severity, check, message}]}`
-and is designed as the feedback step of an agentic write-PDDL → validate →
-fix → solve loop (e.g. translating a natural-language problem to PDDL).
-
-```bash
-$ pddlpy solve blocksworld-domain.pddl blocksworld-problem.pddl | jq .cost
-4
-```
-
-### MCP server ###
-
-For LLMs and agents, pddlpy ships a [Model Context Protocol](https://modelcontextprotocol.io)
-server (#86) exposing the same operations as tools — `parse`, `ground`,
-`solve` and `validate` — with structured JSON results. It is the runtime
-counterpart of the static Agent Skill in [`skills/pddlpy/`](skills/pddlpy/SKILL.md).
-
-```bash
-pip install "pddlpy[mcp]"    # the mcp SDK is an optional extra
-pddlpy-mcp                   # runs on stdio
-```
-
-Client configuration (e.g. Claude Desktop / Claude Code):
-
-```json
-{
-  "mcpServers": {
-    "pddlpy": { "command": "pddlpy-mcp" }
-  }
-}
-```
-
-Tools take filesystem paths to the domain/problem files; `solve` accepts an
-optional `planner` argument (`bfs`, `astar`, `gbfs`, `ucs`). For agents
-translating natural language to PDDL, `validate` provides the fix-loop
-feedback (syntax, undeclared predicates, unknown objects, zero groundings).
-
-**Why pair an LLM with a solver at all?** LLMs translate problems into PDDL
-very well but are unreliable at producing (let alone *optimal*) plans;
-delegating the search to a classical solver combines the strengths of both.
-[`docs/llm-interaction.md`](docs/llm-interaction.md) walks through a complete
-worked example — natural language → PDDL → `pddlpy solve` → natural language —
-on a small cost-optimal routing problem where the intuitive answer is wrong.
-Background reading: *LLM+P* ([arXiv:2304.11477](https://arxiv.org/abs/2304.11477)),
-the paper behind this pipeline, and *PlanBench*
-([arXiv:2206.10498](https://arxiv.org/abs/2206.10498)) on why direct LLM
-planning falls short.
+More PDDL pairs for testing live in [`examples-pddl/`](examples-pddl/) and
+[`tests/corpus/`](tests/corpus/).
 
 ### Documentation ###
 
-* [`docs/object-model.md`](docs/object-model.md) — full reference for the
-  parser object model and the planning layer.
-* [`docs/llm-interaction.md`](docs/llm-interaction.md) — worked example of an
-  LLM and pddlpy dividing the work: translate, solve, translate back (#99).
-* [`skills/pddlpy/SKILL.md`](skills/pddlpy/SKILL.md) — an Agent Skill so coding
-  agents can drive the library (parse, ground, plan).
+* [`docs/object-model.md`](docs/object-model.md): full reference for the
+  object model and the planning layer.
+* [`docs/llm-interaction.md`](docs/llm-interaction.md): worked example of an
+  LLM and pddlpy splitting the work: translate, solve, translate back (#99).
+* [`skills/pddlpy/SKILL.md`](skills/pddlpy/SKILL.md): an Agent Skill so coding
+  agents can drive the library and the CLI.
 
-### Other Resources ###
+### Roadmap ###
 
-There are wonderful material at the the University of Edinburgh:
+These are plans, not promises, and there are no dates. Roughly in order:
+
+1. Vendor the ANTLR runtime so `pip install pddlpy` has zero runtime
+   dependencies.
+2. An oracle test harness against Fast Downward, VAL and INVAL on the IPC
+   corpora.
+3. Plan validation and plan simulation with structured diagnostics.
+4. Decide whether to keep ANTLR or replace the parser, before the grammar
+   grows.
+5. Requirements by priority: goal-side ADL and `(either ...)`, timed initial
+   literals, derived predicates, preferences, concurrent durative actions,
+   trajectory constraints.
+6. Duration inequalities, continuous effects, object fluents.
+7. HDDL / HTN.
+
+### History and acknowledgments ###
+
+pddl-py started in 2015, inspired by the University of Edinburgh's Artificial
+Intelligence Planning MOOC by Dr. Gerhard Wickler and Prof. Austin Tate. The
+terms in the object model API (and the API itself) closely follow the ones the
+lecturers used.
+
+The original grammar was written by Zeyn Saigol from the University of
+Birmingham. I cleaned it up, made it language agnostic and upgraded it to
+ANTLR 4.
+
+The Edinburgh course material is still worth your time:
 * [AI Planning MOOC Project Home Page](http://www.aiai.ed.ac.uk/project/plan/ooc)
 * [Index to access all course materials and videos](http://media.aiai.ed.ac.uk/Project/AIPLAN)
 * [Videos on YouTube](http://bit.ly/aiplanmooc)
 
-### Future development ###
+Contributors:
 
-* Concurrent temporal planning (required action overlap, e.g. match/cellar).
-* Heuristic improvements for the reference planners.
-* ADL on the goal side (`or`/`forall`/`exists` inside `(:goal ...)`) and
-  `(either ...)` union types.
+* Michiaki Tatsubori [@tatsubori](https://github.com/tatsubori) added time-duration support.
+* Yichen Wei [@waymao](https://github.com/waymao) fixed an old bug.
 
-Done recently: ADL support (#10) — conditional/universal effects, quantified
-and full-boolean preconditions and `=` equality, evaluated end-to-end by the
-reference planners — plus case-insensitive keywords, `:requirements`
-capture/enforcement,
-a planner interface with BFS/A*/GBFS/UCS reference planners, numeric fluents
-(`:functions`, numeric preconditions/effects), action costs (`total-cost` +
-cost-aware search), durative-action recovery into the object model, a
-sequential `temporal` planner that schedules durative-action domains (#84), and
-a measured test suite with full coverage of the object model and planning layer.
+I'm very thankful!
 
-### Advanced ###
+### Building from source ###
 
-In case you want to tweak the grammar, add other target languages or modify the library you will need build this project from the repository sources.
+You only need this to change the grammar, add other target languages or work
+on the library itself. Installing and using the package needs none of it.
 
 #### Prerequisites
 
-* Install [uv](https://docs.astral.sh/uv/) - a fast Python package installer and resolver
-* Install Python 3.11 or higher
-* Install Java (required for ANTLR grammar compilation)
+* [uv](https://docs.astral.sh/uv/)
+* Python 3.11 or higher
+* Java, only to regenerate the parser from `pddl.g4`. The generated parser
+  files are not in git, so a fresh clone needs Java once. Released packages
+  already include them.
 
 #### Building
 
-* Checkout the repository
-* Initialize the uv environment: `uv sync`
-* ANTLR JAR will be downloaded automatically when building
-* Run `make` or `make all` to test grammar and run Python tests
-* Run `make build` to build distribution packages
+* Clone the repository.
+* Run `make pyparser` first. It downloads the ANTLR jar and generates the
+  parser into `pddlpy/`. On a fresh clone `uv sync` fails without it.
+* Run `uv sync` to set up the environment.
+* Run `make` (or `make all`) to test the grammar (needs Java and `javac`) and
+  run the Python tests.
+* Run `make build` to build the wheel and sdist.
 
 #### Available Make Targets
 
 * `make all` - Run grammar tests and Python tests (default)
 * `make init` - Initialize uv environment
+* `make pyparser` - Generate the Python parser from `pddl.g4` (needs Java)
 * `make test` - Run Python tests only
+* `make coverage` - Run tests with a coverage report
+* `make lint` - Lint with ruff
+* `make typecheck` - Type-check with mypy
 * `make build` - Build distribution packages (wheel and source dist)
+* `make examples` - Run the example showcase
 * `make clean` - Remove build artifacts
 * `make demo` - Run demo scripts
 * `make help` - Show all available targets
 
-Publishing to PyPI is done exclusively by GitHub Actions when a `v*` tag is
-pushed (TestPyPI first, then PyPI, via [Trusted
-Publishing](https://docs.pypi.org/trusted-publishers/)) — see
+`test`, `coverage`, `typecheck`, `examples`, `build` and `demo` run
+`make pyparser` first, so in a checkout they need Java too.
+
+Publishing to PyPI happens only in GitHub Actions when a `v*` tag is pushed
+(TestPyPI first, then PyPI, via [Trusted
+Publishing](https://docs.pypi.org/trusted-publishers/)). See
 [`.github/workflows/publish.yaml`](.github/workflows/publish.yaml). CI (tests,
-100%-coverage gate, lint, typecheck) runs on every pull request.
+100% coverage gate, lint, typecheck) runs on every pull request.
 
 ### Contribution guidelines ###
 
 I'd appreciate any feedback you send like pull requests, bug reports, etc.
 
 Please, use the issue tracker at will.
-
-### Acknowledgments
-
-* Michiaki Tatsubori [@tatsubori](https://github.com/tatsubori) added time-duration support.
-* Yichen Wei [@waymao](https://github.com/waymao) fixed an old bug.
-
-I'm very thankful!
 
 ### License ###
 
