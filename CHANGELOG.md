@@ -3,6 +3,25 @@
 All notable changes to `pddlpy` are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [1.2.2] - 2026-10-25
+
+Maintenance release.
+
+### Fixed
+- **`pddlpy-mcp` crashed on install with `mcp` 2.x**: the `mcp` extra was
+  unbounded (`>=1.2`), so fresh installs resolved `mcp` 2.x, which renamed
+  `FastMCP` and fails at import. The extra is now capped at `mcp<2`.
+
+### Changed
+- **`mcp` extra floor raised to `>=1.30`**: `pddlpy[mcp]` no longer resolves
+  to an `mcp` release affected by the StreamableHTTP session-accumulation
+  advisory (fixed in 1.30.0). `pddlpy-mcp` serves over stdio and was not
+  exposed; the floor keeps installs off the vulnerable versions.
+- **MCP tool descriptions**: `ground` and `solve` document the unknown-operator
+  error, the `temporal` and `ucs` planners, and unsupported-requirement
+  failures, so MCP clients see the full tool contract.
+- Declared the Python 3.13 classifier; CI now tests Python 3.11, 3.12 and 3.13.
+
 ## [1.2.1] - 2026-07-14
 
 Patch release found in the v1.2.0 post-release check.
@@ -158,6 +177,7 @@ public API (`Development Status :: 5 - Production/Stable`).
 - 150 tests, 100% line coverage; layering between grammar / model / planner enforced
   by a test. Python 3.11+.
 
+[1.2.2]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.2
 [1.2.1]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.1
 [1.2.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.0
 [1.1.2]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.1.2
