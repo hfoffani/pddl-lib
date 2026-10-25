@@ -618,7 +618,7 @@ wheels = [
 
 [[package]]
 name = "pddlpy"
-version = "1.2.1"
+version = "1.2.2"
 source = { editable = "." }
 dependencies = [
     { name = "antlr4-python3-runtime" },
@@ -641,7 +641,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "antlr4-python3-runtime", specifier = "==4.13.2" },
-    { name = "mcp", marker = "extra == 'mcp'", specifier = ">=1.2" },
+    { name = "mcp", marker = "extra == 'mcp'", specifier = ">=1.30,<2" },
 ]
 provides-extras = ["mcp"]
 
