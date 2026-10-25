@@ -53,15 +53,18 @@ exclude = [
     "__pycache__/",
     "*.pyc",
 ]
-# Override .gitignore to include generated ANTLR files in distributions
+# Force include generated ANTLR parser files even though they're in .gitignore
+force-include = { "pddlpy/pddlLexer.py" = "pddlpy/pddlLexer.py", "pddlpy/pddlParser.py" = "pddlpy/pddlParser.py", "pddlpy/pddlListener.py" = "pddlpy/pddlListener.py" }
+
+# sdist-only: at the build level this list also put these top-level files
+# in the wheel root, i.e. directly into site-packages
+[tool.hatch.build.targets.sdist]
 only-include = [
     "pddlpy/",
     "README.md",
     "LICENSE.txt",
     "pyproject.toml",
 ]
-# Force include generated ANTLR parser files even though they're in .gitignore
-force-include = { "pddlpy/pddlLexer.py" = "pddlpy/pddlLexer.py", "pddlpy/pddlParser.py" = "pddlpy/pddlParser.py", "pddlpy/pddlListener.py" = "pddlpy/pddlListener.py" }
 
 [tool.hatch.build.targets.wheel]
 packages = ["pddlpy"]

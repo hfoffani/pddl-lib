@@ -11,6 +11,9 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   project has always been Apache-2.0, as `LICENSE.txt` and the source headers
   state. Metadata now uses PEP 639 (`License-Expression: Apache-2.0`) and
   bundles `LICENSE.txt`.
+- **Wheel installed stray files into `site-packages`**: `LICENSE.txt`,
+  `README.md` and `pyproject.toml` were packed at the wheel root. They now
+  ship only in the sdist; the license stays in the wheel's `.dist-info`.
 
 ## [1.2.2] - 2026-10-25
 
