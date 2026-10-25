@@ -8,6 +8,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v7
       # Java is needed to compile the ANTLR grammar and regenerate the
@@ -17,6 +20,8 @@ jobs:
           distribution: temurin
           java-version: "17"
       - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python-version }}
       # Generate the ANTLR parser BEFORE uv sync: the editable build
       # force-includes pddlpy/pddlLexer.py etc., which are gitignored.
       - name: Generate ANTLR parser
