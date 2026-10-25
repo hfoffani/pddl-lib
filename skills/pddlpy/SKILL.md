@@ -79,14 +79,14 @@ for op in dp.ground_operator("move"):
 ```python
 from pddlpy.planning import get
 
-plan = get("astar").solve(dp)   # or "bfs", "gbfs", "ucs"
+plan = get("astar").solve(dp)   # or "bfs", "gbfs", "ucs", "temporal"
 if plan is not None:
     print(plan.cost)            # accumulated total-cost, else action count
     print(plan.action_names())  # [(name, bindings), ...]
 ```
 
-Planner choice: `bfs` (fewest actions), `astar` (goal-count heuristic, optimal
-for unit costs), `gbfs` (greedy, fast), `ucs` (cost-optimal for `:action-costs`
+Planner choice: `bfs` (fewest actions), `astar` (goal-count heuristic; not
+guaranteed optimal, use `bfs` for fewest actions), `gbfs` (greedy, fast), `ucs` (cost-optimal for `:action-costs`
 domains), `temporal` (durative actions; returns a schedule with start times and
 a `makespan`). A planner raises `UnsupportedRequirementsError` if a domain declares
 `:requirements` it does not support.
@@ -111,7 +111,14 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   `from pddlpy.planning import atom_tuple` (or compare `repr`s / use `State`).
 - **Type hierarchies** are supported: a parameter typed with a supertype
   binds objects of any transitive subtype (`dp.types()` / `dp.subtypes_of(t)`
-  expose the hierarchy). Only `(either ...)` union types are unhandled.
+  expose the hierarchy). `(either ...)` union types parse but bind no objects.
+- **Goals** must be a conjunction of positive atoms. `not`, `or`, `exists`,
+  `forall` and numeric comparisons in `(:goal ...)` are misread without an
+  error (e.g. `(not (p))` is read as `(p)`), so plans for such goals are wrong
+  ([#138](https://github.com/hfoffani/pddl-lib/issues/138)). Not supported at all: `:derived-predicates`, `:constraints`,
+  `:preferences` in goals, timed initial literals, duration inequalities,
+  `:object-fluents`. The README's "Supported :requirements" table has the
+  full status.
 - **Durative actions** (`:durative-actions`) parse into `DurativeAction`
   (`dp.durative_operators()`) and are solved only by `temporal`, under
   sequential semantics: domains that require overlapping actions are not solved.

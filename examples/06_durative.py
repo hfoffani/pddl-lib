@@ -5,9 +5,11 @@ Durative actions are parsed and grounded into a ``DurativeAction`` (time-tagged
 duration). ``DurativeState`` answers whether a grounded action can *start* in a
 state, and ``validate_durative_actions`` checks they are well-formed.
 
-NOT included: a temporal planner. Solving durative domains (scheduling, overlap,
-``over all`` / ``at end`` enforcement over a timeline) is out of scope — the
-reference planners are non-temporal.
+This example stops at the model. To *solve* durative domains use the
+``temporal`` planner (#84): ``get("temporal").solve(dp)`` returns a
+``TemporalPlan`` with per-step start times and a ``makespan``, under sequential
+semantics (no required concurrency). The STRIPS planners (bfs/astar/gbfs/ucs)
+refuse ``:durative-actions``.
 """
 import os
 
