@@ -460,7 +460,7 @@ Please, use the issue tracker at will.
 
 ### License ###
 
-This project is publish under the
+This project is published under the
 [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
 
 ### Who do I talk to? ###
