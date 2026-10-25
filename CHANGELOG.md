@@ -3,6 +3,15 @@
 All notable changes to `pddlpy` are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+- **License metadata**: package metadata wrongly declared MIT (`License: MIT`
+  and the MIT classifier) in every release up to and including 1.2.2. The
+  project has always been Apache-2.0, as `LICENSE.txt` and the source headers
+  state. Metadata now uses PEP 639 (`License-Expression: Apache-2.0`) and
+  bundles `LICENSE.txt`.
+
 ## [1.2.2] - 2026-10-25
 
 Maintenance release.
