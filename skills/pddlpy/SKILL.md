@@ -117,8 +117,8 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   error (e.g. `(not (p))` is read as `(p)`), so plans for such goals are wrong
   ([#138](https://github.com/hfoffani/pddl-lib/issues/138)). Not supported at all: `:derived-predicates`, `:constraints`,
   `:preferences` in goals, timed initial literals, duration inequalities,
-  `:object-fluents`. The README's "Supported :requirements" table has the
-  full status.
+  `:object-fluents`. Full status per requirement:
+  [docs/pddl-support.md](https://github.com/hfoffani/pddl-lib/blob/main/docs/pddl-support.md).
 - **Durative actions** (`:durative-actions`) parse into `DurativeAction`
   (`dp.durative_operators()`) and are solved only by `temporal`, under
   sequential semantics: domains that require overlapping actions are not solved.
