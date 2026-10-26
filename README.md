@@ -112,6 +112,9 @@ pip install "pddlpy[mcp]"
 pddlpy-mcp                   # runs on stdio
 ```
 
+It speaks MCP 2026-07-28 and the earlier protocol versions 2024-11-05,
+2025-03-26, 2025-06-18 and 2025-11-25, so older clients still connect.
+
 Client configuration (e.g. Claude Desktop / Claude Code):
 
 ```json

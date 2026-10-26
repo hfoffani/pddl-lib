@@ -14,6 +14,10 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 - **No Java needed to run the tests**: the generated parser files are now
   committed. Java is needed only to change `pddl.g4`, and CI checks that the
   committed parser matches the grammar.
+- **MCP 2026-07-28 support** (#150): the `mcp` extra moves to `mcp>=2.3,<3`
+  and the server is ported from `FastMCP` to `MCPServer`. `pddlpy-mcp` serves
+  2026-07-28 clients and still accepts the 2024-11-05 to 2025-11-25 handshake;
+  tests connect over stdio at each version.
 
 ### Fixed
 - **License metadata**: package metadata wrongly declared MIT (`License: MIT`
