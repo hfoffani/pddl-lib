@@ -50,9 +50,19 @@ pytestmark = pytest.mark.oracle
 TIMEOUT = float(os.environ.get("ORACLE_TIMEOUT") or 60)
 ORACLE = os.path.join(os.path.dirname(__file__), "corpus", "oracle")
 
-# Known disagreements on the committed pairs; strict, so a fix shows up.
+# Known disagreements on the committed pairs, by (check, domain directory);
+# strict xfails, so a fix shows up as XPASS. Checks: accept, fd_plan,
+# pddlpy_plan, solvable.
+DERIVED = "(:derived ...) does not parse (#141)"
+CASE = "identifiers are case-sensitive: (CLEAR c) vs (clear ?x) (#157)"
+GOALS = "forall goal is misread (#138)"
 KNOWN = {
-    "psr-middle-derived-predicates-adl/p01.pddl": "(:derived ...) does not parse (#141)",
+    ("accept", "psr-middle-derived-predicates-adl"): DERIVED,
+    ("fd_plan", "psr-middle-derived-predicates-adl"): DERIVED,
+    ("fd_plan", "blocks-strips-typed"): CASE,
+    ("solvable", "blocks-strips-typed"): CASE,
+    ("fd_plan", "elevator-adl-full-typed"): GOALS,
+    ("solvable", "elevator-adl-full-typed"): GOALS,
 }
 
 
@@ -72,11 +82,14 @@ def _pairs():
 PAIRS = _pairs()
 
 
-PARAMS = [
-    pytest.param(d, p, id=pid, marks=[pytest.mark.xfail(strict=True, reason=KNOWN[pid])]
-                 if pid in KNOWN else [])
-    for d, p, pid in PAIRS
-]
+def params(check):
+    """The pairs for one check, with its KNOWN disagreements as strict xfails."""
+    out = []
+    for d, p, pid in PAIRS:
+        reason = KNOWN.get((check, os.path.dirname(pid)))
+        marks = [pytest.mark.xfail(strict=True, reason=reason)] if reason else []
+        out.append(pytest.param(d, p, id=pid, marks=marks))
+    return out
 
 
 def need(path, what):
@@ -132,7 +145,7 @@ def fd_only(domain):
         pytest.skip("outside FD's fragment: %s" % declared_requirements(domain))
 
 
-@pytest.mark.parametrize("domain,problem", PARAMS)
+@pytest.mark.parametrize("domain,problem", params("accept"))
 def test_accept_reject_agrees_with_fd(domain, problem):
     fd_only(domain)
     code = fd_translate(need(fast_downward_bin(), "Fast Downward"), domain, problem, TIMEOUT)
@@ -142,7 +155,7 @@ def test_accept_reject_agrees_with_fd(domain, problem):
     assert pddlpy_accepts(domain, problem) == fd_accepts, "FD translator exit %d" % code
 
 
-@pytest.mark.parametrize("domain,problem", PARAMS)
+@pytest.mark.parametrize("domain,problem", params("fd_plan"))
 def test_fd_plan_replays_in_pddlpy_and_val(domain, problem, tmp_path):
     fd_only(domain)
     code, steps = fd_result(domain, problem)
@@ -155,7 +168,7 @@ def test_fd_plan_replays_in_pddlpy_and_val(domain, problem, tmp_path):
     assert replay(DomainProblem(domain, problem), steps) is None
 
 
-@pytest.mark.parametrize("domain,problem", PARAMS)
+@pytest.mark.parametrize("domain,problem", params("pddlpy_plan"))
 def test_pddlpy_plan_passes_val(domain, problem, tmp_path):
     validate = need(validate_bin(), "VAL")
     planner, plan = pddlpy_plan(domain, problem)
@@ -173,7 +186,7 @@ def test_pddlpy_plan_passes_val(domain, problem, tmp_path):
     assert val(validate, domain, problem, plan_file, TIMEOUT) is True
 
 
-@pytest.mark.parametrize("domain,problem", PARAMS)
+@pytest.mark.parametrize("domain,problem", params("solvable"))
 def test_solvability_agrees_with_fd(domain, problem):
     fd_only(domain)
     code, _ = fd_result(domain, problem)
