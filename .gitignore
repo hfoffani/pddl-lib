@@ -3,12 +3,6 @@
 tmp
 __pycache__
 
-pddl.tokens
-pddl.interp
-pddlLexer.tokens
-pddlLexer.*
-pddlListener.*
-pddlParser.*
 pddlBaseListener.*
 
 build
