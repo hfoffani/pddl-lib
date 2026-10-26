@@ -48,6 +48,34 @@ def test_find_order(tmp_path, monkeypatch):
     assert oracles.fast_downward_bin() == "/opt/fd/fast-downward.py"
 
 
+def test_relative_paths_resolve(tmp_path, monkeypatch):
+    """FD runs with a temporary cwd, so a discovered relative path must come
+    back absolute and still run (review on #155)."""
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("FAST_DOWNWARD", raising=False)
+    monkeypatch.setenv("ORACLES_DIR", ".oracles")
+    (tmp_path / ".oracles" / "downward").mkdir(parents=True)
+    script(tmp_path / ".oracles" / "downward" / "fast-downward.py", FAKE_FD)
+    fd = oracles.fast_downward_bin()
+    assert fd == str(tmp_path / ".oracles" / "downward" / "fast-downward.py")
+    monkeypatch.setenv("FAKE_CODE", "0")
+    assert oracles.fd_translate(fd, DOMAIN, PROBLEM, 10) == 0
+    monkeypatch.setenv("FAST_DOWNWARD", ".oracles/downward/fast-downward.py")
+    assert oracles.fast_downward_bin() == fd
+    monkeypatch.setenv("FAST_DOWNWARD", "python3")
+    assert os.path.isabs(oracles.fast_downward_bin())
+
+
+def test_plan_steps_for_durative_actions():
+    """Durative actions live in their own operator table (review on #155)."""
+    from pddlpy import DomainProblem
+    from pddlpy.planning import get
+    corpus = os.path.join(os.path.dirname(IPC), "durative-action-")
+    dp = DomainProblem(corpus + "domain.pddl", corpus + "problem.pddl")
+    plan = get("temporal").solve(dp)
+    assert oracles.plan_steps(dp, [s.action for s in plan.steps]) == [("go", ("a", "b"))]
+
+
 def test_fd_translate_and_solve(tmp_path, monkeypatch):
     fd = script(tmp_path / "fast-downward.py", FAKE_FD)
     monkeypatch.setenv("FAKE_CODE", "31")

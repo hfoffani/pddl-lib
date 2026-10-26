@@ -48,11 +48,16 @@ def _oracles_dir() -> str:
 
 
 def _find(env: str, built: str, *names: str) -> Optional[str]:
-    if os.environ.get(env):
-        return os.environ[env]
+    """An absolute path: the tools run with a temporary ``cwd``, where a
+    relative path would no longer resolve."""
+    explicit = os.environ.get(env)
+    if explicit:
+        if os.sep in explicit:
+            return os.path.abspath(explicit)
+        return shutil.which(explicit) or explicit
     path = os.path.join(_oracles_dir(), built)
     if os.path.exists(path):
-        return path
+        return os.path.abspath(path)
     for name in names:
         found = shutil.which(name)
         if found:
@@ -168,7 +173,9 @@ def _args(dp: DomainProblem, op) -> Tuple[str, ...]:
     """A grounded action's arguments in the operator's declared parameter
     order. The grounded bindings come in binder order, so take the order
     from the lifted operator."""
-    lifted = dp.domain.operators[op.operator_name].variable_list
+    name = op.operator_name
+    table = dp.domain.operators if name in dp.domain.operators else dp.domain.durative_operators
+    lifted = table[name].variable_list
     return tuple(str(op.variable_list[v]) for v in lifted)
 
 
