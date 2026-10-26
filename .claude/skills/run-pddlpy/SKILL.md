@@ -18,24 +18,23 @@ from there.
 
 ## Prerequisites
 
-- **uv** — manages the venv and runs Python. `uv sync` installs deps
-  (just `antlr4-python3-runtime==4.13.2`).
-- **Java 11+** — only needed to (re)generate the parser or `make build`
-  (the `pyparser` step shells out to `antlr-4.13.2-complete.jar`). Verified
-  here with `java 15`. Pure import/test of an already-generated tree does
-  not need Java. (Verified on macOS; on Ubuntu: `apt-get install -y default-jre`.)
+- **uv** — manages the venv and runs Python. pddlpy has no runtime deps:
+  the ANTLR runtime is vendored in `pddlpy/_vendor/antlr4`.
+- **Java 11+** — only needed to change the grammar (`make pyparser`,
+  `make testgrammar`, `make` = `all`); they shell out to
+  `antlr-4.13.2-complete.jar`. On Ubuntu: `apt-get install -y default-jre`.
 
-## Build (required on a fresh clone)
+## Build
 
 The generated parser (`pddlpy/pddlLexer.py`, `pddlParser.py`,
-`pddlListener.py`) is **gitignored** — a fresh checkout has none of it and
-`import pddlpy` will fail until you generate it:
+`pddlListener.py`) is committed, so a fresh clone only needs:
 
 ```bash
-make pyparser    # FIRST: generate pddlLexer/pddlParser/pddlListener (needs Java);
-                 # the editable build in `uv sync` fails without them
-uv sync          # create .venv, install deps
+uv sync          # create .venv, install dev deps
 ```
+
+After editing `pddl.g4`, run `make pyparser` and commit the regenerated files;
+CI's `grammar` job fails if they drift from the grammar.
 
 ## Run (agent path) — the smoke driver
 
@@ -69,12 +68,11 @@ print(next(iter(dp.ground_operator('move'))))
 
 ```bash
 make            # grammar test (Java GRUN) + pytest suite — the full suite
-uv run pytest   # python tests only (no Java, parser must already be generated)
+make test       # python tests only (no Java)
 make demo       # run demo.py over examples 1,2,3,4,6 (human-readable dump)
 ```
 
-`make build` runs the python tests, regenerates the parser, then `uv build`
-produces `dist/pddlpy-<ver>.tar.gz` and `.whl`.
+`make build` runs the python tests, then `uv build` produces `dist/pddlpy-<ver>.tar.gz` and `.whl`.
 
 ## Gotchas
 
@@ -84,8 +82,8 @@ produces `dist/pddlpy-<ver>.tar.gz` and `.whl`.
   to get the symbols. By contrast, a **grounded** operator's
   `precondition_pos`/`effect_pos`/etc. ARE real `tuple`s. `smoke.py`
   normalizes both via `hasattr(atom, "predicate")`.
-- **Generated parser is gitignored** — see Build. Forgetting `make pyparser`
-  on a fresh clone gives `ModuleNotFoundError: pddlpy.pddlLexer`.
+- **Import the vendored runtime as `pddlpy._vendor.antlr4`**, never `antlr4`
+  (it is no longer installed). `make pyparser` rewrites generated imports.
 - **`ground_operator` returns a generator** — wrap in `list()` to count or
   re-iterate. It can explode combinatorially on untyped domains (example 1's
   `op2` grounds to 125 instances from 5 symbols × 3 vars).
@@ -97,8 +95,7 @@ produces `dist/pddlpy-<ver>.tar.gz` and `.whl`.
 
 ## Troubleshooting
 
-- `ModuleNotFoundError: No module named 'pddlpy.pddlLexer'` → run
-  `make pyparser` (parser not generated).
 - `make pyparser` fails with a Java error → install a JRE (`java -version`
-  must work); the `antlr-4.13.2-complete.jar` is committed at the repo root.
+  must work; on Apple Silicon the JDK must be arm64 or Rosetta installed).
+  The Makefile downloads `antlr-4.13.2-complete.jar` on first use.
 - `FileNotFoundError` on `examples-pddl/...` → you're not in the repo root.

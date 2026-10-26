@@ -7,9 +7,9 @@ Four deliverables: the `pddlpy` library, a CLI (`pddlpy`), an MCP server
 
 ## Quick Commands
 ```bash
-uv sync           # Setup environment (fresh clone: run `make pyparser` FIRST)
+uv sync           # Setup environment
 make              # Run all tests (grammar + python)
-make pyparser     # Regenerate parser from pddl.g4 (needs Java)
+make pyparser     # Regenerate parser from pddl.g4 (needs Java; commit the output)
 make lint         # ruff
 make typecheck    # mypy
 make coverage     # tests with coverage report
@@ -32,7 +32,7 @@ uv run pddlpy-mcp # MCP server on stdio
 
 ## Architecture
 ```
-pddl.g4 → (make pyparser) → pddlLexer/Parser/Listener (generated, gitignored)
+pddl.g4 → (make pyparser) → pddlLexer/Parser/Listener (generated, committed)
                                     ↓
                     pddlpy/pddl.py  (object model)  ← pddlpy/diagnostics.py
                                     ↓
@@ -57,13 +57,16 @@ plan = get("astar").solve(dp)        # or bfs/gbfs/ucs/temporal; None if unsolva
 1. Edit `pddl.g4` (grammar) or the module in question
 2. `make pyparser` if grammar changed
 3. `make` to test; `make lint` + `make typecheck` before pushing
-4. CI (`.github/workflows/ci.yaml`) runs make + 100%-coverage gate + ruff + mypy on every PR
+4. CI (`.github/workflows/ci.yaml`) runs tests (no Java) + 100%-coverage gate + ruff + mypy, plus a Java `grammar` job, on every PR
 
 ## Conventions
 - Grounded atoms are tuples `("predicate", "arg1", ...)`; ungrounded are `Atom`s
 - Strict layering: planning never imports the grammar (test-enforced)
-- Generated parser files are gitignored but force-included in dist — on a fresh
-  clone/CI, `make pyparser` must run BEFORE `uv sync` or the editable build fails
+- Generated parser files are committed; CI's `grammar` job regenerates them and
+  fails on drift. Java is needed only to change the grammar
+- Zero runtime deps: the ANTLR runtime is vendored in `pddlpy/_vendor/antlr4`
+  (excluded from ruff/mypy/coverage). Import it as `pddlpy._vendor.antlr4`,
+  never `antlr4`; `make pyparser` rewrites the generated imports
 - PDDL files are read as UTF-8 (#103)
 - Python 3.11+; Java only for grammar compilation; `mcp` is an optional extra (`pddlpy[mcp]`)
 
