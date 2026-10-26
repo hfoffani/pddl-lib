@@ -12,14 +12,14 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 
 from pddlpy.diagnostics import diagnose
 from pddlpy.pddl import DomainProblem
 from pddlpy.planning import get, registry
 from pddlpy.serialize import domain_problem_dict, operator_dict, plan_dict
 
-server = FastMCP(
+server = MCPServer(
     "pddlpy",
     instructions=(
         "Parse, validate, ground and solve PDDL domain/problem pairs. All tools "

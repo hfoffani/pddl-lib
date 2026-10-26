@@ -37,7 +37,7 @@ Issues = "https://github.com/hfoffani/pddl-lib/issues"
 
 [project.optional-dependencies]
 mcp = [
-    "mcp>=1.30,<2",
+    "mcp>=2.3,<3",
 ]
 
 [tool.hatch.build]
@@ -79,7 +79,7 @@ dev = [
     "pytest-cov>=5.0.0",
     "ruff>=0.6.0",
     "mypy>=1.11.0",
-    "mcp>=1.2",
+    "mcp>=2.3,<3",
 ]
 
 [tool.pytest.ini_options]

@@ -1,8 +1,12 @@
 """The MCP server (#86): parse / ground / solve tools over the object model."""
 import asyncio
+import json
 import os
+import subprocess
+import sys
 
 import pytest
+from mcp import Client, StdioServerParameters
 
 from pddlpy import mcpserver
 from pddlpy.mcpserver import ground, parse, server, solve, validate
@@ -84,14 +88,77 @@ def test_tools_registered():
 
 def test_call_tool_returns_structured_content():
     domain, problem = _files("travel")
-    _, structured = asyncio.run(
+    result = asyncio.run(
         server.call_tool(
             "solve",
             {"domain_file": domain, "problem_file": problem, "planner": "ucs"},
         )
     )
-    out = structured["result"]  # FastMCP wraps plain-dict returns
+    out = result.structured_content["result"]  # MCPServer wraps plain-dict returns
     assert out["solved"] is True and out["cost"] == 2.0
+
+
+# --- protocol versions over stdio (#150) -----------------------------------
+
+def _stdio_server():
+    return subprocess.Popen(
+        [sys.executable, "-m", "pddlpy.mcpserver"],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+        text=True,
+    )
+
+
+def _rpc(proc, message):
+    proc.stdin.write(json.dumps(message) + "\n")
+    proc.stdin.flush()
+    if "id" in message:
+        return json.loads(proc.stdout.readline())
+
+
+@pytest.mark.parametrize(
+    "version", ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"]
+)
+def test_stdio_handshake_versions(version):
+    # Pre-2026 clients open with `initialize`; the server echoes their version.
+    proc = _stdio_server()
+    try:
+        init = _rpc(proc, {
+            "jsonrpc": "2.0", "id": 1, "method": "initialize",
+            "params": {
+                "protocolVersion": version, "capabilities": {},
+                "clientInfo": {"name": "test", "version": "0"},
+            },
+        })
+        assert init["result"]["protocolVersion"] == version
+        _rpc(proc, {"jsonrpc": "2.0", "method": "notifications/initialized"})
+        tools = _rpc(proc, {"jsonrpc": "2.0", "id": 2, "method": "tools/list"})
+        assert len(tools["result"]["tools"]) == 4
+    finally:
+        proc.kill()
+        proc.wait()
+
+
+@pytest.mark.parametrize(
+    "mode, version", [("auto", "2026-07-28"), ("legacy", "2025-11-25")]
+)
+def test_stdio_sdk_client(mode, version):
+    # A current SDK client negotiates 2026-07-28 (no handshake); "legacy"
+    # forces the initialize handshake.
+    domain, problem = _files("blocksworld")
+    params = StdioServerParameters(
+        command=sys.executable, args=["-m", "pddlpy.mcpserver"]
+    )
+
+    async def run():
+        async with Client(params, mode=mode) as client:
+            result = await client.call_tool(
+                "validate", {"domain_file": domain, "problem_file": problem}
+            )
+            return client.protocol_version, result.structured_content["result"]
+
+    negotiated, out = asyncio.run(run())
+    assert negotiated == version
+    assert out == {"valid": True, "issues": []}
 
 
 # --- entry point -----------------------------------------------------------
