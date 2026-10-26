@@ -87,6 +87,7 @@ def test_fd_translate_and_solve(tmp_path, monkeypatch):
     monkeypatch.setenv("FAKE_CODE", "11")
     assert oracles.fd_solve(fd, DOMAIN, PROBLEM, 10) == (11, None)
     monkeypatch.setenv("FAKE_SLEEP", "1")
+    monkeypatch.setattr(oracles, "FD_GRACE", 0)
     assert oracles.fd_translate(fd, DOMAIN, PROBLEM, 0.5) is None
 
 

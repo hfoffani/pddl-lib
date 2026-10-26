@@ -103,11 +103,25 @@ def fd_supports(domain: str) -> bool:
     return set(declared_requirements(domain)) <= FD_REQUIREMENTS
 
 
+# Blind A* can fill a CI runner's memory within seconds; past this cap FD
+# exits 20/22 (out of memory), which the checks treat as no verdict.
+FD_MEMORY = "2G"
+# Extra seconds before the subprocess timeout, so FD's own time limit fires
+# first and reports through its exit code.
+FD_GRACE = 10
+
+
+def _fd_limits(timeout: float) -> List[str]:
+    return ["--overall-time-limit", "%ds" % max(1, int(timeout)),
+            "--overall-memory-limit", FD_MEMORY]
+
+
 def fd_translate(fd: str, domain: str, problem: str, timeout: float) -> Optional[int]:
     """Exit code of FD's translator on the pair (``None`` on timeout)."""
     with tempfile.TemporaryDirectory() as tmp:
-        proc = _run(_command(fd) + ["--translate", os.path.abspath(domain),
-                                    os.path.abspath(problem)], timeout, cwd=tmp)
+        proc = _run(_command(fd) + _fd_limits(timeout) + [
+            "--translate", os.path.abspath(domain), os.path.abspath(problem),
+        ], timeout + FD_GRACE, cwd=tmp)
     return None if proc is None else proc.returncode
 
 
@@ -118,11 +132,11 @@ def fd_solve(fd: str, domain: str, problem: str, timeout: float
     ``None`` on timeout and the plan ``None`` when none was written."""
     with tempfile.TemporaryDirectory() as tmp:
         plan_file = os.path.join(tmp, "plan")
-        proc = _run(_command(fd) + [
+        proc = _run(_command(fd) + _fd_limits(timeout) + [
             "--plan-file", plan_file,
             os.path.abspath(domain), os.path.abspath(problem),
             "--search", "astar(blind())",
-        ], timeout, cwd=tmp)
+        ], timeout + FD_GRACE, cwd=tmp)
         plan = read_plan(plan_file) if os.path.exists(plan_file) else None
     return (None if proc is None else proc.returncode), plan
 

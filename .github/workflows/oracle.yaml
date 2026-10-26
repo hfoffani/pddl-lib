@@ -43,6 +43,9 @@ env:
   CORPORA_DIR: ${{ github.workspace }}/.corpora
   ORACLE_TIMEOUT: "30"
   CORPORA_TIMEOUT: "30"
+  # Address-space cap for the oracle pytest process (FD caps itself at 2G):
+  # an uncapped run exhausted a runner and lost its report.
+  ORACLE_MEMORY_MB: "6144"
 
 jobs:
   # Build FD, VAL and INVAL once; later jobs restore them from the cache.

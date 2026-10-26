@@ -136,8 +136,26 @@ def pddlpy_plan(domain, problem):
         pytest.skip("pddlpy refuses: %s" % exc)
     except _Timeout:
         pytest.skip("pddlpy timed out")
+    except MemoryError:
+        pytest.skip("pddlpy ran out of memory (ORACLE_MEMORY_MB)")
     finally:
         signal.alarm(0)
+
+
+@pytest.fixture(autouse=True, scope="module")
+def memory_cap():
+    """With ``ORACLE_MEMORY_MB`` set, cap this process's address space, so a
+    runaway pddlpy search raises MemoryError instead of exhausting the
+    machine (it took a CI runner down). Linux only: macOS ignores it."""
+    mb = int(os.environ.get("ORACLE_MEMORY_MB") or 0)
+    if not mb:
+        yield
+        return
+    import resource
+    old = resource.getrlimit(resource.RLIMIT_AS)
+    resource.setrlimit(resource.RLIMIT_AS, (mb * 1024 * 1024, old[1]))
+    yield
+    resource.setrlimit(resource.RLIMIT_AS, old)
 
 
 def fd_only(domain):
