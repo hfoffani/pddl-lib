@@ -1,0 +1,43 @@
+{
+ "ground": {},
+ "ground_durative": {
+  "LIGHT_MATCH": [],
+  "MEND_FUSE": []
+ },
+ "parse": {
+  "durative_operators": [
+   "LIGHT_MATCH",
+   "MEND_FUSE"
+  ],
+  "goals": [],
+  "initial_numeric": {},
+  "initial_state": [],
+  "metric": null,
+  "objects": {},
+  "operators": [],
+  "predicates": [
+   "handfree",
+   "light",
+   "mended",
+   "unused"
+  ],
+  "requirements": [
+   ":durative-actions",
+   ":typing"
+  ],
+  "types": {
+   "fuse": null,
+   "match": null
+  }
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "syntax",
+    "message": "problem file: line 22:20 no viable alternative at input '(define(problempfile0)(:domainmatchcellar)(:objectsmatch0match1match2-matchfuse0fuse1fuse2fuse3fuse4fuse5-fuse)(:init(handfree)(unusedmatch0)(unusedmatch1)(unusedmatch2))(:goal(and(mendedfuse0)(mendedfuse1)(mendedfuse2)(mendedfuse3)(mendedfuse4)(mendedfuse5)))(:metricminimize(total-time'",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

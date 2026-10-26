@@ -53,6 +53,15 @@ test:
 	@echo "Running Python tests..."
 	$(PYTHON) -m pytest
 
+# Regenerate the IPC subset golden files (#153); review the diff before
+# committing.
+golden:
+	$(PYTHON) tests/golden.py
+
+# Fetch the full IPC corpora at pinned commits into .corpora/ (~3 GB)
+corpora:
+	scripts/fetch-corpora.sh
+
 # Run tests with coverage report for pddlpy/pddl.py
 coverage:
 	@echo "Running tests with coverage..."
@@ -119,6 +128,8 @@ help:
 	@echo "  testgrammar  - Test ANTLR grammar with Java"
 	@echo "  pyparser     - Generate Python parser from grammar"
 	@echo "  test         - Run Python tests"
+	@echo "  golden       - Regenerate IPC subset golden files (tests/corpus/ipc)"
+	@echo "  corpora      - Fetch the full IPC corpora into .corpora/ (~3 GB)"
 	@echo "  coverage     - Run tests with coverage report"
 	@echo "  lint         - Lint with ruff"
 	@echo "  typecheck    - Type-check with mypy"
@@ -129,4 +140,4 @@ help:
 	@echo "  testpublish  - Test package installation from TestPyPI (Docker)"
 	@echo "  e2e-llm      - Manual LLM+solver end-to-end (MODEL=..., needs OPENROUTER_API_KEY)"
 
-.PHONY: all init testgrammar pyparser test coverage lint typecheck build clean demo testpublish e2e-llm help
+.PHONY: all init testgrammar pyparser test golden corpora coverage lint typecheck build clean demo testpublish e2e-llm help

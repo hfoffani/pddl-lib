@@ -1,0 +1,16 @@
+{
+ "error": {
+  "message": "list index out of range",
+  "type": "IndexError"
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "syntax",
+    "message": "domain file: line 5:70 no viable alternative at input '(define(domainpipesworld_strips)(:requirements:strips:typing:durative-actions:fluents:equality:constraints'",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

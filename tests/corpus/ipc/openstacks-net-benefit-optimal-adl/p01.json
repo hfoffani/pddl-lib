@@ -1,0 +1,31 @@
+{
+ "ground": {},
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [],
+  "initial_numeric": {},
+  "initial_state": [],
+  "metric": null,
+  "objects": {},
+  "operators": [],
+  "predicates": [],
+  "requirements": [],
+  "types": {}
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "syntax",
+    "message": "domain file: line 4:44 no viable alternative at input '(define(domainopenstacks-netbenefit-ADL)(:requirements:typing:adl:action-costs:goal'",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "problem file: line 42:1 no viable alternative at input '(define(problemos-netbenefit-p5_1)(:domainopenstacks-netbenefit-ADL)(:objectsn0n1n2n3n4n5-counto1o2o3o4o5-orderp1p2p3p4p5-product)(:init(next-countn0n1)(next-countn1n2)(next-countn2n3)(next-countn3n4)(next-countn4n5)(stacks-availn0)(waitingo1)(includeso1p2)(waitingo2)(includeso2p1)(includeso2p2)(waitingo3)(includeso3p3)(waitingo4)(includeso4p3)(includeso4p4)(waitingo5)(includeso5p5)(=(total-cost)0)(=(stack-cost)2))(:goal(and(shippedo1)(shippedo2)(shippedo3)(shippedo4)(shippedo5)(preference'",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

@@ -1,0 +1,2222 @@
+{
+ "ground": {
+  "calibrate": [
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ]
+    ],
+    "name": "calibrate",
+    "parameters": {
+     "?d": "Star0",
+     "?i": "instrument0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibration_target",
+      "instrument0",
+      "Star0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ]
+    ],
+    "name": "calibrate",
+    "parameters": {
+     "?d": "GroundStation2",
+     "?i": "instrument1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibration_target",
+      "instrument1",
+      "GroundStation2"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ]
+    ]
+   }
+  ],
+  "switch_off": [
+   {
+    "effect_neg": [
+     [
+      "power_on",
+      "instrument0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "power_avail",
+      "satellite0"
+     ]
+    ],
+    "name": "switch_off",
+    "parameters": {
+     "?i": "instrument0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "power_on",
+      "instrument1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "power_avail",
+      "satellite0"
+     ]
+    ],
+    "name": "switch_off",
+    "parameters": {
+     "?i": "instrument1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ]
+    ]
+   }
+  ],
+  "switch_on": [
+   {
+    "effect_neg": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "power_avail",
+      "satellite0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "power_on",
+      "instrument0"
+     ]
+    ],
+    "name": "switch_on",
+    "parameters": {
+     "?i": "instrument0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "power_avail",
+      "satellite0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "power_avail",
+      "satellite0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "power_on",
+      "instrument1"
+     ]
+    ],
+    "name": "switch_on",
+    "parameters": {
+     "?i": "instrument1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "power_avail",
+      "satellite0"
+     ]
+    ]
+   }
+  ],
+  "take_image": [
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation1",
+      "image2"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation1",
+     "?i": "instrument1",
+     "?m": "image2",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "image2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation1",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation1",
+     "?i": "instrument0",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation1",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation1",
+     "?i": "instrument1",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation1",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation1",
+     "?i": "instrument0",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation1",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation1",
+     "?i": "instrument1",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation2",
+      "image2"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation2",
+     "?i": "instrument1",
+     "?m": "image2",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "image2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation2",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation2",
+     "?i": "instrument0",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation2",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation2",
+     "?i": "instrument1",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation2",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation2",
+     "?i": "instrument0",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation2",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation2",
+     "?i": "instrument1",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon5",
+      "image2"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon5",
+     "?i": "instrument1",
+     "?m": "image2",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon5"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "image2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon5",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon5",
+     "?i": "instrument0",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon5"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon5",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon5",
+     "?i": "instrument1",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon5"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon5",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon5",
+     "?i": "instrument0",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon5"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon5",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon5",
+     "?i": "instrument1",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon5"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon6",
+      "image2"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon6",
+     "?i": "instrument1",
+     "?m": "image2",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "image2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon6",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon6",
+     "?i": "instrument0",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon6",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon6",
+     "?i": "instrument1",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon6",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon6",
+     "?i": "instrument0",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon6",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon6",
+     "?i": "instrument1",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Planet3",
+      "image2"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Planet3",
+     "?i": "instrument1",
+     "?m": "image2",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Planet3"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "image2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Planet3",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Planet3",
+     "?i": "instrument0",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Planet3"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Planet3",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Planet3",
+     "?i": "instrument1",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Planet3"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Planet3",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Planet3",
+     "?i": "instrument0",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Planet3"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Planet3",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Planet3",
+     "?i": "instrument1",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Planet3"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Planet4",
+      "image2"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Planet4",
+     "?i": "instrument1",
+     "?m": "image2",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Planet4"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "image2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Planet4",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Planet4",
+     "?i": "instrument0",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Planet4"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Planet4",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Planet4",
+     "?i": "instrument1",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Planet4"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Planet4",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Planet4",
+     "?i": "instrument0",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Planet4"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Planet4",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Planet4",
+     "?i": "instrument1",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Planet4"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star0",
+      "image2"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star0",
+     "?i": "instrument1",
+     "?m": "image2",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "image2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star0",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star0",
+     "?i": "instrument0",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star0",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star0",
+     "?i": "instrument1",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star0",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star0",
+     "?i": "instrument0",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star0",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star0",
+     "?i": "instrument1",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star7",
+      "image2"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star7",
+     "?i": "instrument1",
+     "?m": "image2",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star7"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "image2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star7",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star7",
+     "?i": "instrument0",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star7"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star7",
+      "infrared0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star7",
+     "?i": "instrument1",
+     "?m": "infrared0",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star7"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star7",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star7",
+     "?i": "instrument0",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star7"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "infrared1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star7",
+      "infrared1"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star7",
+     "?i": "instrument1",
+     "?m": "infrared1",
+     "?s": "satellite0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument1"
+     ],
+     [
+      "on_board",
+      "instrument1",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star7"
+     ],
+     [
+      "power_on",
+      "instrument1"
+     ],
+     [
+      "supports",
+      "instrument1",
+      "infrared1"
+     ]
+    ]
+   }
+  ],
+  "turn_to": {
+   "truncated_at": 50
+  }
+ },
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [
+   [
+    "have_image",
+    "Phenomenon5",
+    "image2"
+   ],
+   [
+    "have_image",
+    "Phenomenon6",
+    "infrared0"
+   ],
+   [
+    "have_image",
+    "Planet3",
+    "infrared0"
+   ],
+   [
+    "have_image",
+    "Planet4",
+    "infrared0"
+   ],
+   [
+    "have_image",
+    "Star7",
+    "infrared0"
+   ]
+  ],
+  "initial_numeric": {},
+  "initial_state": [
+   [
+    "calibration_target",
+    "instrument0",
+    "Star0"
+   ],
+   [
+    "calibration_target",
+    "instrument1",
+    "GroundStation2"
+   ],
+   [
+    "on_board",
+    "instrument0",
+    "satellite0"
+   ],
+   [
+    "on_board",
+    "instrument1",
+    "satellite0"
+   ],
+   [
+    "pointing",
+    "satellite0",
+    "Planet4"
+   ],
+   [
+    "power_avail",
+    "satellite0"
+   ],
+   [
+    "supports",
+    "instrument0",
+    "infrared0"
+   ],
+   [
+    "supports",
+    "instrument0",
+    "infrared1"
+   ],
+   [
+    "supports",
+    "instrument1",
+    "image2"
+   ],
+   [
+    "supports",
+    "instrument1",
+    "infrared0"
+   ],
+   [
+    "supports",
+    "instrument1",
+    "infrared1"
+   ]
+  ],
+  "metric": null,
+  "objects": {
+   "GroundStation1": "direction",
+   "GroundStation2": "direction",
+   "Phenomenon5": "direction",
+   "Phenomenon6": "direction",
+   "Planet3": "direction",
+   "Planet4": "direction",
+   "Star0": "direction",
+   "Star7": "direction",
+   "image2": "mode",
+   "infrared0": "mode",
+   "infrared1": "mode",
+   "instrument0": "instrument",
+   "instrument1": "instrument",
+   "satellite0": "satellite"
+  },
+  "operators": [
+   "calibrate",
+   "switch_off",
+   "switch_on",
+   "take_image",
+   "turn_to"
+  ],
+  "predicates": [
+   "calibrated",
+   "calibration_target",
+   "have_image",
+   "on_board",
+   "pointing",
+   "power_avail",
+   "power_on",
+   "supports"
+  ],
+  "requirements": [
+   ":equality",
+   ":strips",
+   ":typing"
+  ],
+  "types": {
+   "direction": null,
+   "instrument": null,
+   "mode": null,
+   "satellite": null
+  }
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "requirements",
+    "message": "domain uses negative-preconditions but does not declare a matching requirement (one of [':adl', ':negative-preconditions'])",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

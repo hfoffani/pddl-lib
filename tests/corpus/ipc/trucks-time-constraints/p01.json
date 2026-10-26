@@ -1,0 +1,31 @@
+{
+ "ground": {},
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [],
+  "initial_numeric": {},
+  "initial_state": [],
+  "metric": null,
+  "objects": {},
+  "operators": [],
+  "predicates": [],
+  "requirements": [],
+  "types": {}
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "syntax",
+    "message": "domain file: line 5:55 no viable alternative at input '(define(domainTrucks-Constraints)(:requirements:typing:adl:durative-actions:fluents:constraints'",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "problem file: line 42:19 no viable alternative at input '(define(problemtruck-1)(:domainTrucks-Constraints)(:objectstruck1-truckpackage1-packagepackage2-packagepackage3-packagel1-locationl2-locationl3-locationa1-truckareaa2-truckarea)(:init(attruck1l2)(freea1truck1)(freea2truck1)(closera1a2)(atpackage1l3)(atpackage2l3)(atpackage3l1)(connectedl1l2)(connectedl1l3)(connectedl2l1)(connectedl2l3)(connectedl3l1)(connectedl3l2)(=(drive-timel1l2)406.3)(=(drive-timel1l3)73.1)(=(drive-timel2l1)406.3)(=(drive-timel2l3)356.8)(=(drive-timel3l1)73.1)(=(drive-timel3l2)356.8))(:goal(and))(:constraints(and(within919.7(deliveredpackage1l1))(within919.7(deliveredpackage2l2))(within1813.7(deliveredpackage3l2))))(:metricminimize(total-time'",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

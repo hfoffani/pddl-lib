@@ -40,3 +40,6 @@ e2e/llm/transcripts/*.md
 
 # local secrets
 .env
+
+# full IPC corpora, fetched by scripts/fetch-corpora.sh (#153)
+.corpora/

@@ -1,0 +1,240 @@
+{
+ "ground": {},
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [
+   [
+    "craves",
+    "abrasion",
+    "rice"
+   ]
+  ],
+  "initial_numeric": {},
+  "initial_state": [
+   [
+    "attacks",
+    "alsace",
+    "quebec"
+   ],
+   [
+    "attacks",
+    "bosnia",
+    "surrey"
+   ],
+   [
+    "attacks",
+    "kentucky",
+    "bosnia"
+   ],
+   [
+    "attacks",
+    "pennsylvania",
+    "alsace"
+   ],
+   [
+    "attacks",
+    "quebec",
+    "guanabara"
+   ],
+   [
+    "attacks",
+    "surrey",
+    "pennsylvania"
+   ],
+   [
+    "craves",
+    "abrasion",
+    "pork"
+   ],
+   [
+    "craves",
+    "depression",
+    "flounder"
+   ],
+   [
+    "craves",
+    "hangover",
+    "rice"
+   ],
+   [
+    "craves",
+    "rest",
+    "pork"
+   ],
+   [
+    "eats",
+    "flounder",
+    "lamb"
+   ],
+   [
+    "eats",
+    "flounder",
+    "rice"
+   ],
+   [
+    "eats",
+    "lamb",
+    "flounder"
+   ],
+   [
+    "eats",
+    "lamb",
+    "pork"
+   ],
+   [
+    "eats",
+    "okra",
+    "pear"
+   ],
+   [
+    "eats",
+    "okra",
+    "pork"
+   ],
+   [
+    "eats",
+    "pear",
+    "okra"
+   ],
+   [
+    "eats",
+    "pear",
+    "rice"
+   ],
+   [
+    "eats",
+    "pork",
+    "lamb"
+   ],
+   [
+    "eats",
+    "pork",
+    "okra"
+   ],
+   [
+    "eats",
+    "rice",
+    "flounder"
+   ],
+   [
+    "eats",
+    "rice",
+    "pear"
+   ],
+   [
+    "eats",
+    "rice",
+    "rice"
+   ],
+   [
+    "harmony",
+    "rest",
+    "venus"
+   ],
+   [
+    "locale",
+    "flounder",
+    "alsace"
+   ],
+   [
+    "locale",
+    "lamb",
+    "pennsylvania"
+   ],
+   [
+    "locale",
+    "okra",
+    "guanabara"
+   ],
+   [
+    "locale",
+    "pear",
+    "surrey"
+   ],
+   [
+    "locale",
+    "pork",
+    "quebec"
+   ],
+   [
+    "locale",
+    "rice",
+    "bosnia"
+   ],
+   [
+    "orbits",
+    "earth",
+    "uranus"
+   ],
+   [
+    "orbits",
+    "mars",
+    "earth"
+   ],
+   [
+    "orbits",
+    "uranus",
+    "venus"
+   ]
+  ],
+  "metric": null,
+  "objects": {
+   "abrasion": "pain",
+   "alsace": "province",
+   "bosnia": "province",
+   "depression": "pain",
+   "earth": "planet",
+   "flounder": "food",
+   "guanabara": "province",
+   "hangover": "pain",
+   "kentucky": "province",
+   "lamb": "food",
+   "mars": "planet",
+   "okra": "food",
+   "pear": "food",
+   "pennsylvania": "province",
+   "pork": "food",
+   "quebec": "province",
+   "rest": "pleasure",
+   "rice": "food",
+   "surrey": "province",
+   "uranus": "planet",
+   "venus": "planet"
+  },
+  "operators": [],
+  "predicates": [],
+  "requirements": [],
+  "types": {}
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "syntax",
+    "message": "domain file: line 16:7 token recognition error at: ':v'",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "domain file: line 27:7 token recognition error at: ':v'",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "domain file: line 38:7 token recognition error at: ':v'",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "domain file: line 49:6 token recognition error at: ':v'",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "domain file: line 16:9 no viable alternative at input '(define(domainmystery-prime-typed)(:requirements:typing:quantified-preconditions:conditional-effects)(:typesprovinceplanetfoodemotion-objectpleasurepain-emotion)(:predicates(eats?n1?n2-food)(craves?v-emotion?n-food)(fears?c-pain?v-pleasure)(locale?n-food?a-province)(harmony?v-emotion?s-planet)(attacks?i?j-province)(orbits?i?j-planet))(:actionovercome:parameters(?c-pain?v-pleasure)ars'",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

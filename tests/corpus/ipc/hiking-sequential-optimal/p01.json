@@ -1,0 +1,7691 @@
+{
+ "ground": {
+  "drive": [
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place0",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place1",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place2",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place0",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place1",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place2",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place0",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place1",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place2",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place0",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place1",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place2",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place0",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place1",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place2",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place0",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place1",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place2",
+     "?x4": "car0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place0",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place1",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place2",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place0",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place1",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place2",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place0",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place1",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place2",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place0",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place1",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place2",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place0",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place1",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place2",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place0",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place1",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place2",
+     "?x4": "car1"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ]
+    ]
+   }
+  ],
+  "drive_passenger": {
+   "truncated_at": 50
+  },
+  "drive_tent": [
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place0",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place1",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place2",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place0",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place1",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place2",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place0",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place1",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place2",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place0",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place1",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place2",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place0",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place1",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place2",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place0",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place1",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place2",
+     "?x4": "car0",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place0",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place1",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "place2",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place0",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place1",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "place2",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place0",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place1",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "place2",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place0",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place1",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "place2",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place0",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place1",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "place2",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place0",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place1",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ]
+    ],
+    "name": "drive_tent",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "place2",
+     "?x4": "car1",
+     "?x5": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_car",
+      "car1",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   }
+  ],
+  "drive_tent_passenger": {
+   "truncated_at": 50
+  },
+  "put_down": [
+   {
+    "effect_neg": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "name": "put_down",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "up",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "name": "put_down",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "up",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "name": "put_down",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "up",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "name": "put_down",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "up",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "name": "put_down",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "up",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "name": "put_down",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "up",
+      "tent0"
+     ]
+    ]
+   }
+  ],
+  "put_up": [
+   {
+    "effect_neg": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "name": "put_up",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place0",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "name": "put_up",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place1",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "name": "put_up",
+    "parameters": {
+     "?x1": "girl0",
+     "?x2": "place2",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "name": "put_up",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place0",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "name": "put_up",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place1",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "down",
+      "tent0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "up",
+      "tent0"
+     ]
+    ],
+    "name": "put_up",
+    "parameters": {
+     "?x1": "guy0",
+     "?x2": "place2",
+     "?x3": "tent0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "down",
+      "tent0"
+     ]
+    ]
+   }
+  ],
+  "walk_together": [
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "girl0",
+     "?x4": "place0",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place0",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "guy0",
+     "?x4": "place0",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place0",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "girl0",
+     "?x4": "place0",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place0",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "guy0",
+     "?x4": "place0",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place0",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "girl0",
+     "?x4": "place0",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place0",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "guy0",
+     "?x4": "place0",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place0",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "girl0",
+     "?x4": "place0",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place0",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "girl0",
+     "?x4": "place0",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place0",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "girl0",
+     "?x4": "place0",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place0",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "girl0",
+     "?x4": "place1",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place1",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "guy0",
+     "?x4": "place1",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place1",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "girl0",
+     "?x4": "place1",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place1",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "guy0",
+     "?x4": "place1",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place1",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "girl0",
+     "?x4": "place1",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place1",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "guy0",
+     "?x4": "place1",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place1",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "girl0",
+     "?x4": "place1",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place1",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "girl0",
+     "?x4": "place1",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place1",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "girl0",
+     "?x4": "place1",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place1",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "girl0",
+     "?x4": "place2",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place2",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "guy0",
+     "?x4": "place2",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place2",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "girl0",
+     "?x4": "place2",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place2",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "guy0",
+     "?x4": "place2",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place2",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "girl0",
+     "?x4": "place2",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place2",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "guy0",
+     "?x4": "place2",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place2",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "girl0",
+     "?x4": "place2",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place2",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "girl0",
+     "?x4": "place2",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place2",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "girl0",
+     "?x4": "place2",
+     "?x5": "girl0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "girl0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place2",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "girl0",
+      "girl0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "guy0",
+     "?x4": "place0",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place0",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "guy0",
+     "?x4": "place0",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place0",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "guy0",
+     "?x4": "place0",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place0",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "guy0",
+     "?x4": "place1",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place1",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "guy0",
+     "?x4": "place1",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place1",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "guy0",
+     "?x4": "place1",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place1",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place0"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place0",
+     "?x3": "guy0",
+     "?x4": "place2",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place0"
+     ],
+     [
+      "next",
+      "place2",
+      "place0"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place1"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place1"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place1",
+     "?x3": "guy0",
+     "?x4": "place2",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place1"
+     ],
+     [
+      "next",
+      "place2",
+      "place1"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   },
+   {
+    "effect_neg": [
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ],
+    "name": "walk_together",
+    "parameters": {
+     "?x1": "tent0",
+     "?x2": "place2",
+     "?x3": "guy0",
+     "?x4": "place2",
+     "?x5": "guy0",
+     "?x6": "couple0"
+    },
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at_person",
+      "guy0",
+      "place2"
+     ],
+     [
+      "at_tent",
+      "tent0",
+      "place2"
+     ],
+     [
+      "next",
+      "place2",
+      "place2"
+     ],
+     [
+      "partners",
+      "couple0",
+      "guy0",
+      "guy0"
+     ],
+     [
+      "up",
+      "tent0"
+     ],
+     [
+      "walked",
+      "couple0",
+      "place2"
+     ]
+    ]
+   }
+  ]
+ },
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [
+   [
+    "walked",
+    "couple0",
+    "place2"
+   ]
+  ],
+  "initial_numeric": {},
+  "initial_state": [
+   [
+    "at_car",
+    "car0",
+    "place0"
+   ],
+   [
+    "at_car",
+    "car1",
+    "place0"
+   ],
+   [
+    "at_person",
+    "girl0",
+    "place0"
+   ],
+   [
+    "at_person",
+    "guy0",
+    "place0"
+   ],
+   [
+    "at_tent",
+    "tent0",
+    "place0"
+   ],
+   [
+    "next",
+    "place0",
+    "place1"
+   ],
+   [
+    "next",
+    "place1",
+    "place2"
+   ],
+   [
+    "partners",
+    "couple0",
+    "guy0",
+    "girl0"
+   ],
+   [
+    "up",
+    "tent0"
+   ],
+   [
+    "walked",
+    "couple0",
+    "place0"
+   ]
+  ],
+  "metric": null,
+  "objects": {
+   "car0": "car",
+   "car1": "car",
+   "couple0": "couple",
+   "girl0": "person",
+   "guy0": "person",
+   "place0": "place",
+   "place1": "place",
+   "place2": "place",
+   "tent0": "tent"
+  },
+  "operators": [
+   "drive",
+   "drive_passenger",
+   "drive_tent",
+   "drive_tent_passenger",
+   "put_down",
+   "put_up",
+   "walk_together"
+  ],
+  "predicates": [
+   "at_car",
+   "at_person",
+   "at_tent",
+   "down",
+   "next",
+   "partners",
+   "up",
+   "walked"
+  ],
+  "requirements": [
+   ":equality",
+   ":strips",
+   ":typing"
+  ],
+  "types": {
+   "car": null,
+   "couple": null,
+   "person": null,
+   "place": null,
+   "tent": null
+  }
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "requirements",
+    "message": "domain uses negative-preconditions but does not declare a matching requirement (one of [':adl', ':negative-preconditions'])",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}
