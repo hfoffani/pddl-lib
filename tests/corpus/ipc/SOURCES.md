@@ -12,7 +12,9 @@ commit `cf19edf7c53d1540ddbb396c642595e0926ee552`. `pNN.pddl` is upstream
 contribute only instance 1, with its `domains/domain-1.pddl`.
 
 `scripts/fetch-corpora.sh` (`make corpora`) fetches the full corpora at
-pinned commits into the git-ignored `.corpora/`.
+pinned commits into `$CORPORA_DIR` (default: the git-ignored `.corpora/`;
+set it in `.env` to use an external disk). `make corpora-test` runs pddlpy
+over every fetched pair and writes a report to `$CORPORA_DIR/results`.
 
 **License.** The upstream repository has no license file. The files are the
 IPC benchmark sets, published by the competition organizers and

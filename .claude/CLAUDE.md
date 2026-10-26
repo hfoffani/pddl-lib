@@ -16,7 +16,9 @@ make coverage     # tests with coverage report
 make build        # Build wheel/sdist
 make examples     # Run the example showcase
 make golden       # Regenerate IPC subset golden files; review the diff (#153)
-make corpora      # Fetch full IPC corpora (pinned) into .corpora/, ~3 GB, opt-in
+make corpora      # Fetch full IPC corpora (pinned) into $CORPORA_DIR (default .corpora), ~3 GB, opt-in
+make corpora-test # pddlpy over every fetched pair; report in $CORPORA_DIR/results; DOMAIN=... filters
+                  # (Makefile reads KEY=value lines from an optional .env, e.g. CORPORA_DIR=/Volumes/ext/corpora)
 uv run pddlpy parse|ground|solve|validate DOMAIN PROBLEM   # the CLI
 uv run pddlpy-mcp # MCP server on stdio
 ```
