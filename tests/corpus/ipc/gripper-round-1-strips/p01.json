@@ -2,6 +2,7 @@
  "ground": {
   "drop": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -27,6 +28,7 @@
      "?obj": "ball1",
      "?room": "rooma"
     },
+    "precondition": "(and (at-robby rooma) (ball ball1) (carry ball1 left) (gripper left) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -55,6 +57,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -80,6 +83,7 @@
      "?obj": "ball1",
      "?room": "roomb"
     },
+    "precondition": "(and (at-robby roomb) (ball ball1) (carry ball1 left) (gripper left) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -108,6 +112,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -133,6 +138,7 @@
      "?obj": "ball1",
      "?room": "rooma"
     },
+    "precondition": "(and (at-robby rooma) (ball ball1) (carry ball1 right) (gripper right) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -161,6 +167,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -186,6 +193,7 @@
      "?obj": "ball1",
      "?room": "roomb"
     },
+    "precondition": "(and (at-robby roomb) (ball ball1) (carry ball1 right) (gripper right) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -214,6 +222,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -239,6 +248,7 @@
      "?obj": "ball2",
      "?room": "rooma"
     },
+    "precondition": "(and (at-robby rooma) (ball ball2) (carry ball2 left) (gripper left) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -267,6 +277,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -292,6 +303,7 @@
      "?obj": "ball2",
      "?room": "roomb"
     },
+    "precondition": "(and (at-robby roomb) (ball ball2) (carry ball2 left) (gripper left) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -320,6 +332,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -345,6 +358,7 @@
      "?obj": "ball2",
      "?room": "rooma"
     },
+    "precondition": "(and (at-robby rooma) (ball ball2) (carry ball2 right) (gripper right) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -373,6 +387,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -398,6 +413,7 @@
      "?obj": "ball2",
      "?room": "roomb"
     },
+    "precondition": "(and (at-robby roomb) (ball ball2) (carry ball2 right) (gripper right) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -426,6 +442,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -451,6 +468,7 @@
      "?obj": "ball3",
      "?room": "rooma"
     },
+    "precondition": "(and (at-robby rooma) (ball ball3) (carry ball3 left) (gripper left) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -479,6 +497,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -504,6 +523,7 @@
      "?obj": "ball3",
      "?room": "roomb"
     },
+    "precondition": "(and (at-robby roomb) (ball ball3) (carry ball3 left) (gripper left) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -532,6 +552,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -557,6 +578,7 @@
      "?obj": "ball3",
      "?room": "rooma"
     },
+    "precondition": "(and (at-robby rooma) (ball ball3) (carry ball3 right) (gripper right) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -585,6 +607,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -610,6 +633,7 @@
      "?obj": "ball3",
      "?room": "roomb"
     },
+    "precondition": "(and (at-robby roomb) (ball ball3) (carry ball3 right) (gripper right) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -638,6 +662,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -663,6 +688,7 @@
      "?obj": "ball4",
      "?room": "rooma"
     },
+    "precondition": "(and (at-robby rooma) (ball ball4) (carry ball4 left) (gripper left) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -691,6 +717,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -716,6 +743,7 @@
      "?obj": "ball4",
      "?room": "roomb"
     },
+    "precondition": "(and (at-robby roomb) (ball ball4) (carry ball4 left) (gripper left) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -744,6 +772,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -769,6 +798,7 @@
      "?obj": "ball4",
      "?room": "rooma"
     },
+    "precondition": "(and (at-robby rooma) (ball ball4) (carry ball4 right) (gripper right) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -797,6 +827,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "carry",
@@ -822,6 +853,7 @@
      "?obj": "ball4",
      "?room": "roomb"
     },
+    "precondition": "(and (at-robby roomb) (ball ball4) (carry ball4 right) (gripper right) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -852,6 +884,7 @@
   ],
   "move": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at-robby",
@@ -870,6 +903,7 @@
      "?from": "rooma",
      "?to": "rooma"
     },
+    "precondition": "(and (at-robby rooma) (room rooma) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -885,6 +919,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at-robby",
@@ -903,6 +938,7 @@
      "?from": "rooma",
      "?to": "roomb"
     },
+    "precondition": "(and (at-robby rooma) (room rooma) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -922,6 +958,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at-robby",
@@ -940,6 +977,7 @@
      "?from": "roomb",
      "?to": "rooma"
     },
+    "precondition": "(and (at-robby roomb) (room rooma) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -959,6 +997,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at-robby",
@@ -977,6 +1016,7 @@
      "?from": "roomb",
      "?to": "roomb"
     },
+    "precondition": "(and (at-robby roomb) (room roomb) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -994,6 +1034,7 @@
   ],
   "pick": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1019,6 +1060,7 @@
      "?obj": "ball1",
      "?room": "rooma"
     },
+    "precondition": "(and (at ball1 rooma) (at-robby rooma) (ball ball1) (free left) (gripper left) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1051,6 +1093,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1076,6 +1119,7 @@
      "?obj": "ball1",
      "?room": "rooma"
     },
+    "precondition": "(and (at ball1 rooma) (at-robby rooma) (ball ball1) (free right) (gripper right) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1108,6 +1152,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1133,6 +1178,7 @@
      "?obj": "ball1",
      "?room": "roomb"
     },
+    "precondition": "(and (at ball1 roomb) (at-robby roomb) (ball ball1) (free left) (gripper left) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1165,6 +1211,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1190,6 +1237,7 @@
      "?obj": "ball1",
      "?room": "roomb"
     },
+    "precondition": "(and (at ball1 roomb) (at-robby roomb) (ball ball1) (free right) (gripper right) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1222,6 +1270,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1247,6 +1296,7 @@
      "?obj": "ball2",
      "?room": "rooma"
     },
+    "precondition": "(and (at ball2 rooma) (at-robby rooma) (ball ball2) (free left) (gripper left) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1279,6 +1329,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1304,6 +1355,7 @@
      "?obj": "ball2",
      "?room": "rooma"
     },
+    "precondition": "(and (at ball2 rooma) (at-robby rooma) (ball ball2) (free right) (gripper right) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1336,6 +1388,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1361,6 +1414,7 @@
      "?obj": "ball2",
      "?room": "roomb"
     },
+    "precondition": "(and (at ball2 roomb) (at-robby roomb) (ball ball2) (free left) (gripper left) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1393,6 +1447,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1418,6 +1473,7 @@
      "?obj": "ball2",
      "?room": "roomb"
     },
+    "precondition": "(and (at ball2 roomb) (at-robby roomb) (ball ball2) (free right) (gripper right) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1450,6 +1506,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1475,6 +1532,7 @@
      "?obj": "ball3",
      "?room": "rooma"
     },
+    "precondition": "(and (at ball3 rooma) (at-robby rooma) (ball ball3) (free left) (gripper left) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1507,6 +1565,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1532,6 +1591,7 @@
      "?obj": "ball3",
      "?room": "rooma"
     },
+    "precondition": "(and (at ball3 rooma) (at-robby rooma) (ball ball3) (free right) (gripper right) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1564,6 +1624,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1589,6 +1650,7 @@
      "?obj": "ball3",
      "?room": "roomb"
     },
+    "precondition": "(and (at ball3 roomb) (at-robby roomb) (ball ball3) (free left) (gripper left) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1621,6 +1683,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1646,6 +1709,7 @@
      "?obj": "ball3",
      "?room": "roomb"
     },
+    "precondition": "(and (at ball3 roomb) (at-robby roomb) (ball ball3) (free right) (gripper right) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1678,6 +1742,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1703,6 +1768,7 @@
      "?obj": "ball4",
      "?room": "rooma"
     },
+    "precondition": "(and (at ball4 rooma) (at-robby rooma) (ball ball4) (free left) (gripper left) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1735,6 +1801,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1760,6 +1827,7 @@
      "?obj": "ball4",
      "?room": "rooma"
     },
+    "precondition": "(and (at ball4 rooma) (at-robby rooma) (ball ball4) (free right) (gripper right) (room rooma))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1792,6 +1860,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1817,6 +1886,7 @@
      "?obj": "ball4",
      "?room": "roomb"
     },
+    "precondition": "(and (at ball4 roomb) (at-robby roomb) (ball ball4) (free left) (gripper left) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1849,6 +1919,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at",
@@ -1874,6 +1945,7 @@
      "?obj": "ball4",
      "?room": "roomb"
     },
+    "precondition": "(and (at ball4 roomb) (at-robby roomb) (ball ball4) (free right) (gripper right) (room roomb))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],

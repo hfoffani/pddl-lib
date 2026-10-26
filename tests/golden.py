@@ -20,7 +20,9 @@ from typing import Any, Dict, List, Tuple
 
 from pddlpy import DomainProblem
 from pddlpy.diagnostics import diagnose
-from pddlpy.serialize import domain_problem_dict, operator_dict
+from pddlpy.pddl import And, Lit, Not, Or
+from pddlpy.planning import atom_tuple
+from pddlpy.serialize import atoms_list, domain_problem_dict, operator_dict
 
 IPC = os.path.join(os.path.dirname(__file__), "corpus", "ipc")
 
@@ -41,6 +43,40 @@ def golden_path(problem: str) -> str:
     return os.path.splitext(problem)[0] + ".json"
 
 
+def condition(c: Any) -> str:
+    """Canonical text of a grounded condition tree. Quantifiers ground to
+    and/or over instances in binder order, so children are sorted."""
+    if isinstance(c, Lit):
+        return "(%s)" % " ".join(atom_tuple(c.atom))
+    if isinstance(c, Not):
+        return "(not %s)" % condition(c.child)
+    if isinstance(c, (And, Or)):
+        word = "and" if isinstance(c, And) else "or"
+        return "(%s %s)" % (word, " ".join(sorted(condition(k) for k in c.children)))
+    return repr(c)  # Equality, NumericCond
+
+
+def grounded_operator(op: Any) -> Dict[str, Any]:
+    """``operator_dict`` plus the executable ADL semantics: the grounded
+    precondition tree and the conditional effects."""
+    result = operator_dict(op)
+    tree = getattr(op, "precondition", None)
+    result["precondition"] = None if tree is None else condition(tree)
+    result["conditional_effects"] = sorted(
+        (
+            {
+                "condition": condition(ce.condition),
+                "add": atoms_list(ce.add),
+                "del": atoms_list(ce.dele),
+                "num": sorted(repr(n) for n in ce.num),
+            }
+            for ce in getattr(op, "conditional_effects", ())
+        ),
+        key=lambda d: json.dumps(d, sort_keys=True),
+    )
+    return result
+
+
 def _capped(groundings: Any, render: Any) -> Any:
     head = list(islice(groundings, GROUND_CAP + 1))
     if len(head) > GROUND_CAP:
@@ -56,7 +92,7 @@ def snapshot(domain: str, problem: str) -> Dict[str, Any]:
         dp = DomainProblem(domain, problem)
         result["parse"] = domain_problem_dict(dp)
         result["ground"] = {
-            op: _capped(dp.ground_operator(op), operator_dict)
+            op: _capped(dp.ground_operator(op), grounded_operator)
             for op in sorted(dp.operators())
         }
         result["ground_durative"] = {

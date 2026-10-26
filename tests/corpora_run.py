@@ -71,8 +71,9 @@ def discover(corpora: str, needle: Optional[str]) -> List[Pair]:
     return sorted(pairs)
 
 
-class _Timeout(Exception):
-    pass
+class _Timeout(BaseException):
+    """Not an ``Exception``: snapshot() records loader and validate
+    exceptions as results, and must not swallow the deadline."""
 
 
 def _alarm(*_: Any) -> None:

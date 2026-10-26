@@ -2,6 +2,7 @@
  "ground": {
   "calibrate": [
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -16,6 +17,7 @@
      "?i": "instrument0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibration_target instrument0 Star0) (on_board instrument0 satellite0) (pointing satellite0 Star0) (power_on instrument0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -42,6 +44,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -56,6 +59,7 @@
      "?i": "instrument1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibration_target instrument1 GroundStation2) (on_board instrument1 satellite0) (pointing satellite0 GroundStation2) (power_on instrument1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -84,6 +88,7 @@
   ],
   "switch_off": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "power_on",
@@ -102,6 +107,7 @@
      "?i": "instrument0",
      "?s": "satellite0"
     },
+    "precondition": "(and (on_board instrument0 satellite0) (power_on instrument0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -118,6 +124,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "power_on",
@@ -136,6 +143,7 @@
      "?i": "instrument1",
      "?s": "satellite0"
     },
+    "precondition": "(and (on_board instrument1 satellite0) (power_on instrument1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -154,6 +162,7 @@
   ],
   "switch_on": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "calibrated",
@@ -176,6 +185,7 @@
      "?i": "instrument0",
      "?s": "satellite0"
     },
+    "precondition": "(and (on_board instrument0 satellite0) (power_avail satellite0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -192,6 +202,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "calibrated",
@@ -214,6 +225,7 @@
      "?i": "instrument1",
      "?s": "satellite0"
     },
+    "precondition": "(and (on_board instrument1 satellite0) (power_avail satellite0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -232,6 +244,7 @@
   ],
   "take_image": [
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -248,6 +261,7 @@
      "?m": "image2",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 GroundStation1) (power_on instrument1) (power_on instrument1) (supports instrument1 image2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -278,6 +292,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -294,6 +309,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 GroundStation1) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -324,6 +340,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -340,6 +357,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 GroundStation1) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -370,6 +388,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -386,6 +405,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 GroundStation1) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -416,6 +436,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -432,6 +453,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 GroundStation1) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -462,6 +484,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -478,6 +501,7 @@
      "?m": "image2",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 GroundStation2) (power_on instrument1) (power_on instrument1) (supports instrument1 image2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -508,6 +532,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -524,6 +549,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 GroundStation2) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -554,6 +580,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -570,6 +597,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 GroundStation2) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -600,6 +628,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -616,6 +645,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 GroundStation2) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -646,6 +676,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -662,6 +693,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 GroundStation2) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -692,6 +724,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -708,6 +741,7 @@
      "?m": "image2",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Phenomenon5) (power_on instrument1) (power_on instrument1) (supports instrument1 image2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -738,6 +772,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -754,6 +789,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Phenomenon5) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -784,6 +820,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -800,6 +837,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Phenomenon5) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -830,6 +868,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -846,6 +885,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Phenomenon5) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -876,6 +916,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -892,6 +933,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Phenomenon5) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -922,6 +964,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -938,6 +981,7 @@
      "?m": "image2",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Phenomenon6) (power_on instrument1) (power_on instrument1) (supports instrument1 image2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -968,6 +1012,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -984,6 +1029,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Phenomenon6) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1014,6 +1060,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1030,6 +1077,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Phenomenon6) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1060,6 +1108,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1076,6 +1125,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Phenomenon6) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1106,6 +1156,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1122,6 +1173,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Phenomenon6) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1152,6 +1204,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1168,6 +1221,7 @@
      "?m": "image2",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Planet3) (power_on instrument1) (power_on instrument1) (supports instrument1 image2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1198,6 +1252,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1214,6 +1269,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Planet3) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1244,6 +1300,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1260,6 +1317,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Planet3) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1290,6 +1348,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1306,6 +1365,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Planet3) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1336,6 +1396,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1352,6 +1413,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Planet3) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1382,6 +1444,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1398,6 +1461,7 @@
      "?m": "image2",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Planet4) (power_on instrument1) (power_on instrument1) (supports instrument1 image2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1428,6 +1492,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1444,6 +1509,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Planet4) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1474,6 +1540,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1490,6 +1557,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Planet4) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1520,6 +1588,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1536,6 +1605,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Planet4) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1566,6 +1636,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1582,6 +1653,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Planet4) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1612,6 +1684,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1628,6 +1701,7 @@
      "?m": "image2",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Star0) (power_on instrument1) (power_on instrument1) (supports instrument1 image2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1658,6 +1732,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1674,6 +1749,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Star0) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1704,6 +1780,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1720,6 +1797,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Star0) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1750,6 +1828,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1766,6 +1845,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Star0) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1796,6 +1876,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1812,6 +1893,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Star0) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1842,6 +1924,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1858,6 +1941,7 @@
      "?m": "image2",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Star7) (power_on instrument1) (power_on instrument1) (supports instrument1 image2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1888,6 +1972,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1904,6 +1989,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Star7) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1934,6 +2020,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1950,6 +2037,7 @@
      "?m": "infrared0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Star7) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1980,6 +2068,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -1996,6 +2085,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Star7) (power_on instrument0) (power_on instrument0) (supports instrument0 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2026,6 +2116,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -2042,6 +2133,7 @@
      "?m": "infrared1",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument1) (on_board instrument1 satellite0) (pointing satellite0 Star7) (power_on instrument1) (power_on instrument1) (supports instrument1 infrared1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],

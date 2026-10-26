@@ -2,6 +2,7 @@
  "ground": {
   "down": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "lift-at",
@@ -20,6 +21,7 @@
      "?f1": "f0",
      "?f2": "f0"
     },
+    "precondition": "(and (above f0 f0) (and ) (lift-at f0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -41,6 +43,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "lift-at",
@@ -59,6 +62,7 @@
      "?f1": "f0",
      "?f2": "f1"
     },
+    "precondition": "(and (above f1 f0) (and ) (lift-at f0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -80,6 +84,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "lift-at",
@@ -98,6 +103,7 @@
      "?f1": "f1",
      "?f2": "f0"
     },
+    "precondition": "(and (above f0 f1) (and ) (lift-at f1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -119,6 +125,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "lift-at",
@@ -137,6 +144,7 @@
      "?f1": "f1",
      "?f2": "f1"
     },
+    "precondition": "(and (above f1 f1) (and ) (lift-at f1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -160,6 +168,41 @@
   ],
   "stop": [
    {
+    "conditional_effects": [
+     {
+      "add": [
+       [
+        "boarded",
+        "p0"
+       ]
+      ],
+      "condition": "(and (not (served p0)) (origin p0 f0))",
+      "del": [],
+      "num": []
+     },
+     {
+      "add": [
+       [
+        "served",
+        "p0"
+       ]
+      ],
+      "condition": "(and (boarded p0) (destin p0 f0))",
+      "del": [],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(and (boarded p0) (destin p0 f0))",
+      "del": [
+       [
+        "boarded",
+        "p0"
+       ]
+      ],
+      "num": []
+     }
+    ],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [],
@@ -167,6 +210,7 @@
     "parameters": {
      "?f": "f0"
     },
+    "precondition": "(and (and (or (not (boarded p0)) (not (no-access p0 f0)))) (and ) (lift-at f0) (or (and ) (not (or ))) (or (and ) (not (or ))) (or (and ) (or )) (or (not (or )) (or )))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -251,6 +295,41 @@
     ]
    },
    {
+    "conditional_effects": [
+     {
+      "add": [
+       [
+        "boarded",
+        "p0"
+       ]
+      ],
+      "condition": "(and (not (served p0)) (origin p0 f1))",
+      "del": [],
+      "num": []
+     },
+     {
+      "add": [
+       [
+        "served",
+        "p0"
+       ]
+      ],
+      "condition": "(and (boarded p0) (destin p0 f1))",
+      "del": [],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(and (boarded p0) (destin p0 f1))",
+      "del": [
+       [
+        "boarded",
+        "p0"
+       ]
+      ],
+      "num": []
+     }
+    ],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [],
@@ -258,6 +337,7 @@
     "parameters": {
      "?f": "f1"
     },
+    "precondition": "(and (and (or (not (boarded p0)) (not (no-access p0 f1)))) (and ) (lift-at f1) (or (and ) (not (or ))) (or (and ) (not (or ))) (or (and ) (or )) (or (not (or )) (or )))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -344,6 +424,7 @@
   ],
   "up": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "lift-at",
@@ -362,6 +443,7 @@
      "?f1": "f0",
      "?f2": "f0"
     },
+    "precondition": "(and (above f0 f0) (and ) (lift-at f0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -383,6 +465,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "lift-at",
@@ -401,6 +484,7 @@
      "?f1": "f0",
      "?f2": "f1"
     },
+    "precondition": "(and (above f0 f1) (and ) (lift-at f0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -422,6 +506,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "lift-at",
@@ -440,6 +525,7 @@
      "?f1": "f1",
      "?f2": "f0"
     },
+    "precondition": "(and (above f1 f0) (and ) (lift-at f1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -461,6 +547,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "lift-at",
@@ -479,6 +566,7 @@
      "?f1": "f1",
      "?f2": "f1"
     },
+    "precondition": "(and (above f1 f1) (and ) (lift-at f1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [

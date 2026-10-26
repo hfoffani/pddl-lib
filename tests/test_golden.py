@@ -10,11 +10,32 @@ import os
 import pytest
 from golden import IPC, dumps, golden_path, pairs, snapshot
 
+from pddlpy import DomainProblem
+
 PAIRS = pairs()
 
 
 def test_subset_present():
     assert len(PAIRS) >= 20
+
+
+def test_snapshot_covers_adl_semantics(monkeypatch):
+    """Losing the grounded precondition tree or the conditional effects must
+    change the snapshot (review on #154)."""
+    domain, problem = next(p for p in PAIRS if "elevator-adl-full-typed" in p[1])
+    before = snapshot(domain, problem)
+    assert all(len(g["conditional_effects"]) == 3 for g in before["ground"]["stop"])
+    original = DomainProblem.ground_operator
+
+    def stripped(self, name):
+        for g in original(self, name):
+            g.precondition, g.conditional_effects = None, []
+            yield g
+
+    monkeypatch.setattr(DomainProblem, "ground_operator", stripped)
+    after = snapshot(domain, problem)
+    assert after["ground"]["stop"] != before["ground"]["stop"]
+    assert after["ground"]["up"] != before["ground"]["up"]
 
 
 @pytest.mark.parametrize(

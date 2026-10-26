@@ -2,6 +2,7 @@
  "ground": {
   "build_diagonal_oneway": [
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -24,6 +25,7 @@
      "?xy_final": "junction1-1",
      "?xy_initial": "junction0-0"
     },
+    "precondition": "(and (clear junction1-1) (diagonal junction0-0 junction1-1) (not (in_place road0)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -45,6 +47,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -67,6 +70,7 @@
      "?xy_final": "junction1-0",
      "?xy_initial": "junction0-1"
     },
+    "precondition": "(and (clear junction1-0) (diagonal junction0-1 junction1-0) (not (in_place road0)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -88,6 +92,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -110,6 +115,7 @@
      "?xy_final": "junction0-1",
      "?xy_initial": "junction1-0"
     },
+    "precondition": "(and (clear junction0-1) (diagonal junction1-0 junction0-1) (not (in_place road0)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -131,6 +137,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -153,6 +160,7 @@
      "?xy_final": "junction0-0",
      "?xy_initial": "junction1-1"
     },
+    "precondition": "(and (clear junction0-0) (diagonal junction1-1 junction0-0) (not (in_place road0)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -174,6 +182,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -196,6 +205,7 @@
      "?xy_final": "junction1-1",
      "?xy_initial": "junction0-0"
     },
+    "precondition": "(and (clear junction1-1) (diagonal junction0-0 junction1-1) (not (in_place road1)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -217,6 +227,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -239,6 +250,7 @@
      "?xy_final": "junction1-0",
      "?xy_initial": "junction0-1"
     },
+    "precondition": "(and (clear junction1-0) (diagonal junction0-1 junction1-0) (not (in_place road1)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -260,6 +272,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -282,6 +295,7 @@
      "?xy_final": "junction0-1",
      "?xy_initial": "junction1-0"
     },
+    "precondition": "(and (clear junction0-1) (diagonal junction1-0 junction0-1) (not (in_place road1)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -303,6 +317,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -325,6 +340,7 @@
      "?xy_final": "junction0-0",
      "?xy_initial": "junction1-1"
     },
+    "precondition": "(and (clear junction0-0) (diagonal junction1-1 junction0-0) (not (in_place road1)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -346,6 +362,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -368,6 +385,7 @@
      "?xy_final": "junction1-1",
      "?xy_initial": "junction0-0"
     },
+    "precondition": "(and (clear junction1-1) (diagonal junction0-0 junction1-1) (not (in_place road2)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -389,6 +407,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -411,6 +430,7 @@
      "?xy_final": "junction1-0",
      "?xy_initial": "junction0-1"
     },
+    "precondition": "(and (clear junction1-0) (diagonal junction0-1 junction1-0) (not (in_place road2)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -432,6 +452,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -454,6 +475,7 @@
      "?xy_final": "junction0-1",
      "?xy_initial": "junction1-0"
     },
+    "precondition": "(and (clear junction0-1) (diagonal junction1-0 junction0-1) (not (in_place road2)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -475,6 +497,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -497,6 +520,7 @@
      "?xy_final": "junction0-0",
      "?xy_initial": "junction1-1"
     },
+    "precondition": "(and (clear junction0-0) (diagonal junction1-1 junction0-0) (not (in_place road2)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -518,6 +542,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -540,6 +565,7 @@
      "?xy_final": "junction1-1",
      "?xy_initial": "junction0-0"
     },
+    "precondition": "(and (clear junction1-1) (diagonal junction0-0 junction1-1) (not (in_place road3)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -561,6 +587,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -583,6 +610,7 @@
      "?xy_final": "junction1-0",
      "?xy_initial": "junction0-1"
     },
+    "precondition": "(and (clear junction1-0) (diagonal junction0-1 junction1-0) (not (in_place road3)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -604,6 +632,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -626,6 +655,7 @@
      "?xy_final": "junction0-1",
      "?xy_initial": "junction1-0"
     },
+    "precondition": "(and (clear junction0-1) (diagonal junction1-0 junction0-1) (not (in_place road3)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -647,6 +677,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 30.0)"
@@ -669,6 +700,7 @@
      "?xy_final": "junction0-0",
      "?xy_initial": "junction1-1"
     },
+    "precondition": "(and (clear junction0-0) (diagonal junction1-1 junction0-0) (not (in_place road3)))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -692,6 +724,7 @@
   ],
   "build_straight_oneway": [
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -714,6 +747,7 @@
      "?xy_final": "junction0-1",
      "?xy_initial": "junction0-0"
     },
+    "precondition": "(and (clear junction0-1) (not (in_place road0)) (same_line junction0-0 junction0-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -735,6 +769,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -757,6 +792,7 @@
      "?xy_final": "junction1-0",
      "?xy_initial": "junction0-0"
     },
+    "precondition": "(and (clear junction1-0) (not (in_place road0)) (same_line junction0-0 junction1-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -778,6 +814,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -800,6 +837,7 @@
      "?xy_final": "junction0-0",
      "?xy_initial": "junction0-1"
     },
+    "precondition": "(and (clear junction0-0) (not (in_place road0)) (same_line junction0-1 junction0-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -821,6 +859,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -843,6 +882,7 @@
      "?xy_final": "junction1-1",
      "?xy_initial": "junction0-1"
     },
+    "precondition": "(and (clear junction1-1) (not (in_place road0)) (same_line junction0-1 junction1-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -864,6 +904,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -886,6 +927,7 @@
      "?xy_final": "junction0-0",
      "?xy_initial": "junction1-0"
     },
+    "precondition": "(and (clear junction0-0) (not (in_place road0)) (same_line junction1-0 junction0-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -907,6 +949,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -929,6 +972,7 @@
      "?xy_final": "junction1-1",
      "?xy_initial": "junction1-0"
     },
+    "precondition": "(and (clear junction1-1) (not (in_place road0)) (same_line junction1-0 junction1-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -950,6 +994,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -972,6 +1017,7 @@
      "?xy_final": "junction0-1",
      "?xy_initial": "junction1-1"
     },
+    "precondition": "(and (clear junction0-1) (not (in_place road0)) (same_line junction1-1 junction0-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -993,6 +1039,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1015,6 +1062,7 @@
      "?xy_final": "junction1-0",
      "?xy_initial": "junction1-1"
     },
+    "precondition": "(and (clear junction1-0) (not (in_place road0)) (same_line junction1-1 junction1-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1036,6 +1084,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1058,6 +1107,7 @@
      "?xy_final": "junction0-1",
      "?xy_initial": "junction0-0"
     },
+    "precondition": "(and (clear junction0-1) (not (in_place road1)) (same_line junction0-0 junction0-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1079,6 +1129,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1101,6 +1152,7 @@
      "?xy_final": "junction1-0",
      "?xy_initial": "junction0-0"
     },
+    "precondition": "(and (clear junction1-0) (not (in_place road1)) (same_line junction0-0 junction1-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1122,6 +1174,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1144,6 +1197,7 @@
      "?xy_final": "junction0-0",
      "?xy_initial": "junction0-1"
     },
+    "precondition": "(and (clear junction0-0) (not (in_place road1)) (same_line junction0-1 junction0-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1165,6 +1219,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1187,6 +1242,7 @@
      "?xy_final": "junction1-1",
      "?xy_initial": "junction0-1"
     },
+    "precondition": "(and (clear junction1-1) (not (in_place road1)) (same_line junction0-1 junction1-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1208,6 +1264,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1230,6 +1287,7 @@
      "?xy_final": "junction0-0",
      "?xy_initial": "junction1-0"
     },
+    "precondition": "(and (clear junction0-0) (not (in_place road1)) (same_line junction1-0 junction0-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1251,6 +1309,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1273,6 +1332,7 @@
      "?xy_final": "junction1-1",
      "?xy_initial": "junction1-0"
     },
+    "precondition": "(and (clear junction1-1) (not (in_place road1)) (same_line junction1-0 junction1-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1294,6 +1354,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1316,6 +1377,7 @@
      "?xy_final": "junction0-1",
      "?xy_initial": "junction1-1"
     },
+    "precondition": "(and (clear junction0-1) (not (in_place road1)) (same_line junction1-1 junction0-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1337,6 +1399,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1359,6 +1422,7 @@
      "?xy_final": "junction1-0",
      "?xy_initial": "junction1-1"
     },
+    "precondition": "(and (clear junction1-0) (not (in_place road1)) (same_line junction1-1 junction1-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1380,6 +1444,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1399,353 +1464,370 @@
     "name": "build_straight_oneway",
     "parameters": {
      "?r1": "road2",
-     "?xy_final": "junction0-1",
-     "?xy_initial": "junction0-0"
-    },
-    "precondition_connective": "and",
-    "precondition_neg": [
-     [
-      "in_place",
-      "road2"
-     ]
-    ],
-    "precondition_num": [],
-    "precondition_pos": [
-     [
-      "clear",
-      "junction0-1"
-     ],
-     [
-      "same_line",
-      "junction0-0",
-      "junction0-1"
-     ]
-    ]
-   },
-   {
-    "effect_neg": [],
-    "effect_num": [
-     "(increase ('total-cost',) 20.0)"
-    ],
-    "effect_pos": [
-     [
-      "in_place",
-      "road2"
-     ],
-     [
-      "road_connect",
-      "road2",
-      "junction0-0",
-      "junction1-0"
-     ]
-    ],
-    "name": "build_straight_oneway",
-    "parameters": {
-     "?r1": "road2",
-     "?xy_final": "junction1-0",
-     "?xy_initial": "junction0-0"
-    },
-    "precondition_connective": "and",
-    "precondition_neg": [
-     [
-      "in_place",
-      "road2"
-     ]
-    ],
-    "precondition_num": [],
-    "precondition_pos": [
-     [
-      "clear",
-      "junction1-0"
-     ],
-     [
-      "same_line",
-      "junction0-0",
-      "junction1-0"
-     ]
-    ]
-   },
-   {
-    "effect_neg": [],
-    "effect_num": [
-     "(increase ('total-cost',) 20.0)"
-    ],
-    "effect_pos": [
-     [
-      "in_place",
-      "road2"
-     ],
-     [
-      "road_connect",
-      "road2",
-      "junction0-1",
-      "junction0-0"
-     ]
-    ],
-    "name": "build_straight_oneway",
-    "parameters": {
-     "?r1": "road2",
-     "?xy_final": "junction0-0",
-     "?xy_initial": "junction0-1"
-    },
-    "precondition_connective": "and",
-    "precondition_neg": [
-     [
-      "in_place",
-      "road2"
-     ]
-    ],
-    "precondition_num": [],
-    "precondition_pos": [
-     [
-      "clear",
-      "junction0-0"
-     ],
-     [
-      "same_line",
-      "junction0-1",
-      "junction0-0"
-     ]
-    ]
-   },
-   {
-    "effect_neg": [],
-    "effect_num": [
-     "(increase ('total-cost',) 20.0)"
-    ],
-    "effect_pos": [
-     [
-      "in_place",
-      "road2"
-     ],
-     [
-      "road_connect",
-      "road2",
-      "junction0-1",
-      "junction1-1"
-     ]
-    ],
-    "name": "build_straight_oneway",
-    "parameters": {
-     "?r1": "road2",
-     "?xy_final": "junction1-1",
-     "?xy_initial": "junction0-1"
-    },
-    "precondition_connective": "and",
-    "precondition_neg": [
-     [
-      "in_place",
-      "road2"
-     ]
-    ],
-    "precondition_num": [],
-    "precondition_pos": [
-     [
-      "clear",
-      "junction1-1"
-     ],
-     [
-      "same_line",
-      "junction0-1",
-      "junction1-1"
-     ]
-    ]
-   },
-   {
-    "effect_neg": [],
-    "effect_num": [
-     "(increase ('total-cost',) 20.0)"
-    ],
-    "effect_pos": [
-     [
-      "in_place",
-      "road2"
-     ],
-     [
-      "road_connect",
-      "road2",
-      "junction1-0",
-      "junction0-0"
-     ]
-    ],
-    "name": "build_straight_oneway",
-    "parameters": {
-     "?r1": "road2",
-     "?xy_final": "junction0-0",
-     "?xy_initial": "junction1-0"
-    },
-    "precondition_connective": "and",
-    "precondition_neg": [
-     [
-      "in_place",
-      "road2"
-     ]
-    ],
-    "precondition_num": [],
-    "precondition_pos": [
-     [
-      "clear",
-      "junction0-0"
-     ],
-     [
-      "same_line",
-      "junction1-0",
-      "junction0-0"
-     ]
-    ]
-   },
-   {
-    "effect_neg": [],
-    "effect_num": [
-     "(increase ('total-cost',) 20.0)"
-    ],
-    "effect_pos": [
-     [
-      "in_place",
-      "road2"
-     ],
-     [
-      "road_connect",
-      "road2",
-      "junction1-0",
-      "junction1-1"
-     ]
-    ],
-    "name": "build_straight_oneway",
-    "parameters": {
-     "?r1": "road2",
-     "?xy_final": "junction1-1",
-     "?xy_initial": "junction1-0"
-    },
-    "precondition_connective": "and",
-    "precondition_neg": [
-     [
-      "in_place",
-      "road2"
-     ]
-    ],
-    "precondition_num": [],
-    "precondition_pos": [
-     [
-      "clear",
-      "junction1-1"
-     ],
-     [
-      "same_line",
-      "junction1-0",
-      "junction1-1"
-     ]
-    ]
-   },
-   {
-    "effect_neg": [],
-    "effect_num": [
-     "(increase ('total-cost',) 20.0)"
-    ],
-    "effect_pos": [
-     [
-      "in_place",
-      "road2"
-     ],
-     [
-      "road_connect",
-      "road2",
-      "junction1-1",
-      "junction0-1"
-     ]
-    ],
-    "name": "build_straight_oneway",
-    "parameters": {
-     "?r1": "road2",
-     "?xy_final": "junction0-1",
-     "?xy_initial": "junction1-1"
-    },
-    "precondition_connective": "and",
-    "precondition_neg": [
-     [
-      "in_place",
-      "road2"
-     ]
-    ],
-    "precondition_num": [],
-    "precondition_pos": [
-     [
-      "clear",
-      "junction0-1"
-     ],
-     [
-      "same_line",
-      "junction1-1",
-      "junction0-1"
-     ]
-    ]
-   },
-   {
-    "effect_neg": [],
-    "effect_num": [
-     "(increase ('total-cost',) 20.0)"
-    ],
-    "effect_pos": [
-     [
-      "in_place",
-      "road2"
-     ],
-     [
-      "road_connect",
-      "road2",
-      "junction1-1",
-      "junction1-0"
-     ]
-    ],
-    "name": "build_straight_oneway",
-    "parameters": {
-     "?r1": "road2",
-     "?xy_final": "junction1-0",
-     "?xy_initial": "junction1-1"
-    },
-    "precondition_connective": "and",
-    "precondition_neg": [
-     [
-      "in_place",
-      "road2"
-     ]
-    ],
-    "precondition_num": [],
-    "precondition_pos": [
-     [
-      "clear",
-      "junction1-0"
-     ],
-     [
-      "same_line",
-      "junction1-1",
-      "junction1-0"
-     ]
-    ]
-   },
-   {
-    "effect_neg": [],
-    "effect_num": [
-     "(increase ('total-cost',) 20.0)"
-    ],
-    "effect_pos": [
-     [
-      "in_place",
-      "road3"
-     ],
-     [
-      "road_connect",
-      "road3",
-      "junction0-0",
-      "junction0-1"
-     ]
-    ],
-    "name": "build_straight_oneway",
-    "parameters": {
-     "?r1": "road3",
      "?xy_final": "junction0-1",
      "?xy_initial": "junction0-0"
     },
+    "precondition": "(and (clear junction0-1) (not (in_place road2)) (same_line junction0-0 junction0-1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "in_place",
+      "road2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "junction0-1"
+     ],
+     [
+      "same_line",
+      "junction0-0",
+      "junction0-1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [
+     "(increase ('total-cost',) 20.0)"
+    ],
+    "effect_pos": [
+     [
+      "in_place",
+      "road2"
+     ],
+     [
+      "road_connect",
+      "road2",
+      "junction0-0",
+      "junction1-0"
+     ]
+    ],
+    "name": "build_straight_oneway",
+    "parameters": {
+     "?r1": "road2",
+     "?xy_final": "junction1-0",
+     "?xy_initial": "junction0-0"
+    },
+    "precondition": "(and (clear junction1-0) (not (in_place road2)) (same_line junction0-0 junction1-0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "in_place",
+      "road2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "junction1-0"
+     ],
+     [
+      "same_line",
+      "junction0-0",
+      "junction1-0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [
+     "(increase ('total-cost',) 20.0)"
+    ],
+    "effect_pos": [
+     [
+      "in_place",
+      "road2"
+     ],
+     [
+      "road_connect",
+      "road2",
+      "junction0-1",
+      "junction0-0"
+     ]
+    ],
+    "name": "build_straight_oneway",
+    "parameters": {
+     "?r1": "road2",
+     "?xy_final": "junction0-0",
+     "?xy_initial": "junction0-1"
+    },
+    "precondition": "(and (clear junction0-0) (not (in_place road2)) (same_line junction0-1 junction0-0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "in_place",
+      "road2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "junction0-0"
+     ],
+     [
+      "same_line",
+      "junction0-1",
+      "junction0-0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [
+     "(increase ('total-cost',) 20.0)"
+    ],
+    "effect_pos": [
+     [
+      "in_place",
+      "road2"
+     ],
+     [
+      "road_connect",
+      "road2",
+      "junction0-1",
+      "junction1-1"
+     ]
+    ],
+    "name": "build_straight_oneway",
+    "parameters": {
+     "?r1": "road2",
+     "?xy_final": "junction1-1",
+     "?xy_initial": "junction0-1"
+    },
+    "precondition": "(and (clear junction1-1) (not (in_place road2)) (same_line junction0-1 junction1-1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "in_place",
+      "road2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "junction1-1"
+     ],
+     [
+      "same_line",
+      "junction0-1",
+      "junction1-1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [
+     "(increase ('total-cost',) 20.0)"
+    ],
+    "effect_pos": [
+     [
+      "in_place",
+      "road2"
+     ],
+     [
+      "road_connect",
+      "road2",
+      "junction1-0",
+      "junction0-0"
+     ]
+    ],
+    "name": "build_straight_oneway",
+    "parameters": {
+     "?r1": "road2",
+     "?xy_final": "junction0-0",
+     "?xy_initial": "junction1-0"
+    },
+    "precondition": "(and (clear junction0-0) (not (in_place road2)) (same_line junction1-0 junction0-0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "in_place",
+      "road2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "junction0-0"
+     ],
+     [
+      "same_line",
+      "junction1-0",
+      "junction0-0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [
+     "(increase ('total-cost',) 20.0)"
+    ],
+    "effect_pos": [
+     [
+      "in_place",
+      "road2"
+     ],
+     [
+      "road_connect",
+      "road2",
+      "junction1-0",
+      "junction1-1"
+     ]
+    ],
+    "name": "build_straight_oneway",
+    "parameters": {
+     "?r1": "road2",
+     "?xy_final": "junction1-1",
+     "?xy_initial": "junction1-0"
+    },
+    "precondition": "(and (clear junction1-1) (not (in_place road2)) (same_line junction1-0 junction1-1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "in_place",
+      "road2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "junction1-1"
+     ],
+     [
+      "same_line",
+      "junction1-0",
+      "junction1-1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [
+     "(increase ('total-cost',) 20.0)"
+    ],
+    "effect_pos": [
+     [
+      "in_place",
+      "road2"
+     ],
+     [
+      "road_connect",
+      "road2",
+      "junction1-1",
+      "junction0-1"
+     ]
+    ],
+    "name": "build_straight_oneway",
+    "parameters": {
+     "?r1": "road2",
+     "?xy_final": "junction0-1",
+     "?xy_initial": "junction1-1"
+    },
+    "precondition": "(and (clear junction0-1) (not (in_place road2)) (same_line junction1-1 junction0-1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "in_place",
+      "road2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "junction0-1"
+     ],
+     [
+      "same_line",
+      "junction1-1",
+      "junction0-1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [
+     "(increase ('total-cost',) 20.0)"
+    ],
+    "effect_pos": [
+     [
+      "in_place",
+      "road2"
+     ],
+     [
+      "road_connect",
+      "road2",
+      "junction1-1",
+      "junction1-0"
+     ]
+    ],
+    "name": "build_straight_oneway",
+    "parameters": {
+     "?r1": "road2",
+     "?xy_final": "junction1-0",
+     "?xy_initial": "junction1-1"
+    },
+    "precondition": "(and (clear junction1-0) (not (in_place road2)) (same_line junction1-1 junction1-0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "in_place",
+      "road2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "junction1-0"
+     ],
+     [
+      "same_line",
+      "junction1-1",
+      "junction1-0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [
+     "(increase ('total-cost',) 20.0)"
+    ],
+    "effect_pos": [
+     [
+      "in_place",
+      "road3"
+     ],
+     [
+      "road_connect",
+      "road3",
+      "junction0-0",
+      "junction0-1"
+     ]
+    ],
+    "name": "build_straight_oneway",
+    "parameters": {
+     "?r1": "road3",
+     "?xy_final": "junction0-1",
+     "?xy_initial": "junction0-0"
+    },
+    "precondition": "(and (clear junction0-1) (not (in_place road3)) (same_line junction0-0 junction0-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1767,6 +1849,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1789,6 +1872,7 @@
      "?xy_final": "junction1-0",
      "?xy_initial": "junction0-0"
     },
+    "precondition": "(and (clear junction1-0) (not (in_place road3)) (same_line junction0-0 junction1-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1810,6 +1894,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1832,6 +1917,7 @@
      "?xy_final": "junction0-0",
      "?xy_initial": "junction0-1"
     },
+    "precondition": "(and (clear junction0-0) (not (in_place road3)) (same_line junction0-1 junction0-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1853,6 +1939,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1875,6 +1962,7 @@
      "?xy_final": "junction1-1",
      "?xy_initial": "junction0-1"
     },
+    "precondition": "(and (clear junction1-1) (not (in_place road3)) (same_line junction0-1 junction1-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1896,6 +1984,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1918,6 +2007,7 @@
      "?xy_final": "junction0-0",
      "?xy_initial": "junction1-0"
     },
+    "precondition": "(and (clear junction0-0) (not (in_place road3)) (same_line junction1-0 junction0-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1939,6 +2029,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -1961,6 +2052,7 @@
      "?xy_final": "junction1-1",
      "?xy_initial": "junction1-0"
     },
+    "precondition": "(and (clear junction1-1) (not (in_place road3)) (same_line junction1-0 junction1-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -1982,6 +2074,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -2004,6 +2097,7 @@
      "?xy_final": "junction0-1",
      "?xy_initial": "junction1-1"
     },
+    "precondition": "(and (clear junction0-1) (not (in_place road3)) (same_line junction1-1 junction0-1))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -2025,6 +2119,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [
      "(increase ('total-cost',) 20.0)"
@@ -2047,6 +2142,7 @@
      "?xy_final": "junction1-0",
      "?xy_initial": "junction1-1"
     },
+    "precondition": "(and (clear junction1-0) (not (in_place road3)) (same_line junction1-1 junction1-0))",
     "precondition_connective": "and",
     "precondition_neg": [
      [
@@ -2070,6 +2166,7 @@
   ],
   "car_arrived": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at_car_jun",
@@ -2094,6 +2191,7 @@
      "?machine": "car0",
      "?xy_final": "junction0-0"
     },
+    "precondition": "(and (at_car_jun car0 junction0-0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2106,6 +2204,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at_car_jun",
@@ -2130,6 +2229,7 @@
      "?machine": "car0",
      "?xy_final": "junction0-1"
     },
+    "precondition": "(and (at_car_jun car0 junction0-1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2142,6 +2242,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at_car_jun",
@@ -2166,6 +2267,7 @@
      "?machine": "car0",
      "?xy_final": "junction1-0"
     },
+    "precondition": "(and (at_car_jun car0 junction1-0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2178,6 +2280,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at_car_jun",
@@ -2202,6 +2305,7 @@
      "?machine": "car0",
      "?xy_final": "junction1-1"
     },
+    "precondition": "(and (at_car_jun car0 junction1-1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2214,6 +2318,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at_car_jun",
@@ -2238,6 +2343,7 @@
      "?machine": "car1",
      "?xy_final": "junction0-0"
     },
+    "precondition": "(and (at_car_jun car1 junction0-0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2250,6 +2356,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at_car_jun",
@@ -2274,6 +2381,7 @@
      "?machine": "car1",
      "?xy_final": "junction0-1"
     },
+    "precondition": "(and (at_car_jun car1 junction0-1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2286,6 +2394,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at_car_jun",
@@ -2310,6 +2419,7 @@
      "?machine": "car1",
      "?xy_final": "junction1-0"
     },
+    "precondition": "(and (at_car_jun car1 junction1-0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2322,6 +2432,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "at_car_jun",
@@ -2346,6 +2457,7 @@
      "?machine": "car1",
      "?xy_final": "junction1-1"
     },
+    "precondition": "(and (at_car_jun car1 junction1-1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2360,6 +2472,7 @@
   ],
   "car_start": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -2385,6 +2498,7 @@
      "?machine": "car0",
      "?xy_final": "junction0-1"
     },
+    "precondition": "(and (at_garage garage0 junction0-1) (clear junction0-1) (starting car0 garage0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2406,6 +2520,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -2431,6 +2546,7 @@
      "?machine": "car1",
      "?xy_final": "junction0-1"
     },
+    "precondition": "(and (at_garage garage0 junction0-1) (clear junction0-1) (starting car1 garage0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
