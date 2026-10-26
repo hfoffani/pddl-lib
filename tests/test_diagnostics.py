@@ -106,3 +106,17 @@ def test_domain_without_predicates_skips_declaration_check(w):
                        " (:init (p o1)) (:goal (p o1)))")
     report = diagnose(dom, prob)
     assert ("error", "undeclared_predicate") not in _checks(report)
+
+
+def test_undeclared_requirement_matches_solve(w):
+    # #144: validate must flag what solve's requirements check refuses.
+    dom = w("d.pddl", "(define (domain t) (:requirements :strips :equality)"
+                      " (:predicates (p ?x) (q ?x))"
+                      " (:action go :parameters (?x ?y)"
+                      "  :precondition (and (p ?x) (not (= ?x ?y))) :effect (q ?y)))")
+    prob = w("p.pddl", "(define (problem p) (:domain t) (:objects a b)"
+                       " (:init (p a)) (:goal (q b)))")
+    report = diagnose(dom, prob)
+    assert report["valid"] is False
+    assert ("error", "requirements") in _checks(report)
+    assert "negative-preconditions" in str(report["issues"])

@@ -20,6 +20,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **`validate` missed undeclared requirements** (#144): `diagnose()` (the
+  `validate` CLI command and MCP tool) now runs the declared-vs-used
+  `:requirements` check that `solve` runs, and reports a `requirements` error.
+  Before, `validate` could report `valid: true` for a pair that `solve` then
+  refused with `UnsupportedRequirementsError`.
 - **License metadata**: package metadata wrongly declared MIT (`License: MIT`
   and the MIT classifier) in every release up to and including 1.2.2. The
   project has always been Apache-2.0, as `LICENSE.txt` and the source headers

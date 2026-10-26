@@ -20,7 +20,13 @@ from pddlpy._vendor.antlr4.error.ErrorListener import ErrorListener
 from pddlpy.pddl import DomainProblem
 from pddlpy.pddlLexer import pddlLexer
 from pddlpy.pddlParser import pddlParser
-from pddlpy.planning import DurativeValidationError, atom_tuple, validate_durative_actions
+from pddlpy.planning import (
+    DurativeValidationError,
+    UnsupportedRequirementsError,
+    atom_tuple,
+    validate_durative_actions,
+    validate_requirements,
+)
 
 
 class _CollectingErrorListener(ErrorListener):
@@ -135,6 +141,13 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
             issues.append(_issue(
                 "warning", "zero_groundings",
                 "operator %r grounds to zero instances" % name))
+
+    # Features used but not declared in :requirements: the check solve runs
+    # (#144), so validate never passes a pair that solve then refuses.
+    try:
+        validate_requirements(dp)
+    except UnsupportedRequirementsError as exc:
+        issues.append(_issue("error", "requirements", str(exc)))
 
     # Durative structure (duration positive, parameters/predicates declared).
     try:
