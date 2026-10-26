@@ -120,6 +120,17 @@ files = ["pddlpy"]
 # checking.
 exclude = '((pddlLexer|pddlParser|pddlListener)\.py$|_vendor/)'
 
+# `exclude` only stops discovery; mypy still follows imports into those
+# modules from pddl.py/diagnostics.py. Skip them so they are never checked.
+[[tool.mypy.overrides]]
+module = [
+    "pddlpy._vendor.*",
+    "pddlpy.pddlLexer",
+    "pddlpy.pddlParser",
+    "pddlpy.pddlListener",
+]
+follow_imports = "skip"
+
 # The planning layer is fully typed; hold it to a higher standard.
 [[tool.mypy.overrides]]
 module = "pddlpy.planning.*"
