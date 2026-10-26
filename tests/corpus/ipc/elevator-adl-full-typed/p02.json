@@ -1,0 +1,669 @@
+{
+ "ground": {
+  "down": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lift-at",
+      "f0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "lift-at",
+      "f0"
+     ]
+    ],
+    "name": "down",
+    "parameters": {
+     "?f1": "f0",
+     "?f2": "f0"
+    },
+    "precondition": "(and (above f0 f0) (and ) (lift-at f0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "boarded",
+      "?p"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "above",
+      "f0",
+      "f0"
+     ],
+     [
+      "lift-at",
+      "f0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lift-at",
+      "f0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "lift-at",
+      "f1"
+     ]
+    ],
+    "name": "down",
+    "parameters": {
+     "?f1": "f0",
+     "?f2": "f1"
+    },
+    "precondition": "(and (above f1 f0) (and ) (lift-at f0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "boarded",
+      "?p"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "above",
+      "f1",
+      "f0"
+     ],
+     [
+      "lift-at",
+      "f0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lift-at",
+      "f1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "lift-at",
+      "f0"
+     ]
+    ],
+    "name": "down",
+    "parameters": {
+     "?f1": "f1",
+     "?f2": "f0"
+    },
+    "precondition": "(and (above f0 f1) (and ) (lift-at f1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "boarded",
+      "?p"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "above",
+      "f0",
+      "f1"
+     ],
+     [
+      "lift-at",
+      "f1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lift-at",
+      "f1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "lift-at",
+      "f1"
+     ]
+    ],
+    "name": "down",
+    "parameters": {
+     "?f1": "f1",
+     "?f2": "f1"
+    },
+    "precondition": "(and (above f1 f1) (and ) (lift-at f1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "boarded",
+      "?p"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "above",
+      "f1",
+      "f1"
+     ],
+     [
+      "lift-at",
+      "f1"
+     ]
+    ]
+   }
+  ],
+  "stop": [
+   {
+    "conditional_effects": [
+     {
+      "add": [
+       [
+        "boarded",
+        "p0"
+       ]
+      ],
+      "condition": "(and (not (served p0)) (origin p0 f0))",
+      "del": [],
+      "num": []
+     },
+     {
+      "add": [
+       [
+        "served",
+        "p0"
+       ]
+      ],
+      "condition": "(and (boarded p0) (destin p0 f0))",
+      "del": [],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(and (boarded p0) (destin p0 f0))",
+      "del": [
+       [
+        "boarded",
+        "p0"
+       ]
+      ],
+      "num": []
+     }
+    ],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "stop",
+    "parameters": {
+     "?f": "f0"
+    },
+    "precondition": "(and (and (or (not (boarded p0)) (not (no-access p0 f0)))) (and ) (lift-at f0) (or (and ) (not (or ))) (or (and ) (not (or ))) (or (and ) (or )) (or (not (or )) (or )))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "boarded",
+      "?p"
+     ],
+     [
+      "boarded",
+      "?q"
+     ],
+     [
+      "destin",
+      "?p",
+      "f0"
+     ],
+     [
+      "destin",
+      "?q",
+      "f0"
+     ],
+     [
+      "origin",
+      "?q",
+      "f0"
+     ],
+     [
+      "served",
+      "?p"
+     ],
+     [
+      "served",
+      "?q"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "boarded",
+      "?p"
+     ],
+     [
+      "boarded",
+      "?q"
+     ],
+     [
+      "destin",
+      "?p",
+      "f0"
+     ],
+     [
+      "destin",
+      "?q",
+      "f0"
+     ],
+     [
+      "lift-at",
+      "f0"
+     ],
+     [
+      "no-access",
+      "?p",
+      "f0"
+     ],
+     [
+      "origin",
+      "?p",
+      "f0"
+     ],
+     [
+      "origin",
+      "?q",
+      "f0"
+     ],
+     [
+      "served",
+      "?p"
+     ],
+     [
+      "served",
+      "?q"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [
+     {
+      "add": [
+       [
+        "boarded",
+        "p0"
+       ]
+      ],
+      "condition": "(and (not (served p0)) (origin p0 f1))",
+      "del": [],
+      "num": []
+     },
+     {
+      "add": [
+       [
+        "served",
+        "p0"
+       ]
+      ],
+      "condition": "(and (boarded p0) (destin p0 f1))",
+      "del": [],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(and (boarded p0) (destin p0 f1))",
+      "del": [
+       [
+        "boarded",
+        "p0"
+       ]
+      ],
+      "num": []
+     }
+    ],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "stop",
+    "parameters": {
+     "?f": "f1"
+    },
+    "precondition": "(and (and (or (not (boarded p0)) (not (no-access p0 f1)))) (and ) (lift-at f1) (or (and ) (not (or ))) (or (and ) (not (or ))) (or (and ) (or )) (or (not (or )) (or )))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "boarded",
+      "?p"
+     ],
+     [
+      "boarded",
+      "?q"
+     ],
+     [
+      "destin",
+      "?p",
+      "f1"
+     ],
+     [
+      "destin",
+      "?q",
+      "f1"
+     ],
+     [
+      "origin",
+      "?q",
+      "f1"
+     ],
+     [
+      "served",
+      "?p"
+     ],
+     [
+      "served",
+      "?q"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "boarded",
+      "?p"
+     ],
+     [
+      "boarded",
+      "?q"
+     ],
+     [
+      "destin",
+      "?p",
+      "f1"
+     ],
+     [
+      "destin",
+      "?q",
+      "f1"
+     ],
+     [
+      "lift-at",
+      "f1"
+     ],
+     [
+      "no-access",
+      "?p",
+      "f1"
+     ],
+     [
+      "origin",
+      "?p",
+      "f1"
+     ],
+     [
+      "origin",
+      "?q",
+      "f1"
+     ],
+     [
+      "served",
+      "?p"
+     ],
+     [
+      "served",
+      "?q"
+     ]
+    ]
+   }
+  ],
+  "up": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lift-at",
+      "f0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "lift-at",
+      "f0"
+     ]
+    ],
+    "name": "up",
+    "parameters": {
+     "?f1": "f0",
+     "?f2": "f0"
+    },
+    "precondition": "(and (above f0 f0) (and ) (lift-at f0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "boarded",
+      "?p"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "above",
+      "f0",
+      "f0"
+     ],
+     [
+      "lift-at",
+      "f0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lift-at",
+      "f0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "lift-at",
+      "f1"
+     ]
+    ],
+    "name": "up",
+    "parameters": {
+     "?f1": "f0",
+     "?f2": "f1"
+    },
+    "precondition": "(and (above f0 f1) (and ) (lift-at f0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "boarded",
+      "?p"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "above",
+      "f0",
+      "f1"
+     ],
+     [
+      "lift-at",
+      "f0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lift-at",
+      "f1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "lift-at",
+      "f0"
+     ]
+    ],
+    "name": "up",
+    "parameters": {
+     "?f1": "f1",
+     "?f2": "f0"
+    },
+    "precondition": "(and (above f1 f0) (and ) (lift-at f1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "boarded",
+      "?p"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "above",
+      "f1",
+      "f0"
+     ],
+     [
+      "lift-at",
+      "f1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lift-at",
+      "f1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "lift-at",
+      "f1"
+     ]
+    ],
+    "name": "up",
+    "parameters": {
+     "?f1": "f1",
+     "?f2": "f1"
+    },
+    "precondition": "(and (above f1 f1) (and ) (lift-at f1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "boarded",
+      "?p"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "above",
+      "f1",
+      "f1"
+     ],
+     [
+      "lift-at",
+      "f1"
+     ]
+    ]
+   }
+  ]
+ },
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [
+   [
+    "served",
+    "?p"
+   ]
+  ],
+  "initial_numeric": {},
+  "initial_state": [
+   [
+    "above",
+    "f0",
+    "f1"
+   ],
+   [
+    "destin",
+    "p0",
+    "f1"
+   ],
+   [
+    "lift-at",
+    "f0"
+   ],
+   [
+    "origin",
+    "p0",
+    "f0"
+   ]
+  ],
+  "metric": null,
+  "objects": {
+   "f0": "floor",
+   "f1": "floor",
+   "p0": "passenger"
+  },
+  "operators": [
+   "down",
+   "stop",
+   "up"
+  ],
+  "predicates": [
+   "above",
+   "boarded",
+   "destin",
+   "lift-at",
+   "no-access",
+   "origin",
+   "served"
+  ],
+  "requirements": [
+   ":adl"
+  ],
+  "types": {
+   "attendant": "passenger",
+   "conflict_A": "passenger",
+   "conflict_B": "passenger",
+   "floor": "object",
+   "going_down": "passenger",
+   "going_nonstop": "passenger",
+   "going_up": "passenger",
+   "never_alone": "passenger",
+   "passenger": "object",
+   "vip": "passenger"
+  }
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "unknown_object",
+    "message": "object '?p' is not declared in :objects (used in :goal)",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

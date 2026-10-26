@@ -1,0 +1,2284 @@
+{
+ "ground": {
+  "calibrate": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ]
+    ],
+    "name": "calibrate",
+    "parameters": {
+     "?d": "GroundStation2",
+     "?i": "instrument0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (calibration_target instrument0 GroundStation2) (on_board instrument0 satellite0) (pointing satellite0 GroundStation2) (power_on instrument0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibration_target",
+      "instrument0",
+      "GroundStation2"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ]
+    ]
+   }
+  ],
+  "switch_off": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "power_on",
+      "instrument0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "power_avail",
+      "satellite0"
+     ]
+    ],
+    "name": "switch_off",
+    "parameters": {
+     "?i": "instrument0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (on_board instrument0 satellite0) (power_on instrument0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ]
+    ]
+   }
+  ],
+  "switch_on": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "power_avail",
+      "satellite0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "power_on",
+      "instrument0"
+     ]
+    ],
+    "name": "switch_on",
+    "parameters": {
+     "?i": "instrument0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (on_board instrument0 satellite0) (power_avail satellite0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "power_avail",
+      "satellite0"
+     ]
+    ]
+   }
+  ],
+  "take_image": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation1",
+      "thermograph0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation1",
+     "?i": "instrument0",
+     "?m": "thermograph0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 GroundStation1) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "thermograph0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "GroundStation2",
+      "thermograph0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "GroundStation2",
+     "?i": "instrument0",
+     "?m": "thermograph0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 GroundStation2) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "thermograph0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon3",
+      "thermograph0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon3",
+     "?i": "instrument0",
+     "?m": "thermograph0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Phenomenon3) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "thermograph0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon4",
+      "thermograph0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon4",
+     "?i": "instrument0",
+     "?m": "thermograph0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Phenomenon4) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "thermograph0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Phenomenon6",
+      "thermograph0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Phenomenon6",
+     "?i": "instrument0",
+     "?m": "thermograph0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Phenomenon6) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "thermograph0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star0",
+      "thermograph0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star0",
+     "?i": "instrument0",
+     "?m": "thermograph0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Star0) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "thermograph0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "have_image",
+      "Star5",
+      "thermograph0"
+     ]
+    ],
+    "name": "take_image",
+    "parameters": {
+     "?d": "Star5",
+     "?i": "instrument0",
+     "?m": "thermograph0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Star5) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "calibrated",
+      "instrument0"
+     ],
+     [
+      "on_board",
+      "instrument0",
+      "satellite0"
+     ],
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ],
+     [
+      "power_on",
+      "instrument0"
+     ],
+     [
+      "supports",
+      "instrument0",
+      "thermograph0"
+     ]
+    ]
+   }
+  ],
+  "turn_to": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation1",
+     "?d_prev": "GroundStation1",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation1 GroundStation1)) (pointing satellite0 GroundStation1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation2",
+     "?d_prev": "GroundStation1",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation2 GroundStation1)) (pointing satellite0 GroundStation1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon3",
+     "?d_prev": "GroundStation1",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon3 GroundStation1)) (pointing satellite0 GroundStation1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon4",
+     "?d_prev": "GroundStation1",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon4 GroundStation1)) (pointing satellite0 GroundStation1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon6",
+     "?d_prev": "GroundStation1",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon6 GroundStation1)) (pointing satellite0 GroundStation1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star0",
+     "?d_prev": "GroundStation1",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star0 GroundStation1)) (pointing satellite0 GroundStation1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star5",
+     "?d_prev": "GroundStation1",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star5 GroundStation1)) (pointing satellite0 GroundStation1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation1",
+     "?d_prev": "GroundStation2",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation1 GroundStation2)) (pointing satellite0 GroundStation2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation2",
+     "?d_prev": "GroundStation2",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation2 GroundStation2)) (pointing satellite0 GroundStation2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon3",
+     "?d_prev": "GroundStation2",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon3 GroundStation2)) (pointing satellite0 GroundStation2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon4",
+     "?d_prev": "GroundStation2",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon4 GroundStation2)) (pointing satellite0 GroundStation2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon6",
+     "?d_prev": "GroundStation2",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon6 GroundStation2)) (pointing satellite0 GroundStation2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star0",
+     "?d_prev": "GroundStation2",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star0 GroundStation2)) (pointing satellite0 GroundStation2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star5",
+     "?d_prev": "GroundStation2",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star5 GroundStation2)) (pointing satellite0 GroundStation2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation1",
+     "?d_prev": "Phenomenon3",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation1 Phenomenon3)) (pointing satellite0 Phenomenon3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation2",
+     "?d_prev": "Phenomenon3",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation2 Phenomenon3)) (pointing satellite0 Phenomenon3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon3",
+     "?d_prev": "Phenomenon3",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon3 Phenomenon3)) (pointing satellite0 Phenomenon3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon4",
+     "?d_prev": "Phenomenon3",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon4 Phenomenon3)) (pointing satellite0 Phenomenon3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon6",
+     "?d_prev": "Phenomenon3",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon6 Phenomenon3)) (pointing satellite0 Phenomenon3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star0",
+     "?d_prev": "Phenomenon3",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star0 Phenomenon3)) (pointing satellite0 Phenomenon3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star5",
+     "?d_prev": "Phenomenon3",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star5 Phenomenon3)) (pointing satellite0 Phenomenon3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation1",
+     "?d_prev": "Phenomenon4",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation1 Phenomenon4)) (pointing satellite0 Phenomenon4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation2",
+     "?d_prev": "Phenomenon4",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation2 Phenomenon4)) (pointing satellite0 Phenomenon4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon3",
+     "?d_prev": "Phenomenon4",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon3 Phenomenon4)) (pointing satellite0 Phenomenon4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon4",
+     "?d_prev": "Phenomenon4",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon4 Phenomenon4)) (pointing satellite0 Phenomenon4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon6",
+     "?d_prev": "Phenomenon4",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon6 Phenomenon4)) (pointing satellite0 Phenomenon4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star0",
+     "?d_prev": "Phenomenon4",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star0 Phenomenon4)) (pointing satellite0 Phenomenon4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star5",
+     "?d_prev": "Phenomenon4",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star5 Phenomenon4)) (pointing satellite0 Phenomenon4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation1",
+     "?d_prev": "Phenomenon6",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation1 Phenomenon6)) (pointing satellite0 Phenomenon6))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation2",
+     "?d_prev": "Phenomenon6",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation2 Phenomenon6)) (pointing satellite0 Phenomenon6))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon3",
+     "?d_prev": "Phenomenon6",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon3 Phenomenon6)) (pointing satellite0 Phenomenon6))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon4",
+     "?d_prev": "Phenomenon6",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon4 Phenomenon6)) (pointing satellite0 Phenomenon6))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon6",
+     "?d_prev": "Phenomenon6",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon6 Phenomenon6)) (pointing satellite0 Phenomenon6))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star0",
+     "?d_prev": "Phenomenon6",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star0 Phenomenon6)) (pointing satellite0 Phenomenon6))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star5",
+     "?d_prev": "Phenomenon6",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star5 Phenomenon6)) (pointing satellite0 Phenomenon6))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation1",
+     "?d_prev": "Star0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation1 Star0)) (pointing satellite0 Star0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation2",
+     "?d_prev": "Star0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation2 Star0)) (pointing satellite0 Star0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon3",
+     "?d_prev": "Star0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon3 Star0)) (pointing satellite0 Star0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon4",
+     "?d_prev": "Star0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon4 Star0)) (pointing satellite0 Star0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon6",
+     "?d_prev": "Star0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon6 Star0)) (pointing satellite0 Star0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star0",
+     "?d_prev": "Star0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star0 Star0)) (pointing satellite0 Star0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star5",
+     "?d_prev": "Star0",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star5 Star0)) (pointing satellite0 Star0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation1"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation1",
+     "?d_prev": "Star5",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation1 Star5)) (pointing satellite0 Star5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "GroundStation2"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "GroundStation2",
+     "?d_prev": "Star5",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= GroundStation2 Star5)) (pointing satellite0 Star5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon3"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon3",
+     "?d_prev": "Star5",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon3 Star5)) (pointing satellite0 Star5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon4"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon4",
+     "?d_prev": "Star5",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon4 Star5)) (pointing satellite0 Star5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Phenomenon6"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Phenomenon6",
+     "?d_prev": "Star5",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Phenomenon6 Star5)) (pointing satellite0 Star5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star0"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star0",
+     "?d_prev": "Star5",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star0 Star5)) (pointing satellite0 Star5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ],
+    "name": "turn_to",
+    "parameters": {
+     "?d_new": "Star5",
+     "?d_prev": "Star5",
+     "?s": "satellite0"
+    },
+    "precondition": "(and (not (= Star5 Star5)) (pointing satellite0 Star5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "pointing",
+      "satellite0",
+      "Star5"
+     ]
+    ]
+   }
+  ]
+ },
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [
+   [
+    "have_image",
+    "Phenomenon4",
+    "thermograph0"
+   ],
+   [
+    "have_image",
+    "Phenomenon6",
+    "thermograph0"
+   ],
+   [
+    "have_image",
+    "Star5",
+    "thermograph0"
+   ]
+  ],
+  "initial_numeric": {},
+  "initial_state": [
+   [
+    "calibration_target",
+    "instrument0",
+    "GroundStation2"
+   ],
+   [
+    "on_board",
+    "instrument0",
+    "satellite0"
+   ],
+   [
+    "pointing",
+    "satellite0",
+    "Phenomenon6"
+   ],
+   [
+    "power_avail",
+    "satellite0"
+   ],
+   [
+    "supports",
+    "instrument0",
+    "thermograph0"
+   ]
+  ],
+  "metric": null,
+  "objects": {
+   "GroundStation1": "direction",
+   "GroundStation2": "direction",
+   "Phenomenon3": "direction",
+   "Phenomenon4": "direction",
+   "Phenomenon6": "direction",
+   "Star0": "direction",
+   "Star5": "direction",
+   "image1": "mode",
+   "instrument0": "instrument",
+   "satellite0": "satellite",
+   "spectrograph2": "mode",
+   "thermograph0": "mode"
+  },
+  "operators": [
+   "calibrate",
+   "switch_off",
+   "switch_on",
+   "take_image",
+   "turn_to"
+  ],
+  "predicates": [
+   "calibrated",
+   "calibration_target",
+   "have_image",
+   "on_board",
+   "pointing",
+   "power_avail",
+   "power_on",
+   "supports"
+  ],
+  "requirements": [
+   ":equality",
+   ":strips",
+   ":typing"
+  ],
+  "types": {
+   "direction": null,
+   "instrument": null,
+   "mode": null,
+   "satellite": null
+  }
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "requirements",
+    "message": "domain uses negative-preconditions but does not declare a matching requirement (one of [':adl', ':negative-preconditions'])",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

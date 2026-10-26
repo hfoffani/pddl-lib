@@ -1,0 +1,31 @@
+{
+ "ground": {},
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [],
+  "initial_numeric": {},
+  "initial_state": [],
+  "metric": null,
+  "objects": {},
+  "operators": [],
+  "predicates": [],
+  "requirements": [],
+  "types": {}
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "syntax",
+    "message": "domain file: line 2:50 no viable alternative at input '(define(domainRover)(:requirements:typing:durative-actions:fluents:duration'",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "problem file: line 69:19 no viable alternative at input '(define(problemroverprob1234)(:domainRover)(:objectsgeneral-Landercolourhigh_reslow_res-Moderover0-Roverrover0store-Storewaypoint0waypoint1waypoint2waypoint3-Waypointcamera0-Cameraobjective0objective1-Objective)(:init(visiblewaypoint1waypoint0)(visiblewaypoint0waypoint1)(visiblewaypoint2waypoint0)(visiblewaypoint0waypoint2)(visiblewaypoint2waypoint1)(visiblewaypoint1waypoint2)(visiblewaypoint3waypoint0)(visiblewaypoint0waypoint3)(visiblewaypoint3waypoint1)(visiblewaypoint1waypoint3)(visiblewaypoint3waypoint2)(visiblewaypoint2waypoint3)(at_soil_samplewaypoint0)(in_sunwaypoint0)(at_rock_samplewaypoint1)(at_soil_samplewaypoint2)(at_rock_samplewaypoint2)(at_soil_samplewaypoint3)(at_rock_samplewaypoint3)(at_landergeneralwaypoint0)(channel_freegeneral)(=(energyrover0)50)(=(recharge-raterover0)11)(atrover0waypoint3)(availablerover0)(store_ofrover0storerover0)(emptyrover0store)(equipped_for_soil_analysisrover0)(equipped_for_rock_analysisrover0)(equipped_for_imagingrover0)(can_traverserover0waypoint3waypoint0)(can_traverserover0waypoint0waypoint3)(can_traverserover0waypoint3waypoint1)(can_traverserover0waypoint1waypoint3)(can_traverserover0waypoint1waypoint2)(can_traverserover0waypoint2waypoint1)(on_boardcamera0rover0)(calibration_targetcamera0objective1)(supportscamera0colour)(supportscamera0high_res)(visible_fromobjective0waypoint0)(visible_fromobjective0waypoint1)(visible_fromobjective0waypoint2)(visible_fromobjective0waypoint3)(visible_fromobjective1waypoint0)(visible_fromobjective1waypoint1)(visible_fromobjective1waypoint2)(visible_fromobjective1waypoint3))(:goal(and(communicated_soil_datawaypoint2)(communicated_rock_datawaypoint3)(communicated_image_dataobjective1high_res)))(:metricminimize(total-time'",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

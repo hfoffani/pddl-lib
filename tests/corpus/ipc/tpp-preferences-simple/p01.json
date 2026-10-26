@@ -1,0 +1,31 @@
+{
+ "ground": {},
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [],
+  "initial_numeric": {},
+  "initial_state": [],
+  "metric": null,
+  "objects": {},
+  "operators": [],
+  "predicates": [],
+  "requirements": [],
+  "types": {}
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "syntax",
+    "message": "domain file: line 18:1 no viable alternative at input '(define(domainTPP-PropositionalSimplePreferences)(:requirements:strips:typing:adl:preferences)(:typesplacelocatablelevel-objectdepotmarket-placetruckgoods-locatable)(:predicates(loaded?g-goods?t-truck?l-level)(ready-to-load?g-goods?m-place?l-level)(stored?g-goods?l-level)(on-sale?g-goods?m-market?l-level)(next?l1?l2-level)(at?t-truck?p-place)(connected?p1?p2-place))(:constants'",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "problem file: line 34:23 no viable alternative at input '(define(problemTPP)(:domainTPP-PropositionalSimplePreferences)(:objectsgoods1goods2goods3-goodstruck1-truckmarket1-marketdepot1-depotlevel1level2level3-level)(:init(nextlevel1level0)(nextlevel2level1)(nextlevel3level2)(ready-to-loadgoods1market1level0)(ready-to-loadgoods1depot1level0)(ready-to-loadgoods2market1level0)(ready-to-loadgoods2depot1level0)(ready-to-loadgoods3market1level0)(ready-to-loadgoods3depot1level0)(storedgoods1level0)(storedgoods2level0)(storedgoods3level0)(loadedgoods1truck1level0)(loadedgoods2truck1level0)(loadedgoods3truck1level0)(connecteddepot1market1)(connectedmarket1depot1)(on-salegoods1market1level1)(on-salegoods2market1level3)(on-salegoods3market1level2)(attruck1depot1))(:goal(and(forall(?g-goods)(preference'",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

@@ -1,0 +1,59 @@
+{
+ "ground": {},
+ "ground_durative": {
+  "deliver-anytime": [],
+  "deliver-ontime": [],
+  "drive": [],
+  "load": [],
+  "unload": []
+ },
+ "parse": {
+  "durative_operators": [
+   "deliver-anytime",
+   "deliver-ontime",
+   "drive",
+   "load",
+   "unload"
+  ],
+  "goals": [],
+  "initial_numeric": {},
+  "initial_state": [],
+  "metric": null,
+  "objects": {},
+  "operators": [],
+  "predicates": [
+   "at",
+   "at-destination",
+   "closer",
+   "connected",
+   "deliverable",
+   "delivered",
+   "free",
+   "in"
+  ],
+  "requirements": [
+   ":adl",
+   ":durative-actions",
+   ":fluents",
+   ":timed-initial-literals",
+   ":typing"
+  ],
+  "types": {
+   "locatable": "object",
+   "location": "object",
+   "package": "locatable",
+   "truck": "locatable",
+   "truckarea": "object"
+  }
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "syntax",
+    "message": "problem file: line 46:19 no viable alternative at input '(define(problemtruck-1)(:domainTrucks-TimeTIL)(:objectstruck1-truckpackage1-packagepackage2-packagepackage3-packagel1-locationl2-locationl3-locationa1-truckareaa2-truckarea)(:init(attruck1l2)(freea1truck1)(freea2truck1)(closera1a2)(atpackage1l3)(atpackage2l3)(atpackage3l1)(connectedl1l2)(connectedl1l3)(connectedl2l1)(connectedl2l3)(connectedl3l1)(connectedl3l2)(deliverablepackage1l1)(deliverablepackage2l2)(deliverablepackage3l2)(at919.7(not(deliverablepackage1l1)))(at919.7(not(deliverablepackage2l2)))(at1813.7(not(deliverablepackage3l2)))(=(drive-timel1l2)406.3)(=(drive-timel1l3)73.1)(=(drive-timel2l1)406.3)(=(drive-timel2l3)356.8)(=(drive-timel3l1)73.1)(=(drive-timel3l2)356.8))(:goal(and(deliveredpackage1l1)(deliveredpackage2l2)(deliveredpackage3l2)))(:metricminimize(total-time'",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

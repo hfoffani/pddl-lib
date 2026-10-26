@@ -1,0 +1,2006 @@
+{
+ "ground": {
+  "pick-up": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "A"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "holding",
+      "A"
+     ]
+    ],
+    "name": "pick-up",
+    "parameters": {
+     "?x": "A"
+    },
+    "precondition": "(and (clear A) (handempty) (ontable A))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "A"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "B"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "holding",
+      "B"
+     ]
+    ],
+    "name": "pick-up",
+    "parameters": {
+     "?x": "B"
+    },
+    "precondition": "(and (clear B) (handempty) (ontable B))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "B"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "C"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "holding",
+      "C"
+     ]
+    ],
+    "name": "pick-up",
+    "parameters": {
+     "?x": "C"
+    },
+    "precondition": "(and (clear C) (handempty) (ontable C))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "C"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "D"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "holding",
+      "D"
+     ]
+    ],
+    "name": "pick-up",
+    "parameters": {
+     "?x": "D"
+    },
+    "precondition": "(and (clear D) (handempty) (ontable D))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "D"
+     ]
+    ]
+   }
+  ],
+  "put-down": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "holding",
+      "A"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "A"
+     ]
+    ],
+    "name": "put-down",
+    "parameters": {
+     "?x": "A"
+    },
+    "precondition": "(holding A)",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "holding",
+      "A"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "holding",
+      "B"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "B"
+     ]
+    ],
+    "name": "put-down",
+    "parameters": {
+     "?x": "B"
+    },
+    "precondition": "(holding B)",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "holding",
+      "B"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "holding",
+      "C"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "C"
+     ]
+    ],
+    "name": "put-down",
+    "parameters": {
+     "?x": "C"
+    },
+    "precondition": "(holding C)",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "holding",
+      "C"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "holding",
+      "D"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "ontable",
+      "D"
+     ]
+    ],
+    "name": "put-down",
+    "parameters": {
+     "?x": "D"
+    },
+    "precondition": "(holding D)",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "holding",
+      "D"
+     ]
+    ]
+   }
+  ],
+  "stack": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "A"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "A",
+     "?y": "A"
+    },
+    "precondition": "(and (clear A) (holding A))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "A"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "B",
+     "?y": "A"
+    },
+    "precondition": "(and (clear A) (holding B))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "A"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "C",
+     "?y": "A"
+    },
+    "precondition": "(and (clear A) (holding C))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "A"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "D",
+     "?y": "A"
+    },
+    "precondition": "(and (clear A) (holding D))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "B"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "A",
+     "?y": "B"
+    },
+    "precondition": "(and (clear B) (holding A))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "B"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "B",
+     "?y": "B"
+    },
+    "precondition": "(and (clear B) (holding B))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "B"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "C",
+     "?y": "B"
+    },
+    "precondition": "(and (clear B) (holding C))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "B"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "D",
+     "?y": "B"
+    },
+    "precondition": "(and (clear B) (holding D))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "C"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "A",
+     "?y": "C"
+    },
+    "precondition": "(and (clear C) (holding A))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "C"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "B",
+     "?y": "C"
+    },
+    "precondition": "(and (clear C) (holding B))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "C"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "C",
+     "?y": "C"
+    },
+    "precondition": "(and (clear C) (holding C))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "C"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "D",
+     "?y": "C"
+    },
+    "precondition": "(and (clear C) (holding D))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "D"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "A",
+     "?y": "D"
+    },
+    "precondition": "(and (clear D) (holding A))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "D"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "B",
+     "?y": "D"
+    },
+    "precondition": "(and (clear D) (holding B))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "D"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "C",
+     "?y": "D"
+    },
+    "precondition": "(and (clear D) (holding C))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "D"
+     ]
+    ],
+    "name": "stack",
+    "parameters": {
+     "?x": "D",
+     "?y": "D"
+    },
+    "precondition": "(and (clear D) (holding D))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ]
+   }
+  ],
+  "unstack": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "A"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "A",
+     "?y": "A"
+    },
+    "precondition": "(and (clear A) (handempty) (on A A))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "A"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "B"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "A",
+     "?y": "B"
+    },
+    "precondition": "(and (clear A) (handempty) (on A B))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "B"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "C"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "A",
+     "?y": "C"
+    },
+    "precondition": "(and (clear A) (handempty) (on A C))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "C"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "D"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "A"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "A",
+     "?y": "D"
+    },
+    "precondition": "(and (clear A) (handempty) (on A D))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "A",
+      "D"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "A"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "B",
+     "?y": "A"
+    },
+    "precondition": "(and (clear B) (handempty) (on B A))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "A"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "B"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "B",
+     "?y": "B"
+    },
+    "precondition": "(and (clear B) (handempty) (on B B))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "B"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "C"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "B",
+     "?y": "C"
+    },
+    "precondition": "(and (clear B) (handempty) (on B C))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "C"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "D"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "B"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "B",
+     "?y": "D"
+    },
+    "precondition": "(and (clear B) (handempty) (on B D))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "B",
+      "D"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "A"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "C",
+     "?y": "A"
+    },
+    "precondition": "(and (clear C) (handempty) (on C A))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "A"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "B"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "C",
+     "?y": "B"
+    },
+    "precondition": "(and (clear C) (handempty) (on C B))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "B"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "C"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "C",
+     "?y": "C"
+    },
+    "precondition": "(and (clear C) (handempty) (on C C))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "C"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "D"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "C"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "C",
+     "?y": "D"
+    },
+    "precondition": "(and (clear C) (handempty) (on C D))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "C",
+      "D"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "A"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "A"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "D",
+     "?y": "A"
+    },
+    "precondition": "(and (clear D) (handempty) (on D A))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "A"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "B"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "B"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "D",
+     "?y": "B"
+    },
+    "precondition": "(and (clear D) (handempty) (on D B))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "B"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "C"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "C"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "D",
+     "?y": "C"
+    },
+    "precondition": "(and (clear D) (handempty) (on D C))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "C"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "D"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "holding",
+      "D"
+     ]
+    ],
+    "name": "unstack",
+    "parameters": {
+     "?x": "D",
+     "?y": "D"
+    },
+    "precondition": "(and (clear D) (handempty) (on D D))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "clear",
+      "D"
+     ],
+     [
+      "handempty"
+     ],
+     [
+      "on",
+      "D",
+      "D"
+     ]
+    ]
+   }
+  ]
+ },
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [
+   [
+    "ON",
+    "A",
+    "B"
+   ],
+   [
+    "ON",
+    "C",
+    "A"
+   ],
+   [
+    "ON",
+    "D",
+    "C"
+   ]
+  ],
+  "initial_numeric": {},
+  "initial_state": [
+   [
+    "CLEAR",
+    "B"
+   ],
+   [
+    "HANDEMPTY"
+   ],
+   [
+    "ON",
+    "A",
+    "D"
+   ],
+   [
+    "ON",
+    "B",
+    "C"
+   ],
+   [
+    "ON",
+    "C",
+    "A"
+   ],
+   [
+    "ONTABLE",
+    "D"
+   ]
+  ],
+  "metric": null,
+  "objects": {
+   "A": "block",
+   "B": "block",
+   "C": "block",
+   "D": "block"
+  },
+  "operators": [
+   "pick-up",
+   "put-down",
+   "stack",
+   "unstack"
+  ],
+  "predicates": [
+   "clear",
+   "handempty",
+   "holding",
+   "on",
+   "ontable"
+  ],
+  "requirements": [
+   ":strips",
+   ":typing"
+  ],
+  "types": {
+   "block": null
+  }
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "undeclared_predicate",
+    "message": "predicate 'CLEAR' is not declared in :predicates (used in :init)",
+    "severity": "error"
+   },
+   {
+    "check": "undeclared_predicate",
+    "message": "predicate 'HANDEMPTY' is not declared in :predicates (used in :init)",
+    "severity": "error"
+   },
+   {
+    "check": "undeclared_predicate",
+    "message": "predicate 'ON' is not declared in :predicates (used in :goal, :init)",
+    "severity": "error"
+   },
+   {
+    "check": "undeclared_predicate",
+    "message": "predicate 'ONTABLE' is not declared in :predicates (used in :init)",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

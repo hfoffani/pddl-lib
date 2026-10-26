@@ -1,0 +1,2106 @@
+{
+ "ground": {
+  "drop": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball1",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball1",
+      "rooma"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball1",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at-robby rooma) (ball ball1) (carry ball1 left) (gripper left) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball1"
+     ],
+     [
+      "carry",
+      "ball1",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball1",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball1",
+      "roomb"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball1",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at-robby roomb) (ball ball1) (carry ball1 left) (gripper left) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball1"
+     ],
+     [
+      "carry",
+      "ball1",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball1",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball1",
+      "rooma"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball1",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at-robby rooma) (ball ball1) (carry ball1 right) (gripper right) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball1"
+     ],
+     [
+      "carry",
+      "ball1",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball1",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball1",
+      "roomb"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball1",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at-robby roomb) (ball ball1) (carry ball1 right) (gripper right) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball1"
+     ],
+     [
+      "carry",
+      "ball1",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball2",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball2",
+      "rooma"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball2",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at-robby rooma) (ball ball2) (carry ball2 left) (gripper left) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball2"
+     ],
+     [
+      "carry",
+      "ball2",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball2",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball2",
+      "roomb"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball2",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at-robby roomb) (ball ball2) (carry ball2 left) (gripper left) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball2"
+     ],
+     [
+      "carry",
+      "ball2",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball2",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball2",
+      "rooma"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball2",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at-robby rooma) (ball ball2) (carry ball2 right) (gripper right) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball2"
+     ],
+     [
+      "carry",
+      "ball2",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball2",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball2",
+      "roomb"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball2",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at-robby roomb) (ball ball2) (carry ball2 right) (gripper right) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball2"
+     ],
+     [
+      "carry",
+      "ball2",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball3",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball3",
+      "rooma"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball3",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at-robby rooma) (ball ball3) (carry ball3 left) (gripper left) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball3"
+     ],
+     [
+      "carry",
+      "ball3",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball3",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball3",
+      "roomb"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball3",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at-robby roomb) (ball ball3) (carry ball3 left) (gripper left) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball3"
+     ],
+     [
+      "carry",
+      "ball3",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball3",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball3",
+      "rooma"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball3",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at-robby rooma) (ball ball3) (carry ball3 right) (gripper right) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball3"
+     ],
+     [
+      "carry",
+      "ball3",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball3",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball3",
+      "roomb"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball3",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at-robby roomb) (ball ball3) (carry ball3 right) (gripper right) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball3"
+     ],
+     [
+      "carry",
+      "ball3",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball4",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball4",
+      "rooma"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball4",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at-robby rooma) (ball ball4) (carry ball4 left) (gripper left) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball4"
+     ],
+     [
+      "carry",
+      "ball4",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball4",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball4",
+      "roomb"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball4",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at-robby roomb) (ball ball4) (carry ball4 left) (gripper left) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball4"
+     ],
+     [
+      "carry",
+      "ball4",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball4",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball4",
+      "rooma"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball4",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at-robby rooma) (ball ball4) (carry ball4 right) (gripper right) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball4"
+     ],
+     [
+      "carry",
+      "ball4",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "carry",
+      "ball4",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at",
+      "ball4",
+      "roomb"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "name": "drop",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball4",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at-robby roomb) (ball ball4) (carry ball4 right) (gripper right) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball4"
+     ],
+     [
+      "carry",
+      "ball4",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   }
+  ],
+  "move": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-robby",
+      "rooma"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ]
+    ],
+    "name": "move",
+    "parameters": {
+     "?from": "rooma",
+     "?to": "rooma"
+    },
+    "precondition": "(and (at-robby rooma) (room rooma) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-robby",
+      "rooma"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ]
+    ],
+    "name": "move",
+    "parameters": {
+     "?from": "rooma",
+     "?to": "roomb"
+    },
+    "precondition": "(and (at-robby rooma) (room rooma) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "room",
+      "rooma"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-robby",
+      "roomb"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at-robby",
+      "rooma"
+     ]
+    ],
+    "name": "move",
+    "parameters": {
+     "?from": "roomb",
+     "?to": "rooma"
+    },
+    "precondition": "(and (at-robby roomb) (room rooma) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "room",
+      "rooma"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-robby",
+      "roomb"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ]
+    ],
+    "name": "move",
+    "parameters": {
+     "?from": "roomb",
+     "?to": "roomb"
+    },
+    "precondition": "(and (at-robby roomb) (room roomb) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   }
+  ],
+  "pick": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball1",
+      "rooma"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball1",
+      "left"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball1",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at ball1 rooma) (at-robby rooma) (ball ball1) (free left) (gripper left) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball1",
+      "rooma"
+     ],
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball1"
+     ],
+     [
+      "free",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball1",
+      "rooma"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball1",
+      "right"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball1",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at ball1 rooma) (at-robby rooma) (ball ball1) (free right) (gripper right) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball1",
+      "rooma"
+     ],
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball1"
+     ],
+     [
+      "free",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball1",
+      "roomb"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball1",
+      "left"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball1",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at ball1 roomb) (at-robby roomb) (ball ball1) (free left) (gripper left) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball1",
+      "roomb"
+     ],
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball1"
+     ],
+     [
+      "free",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball1",
+      "roomb"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball1",
+      "right"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball1",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at ball1 roomb) (at-robby roomb) (ball ball1) (free right) (gripper right) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball1",
+      "roomb"
+     ],
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball1"
+     ],
+     [
+      "free",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball2",
+      "rooma"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball2",
+      "left"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball2",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at ball2 rooma) (at-robby rooma) (ball ball2) (free left) (gripper left) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball2",
+      "rooma"
+     ],
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball2"
+     ],
+     [
+      "free",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball2",
+      "rooma"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball2",
+      "right"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball2",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at ball2 rooma) (at-robby rooma) (ball ball2) (free right) (gripper right) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball2",
+      "rooma"
+     ],
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball2"
+     ],
+     [
+      "free",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball2",
+      "roomb"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball2",
+      "left"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball2",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at ball2 roomb) (at-robby roomb) (ball ball2) (free left) (gripper left) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball2",
+      "roomb"
+     ],
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball2"
+     ],
+     [
+      "free",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball2",
+      "roomb"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball2",
+      "right"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball2",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at ball2 roomb) (at-robby roomb) (ball ball2) (free right) (gripper right) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball2",
+      "roomb"
+     ],
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball2"
+     ],
+     [
+      "free",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball3",
+      "rooma"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball3",
+      "left"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball3",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at ball3 rooma) (at-robby rooma) (ball ball3) (free left) (gripper left) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball3",
+      "rooma"
+     ],
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball3"
+     ],
+     [
+      "free",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball3",
+      "rooma"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball3",
+      "right"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball3",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at ball3 rooma) (at-robby rooma) (ball ball3) (free right) (gripper right) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball3",
+      "rooma"
+     ],
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball3"
+     ],
+     [
+      "free",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball3",
+      "roomb"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball3",
+      "left"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball3",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at ball3 roomb) (at-robby roomb) (ball ball3) (free left) (gripper left) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball3",
+      "roomb"
+     ],
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball3"
+     ],
+     [
+      "free",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball3",
+      "roomb"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball3",
+      "right"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball3",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at ball3 roomb) (at-robby roomb) (ball ball3) (free right) (gripper right) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball3",
+      "roomb"
+     ],
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball3"
+     ],
+     [
+      "free",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball4",
+      "rooma"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball4",
+      "left"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball4",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at ball4 rooma) (at-robby rooma) (ball ball4) (free left) (gripper left) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball4",
+      "rooma"
+     ],
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball4"
+     ],
+     [
+      "free",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball4",
+      "rooma"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball4",
+      "right"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball4",
+     "?room": "rooma"
+    },
+    "precondition": "(and (at ball4 rooma) (at-robby rooma) (ball ball4) (free right) (gripper right) (room rooma))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball4",
+      "rooma"
+     ],
+     [
+      "at-robby",
+      "rooma"
+     ],
+     [
+      "ball",
+      "ball4"
+     ],
+     [
+      "free",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "rooma"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball4",
+      "roomb"
+     ],
+     [
+      "free",
+      "left"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball4",
+      "left"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "left",
+     "?obj": "ball4",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at ball4 roomb) (at-robby roomb) (ball ball4) (free left) (gripper left) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball4",
+      "roomb"
+     ],
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball4"
+     ],
+     [
+      "free",
+      "left"
+     ],
+     [
+      "gripper",
+      "left"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "ball4",
+      "roomb"
+     ],
+     [
+      "free",
+      "right"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "carry",
+      "ball4",
+      "right"
+     ]
+    ],
+    "name": "pick",
+    "parameters": {
+     "?gripper": "right",
+     "?obj": "ball4",
+     "?room": "roomb"
+    },
+    "precondition": "(and (at ball4 roomb) (at-robby roomb) (ball ball4) (free right) (gripper right) (room roomb))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "ball4",
+      "roomb"
+     ],
+     [
+      "at-robby",
+      "roomb"
+     ],
+     [
+      "ball",
+      "ball4"
+     ],
+     [
+      "free",
+      "right"
+     ],
+     [
+      "gripper",
+      "right"
+     ],
+     [
+      "room",
+      "roomb"
+     ]
+    ]
+   }
+  ]
+ },
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [
+   [
+    "at",
+    "ball1",
+    "roomb"
+   ],
+   [
+    "at",
+    "ball2",
+    "roomb"
+   ],
+   [
+    "at",
+    "ball3",
+    "roomb"
+   ],
+   [
+    "at",
+    "ball4",
+    "roomb"
+   ]
+  ],
+  "initial_numeric": {},
+  "initial_state": [
+   [
+    "at",
+    "ball1",
+    "rooma"
+   ],
+   [
+    "at",
+    "ball2",
+    "rooma"
+   ],
+   [
+    "at",
+    "ball3",
+    "rooma"
+   ],
+   [
+    "at",
+    "ball4",
+    "rooma"
+   ],
+   [
+    "at-robby",
+    "rooma"
+   ],
+   [
+    "ball",
+    "ball1"
+   ],
+   [
+    "ball",
+    "ball2"
+   ],
+   [
+    "ball",
+    "ball3"
+   ],
+   [
+    "ball",
+    "ball4"
+   ],
+   [
+    "free",
+    "left"
+   ],
+   [
+    "free",
+    "right"
+   ],
+   [
+    "gripper",
+    "left"
+   ],
+   [
+    "gripper",
+    "right"
+   ],
+   [
+    "room",
+    "rooma"
+   ],
+   [
+    "room",
+    "roomb"
+   ]
+  ],
+  "metric": null,
+  "objects": {
+   "ball1": null,
+   "ball2": null,
+   "ball3": null,
+   "ball4": null,
+   "left": null,
+   "right": null,
+   "rooma": null,
+   "roomb": null
+  },
+  "operators": [
+   "drop",
+   "move",
+   "pick"
+  ],
+  "predicates": [
+   "at",
+   "at-robby",
+   "ball",
+   "carry",
+   "free",
+   "gripper",
+   "room"
+  ],
+  "requirements": [],
+  "types": {}
+ },
+ "validate": {
+  "issues": [],
+  "valid": true
+ }
+}

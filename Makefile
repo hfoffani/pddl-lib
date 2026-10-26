@@ -15,6 +15,16 @@ PIP=uv pip
 
 export CLASSPATH:=.:$(ANTLRJARABS)
 
+# Local settings: KEY=value lines (no quotes) in an optional .env are
+# exported to every recipe. `make VAR=...` still overrides them.
+-include .env
+export $(shell sed -n 's/^\([A-Za-z_][A-Za-z0-9_]*\)=.*/\1/p' .env 2>/dev/null)
+
+# Full IPC corpora (#153): fetched outside the repo's tracked files. Point
+# CORPORA_DIR at an external disk to keep the ~3 GB off the laptop.
+CORPORA_DIR ?= .corpora
+export CORPORA_DIR
+
 # Default target: test grammar and run Python tests
 all: testgrammar test
 
@@ -52,6 +62,20 @@ pyparser: $(ANTLRJAR) pddl.g4
 test:
 	@echo "Running Python tests..."
 	$(PYTHON) -m pytest
+
+# Regenerate the IPC subset golden files (#153); review the diff before
+# committing.
+golden:
+	$(PYTHON) tests/golden.py
+
+# Fetch the full IPC corpora at pinned commits into $(CORPORA_DIR) (~3 GB)
+corpora:
+	scripts/fetch-corpora.sh
+
+# Run pddlpy over every fetched pair; report in $(CORPORA_DIR)/results
+# (CORPORA_OUT). DOMAIN=blocks limits it. No corpora: message, exit 0.
+corpora-test:
+	$(PYTHON) tests/corpora_run.py
 
 # Run tests with coverage report for pddlpy/pddl.py
 coverage:
@@ -119,6 +143,9 @@ help:
 	@echo "  testgrammar  - Test ANTLR grammar with Java"
 	@echo "  pyparser     - Generate Python parser from grammar"
 	@echo "  test         - Run Python tests"
+	@echo "  golden       - Regenerate IPC subset golden files (tests/corpus/ipc)"
+	@echo "  corpora      - Fetch the full IPC corpora into CORPORA_DIR (default .corpora, ~3 GB)"
+	@echo "  corpora-test - Run pddlpy over the fetched corpora (DOMAIN=... to filter)"
 	@echo "  coverage     - Run tests with coverage report"
 	@echo "  lint         - Lint with ruff"
 	@echo "  typecheck    - Type-check with mypy"
@@ -129,4 +156,4 @@ help:
 	@echo "  testpublish  - Test package installation from TestPyPI (Docker)"
 	@echo "  e2e-llm      - Manual LLM+solver end-to-end (MODEL=..., needs OPENROUTER_API_KEY)"
 
-.PHONY: all init testgrammar pyparser test coverage lint typecheck build clean demo testpublish e2e-llm help
+.PHONY: all init testgrammar pyparser test golden corpora corpora-test coverage lint typecheck build clean demo testpublish e2e-llm help

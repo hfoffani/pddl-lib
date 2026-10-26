@@ -1,0 +1,3145 @@
+{
+ "ground": {
+  "make-product-p1": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "not-made",
+      "p1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "made",
+      "p1"
+     ]
+    ],
+    "name": "make-product-p1",
+    "parameters": {},
+    "precondition": "(and (not-made p1) (started o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "not-made",
+      "p1"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ]
+   }
+  ],
+  "make-product-p2": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "not-made",
+      "p2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "made",
+      "p2"
+     ]
+    ],
+    "name": "make-product-p2",
+    "parameters": {},
+    "precondition": "(and (not-made p2) (started o1) (started o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "not-made",
+      "p2"
+     ],
+     [
+      "started",
+      "o1"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ]
+   }
+  ],
+  "make-product-p3": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "not-made",
+      "p3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "made",
+      "p3"
+     ]
+    ],
+    "name": "make-product-p3",
+    "parameters": {},
+    "precondition": "(and (not-made p3) (started o3) (started o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "not-made",
+      "p3"
+     ],
+     [
+      "started",
+      "o3"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ]
+   }
+  ],
+  "make-product-p4": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "not-made",
+      "p4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "made",
+      "p4"
+     ]
+    ],
+    "name": "make-product-p4",
+    "parameters": {},
+    "precondition": "(and (not-made p4) (started o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "not-made",
+      "p4"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ]
+   }
+  ],
+  "make-product-p5": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "not-made",
+      "p5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "made",
+      "p5"
+     ]
+    ],
+    "name": "make-product-p5",
+    "parameters": {},
+    "precondition": "(and (not-made p5) (started o5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "not-made",
+      "p5"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ]
+   }
+  ],
+  "open-new-stack": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('total-cost',) 1.0)"
+    ],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n1"
+     ]
+    ],
+    "name": "open-new-stack",
+    "parameters": {
+     "?new-open": "n1",
+     "?open": "n0"
+    },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n0",
+      "n1"
+     ],
+     [
+      "stacks-avail",
+      "n0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('total-cost',) 1.0)"
+    ],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n2"
+     ]
+    ],
+    "name": "open-new-stack",
+    "parameters": {
+     "?new-open": "n2",
+     "?open": "n1"
+    },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n1",
+      "n2"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n2"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('total-cost',) 1.0)"
+    ],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n3"
+     ]
+    ],
+    "name": "open-new-stack",
+    "parameters": {
+     "?new-open": "n3",
+     "?open": "n2"
+    },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n2",
+      "n3"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n3"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('total-cost',) 1.0)"
+    ],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n4"
+     ]
+    ],
+    "name": "open-new-stack",
+    "parameters": {
+     "?new-open": "n4",
+     "?open": "n3"
+    },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n3",
+      "n4"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n4"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('total-cost',) 1.0)"
+    ],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n5"
+     ]
+    ],
+    "name": "open-new-stack",
+    "parameters": {
+     "?new-open": "n5",
+     "?open": "n4"
+    },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n4",
+      "n5"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ]
+    ]
+   }
+  ],
+  "ship-order-o1": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o1"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ]
+    ],
+    "name": "ship-order-o1",
+    "parameters": {
+     "?avail": "n0",
+     "?new-avail": "n1"
+    },
+    "precondition": "(and (made p2) (next-count n0 n1) (stacks-avail n0) (started o1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p2"
+     ],
+     [
+      "next-count",
+      "n0",
+      "n1"
+     ],
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o1"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ]
+    ],
+    "name": "ship-order-o1",
+    "parameters": {
+     "?avail": "n1",
+     "?new-avail": "n2"
+    },
+    "precondition": "(and (made p2) (next-count n1 n2) (stacks-avail n1) (started o1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p2"
+     ],
+     [
+      "next-count",
+      "n1",
+      "n2"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o1"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ]
+    ],
+    "name": "ship-order-o1",
+    "parameters": {
+     "?avail": "n2",
+     "?new-avail": "n3"
+    },
+    "precondition": "(and (made p2) (next-count n2 n3) (stacks-avail n2) (started o1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p2"
+     ],
+     [
+      "next-count",
+      "n2",
+      "n3"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o1"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ]
+    ],
+    "name": "ship-order-o1",
+    "parameters": {
+     "?avail": "n3",
+     "?new-avail": "n4"
+    },
+    "precondition": "(and (made p2) (next-count n3 n4) (stacks-avail n3) (started o1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p2"
+     ],
+     [
+      "next-count",
+      "n3",
+      "n4"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o1"
+     ],
+     [
+      "stacks-avail",
+      "n5"
+     ]
+    ],
+    "name": "ship-order-o1",
+    "parameters": {
+     "?avail": "n4",
+     "?new-avail": "n5"
+    },
+    "precondition": "(and (made p2) (next-count n4 n5) (stacks-avail n4) (started o1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p2"
+     ],
+     [
+      "next-count",
+      "n4",
+      "n5"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ]
+   }
+  ],
+  "ship-order-o2": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o2"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ]
+    ],
+    "name": "ship-order-o2",
+    "parameters": {
+     "?avail": "n0",
+     "?new-avail": "n1"
+    },
+    "precondition": "(and (made p1) (made p2) (next-count n0 n1) (stacks-avail n0) (started o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p1"
+     ],
+     [
+      "made",
+      "p2"
+     ],
+     [
+      "next-count",
+      "n0",
+      "n1"
+     ],
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o2"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ]
+    ],
+    "name": "ship-order-o2",
+    "parameters": {
+     "?avail": "n1",
+     "?new-avail": "n2"
+    },
+    "precondition": "(and (made p1) (made p2) (next-count n1 n2) (stacks-avail n1) (started o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p1"
+     ],
+     [
+      "made",
+      "p2"
+     ],
+     [
+      "next-count",
+      "n1",
+      "n2"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o2"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ]
+    ],
+    "name": "ship-order-o2",
+    "parameters": {
+     "?avail": "n2",
+     "?new-avail": "n3"
+    },
+    "precondition": "(and (made p1) (made p2) (next-count n2 n3) (stacks-avail n2) (started o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p1"
+     ],
+     [
+      "made",
+      "p2"
+     ],
+     [
+      "next-count",
+      "n2",
+      "n3"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o2"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ]
+    ],
+    "name": "ship-order-o2",
+    "parameters": {
+     "?avail": "n3",
+     "?new-avail": "n4"
+    },
+    "precondition": "(and (made p1) (made p2) (next-count n3 n4) (stacks-avail n3) (started o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p1"
+     ],
+     [
+      "made",
+      "p2"
+     ],
+     [
+      "next-count",
+      "n3",
+      "n4"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o2"
+     ],
+     [
+      "stacks-avail",
+      "n5"
+     ]
+    ],
+    "name": "ship-order-o2",
+    "parameters": {
+     "?avail": "n4",
+     "?new-avail": "n5"
+    },
+    "precondition": "(and (made p1) (made p2) (next-count n4 n5) (stacks-avail n4) (started o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p1"
+     ],
+     [
+      "made",
+      "p2"
+     ],
+     [
+      "next-count",
+      "n4",
+      "n5"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ]
+   }
+  ],
+  "ship-order-o3": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o3"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ]
+    ],
+    "name": "ship-order-o3",
+    "parameters": {
+     "?avail": "n0",
+     "?new-avail": "n1"
+    },
+    "precondition": "(and (made p3) (next-count n0 n1) (stacks-avail n0) (started o3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p3"
+     ],
+     [
+      "next-count",
+      "n0",
+      "n1"
+     ],
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o3"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ]
+    ],
+    "name": "ship-order-o3",
+    "parameters": {
+     "?avail": "n1",
+     "?new-avail": "n2"
+    },
+    "precondition": "(and (made p3) (next-count n1 n2) (stacks-avail n1) (started o3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p3"
+     ],
+     [
+      "next-count",
+      "n1",
+      "n2"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o3"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ]
+    ],
+    "name": "ship-order-o3",
+    "parameters": {
+     "?avail": "n2",
+     "?new-avail": "n3"
+    },
+    "precondition": "(and (made p3) (next-count n2 n3) (stacks-avail n2) (started o3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p3"
+     ],
+     [
+      "next-count",
+      "n2",
+      "n3"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o3"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ]
+    ],
+    "name": "ship-order-o3",
+    "parameters": {
+     "?avail": "n3",
+     "?new-avail": "n4"
+    },
+    "precondition": "(and (made p3) (next-count n3 n4) (stacks-avail n3) (started o3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p3"
+     ],
+     [
+      "next-count",
+      "n3",
+      "n4"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o3"
+     ],
+     [
+      "stacks-avail",
+      "n5"
+     ]
+    ],
+    "name": "ship-order-o3",
+    "parameters": {
+     "?avail": "n4",
+     "?new-avail": "n5"
+    },
+    "precondition": "(and (made p3) (next-count n4 n5) (stacks-avail n4) (started o3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p3"
+     ],
+     [
+      "next-count",
+      "n4",
+      "n5"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ]
+   }
+  ],
+  "ship-order-o4": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o4"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ]
+    ],
+    "name": "ship-order-o4",
+    "parameters": {
+     "?avail": "n0",
+     "?new-avail": "n1"
+    },
+    "precondition": "(and (made p3) (made p4) (next-count n0 n1) (stacks-avail n0) (started o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p3"
+     ],
+     [
+      "made",
+      "p4"
+     ],
+     [
+      "next-count",
+      "n0",
+      "n1"
+     ],
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o4"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ]
+    ],
+    "name": "ship-order-o4",
+    "parameters": {
+     "?avail": "n1",
+     "?new-avail": "n2"
+    },
+    "precondition": "(and (made p3) (made p4) (next-count n1 n2) (stacks-avail n1) (started o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p3"
+     ],
+     [
+      "made",
+      "p4"
+     ],
+     [
+      "next-count",
+      "n1",
+      "n2"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o4"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ]
+    ],
+    "name": "ship-order-o4",
+    "parameters": {
+     "?avail": "n2",
+     "?new-avail": "n3"
+    },
+    "precondition": "(and (made p3) (made p4) (next-count n2 n3) (stacks-avail n2) (started o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p3"
+     ],
+     [
+      "made",
+      "p4"
+     ],
+     [
+      "next-count",
+      "n2",
+      "n3"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o4"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ]
+    ],
+    "name": "ship-order-o4",
+    "parameters": {
+     "?avail": "n3",
+     "?new-avail": "n4"
+    },
+    "precondition": "(and (made p3) (made p4) (next-count n3 n4) (stacks-avail n3) (started o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p3"
+     ],
+     [
+      "made",
+      "p4"
+     ],
+     [
+      "next-count",
+      "n3",
+      "n4"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o4"
+     ],
+     [
+      "stacks-avail",
+      "n5"
+     ]
+    ],
+    "name": "ship-order-o4",
+    "parameters": {
+     "?avail": "n4",
+     "?new-avail": "n5"
+    },
+    "precondition": "(and (made p3) (made p4) (next-count n4 n5) (stacks-avail n4) (started o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p3"
+     ],
+     [
+      "made",
+      "p4"
+     ],
+     [
+      "next-count",
+      "n4",
+      "n5"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ]
+   }
+  ],
+  "ship-order-o5": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o5"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ]
+    ],
+    "name": "ship-order-o5",
+    "parameters": {
+     "?avail": "n0",
+     "?new-avail": "n1"
+    },
+    "precondition": "(and (made p5) (next-count n0 n1) (stacks-avail n0) (started o5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p5"
+     ],
+     [
+      "next-count",
+      "n0",
+      "n1"
+     ],
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o5"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ]
+    ],
+    "name": "ship-order-o5",
+    "parameters": {
+     "?avail": "n1",
+     "?new-avail": "n2"
+    },
+    "precondition": "(and (made p5) (next-count n1 n2) (stacks-avail n1) (started o5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p5"
+     ],
+     [
+      "next-count",
+      "n1",
+      "n2"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o5"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ]
+    ],
+    "name": "ship-order-o5",
+    "parameters": {
+     "?avail": "n2",
+     "?new-avail": "n3"
+    },
+    "precondition": "(and (made p5) (next-count n2 n3) (stacks-avail n2) (started o5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p5"
+     ],
+     [
+      "next-count",
+      "n2",
+      "n3"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o5"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ]
+    ],
+    "name": "ship-order-o5",
+    "parameters": {
+     "?avail": "n3",
+     "?new-avail": "n4"
+    },
+    "precondition": "(and (made p5) (next-count n3 n4) (stacks-avail n3) (started o5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p5"
+     ],
+     [
+      "next-count",
+      "n3",
+      "n4"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "shipped",
+      "o5"
+     ],
+     [
+      "stacks-avail",
+      "n5"
+     ]
+    ],
+    "name": "ship-order-o5",
+    "parameters": {
+     "?avail": "n4",
+     "?new-avail": "n5"
+    },
+    "precondition": "(and (made p5) (next-count n4 n5) (stacks-avail n4) (started o5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "made",
+      "p5"
+     ],
+     [
+      "next-count",
+      "n4",
+      "n5"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ]
+   }
+  ],
+  "start-order": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "waiting",
+      "o1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n1",
+     "?new-avail": "n0",
+     "?o": "o1"
+    },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n1) (waiting o1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n0",
+      "n1"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "waiting",
+      "o1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "waiting",
+      "o2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n1",
+     "?new-avail": "n0",
+     "?o": "o2"
+    },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n1) (waiting o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n0",
+      "n1"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "waiting",
+      "o2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "waiting",
+      "o3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n1",
+     "?new-avail": "n0",
+     "?o": "o3"
+    },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n1) (waiting o3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n0",
+      "n1"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "waiting",
+      "o3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "waiting",
+      "o4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n1",
+     "?new-avail": "n0",
+     "?o": "o4"
+    },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n1) (waiting o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n0",
+      "n1"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "waiting",
+      "o4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "waiting",
+      "o5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n0"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n1",
+     "?new-avail": "n0",
+     "?o": "o5"
+    },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n1) (waiting o5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n0",
+      "n1"
+     ],
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "waiting",
+      "o5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "waiting",
+      "o1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n2",
+     "?new-avail": "n1",
+     "?o": "o1"
+    },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n2) (waiting o1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n1",
+      "n2"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "waiting",
+      "o1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "waiting",
+      "o2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n2",
+     "?new-avail": "n1",
+     "?o": "o2"
+    },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n2) (waiting o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n1",
+      "n2"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "waiting",
+      "o2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "waiting",
+      "o3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n2",
+     "?new-avail": "n1",
+     "?o": "o3"
+    },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n2) (waiting o3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n1",
+      "n2"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "waiting",
+      "o3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "waiting",
+      "o4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n2",
+     "?new-avail": "n1",
+     "?o": "o4"
+    },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n2) (waiting o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n1",
+      "n2"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "waiting",
+      "o4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "waiting",
+      "o5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n1"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n2",
+     "?new-avail": "n1",
+     "?o": "o5"
+    },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n2) (waiting o5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n1",
+      "n2"
+     ],
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "waiting",
+      "o5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "waiting",
+      "o1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n3",
+     "?new-avail": "n2",
+     "?o": "o1"
+    },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n3) (waiting o1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n2",
+      "n3"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "waiting",
+      "o1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "waiting",
+      "o2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n3",
+     "?new-avail": "n2",
+     "?o": "o2"
+    },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n3) (waiting o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n2",
+      "n3"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "waiting",
+      "o2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "waiting",
+      "o3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n3",
+     "?new-avail": "n2",
+     "?o": "o3"
+    },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n3) (waiting o3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n2",
+      "n3"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "waiting",
+      "o3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "waiting",
+      "o4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n3",
+     "?new-avail": "n2",
+     "?o": "o4"
+    },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n3) (waiting o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n2",
+      "n3"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "waiting",
+      "o4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "waiting",
+      "o5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n2"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n3",
+     "?new-avail": "n2",
+     "?o": "o5"
+    },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n3) (waiting o5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n2",
+      "n3"
+     ],
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "waiting",
+      "o5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "waiting",
+      "o1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n4",
+     "?new-avail": "n3",
+     "?o": "o1"
+    },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n4) (waiting o1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n3",
+      "n4"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "waiting",
+      "o1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "waiting",
+      "o2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n4",
+     "?new-avail": "n3",
+     "?o": "o2"
+    },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n4) (waiting o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n3",
+      "n4"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "waiting",
+      "o2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "waiting",
+      "o3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n4",
+     "?new-avail": "n3",
+     "?o": "o3"
+    },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n4) (waiting o3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n3",
+      "n4"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "waiting",
+      "o3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "waiting",
+      "o4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n4",
+     "?new-avail": "n3",
+     "?o": "o4"
+    },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n4) (waiting o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n3",
+      "n4"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "waiting",
+      "o4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "waiting",
+      "o5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n3"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n4",
+     "?new-avail": "n3",
+     "?o": "o5"
+    },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n4) (waiting o5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n3",
+      "n4"
+     ],
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "waiting",
+      "o5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n5"
+     ],
+     [
+      "waiting",
+      "o1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o1"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n5",
+     "?new-avail": "n4",
+     "?o": "o1"
+    },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n5) (waiting o1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n4",
+      "n5"
+     ],
+     [
+      "stacks-avail",
+      "n5"
+     ],
+     [
+      "waiting",
+      "o1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n5"
+     ],
+     [
+      "waiting",
+      "o2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o2"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n5",
+     "?new-avail": "n4",
+     "?o": "o2"
+    },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n5) (waiting o2))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n4",
+      "n5"
+     ],
+     [
+      "stacks-avail",
+      "n5"
+     ],
+     [
+      "waiting",
+      "o2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n5"
+     ],
+     [
+      "waiting",
+      "o3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o3"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n5",
+     "?new-avail": "n4",
+     "?o": "o3"
+    },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n5) (waiting o3))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n4",
+      "n5"
+     ],
+     [
+      "stacks-avail",
+      "n5"
+     ],
+     [
+      "waiting",
+      "o3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n5"
+     ],
+     [
+      "waiting",
+      "o4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o4"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n5",
+     "?new-avail": "n4",
+     "?o": "o4"
+    },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n5) (waiting o4))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n4",
+      "n5"
+     ],
+     [
+      "stacks-avail",
+      "n5"
+     ],
+     [
+      "waiting",
+      "o4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "stacks-avail",
+      "n5"
+     ],
+     [
+      "waiting",
+      "o5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "stacks-avail",
+      "n4"
+     ],
+     [
+      "started",
+      "o5"
+     ]
+    ],
+    "name": "start-order",
+    "parameters": {
+     "?avail": "n5",
+     "?new-avail": "n4",
+     "?o": "o5"
+    },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n5) (waiting o5))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "next-count",
+      "n4",
+      "n5"
+     ],
+     [
+      "stacks-avail",
+      "n5"
+     ],
+     [
+      "waiting",
+      "o5"
+     ]
+    ]
+   }
+  ]
+ },
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [
+   [
+    "shipped",
+    "o1"
+   ],
+   [
+    "shipped",
+    "o2"
+   ],
+   [
+    "shipped",
+    "o3"
+   ],
+   [
+    "shipped",
+    "o4"
+   ],
+   [
+    "shipped",
+    "o5"
+   ]
+  ],
+  "initial_numeric": {
+   "total-cost": 0.0
+  },
+  "initial_state": [
+   [
+    "includes",
+    "o1",
+    "p2"
+   ],
+   [
+    "includes",
+    "o2",
+    "p1"
+   ],
+   [
+    "includes",
+    "o2",
+    "p2"
+   ],
+   [
+    "includes",
+    "o3",
+    "p3"
+   ],
+   [
+    "includes",
+    "o4",
+    "p3"
+   ],
+   [
+    "includes",
+    "o4",
+    "p4"
+   ],
+   [
+    "includes",
+    "o5",
+    "p5"
+   ],
+   [
+    "next-count",
+    "n0",
+    "n1"
+   ],
+   [
+    "next-count",
+    "n1",
+    "n2"
+   ],
+   [
+    "next-count",
+    "n2",
+    "n3"
+   ],
+   [
+    "next-count",
+    "n3",
+    "n4"
+   ],
+   [
+    "next-count",
+    "n4",
+    "n5"
+   ],
+   [
+    "not-made",
+    "p1"
+   ],
+   [
+    "not-made",
+    "p2"
+   ],
+   [
+    "not-made",
+    "p3"
+   ],
+   [
+    "not-made",
+    "p4"
+   ],
+   [
+    "not-made",
+    "p5"
+   ],
+   [
+    "stacks-avail",
+    "n0"
+   ],
+   [
+    "waiting",
+    "o1"
+   ],
+   [
+    "waiting",
+    "o2"
+   ],
+   [
+    "waiting",
+    "o3"
+   ],
+   [
+    "waiting",
+    "o4"
+   ],
+   [
+    "waiting",
+    "o5"
+   ]
+  ],
+  "metric": {
+   "expression": "(total-cost)",
+   "optimization": "minimize"
+  },
+  "objects": {
+   "n0": "count",
+   "n1": "count",
+   "n2": "count",
+   "n3": "count",
+   "n4": "count",
+   "n5": "count",
+   "o1": "order",
+   "o2": "order",
+   "o3": "order",
+   "o4": "order",
+   "o5": "order",
+   "p1": "product",
+   "p2": "product",
+   "p3": "product",
+   "p4": "product",
+   "p5": "product"
+  },
+  "operators": [
+   "make-product-p1",
+   "make-product-p2",
+   "make-product-p3",
+   "make-product-p4",
+   "make-product-p5",
+   "open-new-stack",
+   "ship-order-o1",
+   "ship-order-o2",
+   "ship-order-o3",
+   "ship-order-o4",
+   "ship-order-o5",
+   "start-order"
+  ],
+  "predicates": [
+   "includes",
+   "made",
+   "next-count",
+   "not-made",
+   "shipped",
+   "stacks-avail",
+   "started",
+   "waiting"
+  ],
+  "requirements": [
+   ":action-costs",
+   ":typing"
+  ],
+  "types": {
+   "count": null,
+   "order": null,
+   "product": null
+  }
+ },
+ "validate": {
+  "issues": [],
+  "valid": true
+ }
+}

@@ -15,6 +15,10 @@ make typecheck    # mypy
 make coverage     # tests with coverage report
 make build        # Build wheel/sdist
 make examples     # Run the example showcase
+make golden       # Regenerate IPC subset golden files; review the diff (#153)
+make corpora      # Fetch full IPC corpora (pinned) into $CORPORA_DIR (default .corpora), ~3 GB, opt-in
+make corpora-test # pddlpy over every fetched pair; report in $CORPORA_DIR/results; DOMAIN=... filters
+                  # (Makefile reads KEY=value lines from an optional .env, e.g. CORPORA_DIR=/Volumes/ext/corpora)
 uv run pddlpy parse|ground|solve|validate DOMAIN PROBLEM   # the CLI
 uv run pddlpy-mcp # MCP server on stdio
 ```
@@ -28,6 +32,9 @@ uv run pddlpy-mcp # MCP server on stdio
 - `pddlpy/mcpserver.py` — MCP server, tools parse/ground/solve/validate (#86)
 - `pddlpy/diagnostics.py` — `diagnose()` behind `validate` (#94)
 - `tests/` — the pytest suite (+ `tests/corpus/` PDDL pairs); `pddlpy/test.py` is legacy unittest
+- `tests/corpus/ipc/` + `tests/golden.py` — IPC subset and its golden files
+  (`test_golden.py`). A semantics change shows up as a golden mismatch:
+  `make golden`, then review the diff (#153)
 - `docs/object-model.md`, `docs/llm-interaction.md` — reference + LLM worked example
 
 ## Architecture

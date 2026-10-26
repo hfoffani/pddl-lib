@@ -1,0 +1,156 @@
+{
+ "ground": {},
+ "ground_durative": {
+  "make-product-p1": [
+   {
+    "name": "make-product-p1",
+    "parameters": {}
+   }
+  ],
+  "make-product-p2": [
+   {
+    "name": "make-product-p2",
+    "parameters": {}
+   }
+  ],
+  "make-product-p3": [
+   {
+    "name": "make-product-p3",
+    "parameters": {}
+   }
+  ],
+  "make-product-p4": [
+   {
+    "name": "make-product-p4",
+    "parameters": {}
+   }
+  ],
+  "make-product-p5": [
+   {
+    "name": "make-product-p5",
+    "parameters": {}
+   }
+  ],
+  "ship-order-o1": [
+   {
+    "name": "ship-order-o1",
+    "parameters": {}
+   }
+  ],
+  "ship-order-o2": [
+   {
+    "name": "ship-order-o2",
+    "parameters": {}
+   }
+  ],
+  "ship-order-o3": [
+   {
+    "name": "ship-order-o3",
+    "parameters": {}
+   }
+  ],
+  "ship-order-o4": [
+   {
+    "name": "ship-order-o4",
+    "parameters": {}
+   }
+  ],
+  "ship-order-o5": [
+   {
+    "name": "ship-order-o5",
+    "parameters": {}
+   }
+  ],
+  "start-order": [
+   {
+    "name": "start-order",
+    "parameters": {
+     "?o": "o1"
+    }
+   },
+   {
+    "name": "start-order",
+    "parameters": {
+     "?o": "o2"
+    }
+   },
+   {
+    "name": "start-order",
+    "parameters": {
+     "?o": "o3"
+    }
+   },
+   {
+    "name": "start-order",
+    "parameters": {
+     "?o": "o4"
+    }
+   },
+   {
+    "name": "start-order",
+    "parameters": {
+     "?o": "o5"
+    }
+   }
+  ]
+ },
+ "parse": {
+  "durative_operators": [
+   "make-product-p1",
+   "make-product-p2",
+   "make-product-p3",
+   "make-product-p4",
+   "make-product-p5",
+   "ship-order-o1",
+   "ship-order-o2",
+   "ship-order-o3",
+   "ship-order-o4",
+   "ship-order-o5",
+   "start-order"
+  ],
+  "goals": [],
+  "initial_numeric": {},
+  "initial_state": [],
+  "metric": null,
+  "objects": {
+   "o1": "order",
+   "o2": "order",
+   "o3": "order",
+   "o4": "order",
+   "o5": "order",
+   "p1": "product",
+   "p2": "product",
+   "p3": "product",
+   "p4": "product",
+   "p5": "product"
+  },
+  "operators": [],
+  "predicates": [
+   "includes",
+   "made",
+   "not-made",
+   "shipped",
+   "started",
+   "waiting"
+  ],
+  "requirements": [
+   ":durative-actions",
+   ":numeric-fluents",
+   ":typing"
+  ],
+  "types": {
+   "order": null,
+   "product": null
+  }
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "syntax",
+    "message": "problem file: line 41:19 no viable alternative at input '(define(problemos-time-p5_1)(:domainopenstacks-time-numeric-nonADL-nonNegated)(:objects)(:init(=(stacks-in-use)0)(=(max-stacks)4)(waitingo1)(includeso1p2)(waitingo2)(includeso2p1)(includeso2p2)(waitingo3)(includeso3p3)(waitingo4)(includeso4p3)(includeso4p4)(waitingo5)(includeso5p5)(not-madep1)(not-madep2)(not-madep3)(not-madep4)(not-madep5))(:goal(and(shippedo1)(shippedo2)(shippedo3)(shippedo4)(shippedo5)))(:metricminimize(total-time'",
+    "severity": "error"
+   }
+  ],
+  "valid": false
+ }
+}

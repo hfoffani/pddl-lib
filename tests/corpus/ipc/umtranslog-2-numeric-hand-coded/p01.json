@@ -1,0 +1,4376 @@
+{
+ "ground": {
+  "attach-conveyor-ramp": {
+   "truncated_at": 50
+  },
+  "clean-domain": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "clear"
+     ]
+    ],
+    "name": "clean-domain",
+    "parameters": {},
+    "precondition": "(not (or (and (or (and (chute-connected airplane0) (typev airplane0 hopper)) (and (door-open airplane0) (typev airplane0 air)) (and (door-open airplane0) (typev airplane0 regularv)) (and (hose-connected airplane0) (typev airplane0 tanker)) (and (or (ramp-connected airplane0 plane_ramp0) (ramp-connected airplane0 plane_ramp1) (ramp-connected airplane0 plane_ramp2) (ramp-connected airplane0 plane_ramp3)) (typev airplane0 air)) (and (ramp-down airplane0) (typev airplane0 auto)) (and (typev airplane0 tanker) (valve-open airplane0))) (unload airplane0)) (and (or (and (chute-connected airplane1) (typev airplane1 hopper)) (and (door-open airplane1) (typev airplane1 air)) (and (door-open airplane1) (typev airplane1 regularv)) (and (hose-connected airplane1) (typev airplane1 tanker)) (and (or (ramp-connected airplane1 plane_ramp0) (ramp-connected airplane1 plane_ramp1) (ramp-connected airplane1 plane_ramp2) (ramp-connected airplane1 plane_ramp3)) (typev airplane1 air)) (and (ramp-down airplane1) (typev airplane1 auto)) (and (typev airplane1 tanker) (valve-open airplane1))) (unload airplane1)) (and (or (and (chute-connected airplane2) (typev airplane2 hopper)) (and (door-open airplane2) (typev airplane2 air)) (and (door-open airplane2) (typev airplane2 regularv)) (and (hose-connected airplane2) (typev airplane2 tanker)) (and (or (ramp-connected airplane2 plane_ramp0) (ramp-connected airplane2 plane_ramp1) (ramp-connected airplane2 plane_ramp2) (ramp-connected airplane2 plane_ramp3)) (typev airplane2 air)) (and (ramp-down airplane2) (typev airplane2 auto)) (and (typev airplane2 tanker) (valve-open airplane2))) (unload airplane2)) (and (or (and (chute-connected truck0) (typev truck0 hopper)) (and (door-open truck0) (typev truck0 air)) (and (door-open truck0) (typev truck0 regularv)) (and (hose-connected truck0) (typev truck0 tanker)) (and (or (ramp-connected truck0 plane_ramp0) (ramp-connected truck0 plane_ramp1) (ramp-connected truck0 plane_ramp2) (ramp-connected truck0 plane_ramp3)) (typev truck0 air)) (and (ramp-down truck0) (typev truck0 auto)) (and (typev truck0 tanker) (valve-open truck0))) (unload truck0)) (and (or (and (chute-connected truck1) (typev truck1 hopper)) (and (door-open truck1) (typev truck1 air)) (and (door-open truck1) (typev truck1 regularv)) (and (hose-connected truck1) (typev truck1 tanker)) (and (or (ramp-connected truck1 plane_ramp0) (ramp-connected truck1 plane_ramp1) (ramp-connected truck1 plane_ramp2) (ramp-connected truck1 plane_ramp3)) (typev truck1 air)) (and (ramp-down truck1) (typev truck1 auto)) (and (typev truck1 tanker) (valve-open truck1))) (unload truck1)) (and (or (and (chute-connected truck2) (typev truck2 hopper)) (and (door-open truck2) (typev truck2 air)) (and (door-open truck2) (typev truck2 regularv)) (and (hose-connected truck2) (typev truck2 tanker)) (and (or (ramp-connected truck2 plane_ramp0) (ramp-connected truck2 plane_ramp1) (ramp-connected truck2 plane_ramp2) (ramp-connected truck2 plane_ramp3)) (typev truck2 air)) (and (ramp-down truck2) (typev truck2 auto)) (and (typev truck2 tanker) (valve-open truck2))) (unload truck2)) (and (or (and (chute-connected truck3) (typev truck3 hopper)) (and (door-open truck3) (typev truck3 air)) (and (door-open truck3) (typev truck3 regularv)) (and (hose-connected truck3) (typev truck3 tanker)) (and (or (ramp-connected truck3 plane_ramp0) (ramp-connected truck3 plane_ramp1) (ramp-connected truck3 plane_ramp2) (ramp-connected truck3 plane_ramp3)) (typev truck3 air)) (and (ramp-down truck3) (typev truck3 auto)) (and (typev truck3 tanker) (valve-open truck3))) (unload truck3)) (and (or (and (chute-connected truck4) (typev truck4 hopper)) (and (door-open truck4) (typev truck4 air)) (and (door-open truck4) (typev truck4 regularv)) (and (hose-connected truck4) (typev truck4 tanker)) (and (or (ramp-connected truck4 plane_ramp0) (ramp-connected truck4 plane_ramp1) (ramp-connected truck4 plane_ramp2) (ramp-connected truck4 plane_ramp3)) (typev truck4 air)) (and (ramp-down truck4) (typev truck4 auto)) (and (typev truck4 tanker) (valve-open truck4))) (unload truck4)) (and (or (and (chute-connected truck5) (typev truck5 hopper)) (and (door-open truck5) (typev truck5 air)) (and (door-open truck5) (typev truck5 regularv)) (and (hose-connected truck5) (typev truck5 tanker)) (and (or (ramp-connected truck5 plane_ramp0) (ramp-connected truck5 plane_ramp1) (ramp-connected truck5 plane_ramp2) (ramp-connected truck5 plane_ramp3)) (typev truck5 air)) (and (ramp-down truck5) (typev truck5 auto)) (and (typev truck5 tanker) (valve-open truck5))) (unload truck5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "chute-connected",
+      "?v"
+     ],
+     [
+      "door-open",
+      "?v"
+     ],
+     [
+      "hose-connected",
+      "?v"
+     ],
+     [
+      "ramp-connected",
+      "?v",
+      "?ramp"
+     ],
+     [
+      "ramp-down",
+      "?v"
+     ],
+     [
+      "typev",
+      "?v",
+      "air"
+     ],
+     [
+      "typev",
+      "?v",
+      "auto"
+     ],
+     [
+      "typev",
+      "?v",
+      "hopper"
+     ],
+     [
+      "typev",
+      "?v",
+      "regularv"
+     ],
+     [
+      "typev",
+      "?v",
+      "tanker"
+     ],
+     [
+      "unload",
+      "?v"
+     ],
+     [
+      "valve-open",
+      "?v"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   }
+  ],
+  "close-door-airplane": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "door-open",
+      "airplane0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "close-door-airplane",
+    "parameters": {
+     "?v": "airplane0"
+    },
+    "precondition": "(and (door-open airplane0) (typev airplane0 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "door-open",
+      "airplane0"
+     ],
+     [
+      "typev",
+      "airplane0",
+      "air"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "door-open",
+      "airplane1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "close-door-airplane",
+    "parameters": {
+     "?v": "airplane1"
+    },
+    "precondition": "(and (door-open airplane1) (typev airplane1 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "door-open",
+      "airplane1"
+     ],
+     [
+      "typev",
+      "airplane1",
+      "air"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "door-open",
+      "airplane2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "close-door-airplane",
+    "parameters": {
+     "?v": "airplane2"
+    },
+    "precondition": "(and (door-open airplane2) (typev airplane2 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "door-open",
+      "airplane2"
+     ],
+     [
+      "typev",
+      "airplane2",
+      "air"
+     ]
+    ]
+   }
+  ],
+  "close-door-regular": [],
+  "close-valve": [],
+  "collect-fees": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "fees-collected",
+      "package0"
+     ]
+    ],
+    "name": "collect-fees",
+    "parameters": {
+     "?p": "package0"
+    },
+    "precondition": "(and (not (fees-collected package0)) (not (or (delivered package0 location0) (delivered package0 location1) (delivered package0 location2) (delivered package0 location3) (delivered package0 location4) (delivered package0 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package0",
+      "?dd"
+     ],
+     [
+      "fees-collected",
+      "package0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "fees-collected",
+      "package1"
+     ]
+    ],
+    "name": "collect-fees",
+    "parameters": {
+     "?p": "package1"
+    },
+    "precondition": "(and (not (fees-collected package1)) (not (or (delivered package1 location0) (delivered package1 location1) (delivered package1 location2) (delivered package1 location3) (delivered package1 location4) (delivered package1 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package1",
+      "?dd"
+     ],
+     [
+      "fees-collected",
+      "package1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "fees-collected",
+      "package2"
+     ]
+    ],
+    "name": "collect-fees",
+    "parameters": {
+     "?p": "package2"
+    },
+    "precondition": "(and (not (fees-collected package2)) (not (or (delivered package2 location0) (delivered package2 location1) (delivered package2 location2) (delivered package2 location3) (delivered package2 location4) (delivered package2 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package2",
+      "?dd"
+     ],
+     [
+      "fees-collected",
+      "package2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   }
+  ],
+  "connect-chute": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "chute-connected",
+      "truck0"
+     ]
+    ],
+    "name": "connect-chute",
+    "parameters": {
+     "?v": "truck0"
+    },
+    "precondition": "(and (not (chute-connected truck0)) (typev truck0 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "chute-connected",
+      "truck0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "typev",
+      "truck0",
+      "hopper"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "chute-connected",
+      "truck1"
+     ]
+    ],
+    "name": "connect-chute",
+    "parameters": {
+     "?v": "truck1"
+    },
+    "precondition": "(and (not (chute-connected truck1)) (typev truck1 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "chute-connected",
+      "truck1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "typev",
+      "truck1",
+      "hopper"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "chute-connected",
+      "truck2"
+     ]
+    ],
+    "name": "connect-chute",
+    "parameters": {
+     "?v": "truck2"
+    },
+    "precondition": "(and (not (chute-connected truck2)) (typev truck2 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "chute-connected",
+      "truck2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "typev",
+      "truck2",
+      "hopper"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "chute-connected",
+      "truck3"
+     ]
+    ],
+    "name": "connect-chute",
+    "parameters": {
+     "?v": "truck3"
+    },
+    "precondition": "(and (not (chute-connected truck3)) (typev truck3 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "chute-connected",
+      "truck3"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "typev",
+      "truck3",
+      "hopper"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "chute-connected",
+      "truck4"
+     ]
+    ],
+    "name": "connect-chute",
+    "parameters": {
+     "?v": "truck4"
+    },
+    "precondition": "(and (not (chute-connected truck4)) (typev truck4 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "chute-connected",
+      "truck4"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "typev",
+      "truck4",
+      "hopper"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "chute-connected",
+      "truck5"
+     ]
+    ],
+    "name": "connect-chute",
+    "parameters": {
+     "?v": "truck5"
+    },
+    "precondition": "(and (not (chute-connected truck5)) (typev truck5 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "chute-connected",
+      "truck5"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "typev",
+      "truck5",
+      "hopper"
+     ]
+    ]
+   }
+  ],
+  "connect-hose": [],
+  "deliver": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package0",
+      "location0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location0') ('volume-p', 'package0'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package0",
+      "location0"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location0",
+     "?p": "package0"
+    },
+    "precondition": "(and (at-packagel package0 location0) (not (or (delivered package0 location0) (delivered package0 location1) (delivered package0 location2) (delivered package0 location3) (delivered package0 location4) (delivered package0 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package0",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package0",
+      "location0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package0",
+      "location1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location1') ('volume-p', 'package0'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package0",
+      "location1"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location1",
+     "?p": "package0"
+    },
+    "precondition": "(and (at-packagel package0 location1) (not (or (delivered package0 location0) (delivered package0 location1) (delivered package0 location2) (delivered package0 location3) (delivered package0 location4) (delivered package0 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package0",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package0",
+      "location1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package0",
+      "location2"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location2') ('volume-p', 'package0'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package0",
+      "location2"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location2",
+     "?p": "package0"
+    },
+    "precondition": "(and (at-packagel package0 location2) (not (or (delivered package0 location0) (delivered package0 location1) (delivered package0 location2) (delivered package0 location3) (delivered package0 location4) (delivered package0 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package0",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package0",
+      "location2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package0",
+      "location3"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location3') ('volume-p', 'package0'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package0",
+      "location3"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location3",
+     "?p": "package0"
+    },
+    "precondition": "(and (at-packagel package0 location3) (not (or (delivered package0 location0) (delivered package0 location1) (delivered package0 location2) (delivered package0 location3) (delivered package0 location4) (delivered package0 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package0",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package0",
+      "location3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package0",
+      "location4"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location4') ('volume-p', 'package0'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package0",
+      "location4"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location4",
+     "?p": "package0"
+    },
+    "precondition": "(and (at-packagel package0 location4) (not (or (delivered package0 location0) (delivered package0 location1) (delivered package0 location2) (delivered package0 location3) (delivered package0 location4) (delivered package0 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package0",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package0",
+      "location4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package0",
+      "location5"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location5') ('volume-p', 'package0'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package0",
+      "location5"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location5",
+     "?p": "package0"
+    },
+    "precondition": "(and (at-packagel package0 location5) (not (or (delivered package0 location0) (delivered package0 location1) (delivered package0 location2) (delivered package0 location3) (delivered package0 location4) (delivered package0 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package0",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package0",
+      "location5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package1",
+      "location0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location0') ('volume-p', 'package1'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package1",
+      "location0"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location0",
+     "?p": "package1"
+    },
+    "precondition": "(and (at-packagel package1 location0) (not (or (delivered package1 location0) (delivered package1 location1) (delivered package1 location2) (delivered package1 location3) (delivered package1 location4) (delivered package1 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package1",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package1",
+      "location0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package1",
+      "location1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location1') ('volume-p', 'package1'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package1",
+      "location1"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location1",
+     "?p": "package1"
+    },
+    "precondition": "(and (at-packagel package1 location1) (not (or (delivered package1 location0) (delivered package1 location1) (delivered package1 location2) (delivered package1 location3) (delivered package1 location4) (delivered package1 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package1",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package1",
+      "location1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package1",
+      "location2"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location2') ('volume-p', 'package1'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package1",
+      "location2"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location2",
+     "?p": "package1"
+    },
+    "precondition": "(and (at-packagel package1 location2) (not (or (delivered package1 location0) (delivered package1 location1) (delivered package1 location2) (delivered package1 location3) (delivered package1 location4) (delivered package1 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package1",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package1",
+      "location2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package1",
+      "location3"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location3') ('volume-p', 'package1'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package1",
+      "location3"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location3",
+     "?p": "package1"
+    },
+    "precondition": "(and (at-packagel package1 location3) (not (or (delivered package1 location0) (delivered package1 location1) (delivered package1 location2) (delivered package1 location3) (delivered package1 location4) (delivered package1 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package1",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package1",
+      "location3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package1",
+      "location4"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location4') ('volume-p', 'package1'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package1",
+      "location4"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location4",
+     "?p": "package1"
+    },
+    "precondition": "(and (at-packagel package1 location4) (not (or (delivered package1 location0) (delivered package1 location1) (delivered package1 location2) (delivered package1 location3) (delivered package1 location4) (delivered package1 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package1",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package1",
+      "location4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package1",
+      "location5"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location5') ('volume-p', 'package1'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package1",
+      "location5"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location5",
+     "?p": "package1"
+    },
+    "precondition": "(and (at-packagel package1 location5) (not (or (delivered package1 location0) (delivered package1 location1) (delivered package1 location2) (delivered package1 location3) (delivered package1 location4) (delivered package1 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package1",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package1",
+      "location5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package2",
+      "location0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location0') ('volume-p', 'package2'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package2",
+      "location0"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location0",
+     "?p": "package2"
+    },
+    "precondition": "(and (at-packagel package2 location0) (not (or (delivered package2 location0) (delivered package2 location1) (delivered package2 location2) (delivered package2 location3) (delivered package2 location4) (delivered package2 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package2",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package2",
+      "location0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package2",
+      "location1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location1') ('volume-p', 'package2'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package2",
+      "location1"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location1",
+     "?p": "package2"
+    },
+    "precondition": "(and (at-packagel package2 location1) (not (or (delivered package2 location0) (delivered package2 location1) (delivered package2 location2) (delivered package2 location3) (delivered package2 location4) (delivered package2 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package2",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package2",
+      "location1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package2",
+      "location2"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location2') ('volume-p', 'package2'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package2",
+      "location2"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location2",
+     "?p": "package2"
+    },
+    "precondition": "(and (at-packagel package2 location2) (not (or (delivered package2 location0) (delivered package2 location1) (delivered package2 location2) (delivered package2 location3) (delivered package2 location4) (delivered package2 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package2",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package2",
+      "location2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package2",
+      "location3"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location3') ('volume-p', 'package2'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package2",
+      "location3"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location3",
+     "?p": "package2"
+    },
+    "precondition": "(and (at-packagel package2 location3) (not (or (delivered package2 location0) (delivered package2 location1) (delivered package2 location2) (delivered package2 location3) (delivered package2 location4) (delivered package2 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package2",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package2",
+      "location3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package2",
+      "location4"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location4') ('volume-p', 'package2'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package2",
+      "location4"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location4",
+     "?p": "package2"
+    },
+    "precondition": "(and (at-packagel package2 location4) (not (or (delivered package2 location0) (delivered package2 location1) (delivered package2 location2) (delivered package2 location3) (delivered package2 location4) (delivered package2 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package2",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package2",
+      "location4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at-packagel",
+      "package2",
+      "location5"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('volume-load-l', 'location5') ('volume-p', 'package2'))"
+    ],
+    "effect_pos": [
+     [
+      "delivered",
+      "package2",
+      "location5"
+     ]
+    ],
+    "name": "deliver",
+    "parameters": {
+     "?d": "location5",
+     "?p": "package2"
+    },
+    "precondition": "(and (at-packagel package2 location5) (not (or (delivered package2 location0) (delivered package2 location1) (delivered package2 location2) (delivered package2 location3) (delivered package2 location4) (delivered package2 location5))))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "delivered",
+      "package2",
+      "?dd"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-packagel",
+      "package2",
+      "location5"
+     ]
+    ]
+   }
+  ],
+  "detach-conveyor-ramp": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane0",
+      "plane_ramp0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location0",
+     "?r": "plane_ramp0",
+     "?v": "airplane0"
+    },
+    "precondition": "(and (at-equipment plane_ramp0 location0) (at-vehicle airplane0 location0) (not (door-open airplane0)) (ramp-connected airplane0 plane_ramp0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp0",
+      "location0"
+     ],
+     [
+      "at-vehicle",
+      "airplane0",
+      "location0"
+     ],
+     [
+      "ramp-connected",
+      "airplane0",
+      "plane_ramp0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane0",
+      "plane_ramp1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location1",
+     "?r": "plane_ramp1",
+     "?v": "airplane0"
+    },
+    "precondition": "(and (at-equipment plane_ramp1 location1) (at-vehicle airplane0 location1) (not (door-open airplane0)) (ramp-connected airplane0 plane_ramp1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp1",
+      "location1"
+     ],
+     [
+      "at-vehicle",
+      "airplane0",
+      "location1"
+     ],
+     [
+      "ramp-connected",
+      "airplane0",
+      "plane_ramp1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane0",
+      "plane_ramp2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location2",
+     "?r": "plane_ramp2",
+     "?v": "airplane0"
+    },
+    "precondition": "(and (at-equipment plane_ramp2 location2) (at-vehicle airplane0 location2) (not (door-open airplane0)) (ramp-connected airplane0 plane_ramp2))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp2",
+      "location2"
+     ],
+     [
+      "at-vehicle",
+      "airplane0",
+      "location2"
+     ],
+     [
+      "ramp-connected",
+      "airplane0",
+      "plane_ramp2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane0",
+      "plane_ramp3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location3",
+     "?r": "plane_ramp3",
+     "?v": "airplane0"
+    },
+    "precondition": "(and (at-equipment plane_ramp3 location3) (at-vehicle airplane0 location3) (not (door-open airplane0)) (ramp-connected airplane0 plane_ramp3))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp3",
+      "location3"
+     ],
+     [
+      "at-vehicle",
+      "airplane0",
+      "location3"
+     ],
+     [
+      "ramp-connected",
+      "airplane0",
+      "plane_ramp3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane1",
+      "plane_ramp0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location0",
+     "?r": "plane_ramp0",
+     "?v": "airplane1"
+    },
+    "precondition": "(and (at-equipment plane_ramp0 location0) (at-vehicle airplane1 location0) (not (door-open airplane1)) (ramp-connected airplane1 plane_ramp0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp0",
+      "location0"
+     ],
+     [
+      "at-vehicle",
+      "airplane1",
+      "location0"
+     ],
+     [
+      "ramp-connected",
+      "airplane1",
+      "plane_ramp0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane1",
+      "plane_ramp1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location1",
+     "?r": "plane_ramp1",
+     "?v": "airplane1"
+    },
+    "precondition": "(and (at-equipment plane_ramp1 location1) (at-vehicle airplane1 location1) (not (door-open airplane1)) (ramp-connected airplane1 plane_ramp1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp1",
+      "location1"
+     ],
+     [
+      "at-vehicle",
+      "airplane1",
+      "location1"
+     ],
+     [
+      "ramp-connected",
+      "airplane1",
+      "plane_ramp1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane1",
+      "plane_ramp2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location2",
+     "?r": "plane_ramp2",
+     "?v": "airplane1"
+    },
+    "precondition": "(and (at-equipment plane_ramp2 location2) (at-vehicle airplane1 location2) (not (door-open airplane1)) (ramp-connected airplane1 plane_ramp2))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp2",
+      "location2"
+     ],
+     [
+      "at-vehicle",
+      "airplane1",
+      "location2"
+     ],
+     [
+      "ramp-connected",
+      "airplane1",
+      "plane_ramp2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane1",
+      "plane_ramp3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location3",
+     "?r": "plane_ramp3",
+     "?v": "airplane1"
+    },
+    "precondition": "(and (at-equipment plane_ramp3 location3) (at-vehicle airplane1 location3) (not (door-open airplane1)) (ramp-connected airplane1 plane_ramp3))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp3",
+      "location3"
+     ],
+     [
+      "at-vehicle",
+      "airplane1",
+      "location3"
+     ],
+     [
+      "ramp-connected",
+      "airplane1",
+      "plane_ramp3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane2",
+      "plane_ramp0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location0",
+     "?r": "plane_ramp0",
+     "?v": "airplane2"
+    },
+    "precondition": "(and (at-equipment plane_ramp0 location0) (at-vehicle airplane2 location0) (not (door-open airplane2)) (ramp-connected airplane2 plane_ramp0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp0",
+      "location0"
+     ],
+     [
+      "at-vehicle",
+      "airplane2",
+      "location0"
+     ],
+     [
+      "ramp-connected",
+      "airplane2",
+      "plane_ramp0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane2",
+      "plane_ramp1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location1",
+     "?r": "plane_ramp1",
+     "?v": "airplane2"
+    },
+    "precondition": "(and (at-equipment plane_ramp1 location1) (at-vehicle airplane2 location1) (not (door-open airplane2)) (ramp-connected airplane2 plane_ramp1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp1",
+      "location1"
+     ],
+     [
+      "at-vehicle",
+      "airplane2",
+      "location1"
+     ],
+     [
+      "ramp-connected",
+      "airplane2",
+      "plane_ramp1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane2",
+      "plane_ramp2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location2",
+     "?r": "plane_ramp2",
+     "?v": "airplane2"
+    },
+    "precondition": "(and (at-equipment plane_ramp2 location2) (at-vehicle airplane2 location2) (not (door-open airplane2)) (ramp-connected airplane2 plane_ramp2))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp2",
+      "location2"
+     ],
+     [
+      "at-vehicle",
+      "airplane2",
+      "location2"
+     ],
+     [
+      "ramp-connected",
+      "airplane2",
+      "plane_ramp2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "airplane2",
+      "plane_ramp3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location3",
+     "?r": "plane_ramp3",
+     "?v": "airplane2"
+    },
+    "precondition": "(and (at-equipment plane_ramp3 location3) (at-vehicle airplane2 location3) (not (door-open airplane2)) (ramp-connected airplane2 plane_ramp3))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp3",
+      "location3"
+     ],
+     [
+      "at-vehicle",
+      "airplane2",
+      "location3"
+     ],
+     [
+      "ramp-connected",
+      "airplane2",
+      "plane_ramp3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck0",
+      "plane_ramp0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location0",
+     "?r": "plane_ramp0",
+     "?v": "truck0"
+    },
+    "precondition": "(and (at-equipment plane_ramp0 location0) (at-vehicle truck0 location0) (not (door-open truck0)) (ramp-connected truck0 plane_ramp0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp0",
+      "location0"
+     ],
+     [
+      "at-vehicle",
+      "truck0",
+      "location0"
+     ],
+     [
+      "ramp-connected",
+      "truck0",
+      "plane_ramp0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck0",
+      "plane_ramp1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location1",
+     "?r": "plane_ramp1",
+     "?v": "truck0"
+    },
+    "precondition": "(and (at-equipment plane_ramp1 location1) (at-vehicle truck0 location1) (not (door-open truck0)) (ramp-connected truck0 plane_ramp1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp1",
+      "location1"
+     ],
+     [
+      "at-vehicle",
+      "truck0",
+      "location1"
+     ],
+     [
+      "ramp-connected",
+      "truck0",
+      "plane_ramp1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck0",
+      "plane_ramp2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location2",
+     "?r": "plane_ramp2",
+     "?v": "truck0"
+    },
+    "precondition": "(and (at-equipment plane_ramp2 location2) (at-vehicle truck0 location2) (not (door-open truck0)) (ramp-connected truck0 plane_ramp2))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp2",
+      "location2"
+     ],
+     [
+      "at-vehicle",
+      "truck0",
+      "location2"
+     ],
+     [
+      "ramp-connected",
+      "truck0",
+      "plane_ramp2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck0",
+      "plane_ramp3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location3",
+     "?r": "plane_ramp3",
+     "?v": "truck0"
+    },
+    "precondition": "(and (at-equipment plane_ramp3 location3) (at-vehicle truck0 location3) (not (door-open truck0)) (ramp-connected truck0 plane_ramp3))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp3",
+      "location3"
+     ],
+     [
+      "at-vehicle",
+      "truck0",
+      "location3"
+     ],
+     [
+      "ramp-connected",
+      "truck0",
+      "plane_ramp3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck1",
+      "plane_ramp0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location0",
+     "?r": "plane_ramp0",
+     "?v": "truck1"
+    },
+    "precondition": "(and (at-equipment plane_ramp0 location0) (at-vehicle truck1 location0) (not (door-open truck1)) (ramp-connected truck1 plane_ramp0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp0",
+      "location0"
+     ],
+     [
+      "at-vehicle",
+      "truck1",
+      "location0"
+     ],
+     [
+      "ramp-connected",
+      "truck1",
+      "plane_ramp0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck1",
+      "plane_ramp1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location1",
+     "?r": "plane_ramp1",
+     "?v": "truck1"
+    },
+    "precondition": "(and (at-equipment plane_ramp1 location1) (at-vehicle truck1 location1) (not (door-open truck1)) (ramp-connected truck1 plane_ramp1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp1",
+      "location1"
+     ],
+     [
+      "at-vehicle",
+      "truck1",
+      "location1"
+     ],
+     [
+      "ramp-connected",
+      "truck1",
+      "plane_ramp1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck1",
+      "plane_ramp2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location2",
+     "?r": "plane_ramp2",
+     "?v": "truck1"
+    },
+    "precondition": "(and (at-equipment plane_ramp2 location2) (at-vehicle truck1 location2) (not (door-open truck1)) (ramp-connected truck1 plane_ramp2))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp2",
+      "location2"
+     ],
+     [
+      "at-vehicle",
+      "truck1",
+      "location2"
+     ],
+     [
+      "ramp-connected",
+      "truck1",
+      "plane_ramp2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck1",
+      "plane_ramp3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location3",
+     "?r": "plane_ramp3",
+     "?v": "truck1"
+    },
+    "precondition": "(and (at-equipment plane_ramp3 location3) (at-vehicle truck1 location3) (not (door-open truck1)) (ramp-connected truck1 plane_ramp3))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp3",
+      "location3"
+     ],
+     [
+      "at-vehicle",
+      "truck1",
+      "location3"
+     ],
+     [
+      "ramp-connected",
+      "truck1",
+      "plane_ramp3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck2",
+      "plane_ramp0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location0",
+     "?r": "plane_ramp0",
+     "?v": "truck2"
+    },
+    "precondition": "(and (at-equipment plane_ramp0 location0) (at-vehicle truck2 location0) (not (door-open truck2)) (ramp-connected truck2 plane_ramp0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp0",
+      "location0"
+     ],
+     [
+      "at-vehicle",
+      "truck2",
+      "location0"
+     ],
+     [
+      "ramp-connected",
+      "truck2",
+      "plane_ramp0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck2",
+      "plane_ramp1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location1",
+     "?r": "plane_ramp1",
+     "?v": "truck2"
+    },
+    "precondition": "(and (at-equipment plane_ramp1 location1) (at-vehicle truck2 location1) (not (door-open truck2)) (ramp-connected truck2 plane_ramp1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp1",
+      "location1"
+     ],
+     [
+      "at-vehicle",
+      "truck2",
+      "location1"
+     ],
+     [
+      "ramp-connected",
+      "truck2",
+      "plane_ramp1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck2",
+      "plane_ramp2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location2",
+     "?r": "plane_ramp2",
+     "?v": "truck2"
+    },
+    "precondition": "(and (at-equipment plane_ramp2 location2) (at-vehicle truck2 location2) (not (door-open truck2)) (ramp-connected truck2 plane_ramp2))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp2",
+      "location2"
+     ],
+     [
+      "at-vehicle",
+      "truck2",
+      "location2"
+     ],
+     [
+      "ramp-connected",
+      "truck2",
+      "plane_ramp2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck2",
+      "plane_ramp3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location3",
+     "?r": "plane_ramp3",
+     "?v": "truck2"
+    },
+    "precondition": "(and (at-equipment plane_ramp3 location3) (at-vehicle truck2 location3) (not (door-open truck2)) (ramp-connected truck2 plane_ramp3))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp3",
+      "location3"
+     ],
+     [
+      "at-vehicle",
+      "truck2",
+      "location3"
+     ],
+     [
+      "ramp-connected",
+      "truck2",
+      "plane_ramp3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck3",
+      "plane_ramp0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location0",
+     "?r": "plane_ramp0",
+     "?v": "truck3"
+    },
+    "precondition": "(and (at-equipment plane_ramp0 location0) (at-vehicle truck3 location0) (not (door-open truck3)) (ramp-connected truck3 plane_ramp0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck3"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp0",
+      "location0"
+     ],
+     [
+      "at-vehicle",
+      "truck3",
+      "location0"
+     ],
+     [
+      "ramp-connected",
+      "truck3",
+      "plane_ramp0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck3",
+      "plane_ramp1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location1",
+     "?r": "plane_ramp1",
+     "?v": "truck3"
+    },
+    "precondition": "(and (at-equipment plane_ramp1 location1) (at-vehicle truck3 location1) (not (door-open truck3)) (ramp-connected truck3 plane_ramp1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck3"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp1",
+      "location1"
+     ],
+     [
+      "at-vehicle",
+      "truck3",
+      "location1"
+     ],
+     [
+      "ramp-connected",
+      "truck3",
+      "plane_ramp1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck3",
+      "plane_ramp2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location2",
+     "?r": "plane_ramp2",
+     "?v": "truck3"
+    },
+    "precondition": "(and (at-equipment plane_ramp2 location2) (at-vehicle truck3 location2) (not (door-open truck3)) (ramp-connected truck3 plane_ramp2))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck3"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp2",
+      "location2"
+     ],
+     [
+      "at-vehicle",
+      "truck3",
+      "location2"
+     ],
+     [
+      "ramp-connected",
+      "truck3",
+      "plane_ramp2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck3",
+      "plane_ramp3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location3",
+     "?r": "plane_ramp3",
+     "?v": "truck3"
+    },
+    "precondition": "(and (at-equipment plane_ramp3 location3) (at-vehicle truck3 location3) (not (door-open truck3)) (ramp-connected truck3 plane_ramp3))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck3"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp3",
+      "location3"
+     ],
+     [
+      "at-vehicle",
+      "truck3",
+      "location3"
+     ],
+     [
+      "ramp-connected",
+      "truck3",
+      "plane_ramp3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck4",
+      "plane_ramp0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location0",
+     "?r": "plane_ramp0",
+     "?v": "truck4"
+    },
+    "precondition": "(and (at-equipment plane_ramp0 location0) (at-vehicle truck4 location0) (not (door-open truck4)) (ramp-connected truck4 plane_ramp0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck4"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp0",
+      "location0"
+     ],
+     [
+      "at-vehicle",
+      "truck4",
+      "location0"
+     ],
+     [
+      "ramp-connected",
+      "truck4",
+      "plane_ramp0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck4",
+      "plane_ramp1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location1",
+     "?r": "plane_ramp1",
+     "?v": "truck4"
+    },
+    "precondition": "(and (at-equipment plane_ramp1 location1) (at-vehicle truck4 location1) (not (door-open truck4)) (ramp-connected truck4 plane_ramp1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck4"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp1",
+      "location1"
+     ],
+     [
+      "at-vehicle",
+      "truck4",
+      "location1"
+     ],
+     [
+      "ramp-connected",
+      "truck4",
+      "plane_ramp1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck4",
+      "plane_ramp2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location2",
+     "?r": "plane_ramp2",
+     "?v": "truck4"
+    },
+    "precondition": "(and (at-equipment plane_ramp2 location2) (at-vehicle truck4 location2) (not (door-open truck4)) (ramp-connected truck4 plane_ramp2))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck4"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp2",
+      "location2"
+     ],
+     [
+      "at-vehicle",
+      "truck4",
+      "location2"
+     ],
+     [
+      "ramp-connected",
+      "truck4",
+      "plane_ramp2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck4",
+      "plane_ramp3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location3",
+     "?r": "plane_ramp3",
+     "?v": "truck4"
+    },
+    "precondition": "(and (at-equipment plane_ramp3 location3) (at-vehicle truck4 location3) (not (door-open truck4)) (ramp-connected truck4 plane_ramp3))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck4"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp3",
+      "location3"
+     ],
+     [
+      "at-vehicle",
+      "truck4",
+      "location3"
+     ],
+     [
+      "ramp-connected",
+      "truck4",
+      "plane_ramp3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck5",
+      "plane_ramp0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location0",
+     "?r": "plane_ramp0",
+     "?v": "truck5"
+    },
+    "precondition": "(and (at-equipment plane_ramp0 location0) (at-vehicle truck5 location0) (not (door-open truck5)) (ramp-connected truck5 plane_ramp0))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck5"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp0",
+      "location0"
+     ],
+     [
+      "at-vehicle",
+      "truck5",
+      "location0"
+     ],
+     [
+      "ramp-connected",
+      "truck5",
+      "plane_ramp0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck5",
+      "plane_ramp1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location1",
+     "?r": "plane_ramp1",
+     "?v": "truck5"
+    },
+    "precondition": "(and (at-equipment plane_ramp1 location1) (at-vehicle truck5 location1) (not (door-open truck5)) (ramp-connected truck5 plane_ramp1))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck5"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp1",
+      "location1"
+     ],
+     [
+      "at-vehicle",
+      "truck5",
+      "location1"
+     ],
+     [
+      "ramp-connected",
+      "truck5",
+      "plane_ramp1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck5",
+      "plane_ramp2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location2",
+     "?r": "plane_ramp2",
+     "?v": "truck5"
+    },
+    "precondition": "(and (at-equipment plane_ramp2 location2) (at-vehicle truck5 location2) (not (door-open truck5)) (ramp-connected truck5 plane_ramp2))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck5"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp2",
+      "location2"
+     ],
+     [
+      "at-vehicle",
+      "truck5",
+      "location2"
+     ],
+     [
+      "ramp-connected",
+      "truck5",
+      "plane_ramp2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "ramp-connected",
+      "truck5",
+      "plane_ramp3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "detach-conveyor-ramp",
+    "parameters": {
+     "?l": "location3",
+     "?r": "plane_ramp3",
+     "?v": "truck5"
+    },
+    "precondition": "(and (at-equipment plane_ramp3 location3) (at-vehicle truck5 location3) (not (door-open truck5)) (ramp-connected truck5 plane_ramp3))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck5"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at-equipment",
+      "plane_ramp3",
+      "location3"
+     ],
+     [
+      "at-vehicle",
+      "truck5",
+      "location3"
+     ],
+     [
+      "ramp-connected",
+      "truck5",
+      "plane_ramp3"
+     ]
+    ]
+   }
+  ],
+  "disconnect-chute": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "chute-connected",
+      "truck0"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "disconnect-chute",
+    "parameters": {
+     "?v": "truck0"
+    },
+    "precondition": "(and (chute-connected truck0) (typev truck0 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "chute-connected",
+      "truck0"
+     ],
+     [
+      "typev",
+      "truck0",
+      "hopper"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "chute-connected",
+      "truck1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "disconnect-chute",
+    "parameters": {
+     "?v": "truck1"
+    },
+    "precondition": "(and (chute-connected truck1) (typev truck1 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "chute-connected",
+      "truck1"
+     ],
+     [
+      "typev",
+      "truck1",
+      "hopper"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "chute-connected",
+      "truck2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "disconnect-chute",
+    "parameters": {
+     "?v": "truck2"
+    },
+    "precondition": "(and (chute-connected truck2) (typev truck2 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "chute-connected",
+      "truck2"
+     ],
+     [
+      "typev",
+      "truck2",
+      "hopper"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "chute-connected",
+      "truck3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "disconnect-chute",
+    "parameters": {
+     "?v": "truck3"
+    },
+    "precondition": "(and (chute-connected truck3) (typev truck3 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "chute-connected",
+      "truck3"
+     ],
+     [
+      "typev",
+      "truck3",
+      "hopper"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "chute-connected",
+      "truck4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "disconnect-chute",
+    "parameters": {
+     "?v": "truck4"
+    },
+    "precondition": "(and (chute-connected truck4) (typev truck4 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "chute-connected",
+      "truck4"
+     ],
+     [
+      "typev",
+      "truck4",
+      "hopper"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "chute-connected",
+      "truck5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "disconnect-chute",
+    "parameters": {
+     "?v": "truck5"
+    },
+    "precondition": "(and (chute-connected truck5) (typev truck5 hopper))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "chute-connected",
+      "truck5"
+     ],
+     [
+      "typev",
+      "truck5",
+      "hopper"
+     ]
+    ]
+   }
+  ],
+  "disconnect-hose": [],
+  "empty-hopper": {
+   "truncated_at": 50
+  },
+  "empty-tank": [],
+  "fill-hopper": {
+   "truncated_at": 50
+  },
+  "fill-tank": {
+   "truncated_at": 50
+  },
+  "load-airplane": {
+   "truncated_at": 50
+  },
+  "load-cars": {
+   "truncated_at": 50
+  },
+  "load-regular": {
+   "truncated_at": 50
+  },
+  "lower-ramp": [],
+  "move-vehicle-local-road-route1": {
+   "truncated_at": 50
+  },
+  "move-vehicle-local-road-route2": {
+   "truncated_at": 50
+  },
+  "move-vehicle-local-road-route3": {
+   "truncated_at": 50
+  },
+  "move-vehicle-nonroad-route1": {
+   "truncated_at": 50
+  },
+  "move-vehicle-nonroad-route2": {
+   "truncated_at": 50
+  },
+  "move-vehicle-nonroad-route3": {
+   "truncated_at": 50
+  },
+  "move-vehicle-road-route-crossCity": {
+   "truncated_at": 50
+  },
+  "open-door-airplane": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "door-open",
+      "airplane0"
+     ]
+    ],
+    "name": "open-door-airplane",
+    "parameters": {
+     "?v": "airplane0"
+    },
+    "precondition": "(and (not (door-open airplane0)) (or (ramp-connected airplane0 plane_ramp0) (ramp-connected airplane0 plane_ramp1) (ramp-connected airplane0 plane_ramp2) (ramp-connected airplane0 plane_ramp3)) (typev airplane0 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "ramp-connected",
+      "airplane0",
+      "?r"
+     ],
+     [
+      "typev",
+      "airplane0",
+      "air"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "door-open",
+      "airplane1"
+     ]
+    ],
+    "name": "open-door-airplane",
+    "parameters": {
+     "?v": "airplane1"
+    },
+    "precondition": "(and (not (door-open airplane1)) (or (ramp-connected airplane1 plane_ramp0) (ramp-connected airplane1 plane_ramp1) (ramp-connected airplane1 plane_ramp2) (ramp-connected airplane1 plane_ramp3)) (typev airplane1 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "ramp-connected",
+      "airplane1",
+      "?r"
+     ],
+     [
+      "typev",
+      "airplane1",
+      "air"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "door-open",
+      "airplane2"
+     ]
+    ],
+    "name": "open-door-airplane",
+    "parameters": {
+     "?v": "airplane2"
+    },
+    "precondition": "(and (not (door-open airplane2)) (or (ramp-connected airplane2 plane_ramp0) (ramp-connected airplane2 plane_ramp1) (ramp-connected airplane2 plane_ramp2) (ramp-connected airplane2 plane_ramp3)) (typev airplane2 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "airplane2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "ramp-connected",
+      "airplane2",
+      "?r"
+     ],
+     [
+      "typev",
+      "airplane2",
+      "air"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "door-open",
+      "truck0"
+     ]
+    ],
+    "name": "open-door-airplane",
+    "parameters": {
+     "?v": "truck0"
+    },
+    "precondition": "(and (not (door-open truck0)) (or (ramp-connected truck0 plane_ramp0) (ramp-connected truck0 plane_ramp1) (ramp-connected truck0 plane_ramp2) (ramp-connected truck0 plane_ramp3)) (typev truck0 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck0"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "ramp-connected",
+      "truck0",
+      "?r"
+     ],
+     [
+      "typev",
+      "truck0",
+      "air"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "door-open",
+      "truck1"
+     ]
+    ],
+    "name": "open-door-airplane",
+    "parameters": {
+     "?v": "truck1"
+    },
+    "precondition": "(and (not (door-open truck1)) (or (ramp-connected truck1 plane_ramp0) (ramp-connected truck1 plane_ramp1) (ramp-connected truck1 plane_ramp2) (ramp-connected truck1 plane_ramp3)) (typev truck1 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "ramp-connected",
+      "truck1",
+      "?r"
+     ],
+     [
+      "typev",
+      "truck1",
+      "air"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "door-open",
+      "truck2"
+     ]
+    ],
+    "name": "open-door-airplane",
+    "parameters": {
+     "?v": "truck2"
+    },
+    "precondition": "(and (not (door-open truck2)) (or (ramp-connected truck2 plane_ramp0) (ramp-connected truck2 plane_ramp1) (ramp-connected truck2 plane_ramp2) (ramp-connected truck2 plane_ramp3)) (typev truck2 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "ramp-connected",
+      "truck2",
+      "?r"
+     ],
+     [
+      "typev",
+      "truck2",
+      "air"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "door-open",
+      "truck3"
+     ]
+    ],
+    "name": "open-door-airplane",
+    "parameters": {
+     "?v": "truck3"
+    },
+    "precondition": "(and (not (door-open truck3)) (or (ramp-connected truck3 plane_ramp0) (ramp-connected truck3 plane_ramp1) (ramp-connected truck3 plane_ramp2) (ramp-connected truck3 plane_ramp3)) (typev truck3 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck3"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "ramp-connected",
+      "truck3",
+      "?r"
+     ],
+     [
+      "typev",
+      "truck3",
+      "air"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "door-open",
+      "truck4"
+     ]
+    ],
+    "name": "open-door-airplane",
+    "parameters": {
+     "?v": "truck4"
+    },
+    "precondition": "(and (not (door-open truck4)) (or (ramp-connected truck4 plane_ramp0) (ramp-connected truck4 plane_ramp1) (ramp-connected truck4 plane_ramp2) (ramp-connected truck4 plane_ramp3)) (typev truck4 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck4"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "ramp-connected",
+      "truck4",
+      "?r"
+     ],
+     [
+      "typev",
+      "truck4",
+      "air"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "door-open",
+      "truck5"
+     ]
+    ],
+    "name": "open-door-airplane",
+    "parameters": {
+     "?v": "truck5"
+    },
+    "precondition": "(and (not (door-open truck5)) (or (ramp-connected truck5 plane_ramp0) (ramp-connected truck5 plane_ramp1) (ramp-connected truck5 plane_ramp2) (ramp-connected truck5 plane_ramp3)) (typev truck5 air))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "door-open",
+      "truck5"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "ramp-connected",
+      "truck5",
+      "?r"
+     ],
+     [
+      "typev",
+      "truck5",
+      "air"
+     ]
+    ]
+   }
+  ],
+  "open-door-regular": [],
+  "open-valve": [],
+  "pick-up-package-ground": [],
+  "pick-up-package-vehicle": [],
+  "put-down-package-ground": [],
+  "put-down-package-vehicle": [],
+  "raise-ramp": [],
+  "unload-airplane": {
+   "truncated_at": 50
+  },
+  "unload-cars": [],
+  "unload-regular": []
+ },
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [
+   [
+    "clear"
+   ],
+   [
+    "delivered",
+    "package0",
+    "location1"
+   ],
+   [
+    "delivered",
+    "package1",
+    "location4"
+   ],
+   [
+    "delivered",
+    "package2",
+    "location5"
+   ]
+  ],
+  "initial_numeric": {
+   "distance location0 location0": 0.0,
+   "distance location0 location1": 55.0,
+   "distance location0 location2": 68.0,
+   "distance location0 location3": 14.0,
+   "distance location0 location4": 15.0,
+   "distance location0 location5": 2.0,
+   "distance location1 location0": 55.0,
+   "distance location1 location1": 0.0,
+   "distance location1 location2": 42.0,
+   "distance location1 location3": 18.0,
+   "distance location1 location4": 20.0,
+   "distance location1 location5": 33.0,
+   "distance location2 location0": 68.0,
+   "distance location2 location1": 42.0,
+   "distance location2 location2": 0.0,
+   "distance location2 location3": 3.0,
+   "distance location2 location4": 25.0,
+   "distance location2 location5": 8.0,
+   "distance location3 location0": 14.0,
+   "distance location3 location1": 18.0,
+   "distance location3 location2": 3.0,
+   "distance location3 location3": 0.0,
+   "distance location3 location4": 61.0,
+   "distance location3 location5": 43.0,
+   "distance location4 location0": 15.0,
+   "distance location4 location1": 20.0,
+   "distance location4 location2": 25.0,
+   "distance location4 location3": 61.0,
+   "distance location4 location4": 0.0,
+   "distance location4 location5": 63.0,
+   "distance location5 location0": 2.0,
+   "distance location5 location1": 33.0,
+   "distance location5 location2": 8.0,
+   "distance location5 location3": 43.0,
+   "distance location5 location4": 63.0,
+   "distance location5 location5": 0.0,
+   "gas-left airplane0": 54.0,
+   "gas-left airplane1": 56.0,
+   "gas-left airplane2": 350.0,
+   "gas-left truck0": 426.0,
+   "gas-left truck1": 278.0,
+   "gas-left truck2": 236.0,
+   "gas-left truck3": 161.0,
+   "gas-left truck4": 268.0,
+   "gas-left truck5": 347.0,
+   "gpm airplane0": 3.0,
+   "gpm airplane1": 1.0,
+   "gpm airplane2": 3.0,
+   "gpm truck0": 3.0,
+   "gpm truck1": 3.0,
+   "gpm truck2": 1.0,
+   "gpm truck3": 2.0,
+   "gpm truck4": 3.0,
+   "gpm truck5": 2.0,
+   "height-cap-l location0": 20.0,
+   "height-cap-l location1": 11.0,
+   "height-cap-l location2": 21.0,
+   "height-cap-l location3": 10.0,
+   "height-cap-l location4": 27.0,
+   "height-cap-l location5": 24.0,
+   "height-cap-r air_route0": 16.0,
+   "height-cap-r air_route1": 9.0,
+   "height-cap-r air_route10": 26.0,
+   "height-cap-r air_route11": 30.0,
+   "height-cap-r air_route2": 12.0,
+   "height-cap-r air_route3": 27.0,
+   "height-cap-r air_route4": 18.0,
+   "height-cap-r air_route5": 24.0,
+   "height-cap-r air_route6": 15.0,
+   "height-cap-r air_route7": 24.0,
+   "height-cap-r air_route8": 12.0,
+   "height-cap-r air_route9": 29.0,
+   "height-cap-r road_route0": 16.0,
+   "height-cap-r road_route1": 16.0,
+   "height-v airplane0": 8.0,
+   "height-v airplane1": 7.0,
+   "height-v airplane2": 8.0,
+   "height-v truck0": 1.0,
+   "height-v truck1": 7.0,
+   "height-v truck2": 1.0,
+   "height-v truck3": 5.0,
+   "height-v truck4": 10.0,
+   "height-v truck5": 4.0,
+   "length-cap-l location0": 48.0,
+   "length-cap-l location1": 29.0,
+   "length-cap-l location2": 31.0,
+   "length-cap-l location3": 35.0,
+   "length-cap-l location4": 46.0,
+   "length-cap-l location5": 20.0,
+   "length-v airplane0": 13.0,
+   "length-v airplane1": 14.0,
+   "length-v airplane2": 14.0,
+   "length-v truck0": 10.0,
+   "length-v truck1": 7.0,
+   "length-v truck2": 6.0,
+   "length-v truck3": 7.0,
+   "length-v truck4": 11.0,
+   "length-v truck5": 17.0,
+   "local-height city0": 23.0,
+   "local-height city1": 17.0,
+   "local-weight city0": 284.0,
+   "local-weight city1": 228.0,
+   "volume-cap-l location0": 396.0,
+   "volume-cap-l location1": 110.0,
+   "volume-cap-l location2": 230.0,
+   "volume-cap-l location3": 311.0,
+   "volume-cap-l location4": 484.0,
+   "volume-cap-l location5": 336.0,
+   "volume-cap-v airplane0": 416.0,
+   "volume-cap-v airplane1": 685.0,
+   "volume-cap-v airplane2": 470.0,
+   "volume-cap-v truck0": 80.0,
+   "volume-cap-v truck1": 240.0,
+   "volume-cap-v truck2": 6.0,
+   "volume-cap-v truck3": 210.0,
+   "volume-cap-v truck4": 770.0,
+   "volume-cap-v truck5": 475.0,
+   "volume-load-l location0": 0.0,
+   "volume-load-l location1": 0.0,
+   "volume-load-l location2": 0.0,
+   "volume-load-l location3": 0.0,
+   "volume-load-l location4": 23.0,
+   "volume-load-l location5": 19.0,
+   "volume-load-v airplane0": 0.0,
+   "volume-load-v airplane1": 0.0,
+   "volume-load-v airplane2": 0.0,
+   "volume-load-v truck0": 0.0,
+   "volume-load-v truck1": 0.0,
+   "volume-load-v truck2": 0.0,
+   "volume-load-v truck3": 0.0,
+   "volume-load-v truck4": 0.0,
+   "volume-load-v truck5": 0.0,
+   "volume-p package0": 23.0,
+   "volume-p package1": 9.0,
+   "volume-p package2": 10.0,
+   "weight-cap-r air_route0": 169.0,
+   "weight-cap-r air_route1": 188.0,
+   "weight-cap-r air_route10": 323.0,
+   "weight-cap-r air_route11": 63.0,
+   "weight-cap-r air_route2": 454.0,
+   "weight-cap-r air_route3": 317.0,
+   "weight-cap-r air_route4": 542.0,
+   "weight-cap-r air_route5": 365.0,
+   "weight-cap-r air_route6": 224.0,
+   "weight-cap-r air_route7": 306.0,
+   "weight-cap-r air_route8": 326.0,
+   "weight-cap-r air_route9": 75.0,
+   "weight-cap-r road_route0": 533.0,
+   "weight-cap-r road_route1": 286.0,
+   "weight-cap-v airplane0": 35.0,
+   "weight-cap-v airplane1": 168.0,
+   "weight-cap-v airplane2": 331.0,
+   "weight-cap-v truck0": 272.0,
+   "weight-cap-v truck1": 112.0,
+   "weight-cap-v truck2": 372.0,
+   "weight-cap-v truck3": 498.0,
+   "weight-cap-v truck4": 413.0,
+   "weight-cap-v truck5": 113.0,
+   "weight-load-v airplane0": 0.0,
+   "weight-load-v airplane1": 0.0,
+   "weight-load-v airplane2": 0.0,
+   "weight-load-v truck0": 0.0,
+   "weight-load-v truck1": 0.0,
+   "weight-load-v truck2": 0.0,
+   "weight-load-v truck3": 0.0,
+   "weight-load-v truck4": 0.0,
+   "weight-load-v truck5": 0.0,
+   "weight-p package0": 13.0,
+   "weight-p package1": 12.0,
+   "weight-p package2": 21.0,
+   "weight-v airplane0": 19.0,
+   "weight-v airplane1": 37.0,
+   "weight-v airplane2": 33.0,
+   "weight-v truck0": 20.0,
+   "weight-v truck1": 14.0,
+   "weight-v truck2": 18.0,
+   "weight-v truck3": 21.0,
+   "weight-v truck4": 26.0,
+   "weight-v truck5": 16.0,
+   "width-cap-l location0": 29.0,
+   "width-cap-l location1": 33.0,
+   "width-cap-l location2": 13.0,
+   "width-cap-l location3": 27.0,
+   "width-cap-l location4": 26.0,
+   "width-cap-l location5": 26.0,
+   "width-v airplane0": 4.0,
+   "width-v airplane1": 10.0,
+   "width-v airplane2": 6.0,
+   "width-v truck0": 8.0,
+   "width-v truck1": 7.0,
+   "width-v truck2": 1.0,
+   "width-v truck3": 6.0,
+   "width-v truck4": 10.0,
+   "width-v truck5": 10.0
+  },
+  "initial_state": [
+   [
+    "at-equipment",
+    "plane_ramp0",
+    "location0"
+   ],
+   [
+    "at-equipment",
+    "plane_ramp1",
+    "location1"
+   ],
+   [
+    "at-equipment",
+    "plane_ramp2",
+    "location2"
+   ],
+   [
+    "at-equipment",
+    "plane_ramp3",
+    "location3"
+   ],
+   [
+    "at-packagel",
+    "package0",
+    "location4"
+   ],
+   [
+    "at-packagel",
+    "package1",
+    "location5"
+   ],
+   [
+    "at-packagel",
+    "package2",
+    "location5"
+   ],
+   [
+    "at-vehicle",
+    "airplane0",
+    "location0"
+   ],
+   [
+    "at-vehicle",
+    "airplane1",
+    "location2"
+   ],
+   [
+    "at-vehicle",
+    "airplane2",
+    "location3"
+   ],
+   [
+    "at-vehicle",
+    "truck0",
+    "location3"
+   ],
+   [
+    "at-vehicle",
+    "truck1",
+    "location2"
+   ],
+   [
+    "at-vehicle",
+    "truck2",
+    "location0"
+   ],
+   [
+    "at-vehicle",
+    "truck3",
+    "location0"
+   ],
+   [
+    "at-vehicle",
+    "truck4",
+    "location1"
+   ],
+   [
+    "at-vehicle",
+    "truck5",
+    "location0"
+   ],
+   [
+    "availablel",
+    "location0"
+   ],
+   [
+    "availablel",
+    "location1"
+   ],
+   [
+    "availablel",
+    "location2"
+   ],
+   [
+    "availablel",
+    "location3"
+   ],
+   [
+    "availabler",
+    "air_route0"
+   ],
+   [
+    "availabler",
+    "air_route1"
+   ],
+   [
+    "availabler",
+    "air_route10"
+   ],
+   [
+    "availabler",
+    "air_route11"
+   ],
+   [
+    "availabler",
+    "air_route2"
+   ],
+   [
+    "availabler",
+    "air_route3"
+   ],
+   [
+    "availabler",
+    "air_route4"
+   ],
+   [
+    "availabler",
+    "air_route5"
+   ],
+   [
+    "availabler",
+    "air_route6"
+   ],
+   [
+    "availabler",
+    "air_route7"
+   ],
+   [
+    "availabler",
+    "air_route8"
+   ],
+   [
+    "availabler",
+    "air_route9"
+   ],
+   [
+    "availabler",
+    "road_route0"
+   ],
+   [
+    "availabler",
+    "road_route1"
+   ],
+   [
+    "availablev",
+    "airplane1"
+   ],
+   [
+    "availablev",
+    "airplane2"
+   ],
+   [
+    "availablev",
+    "truck0"
+   ],
+   [
+    "availablev",
+    "truck1"
+   ],
+   [
+    "availablev",
+    "truck2"
+   ],
+   [
+    "availablev",
+    "truck3"
+   ],
+   [
+    "availablev",
+    "truck4"
+   ],
+   [
+    "availablev",
+    "truck5"
+   ],
+   [
+    "connect-city",
+    "road_route0",
+    "road-route",
+    "city0",
+    "city1"
+   ],
+   [
+    "connect-city",
+    "road_route1",
+    "road-route",
+    "city1",
+    "city0"
+   ],
+   [
+    "connect-loc",
+    "air_route0",
+    "air-route",
+    "location0",
+    "location1"
+   ],
+   [
+    "connect-loc",
+    "air_route1",
+    "air-route",
+    "location0",
+    "location2"
+   ],
+   [
+    "connect-loc",
+    "air_route10",
+    "air-route",
+    "location3",
+    "location1"
+   ],
+   [
+    "connect-loc",
+    "air_route11",
+    "air-route",
+    "location3",
+    "location2"
+   ],
+   [
+    "connect-loc",
+    "air_route2",
+    "air-route",
+    "location0",
+    "location3"
+   ],
+   [
+    "connect-loc",
+    "air_route3",
+    "air-route",
+    "location1",
+    "location0"
+   ],
+   [
+    "connect-loc",
+    "air_route4",
+    "air-route",
+    "location1",
+    "location2"
+   ],
+   [
+    "connect-loc",
+    "air_route5",
+    "air-route",
+    "location1",
+    "location3"
+   ],
+   [
+    "connect-loc",
+    "air_route6",
+    "air-route",
+    "location2",
+    "location0"
+   ],
+   [
+    "connect-loc",
+    "air_route7",
+    "air-route",
+    "location2",
+    "location1"
+   ],
+   [
+    "connect-loc",
+    "air_route8",
+    "air-route",
+    "location2",
+    "location3"
+   ],
+   [
+    "connect-loc",
+    "air_route9",
+    "air-route",
+    "location3",
+    "location0"
+   ],
+   [
+    "hub",
+    "location0"
+   ],
+   [
+    "hub",
+    "location1"
+   ],
+   [
+    "hub",
+    "location3"
+   ],
+   [
+    "in-city",
+    "location0",
+    "city0"
+   ],
+   [
+    "in-city",
+    "location1",
+    "city0"
+   ],
+   [
+    "in-city",
+    "location2",
+    "city1"
+   ],
+   [
+    "in-city",
+    "location3",
+    "city1"
+   ],
+   [
+    "in-city",
+    "location4",
+    "city0"
+   ],
+   [
+    "in-city",
+    "location5",
+    "city1"
+   ],
+   [
+    "in-region",
+    "city0",
+    "region0"
+   ],
+   [
+    "in-region",
+    "city1",
+    "region0"
+   ],
+   [
+    "pv-compatible",
+    "bulky",
+    "flatbed"
+   ],
+   [
+    "pv-compatible",
+    "cars",
+    "auto"
+   ],
+   [
+    "pv-compatible",
+    "granular",
+    "hopper"
+   ],
+   [
+    "pv-compatible",
+    "liquid",
+    "tanker"
+   ],
+   [
+    "pv-compatible",
+    "mail",
+    "air"
+   ],
+   [
+    "pv-compatible",
+    "mail",
+    "regularv"
+   ],
+   [
+    "pv-compatible",
+    "regularp",
+    "air"
+   ],
+   [
+    "pv-compatible",
+    "regularp",
+    "regularv"
+   ],
+   [
+    "rv-compatible",
+    "air-route",
+    "airplane"
+   ],
+   [
+    "rv-compatible",
+    "rail-route",
+    "train"
+   ],
+   [
+    "rv-compatible",
+    "road-route",
+    "truck"
+   ],
+   [
+    "serves",
+    "location0",
+    "region0"
+   ],
+   [
+    "serves",
+    "location1",
+    "region0"
+   ],
+   [
+    "serves",
+    "location3",
+    "region0"
+   ],
+   [
+    "tcenter",
+    "location0"
+   ],
+   [
+    "tcenter",
+    "location1"
+   ],
+   [
+    "tcenter",
+    "location2"
+   ],
+   [
+    "tcenter",
+    "location3"
+   ],
+   [
+    "typel",
+    "location0",
+    "airport"
+   ],
+   [
+    "typel",
+    "location1",
+    "airport"
+   ],
+   [
+    "typel",
+    "location2",
+    "airport"
+   ],
+   [
+    "typel",
+    "location3",
+    "airport"
+   ],
+   [
+    "typep",
+    "package0",
+    "granular"
+   ],
+   [
+    "typep",
+    "package1",
+    "granular"
+   ],
+   [
+    "typep",
+    "package2",
+    "granular"
+   ],
+   [
+    "typev",
+    "airplane0",
+    "air"
+   ],
+   [
+    "typev",
+    "airplane1",
+    "air"
+   ],
+   [
+    "typev",
+    "airplane2",
+    "air"
+   ],
+   [
+    "typev",
+    "truck0",
+    "hopper"
+   ],
+   [
+    "typev",
+    "truck1",
+    "hopper"
+   ],
+   [
+    "typev",
+    "truck2",
+    "hopper"
+   ],
+   [
+    "typev",
+    "truck3",
+    "hopper"
+   ],
+   [
+    "typev",
+    "truck4",
+    "hopper"
+   ],
+   [
+    "typev",
+    "truck5",
+    "hopper"
+   ],
+   [
+    "typevp",
+    "airplane0",
+    "airplane"
+   ],
+   [
+    "typevp",
+    "airplane1",
+    "airplane"
+   ],
+   [
+    "typevp",
+    "airplane2",
+    "airplane"
+   ],
+   [
+    "typevp",
+    "truck0",
+    "truck"
+   ],
+   [
+    "typevp",
+    "truck1",
+    "truck"
+   ],
+   [
+    "typevp",
+    "truck2",
+    "truck"
+   ],
+   [
+    "typevp",
+    "truck3",
+    "truck"
+   ],
+   [
+    "typevp",
+    "truck4",
+    "truck"
+   ],
+   [
+    "typevp",
+    "truck5",
+    "truck"
+   ]
+  ],
+  "metric": null,
+  "objects": {
+   "air": "vtype",
+   "air-route": "rtype",
+   "air_route0": "route",
+   "air_route1": "route",
+   "air_route10": "route",
+   "air_route11": "route",
+   "air_route2": "route",
+   "air_route3": "route",
+   "air_route4": "route",
+   "air_route5": "route",
+   "air_route6": "route",
+   "air_route7": "route",
+   "air_route8": "route",
+   "air_route9": "route",
+   "airplane": "vptype",
+   "airplane0": "vehicle",
+   "airplane1": "vehicle",
+   "airplane2": "vehicle",
+   "airport": "ltype",
+   "auto": "vtype",
+   "bulky": "ptype",
+   "cars": "ptype",
+   "city0": "city",
+   "city1": "city",
+   "flatbed": "vtype",
+   "granular": "ptype",
+   "hopper": "vtype",
+   "liquid": "ptype",
+   "location0": "location",
+   "location1": "location",
+   "location2": "location",
+   "location3": "location",
+   "location4": "location",
+   "location5": "location",
+   "mail": "ptype",
+   "package0": "package",
+   "package1": "package",
+   "package2": "package",
+   "plane_ramp0": "plane-ramp",
+   "plane_ramp1": "plane-ramp",
+   "plane_ramp2": "plane-ramp",
+   "plane_ramp3": "plane-ramp",
+   "rail-route": "rtype",
+   "region0": "region",
+   "regularp": "ptype",
+   "regularv": "vtype",
+   "road-route": "rtype",
+   "road_route0": "route",
+   "road_route1": "route",
+   "tanker": "vtype",
+   "train": "vptype",
+   "train-station": "ltype",
+   "truck": "vptype",
+   "truck0": "vehicle",
+   "truck1": "vehicle",
+   "truck2": "vehicle",
+   "truck3": "vehicle",
+   "truck4": "vehicle",
+   "truck5": "vehicle"
+  },
+  "operators": [
+   "attach-conveyor-ramp",
+   "clean-domain",
+   "close-door-airplane",
+   "close-door-regular",
+   "close-valve",
+   "collect-fees",
+   "connect-chute",
+   "connect-hose",
+   "deliver",
+   "detach-conveyor-ramp",
+   "disconnect-chute",
+   "disconnect-hose",
+   "empty-hopper",
+   "empty-tank",
+   "fill-hopper",
+   "fill-tank",
+   "load-airplane",
+   "load-cars",
+   "load-regular",
+   "lower-ramp",
+   "move-vehicle-local-road-route1",
+   "move-vehicle-local-road-route2",
+   "move-vehicle-local-road-route3",
+   "move-vehicle-nonroad-route1",
+   "move-vehicle-nonroad-route2",
+   "move-vehicle-nonroad-route3",
+   "move-vehicle-road-route-crossCity",
+   "open-door-airplane",
+   "open-door-regular",
+   "open-valve",
+   "pick-up-package-ground",
+   "pick-up-package-vehicle",
+   "put-down-package-ground",
+   "put-down-package-vehicle",
+   "raise-ramp",
+   "unload-airplane",
+   "unload-cars",
+   "unload-regular"
+  ],
+  "predicates": [
+   "at-equipment",
+   "at-packagec",
+   "at-packagel",
+   "at-packagev",
+   "at-vehicle",
+   "availablel",
+   "availabler",
+   "availablev",
+   "chute-connected",
+   "clear",
+   "connect-city",
+   "connect-loc",
+   "delivered",
+   "door-open",
+   "empty",
+   "fees-collected",
+   "h-start",
+   "hose-connected",
+   "hub",
+   "in-city",
+   "in-region",
+   "move",
+   "move-emp",
+   "over",
+   "pv-compatible",
+   "ramp-connected",
+   "ramp-down",
+   "rv-compatible",
+   "serves",
+   "t-end",
+   "t-start",
+   "tcenter",
+   "typel",
+   "typep",
+   "typev",
+   "typevp",
+   "unload",
+   "valve-open"
+  ],
+  "requirements": [
+   ":adl",
+   ":equality",
+   ":existential-preconditions",
+   ":fluents",
+   ":negative-preconditions",
+   ":typing",
+   ":universal-preconditions"
+  ],
+  "types": {
+   "city": "object",
+   "crane": "equipment",
+   "equipment": "object",
+   "location": "object",
+   "ltype": "object",
+   "package": "object",
+   "plane-ramp": "equipment",
+   "ptype": "object",
+   "region": "object",
+   "route": "object",
+   "rtype": "object",
+   "vehicle": "object",
+   "vptype": "object",
+   "vtype": "object"
+  }
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "zero_groundings",
+    "message": "operator 'close-door-regular' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'close-valve' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'connect-hose' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'disconnect-hose' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'empty-tank' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'lower-ramp' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'open-door-regular' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'open-valve' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'pick-up-package-ground' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'pick-up-package-vehicle' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'put-down-package-ground' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'put-down-package-vehicle' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'raise-ramp' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'unload-cars' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'unload-regular' grounds to zero instances",
+    "severity": "warning"
+   }
+  ],
+  "valid": true
+ }
+}

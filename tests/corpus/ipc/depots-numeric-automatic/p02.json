@@ -1,0 +1,233 @@
+{
+ "ground": {
+  "Drive": [],
+  "Drop": [],
+  "Lift": [],
+  "Load": [],
+  "Unload": []
+ },
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [
+   [
+    "on",
+    "crate0",
+    "pallet2"
+   ],
+   [
+    "on",
+    "crate1",
+    "crate3"
+   ],
+   [
+    "on",
+    "crate2",
+    "pallet0"
+   ],
+   [
+    "on",
+    "crate3",
+    "pallet1"
+   ]
+  ],
+  "initial_numeric": {
+   "current_load truck0": 0.0,
+   "current_load truck1": 0.0,
+   "fuel-cost": 0.0,
+   "load_limit truck0": 411.0,
+   "load_limit truck1": 390.0,
+   "weight crate0": 32.0,
+   "weight crate1": 4.0,
+   "weight crate2": 89.0,
+   "weight crate3": 62.0
+  },
+  "initial_state": [
+   [
+    "at",
+    "crate0",
+    "depot0"
+   ],
+   [
+    "at",
+    "crate1",
+    "distributor1"
+   ],
+   [
+    "at",
+    "crate2",
+    "distributor1"
+   ],
+   [
+    "at",
+    "crate3",
+    "distributor0"
+   ],
+   [
+    "at",
+    "hoist0",
+    "depot0"
+   ],
+   [
+    "at",
+    "hoist1",
+    "distributor0"
+   ],
+   [
+    "at",
+    "hoist2",
+    "distributor1"
+   ],
+   [
+    "at",
+    "pallet0",
+    "depot0"
+   ],
+   [
+    "at",
+    "pallet1",
+    "distributor0"
+   ],
+   [
+    "at",
+    "pallet2",
+    "distributor1"
+   ],
+   [
+    "at",
+    "truck0",
+    "depot0"
+   ],
+   [
+    "at",
+    "truck1",
+    "depot0"
+   ],
+   [
+    "available",
+    "hoist0"
+   ],
+   [
+    "available",
+    "hoist1"
+   ],
+   [
+    "available",
+    "hoist2"
+   ],
+   [
+    "clear",
+    "crate0"
+   ],
+   [
+    "clear",
+    "crate2"
+   ],
+   [
+    "clear",
+    "crate3"
+   ],
+   [
+    "on",
+    "crate0",
+    "pallet0"
+   ],
+   [
+    "on",
+    "crate1",
+    "pallet2"
+   ],
+   [
+    "on",
+    "crate2",
+    "crate1"
+   ],
+   [
+    "on",
+    "crate3",
+    "pallet1"
+   ]
+  ],
+  "metric": {
+   "expression": "(fuel-cost)",
+   "optimization": "minimize"
+  },
+  "objects": {
+   "crate0": "Crate",
+   "crate1": "Crate",
+   "crate2": "Crate",
+   "crate3": "Crate",
+   "depot0": "Depot",
+   "distributor0": "Distributor",
+   "distributor1": "Distributor",
+   "hoist0": "Hoist",
+   "hoist1": "Hoist",
+   "hoist2": "Hoist",
+   "pallet0": "Pallet",
+   "pallet1": "Pallet",
+   "pallet2": "Pallet",
+   "truck0": "Truck",
+   "truck1": "Truck"
+  },
+  "operators": [
+   "Drive",
+   "Drop",
+   "Lift",
+   "Load",
+   "Unload"
+  ],
+  "predicates": [
+   "at",
+   "available",
+   "clear",
+   "in",
+   "lifting",
+   "on"
+  ],
+  "requirements": [
+   ":fluents",
+   ":typing"
+  ],
+  "types": {
+   "crate": "surface",
+   "depot": "place",
+   "distributor": "place",
+   "hoist": "locatable",
+   "locatable": "object",
+   "pallet": "surface",
+   "place": "object",
+   "surface": "locatable",
+   "truck": "locatable"
+  }
+ },
+ "validate": {
+  "issues": [
+   {
+    "check": "zero_groundings",
+    "message": "operator 'Drive' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'Drop' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'Lift' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'Load' grounds to zero instances",
+    "severity": "warning"
+   },
+   {
+    "check": "zero_groundings",
+    "message": "operator 'Unload' grounds to zero instances",
+    "severity": "warning"
+   }
+  ],
+  "valid": true
+ }
+}
