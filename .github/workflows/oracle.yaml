@@ -1,0 +1,149 @@
+name: Oracle
+
+# pddlpy vs Fast Downward / VAL / INVAL on the IPC corpora (#153). Never
+# part of the PR gate: it needs network, native builds and hours. Triggers:
+# weekly, on demand (e.g. before a release), and on pushes to main that
+# touch parsing semantics. The pull_request trigger only fires when this
+# file changes, to try the workflow itself before it reaches main.
+#
+# GitHub disables scheduled workflows in public repos after 60 days without
+# repository activity; re-enable this one from the Actions tab.
+
+on:
+  schedule:
+    - cron: "17 4 * * 1"  # Mondays 04:17 UTC
+  workflow_dispatch:
+    inputs:
+      oracle_per_domain:
+        description: "Oracle checks: problems per domain variant (0 = all)"
+        default: "2"
+      corpora_per_domain:
+        description: "corpora-test: problems per domain variant (0 = all)"
+        default: "5"
+  push:
+    branches: [main]
+    paths:
+      - pddl.g4
+      - pddlpy/pddl.py
+      - pddlpy/diagnostics.py
+      - "pddlpy/_vendor/**"
+  pull_request:
+    paths:
+      - .github/workflows/oracle.yaml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: oracle-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ORACLES_DIR: ${{ github.workspace }}/.oracles
+  CORPORA_DIR: ${{ github.workspace }}/.corpora
+  ORACLE_TIMEOUT: "30"
+  CORPORA_TIMEOUT: "30"
+
+jobs:
+  # Build FD, VAL and INVAL once; later jobs restore them from the cache.
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        id: cache
+        with:
+          path: .oracles
+          key: oracles-${{ runner.os }}-${{ hashFiles('scripts/build-oracles.sh', 'scripts/inval-sbcl.lsp') }}
+      - name: Toolchain
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: sudo apt-get update && sudo apt-get install -y sbcl flex bison
+      - name: Build oracles
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: scripts/build-oracles.sh
+
+  # The committed pairs (tests/corpus/ipc + tests/corpus/oracle).
+  subset:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.12"
+      - run: uv sync
+      - name: Oracle runtime
+        run: sudo apt-get update && sudo apt-get install -y sbcl
+      - uses: actions/cache/restore@v6
+        with:
+          path: .oracles
+          key: oracles-${{ runner.os }}-${{ hashFiles('scripts/build-oracles.sh', 'scripts/inval-sbcl.lsp') }}
+          fail-on-cache-miss: true
+      - name: Oracle checks
+        run: make oracle PYTEST_ARGS="--junitxml=oracle-subset.xml"
+      - name: Report
+        if: always()
+        run: |
+          uv run python tests/oracle_report.py --title "Oracle: committed pairs" oracle-subset.xml \
+            | tee report-subset.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: oracle-subset
+          path: |
+            oracle-subset.xml
+            report-subset.md
+
+  # The full corpora, sampled per domain variant, one job per corpus.
+  corpus:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      matrix:
+        corpus: [potassco, classical]
+    env:
+      DOMAIN: ${{ matrix.corpus }}/
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.12"
+      - run: uv sync
+      - name: Oracle runtime
+        run: sudo apt-get update && sudo apt-get install -y sbcl
+      - uses: actions/cache/restore@v6
+        with:
+          path: .oracles
+          key: oracles-${{ runner.os }}-${{ hashFiles('scripts/build-oracles.sh', 'scripts/inval-sbcl.lsp') }}
+          fail-on-cache-miss: true
+      - name: Fetch corpus
+        run: scripts/fetch-corpora.sh ${{ matrix.corpus }}
+      - name: pddlpy over the corpus (snapshots + summary)
+        env:
+          CORPORA_PER_DOMAIN: ${{ inputs.corpora_per_domain || '5' }}
+        run: make corpora-test
+      - name: Oracle checks
+        env:
+          ORACLE_CORPORA: "1"
+          CORPORA_PER_DOMAIN: ${{ inputs.oracle_per_domain || '2' }}
+        run: make oracle PYTEST_ARGS="-q --junitxml=oracle-${{ matrix.corpus }}.xml"
+      - name: Report
+        if: always()
+        run: |
+          uv run python tests/oracle_report.py --title "Oracle: ${{ matrix.corpus }}" \
+            oracle-${{ matrix.corpus }}.xml .corpora/results/summary.json \
+            | tee report-${{ matrix.corpus }}.md >> "$GITHUB_STEP_SUMMARY"
+      # The per-pair snapshots are the corpus's golden outputs: an artifact,
+      # never committed.
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: oracle-${{ matrix.corpus }}
+          path: |
+            oracle-${{ matrix.corpus }}.xml
+            report-${{ matrix.corpus }}.md
+            .corpora/results/

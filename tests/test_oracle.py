@@ -19,7 +19,7 @@ import os
 import signal
 
 import pytest
-from corpora_run import discover
+from corpora_run import discover, per_domain
 from golden import IPC, pairs
 from oracles import (
     FD_SEARCH_UNSOLVABLE,
@@ -60,7 +60,7 @@ def _pairs():
     if os.environ.get("ORACLE_CORPORA"):
         corpora = os.environ.get("CORPORA_DIR") or ".corpora"
         return [(d, p, os.path.relpath(p, corpora))
-                for _, d, p in discover(corpora, os.environ.get("DOMAIN"))]
+                for _, d, p in discover(corpora, os.environ.get("DOMAIN"), per_domain())]
     committed = pairs() + [
         (os.path.join(ORACLE, name, "domain.pddl"), os.path.join(ORACLE, name, "p01.pddl"))
         for name in sorted(os.listdir(ORACLE))

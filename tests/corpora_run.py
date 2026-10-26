@@ -11,6 +11,7 @@ Environment:
   CORPORA_DIR      corpora root (default .corpora)
   CORPORA_OUT      results directory (default $CORPORA_DIR/results)
   DOMAIN           only pairs whose path contains this substring
+  CORPORA_PER_DOMAIN  only the first N problems of each domain variant
   CORPORA_TIMEOUT  seconds per pair (default 60)
   CORPORA_JOBS     worker processes (default: CPU count)
 """
@@ -21,6 +22,7 @@ import collections
 import glob
 import json
 import os
+import re
 import signal
 import sys
 from multiprocessing import Pool
@@ -60,7 +62,23 @@ def classical_pairs(root: str) -> List[Pair]:
     return pairs
 
 
-def discover(corpora: str, needle: Optional[str]) -> List[Pair]:
+def _natural(path: str) -> List[Any]:
+    """Sort key: instance-2 before instance-10."""
+    return [int(t) if t.isdigit() else t for t in re.split(r"(\d+)", path)]
+
+
+def _variant(pair: Pair) -> str:
+    """The domain variant a pair belongs to (its problems' directory)."""
+    corpus, _, prob = pair
+    parent = os.path.dirname(prob)
+    return os.path.dirname(parent) if corpus == "potassco" else parent
+
+
+def discover(corpora: str, needle: Optional[str],
+             limit: Optional[int] = None) -> List[Pair]:
+    """Every pair under ``corpora``, filtered by ``needle`` (substring of the
+    problem's relative path) and, with ``limit``, sampled to the first N
+    problems of each domain variant (the smallest, in IPC numbering)."""
     pairs = []
     if os.path.isdir(os.path.join(corpora, "potassco")):
         pairs += potassco_pairs(os.path.join(corpora, "potassco"))
@@ -68,7 +86,21 @@ def discover(corpora: str, needle: Optional[str]) -> List[Pair]:
         pairs += classical_pairs(os.path.join(corpora, "classical"))
     if needle:
         pairs = [p for p in pairs if needle in os.path.relpath(p[2], corpora)]
+    pairs.sort(key=lambda p: _natural(p[2]))
+    if limit:
+        taken: Dict[str, int] = collections.Counter()
+        sampled = []
+        for p in pairs:
+            if taken[_variant(p)] < limit:
+                taken[_variant(p)] += 1
+                sampled.append(p)
+        pairs = sampled
     return sorted(pairs)
+
+
+def per_domain() -> Optional[int]:
+    """``CORPORA_PER_DOMAIN`` as a sampling limit (unset or 0: no limit)."""
+    return int(os.environ.get("CORPORA_PER_DOMAIN") or 0) or None
 
 
 class _Timeout(BaseException):
@@ -111,7 +143,7 @@ def main() -> int:
     out = os.environ.get("CORPORA_OUT") or os.path.join(corpora, "results")
     timeout = int(os.environ.get("CORPORA_TIMEOUT") or 60)
     jobs = int(os.environ.get("CORPORA_JOBS") or os.cpu_count() or 1)
-    pairs = discover(corpora, os.environ.get("DOMAIN"))
+    pairs = discover(corpora, os.environ.get("DOMAIN"), per_domain())
     if not pairs:
         print("corpora-test: no domain/problem pairs under %r; run `make corpora` "
               "first (or set CORPORA_DIR / DOMAIN). Nothing to do." % corpora)
