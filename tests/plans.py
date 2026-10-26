@@ -19,7 +19,7 @@ import signal
 from typing import Any, Dict, List
 
 from golden import pairs
-from oracles import Step, plan_steps, write_plan
+from oracles import Step, plan_steps, read_plan, replay, write_plan
 
 from pddlpy import DomainProblem
 from pddlpy.planning import get
@@ -41,7 +41,7 @@ def corruptions(steps: List[Step]) -> Dict[str, List[Step]]:
     }
 
 
-class _Timeout(Exception):
+class _Timeout(BaseException):  # not swallowed by `except Exception`
     pass
 
 
@@ -69,7 +69,7 @@ def main() -> None:
             if dp.durative_operators():
                 continue
             plan = get("bfs").solve(dp)
-        except Exception:  # timeout, refused requirements, loader crash
+        except (Exception, _Timeout):  # refused requirements, loader crash, timeout
             continue
         finally:
             signal.alarm(0)
@@ -79,10 +79,17 @@ def main() -> None:
         out = plans_dir(problem)
         os.makedirs(out, exist_ok=True)
         stem = os.path.splitext(os.path.basename(problem))[0]
-        write_plan(steps, os.path.join(out, stem + ".plan"))
+        path = os.path.join(out, stem + ".plan")
+        # bfs breaks ties in hash order: keep a committed plan that is still
+        # valid and still shortest, so regenerating does not churn fixtures.
+        if os.path.exists(path):
+            kept = read_plan(path)
+            if len(kept) == len(steps) and replay(dp, kept) is None:
+                steps = kept
+        write_plan(steps, path)
         for kind, bad in corruptions(steps).items():
             write_plan(bad, os.path.join(out, "%s.%s.plan" % (stem, kind)))
-        print(os.path.relpath(os.path.join(out, stem + ".plan")))
+        print(os.path.relpath(path))
 
 
 if __name__ == "__main__":

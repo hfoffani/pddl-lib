@@ -99,7 +99,7 @@ def fd_result(domain, problem):
     return fd_solve(need(fast_downward_bin(), "Fast Downward"), domain, problem, TIMEOUT)
 
 
-class _Timeout(Exception):
+class _Timeout(BaseException):  # not swallowed by `except Exception`
     pass
 
 
