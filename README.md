@@ -42,8 +42,10 @@ pip install pddlpy            # library + `pddlpy` CLI
 pip install "pddlpy[mcp]"     # also the MCP server (`pddlpy-mcp`)
 ```
 
-The only runtime dependency is `antlr4-python3-runtime`; `mcp` is an optional
-extra. Java is not needed to install or use the package.
+`pddlpy` has no runtime dependencies: the ANTLR runtime (4.13.2, BSD-3-Clause)
+is vendored in `pddlpy/_vendor/`, so it does not clash with packages that pin
+another `antlr4-python3-runtime` version. `mcp` is an optional extra. Java is
+not needed to install or use the package.
 
 ### Command-line interface ###
 
@@ -369,16 +371,17 @@ on the library itself. Installing and using the package needs none of it.
 
 * [uv](https://docs.astral.sh/uv/)
 * Python 3.11 or higher
-* Java, only to regenerate the parser from `pddl.g4`. The generated parser
-  files are not in git, so a fresh clone needs Java once. Released packages
-  already include them.
+* Java, only to change the grammar. The generated parser files are committed,
+  so a fresh clone runs the tests without Java.
 
 #### Building
 
 * Clone the repository.
-* Run `make pyparser` first. It downloads the ANTLR jar and generates the
-  parser into `pddlpy/`. On a fresh clone `uv sync` fails without it.
 * Run `uv sync` to set up the environment.
+* Run `make test` to run the Python tests.
+* After changing `pddl.g4`, run `make pyparser` to regenerate the parser into
+  `pddlpy/` (it downloads the ANTLR jar), and commit the regenerated files. CI
+  fails if they don't match the grammar.
 * Run `make` (or `make all`) to test the grammar (needs Java and `javac`) and
   run the Python tests.
 * Run `make build` to build the wheel and sdist.
@@ -397,9 +400,6 @@ on the library itself. Installing and using the package needs none of it.
 * `make clean` - Remove build artifacts
 * `make demo` - Run demo scripts
 * `make help` - Show all available targets
-
-`test`, `coverage`, `typecheck`, `examples`, `build` and `demo` run
-`make pyparser` first, so in a checkout they need Java too.
 
 Publishing to PyPI happens only in GitHub Actions when a `v*` tag is pushed
 (TestPyPI first, then PyPI, via [Trusted

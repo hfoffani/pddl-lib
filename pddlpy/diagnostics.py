@@ -15,9 +15,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, Iterator, List, Set, Tuple
 
-from antlr4 import CommonTokenStream, FileStream
-from antlr4.error.ErrorListener import ErrorListener
-
+from pddlpy._vendor.antlr4 import CommonTokenStream, FileStream
+from pddlpy._vendor.antlr4.error.ErrorListener import ErrorListener
 from pddlpy.pddl import DomainProblem
 from pddlpy.pddlLexer import pddlLexer
 from pddlpy.pddlParser import pddlParser

@@ -37,19 +37,24 @@ testgrammar: $(ANTLRJAR) pddl.g4
 	$(GRUN) pddl domain ../examples-pddl/domain-01.pddl && \
 	$(GRUN) pddl problem ../examples-pddl/problem-01.pddl
 
-# Generate Python parser from ANTLR grammar
+# Generate Python parser from ANTLR grammar. The generated files are
+# committed; regenerate only after changing pddl.g4. The sed points them at
+# the vendored runtime (#148); -i.bak keeps it portable across BSD/GNU sed.
+GENERATED=pddlpy/pddlLexer.py pddlpy/pddlParser.py pddlpy/pddlListener.py
 pyparser: $(ANTLRJAR) pddl.g4
 	@echo "Generating Python parser..."
 	mkdir -p pddlpy && \
-	$(ANTLR) $(ANTLRLANG) -o pddlpy pddl.g4
+	$(ANTLR) $(ANTLRLANG) -o pddlpy pddl.g4 && \
+	sed -i.bak -E 's/^from antlr4([. ])/from pddlpy._vendor.antlr4\1/' $(GENERATED) && \
+	rm -f $(addsuffix .bak,$(GENERATED))
 
 # Run Python tests
-test: pyparser pddlpy/pddl.py
+test:
 	@echo "Running Python tests..."
 	$(PYTHON) -m pytest
 
 # Run tests with coverage report for pddlpy/pddl.py
-coverage: pyparser pddlpy/pddl.py
+coverage:
 	@echo "Running tests with coverage..."
 	$(PYTHON) -m pytest --cov=pddlpy --cov-report=term-missing
 
@@ -59,7 +64,7 @@ lint:
 	$(PYTHON) -m ruff check pddlpy tests demo.py
 
 # Type-check with mypy
-typecheck: pyparser pddlpy/pddl.py
+typecheck:
 	@echo "Type checking with mypy..."
 	$(PYTHON) -m mypy
 
@@ -73,7 +78,6 @@ build: test
 clean:
 	@echo "Cleaning build artifacts..."
 	rm -rf dist/ build/ pddlpy.egg-info/ tmp/
-	rm -f pddlpy/pddlLexer.py pddlpy/pddlParser.py pddlpy/pddlListener.py pddlpy/*.interp pddlpy/*.tokens
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 
 # Run demo
@@ -82,7 +86,7 @@ demo: test
 	for i in 1 2 3 4 6; do $(PYTHON) demo.py $$i ; done
 
 # Run the example showcase (examples/)
-examples: pyparser pddlpy/pddl.py
+examples:
 	@echo "Running examples..."
 	for f in examples/[0-9][0-9]_*.py ; do echo "=== $$f ===" ; $(PYTHON) $$f ; done
 

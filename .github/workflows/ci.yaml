@@ -6,6 +6,8 @@ on:
   pull_request:
 
 jobs:
+  # No Java here on purpose (#148): the generated parser is committed and
+  # the ANTLR runtime is vendored, so the tests must run without it.
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -13,26 +15,36 @@ jobs:
         python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v7
-      # Java is needed to compile the ANTLR grammar and regenerate the
-      # parser (the generated pddlLexer/Parser/Listener are gitignored).
-      - uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "17"
       - uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
-      # Generate the ANTLR parser BEFORE uv sync: the editable build
-      # force-includes pddlpy/pddlLexer.py etc., which are gitignored.
-      - name: Generate ANTLR parser
-        run: make pyparser
       - name: Install dependencies
         run: uv sync --all-extras
-      - name: Grammar + tests
-        run: make
+      - name: Tests
+        run: make test
       - name: Coverage gate (100%)
         run: uv run pytest -q --cov=pddlpy --cov-fail-under=100
       - name: Lint
         run: make lint
       - name: Typecheck
         run: make typecheck
+
+  # Java job: compile and exercise the grammar, then regenerate the Python
+  # parser from pddl.g4 and fail if it differs from the committed files.
+  grammar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Grammar test
+        run: make testgrammar
+      - name: Regenerate parser
+        run: make pyparser
+      - name: Committed parser matches pddl.g4
+        run: |
+          git status --porcelain pddlpy
+          git diff --exit-code pddlpy
+          test -z "$(git status --porcelain pddlpy)"

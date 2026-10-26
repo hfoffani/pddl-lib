@@ -43,7 +43,7 @@ from typing import (
     cast,
 )
 
-from antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
+from pddlpy._vendor.antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
 
 from .binding import CartesianBinder, StaticPrunedBinder, VariableBinder
 from .pddlLexer import pddlLexer

@@ -23,9 +23,8 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 requires-python = ">=3.11"
-dependencies = [
-    "antlr4-python3-runtime==4.13.2",
-]
+# None: the ANTLR runtime is vendored in pddlpy/_vendor/ (#148).
+dependencies = []
 
 [project.scripts]
 pddlpy = "pddlpy.cli:main"
@@ -52,9 +51,10 @@ exclude = [
     ".venv/",
     "__pycache__/",
     "*.pyc",
+    # ANTLR tool side-outputs; the Python parser does not read them.
+    "pddlpy/*.interp",
+    "pddlpy/*.tokens",
 ]
-# Force include generated ANTLR parser files even though they're in .gitignore
-force-include = { "pddlpy/pddlLexer.py" = "pddlpy/pddlLexer.py", "pddlpy/pddlParser.py" = "pddlpy/pddlParser.py", "pddlpy/pddlListener.py" = "pddlpy/pddlListener.py" }
 
 # sdist-only: at the build level this list also put these top-level files
 # in the wheel root, i.e. directly into site-packages
@@ -72,9 +72,6 @@ packages = ["pddlpy"]
 # Include example PDDL files as data files
 [tool.hatch.build.targets.wheel.shared-data]
 "examples-pddl" = "share/pddlpy/examples"
-
-# Build hook is handled by Makefile's pyparser target
-# ANTLR files are generated before building
 
 [dependency-groups]
 dev = [
@@ -95,17 +92,19 @@ omit = [
     "pddlpy/pddlLexer.py",
     "pddlpy/pddlParser.py",
     "pddlpy/pddlListener.py",
+    "pddlpy/_vendor/*",
     "pddlpy/test.py",
 ]
 
-# Generated ANTLR parser files are machine output, not ours — exclude them
-# from linting and type checking everywhere.
+# Generated ANTLR parser files and the vendored runtime are not ours —
+# exclude them from linting and type checking everywhere.
 [tool.ruff]
 line-length = 100
 extend-exclude = [
     "pddlpy/pddlLexer.py",
     "pddlpy/pddlParser.py",
     "pddlpy/pddlListener.py",
+    "pddlpy/_vendor/",
 ]
 
 [tool.ruff.lint]
@@ -117,10 +116,20 @@ ignore = ["E501"]
 [tool.mypy]
 python_version = "3.11"
 files = ["pddlpy"]
-# antlr4 runtime ships no type stubs.
-ignore_missing_imports = true
-# Generated parser files are excluded from type checking.
-exclude = '(pddlLexer|pddlParser|pddlListener)\.py$'
+# Generated parser files and the vendored runtime are excluded from type
+# checking.
+exclude = '((pddlLexer|pddlParser|pddlListener)\.py$|_vendor/)'
+
+# `exclude` only stops discovery; mypy still follows imports into those
+# modules from pddl.py/diagnostics.py. Skip them so they are never checked.
+[[tool.mypy.overrides]]
+module = [
+    "pddlpy._vendor.*",
+    "pddlpy.pddlLexer",
+    "pddlpy.pddlParser",
+    "pddlpy.pddlListener",
+]
+follow_imports = "skip"
 
 # The planning layer is fully typed; hold it to a higher standard.
 [[tool.mypy.overrides]]

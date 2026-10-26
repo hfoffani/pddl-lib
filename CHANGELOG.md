@@ -5,6 +5,16 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 
 ## [Unreleased]
 
+### Changed
+- **No runtime dependencies** (#148): the ANTLR runtime (4.13.2, BSD-3-Clause)
+  is vendored in `pddlpy/_vendor/antlr4`, and `antlr4-python3-runtime` is no
+  longer a dependency. The runtime pin had to be exact, so `pddlpy` could not
+  be installed next to packages pinning another version, such as
+  omegaconf/Hydra (`4.9.*`).
+- **No Java needed to run the tests**: the generated parser files are now
+  committed. Java is needed only to change `pddl.g4`, and CI checks that the
+  committed parser matches the grammar.
+
 ### Fixed
 - **License metadata**: package metadata wrongly declared MIT (`License: MIT`
   and the MIT classifier) in every release up to and including 1.2.2. The
