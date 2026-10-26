@@ -2,6 +2,7 @@
  "ground": {
   "calibrate": [
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -16,6 +17,7 @@
      "?i": "instrument0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibration_target instrument0 GroundStation2) (on_board instrument0 satellite0) (pointing satellite0 GroundStation2) (power_on instrument0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -44,6 +46,7 @@
   ],
   "switch_off": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "power_on",
@@ -62,6 +65,7 @@
      "?i": "instrument0",
      "?s": "satellite0"
     },
+    "precondition": "(and (on_board instrument0 satellite0) (power_on instrument0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -80,6 +84,7 @@
   ],
   "switch_on": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "calibrated",
@@ -102,6 +107,7 @@
      "?i": "instrument0",
      "?s": "satellite0"
     },
+    "precondition": "(and (on_board instrument0 satellite0) (power_avail satellite0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -120,6 +126,7 @@
   ],
   "take_image": [
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -136,6 +143,7 @@
      "?m": "thermograph0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 GroundStation1) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -166,6 +174,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -182,6 +191,7 @@
      "?m": "thermograph0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 GroundStation2) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -212,6 +222,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -228,6 +239,7 @@
      "?m": "thermograph0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Phenomenon3) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -258,6 +270,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -274,6 +287,7 @@
      "?m": "thermograph0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Phenomenon4) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -304,6 +318,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -320,6 +335,7 @@
      "?m": "thermograph0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Phenomenon6) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -350,6 +366,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -366,6 +383,7 @@
      "?m": "thermograph0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Star0) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -396,6 +414,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [],
     "effect_num": [],
     "effect_pos": [
@@ -412,6 +431,7 @@
      "?m": "thermograph0",
      "?s": "satellite0"
     },
+    "precondition": "(and (calibrated instrument0) (on_board instrument0 satellite0) (pointing satellite0 Star5) (power_on instrument0) (power_on instrument0) (supports instrument0 thermograph0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -444,6 +464,7 @@
   ],
   "turn_to": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -465,6 +486,7 @@
      "?d_prev": "GroundStation1",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation1 GroundStation1)) (pointing satellite0 GroundStation1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -477,6 +499,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -498,6 +521,7 @@
      "?d_prev": "GroundStation1",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation2 GroundStation1)) (pointing satellite0 GroundStation1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -510,6 +534,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -531,6 +556,7 @@
      "?d_prev": "GroundStation1",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon3 GroundStation1)) (pointing satellite0 GroundStation1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -543,6 +569,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -564,6 +591,7 @@
      "?d_prev": "GroundStation1",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon4 GroundStation1)) (pointing satellite0 GroundStation1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -576,6 +604,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -597,6 +626,7 @@
      "?d_prev": "GroundStation1",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon6 GroundStation1)) (pointing satellite0 GroundStation1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -609,6 +639,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -630,6 +661,7 @@
      "?d_prev": "GroundStation1",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star0 GroundStation1)) (pointing satellite0 GroundStation1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -642,6 +674,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -663,6 +696,7 @@
      "?d_prev": "GroundStation1",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star5 GroundStation1)) (pointing satellite0 GroundStation1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -675,6 +709,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -696,6 +731,7 @@
      "?d_prev": "GroundStation2",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation1 GroundStation2)) (pointing satellite0 GroundStation2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -708,6 +744,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -729,6 +766,7 @@
      "?d_prev": "GroundStation2",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation2 GroundStation2)) (pointing satellite0 GroundStation2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -741,6 +779,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -762,6 +801,7 @@
      "?d_prev": "GroundStation2",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon3 GroundStation2)) (pointing satellite0 GroundStation2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -774,6 +814,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -795,6 +836,7 @@
      "?d_prev": "GroundStation2",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon4 GroundStation2)) (pointing satellite0 GroundStation2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -807,6 +849,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -828,6 +871,7 @@
      "?d_prev": "GroundStation2",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon6 GroundStation2)) (pointing satellite0 GroundStation2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -840,6 +884,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -861,6 +906,7 @@
      "?d_prev": "GroundStation2",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star0 GroundStation2)) (pointing satellite0 GroundStation2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -873,6 +919,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -894,6 +941,7 @@
      "?d_prev": "GroundStation2",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star5 GroundStation2)) (pointing satellite0 GroundStation2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -906,6 +954,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -927,6 +976,7 @@
      "?d_prev": "Phenomenon3",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation1 Phenomenon3)) (pointing satellite0 Phenomenon3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -939,6 +989,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -960,6 +1011,7 @@
      "?d_prev": "Phenomenon3",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation2 Phenomenon3)) (pointing satellite0 Phenomenon3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -972,6 +1024,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -993,6 +1046,7 @@
      "?d_prev": "Phenomenon3",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon3 Phenomenon3)) (pointing satellite0 Phenomenon3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1005,6 +1059,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1026,6 +1081,7 @@
      "?d_prev": "Phenomenon3",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon4 Phenomenon3)) (pointing satellite0 Phenomenon3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1038,6 +1094,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1059,6 +1116,7 @@
      "?d_prev": "Phenomenon3",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon6 Phenomenon3)) (pointing satellite0 Phenomenon3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1071,6 +1129,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1092,6 +1151,7 @@
      "?d_prev": "Phenomenon3",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star0 Phenomenon3)) (pointing satellite0 Phenomenon3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1104,6 +1164,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1125,6 +1186,7 @@
      "?d_prev": "Phenomenon3",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star5 Phenomenon3)) (pointing satellite0 Phenomenon3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1137,6 +1199,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1158,6 +1221,7 @@
      "?d_prev": "Phenomenon4",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation1 Phenomenon4)) (pointing satellite0 Phenomenon4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1170,6 +1234,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1191,6 +1256,7 @@
      "?d_prev": "Phenomenon4",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation2 Phenomenon4)) (pointing satellite0 Phenomenon4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1203,6 +1269,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1224,6 +1291,7 @@
      "?d_prev": "Phenomenon4",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon3 Phenomenon4)) (pointing satellite0 Phenomenon4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1236,6 +1304,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1257,6 +1326,7 @@
      "?d_prev": "Phenomenon4",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon4 Phenomenon4)) (pointing satellite0 Phenomenon4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1269,6 +1339,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1290,6 +1361,7 @@
      "?d_prev": "Phenomenon4",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon6 Phenomenon4)) (pointing satellite0 Phenomenon4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1302,6 +1374,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1323,6 +1396,7 @@
      "?d_prev": "Phenomenon4",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star0 Phenomenon4)) (pointing satellite0 Phenomenon4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1335,6 +1409,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1356,6 +1431,7 @@
      "?d_prev": "Phenomenon4",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star5 Phenomenon4)) (pointing satellite0 Phenomenon4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1368,6 +1444,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1389,6 +1466,7 @@
      "?d_prev": "Phenomenon6",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation1 Phenomenon6)) (pointing satellite0 Phenomenon6))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1401,6 +1479,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1422,6 +1501,7 @@
      "?d_prev": "Phenomenon6",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation2 Phenomenon6)) (pointing satellite0 Phenomenon6))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1434,6 +1514,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1455,6 +1536,7 @@
      "?d_prev": "Phenomenon6",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon3 Phenomenon6)) (pointing satellite0 Phenomenon6))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1467,6 +1549,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1488,6 +1571,7 @@
      "?d_prev": "Phenomenon6",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon4 Phenomenon6)) (pointing satellite0 Phenomenon6))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1500,6 +1584,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1521,6 +1606,7 @@
      "?d_prev": "Phenomenon6",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon6 Phenomenon6)) (pointing satellite0 Phenomenon6))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1533,6 +1619,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1554,6 +1641,7 @@
      "?d_prev": "Phenomenon6",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star0 Phenomenon6)) (pointing satellite0 Phenomenon6))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1566,6 +1654,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1587,6 +1676,7 @@
      "?d_prev": "Phenomenon6",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star5 Phenomenon6)) (pointing satellite0 Phenomenon6))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1599,6 +1689,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1620,6 +1711,7 @@
      "?d_prev": "Star0",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation1 Star0)) (pointing satellite0 Star0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1632,6 +1724,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1653,6 +1746,7 @@
      "?d_prev": "Star0",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation2 Star0)) (pointing satellite0 Star0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1665,6 +1759,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1686,6 +1781,7 @@
      "?d_prev": "Star0",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon3 Star0)) (pointing satellite0 Star0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1698,6 +1794,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1719,6 +1816,7 @@
      "?d_prev": "Star0",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon4 Star0)) (pointing satellite0 Star0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1731,6 +1829,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1752,6 +1851,7 @@
      "?d_prev": "Star0",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon6 Star0)) (pointing satellite0 Star0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1764,6 +1864,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1785,6 +1886,7 @@
      "?d_prev": "Star0",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star0 Star0)) (pointing satellite0 Star0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1797,6 +1899,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1818,6 +1921,7 @@
      "?d_prev": "Star0",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star5 Star0)) (pointing satellite0 Star0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1830,6 +1934,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1851,6 +1956,7 @@
      "?d_prev": "Star5",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation1 Star5)) (pointing satellite0 Star5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1863,6 +1969,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1884,6 +1991,7 @@
      "?d_prev": "Star5",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= GroundStation2 Star5)) (pointing satellite0 Star5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1896,6 +2004,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1917,6 +2026,7 @@
      "?d_prev": "Star5",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon3 Star5)) (pointing satellite0 Star5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1929,6 +2039,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1950,6 +2061,7 @@
      "?d_prev": "Star5",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon4 Star5)) (pointing satellite0 Star5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1962,6 +2074,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -1983,6 +2096,7 @@
      "?d_prev": "Star5",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Phenomenon6 Star5)) (pointing satellite0 Star5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1995,6 +2109,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -2016,6 +2131,7 @@
      "?d_prev": "Star5",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star0 Star5)) (pointing satellite0 Star5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2028,6 +2144,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "pointing",
@@ -2049,6 +2166,7 @@
      "?d_prev": "Star5",
      "?s": "satellite0"
     },
+    "precondition": "(and (not (= Star5 Star5)) (pointing satellite0 Star5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],

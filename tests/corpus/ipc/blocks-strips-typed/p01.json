@@ -2,6 +2,7 @@
  "ground": {
   "pick-up": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -26,6 +27,7 @@
     "parameters": {
      "?x": "A"
     },
+    "precondition": "(and (clear A) (handempty) (ontable A))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -44,6 +46,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -68,6 +71,7 @@
     "parameters": {
      "?x": "B"
     },
+    "precondition": "(and (clear B) (handempty) (ontable B))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -86,6 +90,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -110,6 +115,7 @@
     "parameters": {
      "?x": "C"
     },
+    "precondition": "(and (clear C) (handempty) (ontable C))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -128,6 +134,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -152,6 +159,7 @@
     "parameters": {
      "?x": "D"
     },
+    "precondition": "(and (clear D) (handempty) (ontable D))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -172,6 +180,7 @@
   ],
   "put-down": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "holding",
@@ -196,6 +205,7 @@
     "parameters": {
      "?x": "A"
     },
+    "precondition": "(holding A)",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -207,6 +217,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "holding",
@@ -231,6 +242,7 @@
     "parameters": {
      "?x": "B"
     },
+    "precondition": "(holding B)",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -242,6 +254,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "holding",
@@ -266,6 +279,7 @@
     "parameters": {
      "?x": "C"
     },
+    "precondition": "(holding C)",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -277,6 +291,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "holding",
@@ -301,6 +316,7 @@
     "parameters": {
      "?x": "D"
     },
+    "precondition": "(holding D)",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -314,6 +330,7 @@
   ],
   "stack": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -344,6 +361,7 @@
      "?x": "A",
      "?y": "A"
     },
+    "precondition": "(and (clear A) (holding A))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -359,6 +377,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -389,6 +408,7 @@
      "?x": "B",
      "?y": "A"
     },
+    "precondition": "(and (clear A) (holding B))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -404,6 +424,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -434,6 +455,7 @@
      "?x": "C",
      "?y": "A"
     },
+    "precondition": "(and (clear A) (holding C))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -449,6 +471,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -479,6 +502,7 @@
      "?x": "D",
      "?y": "A"
     },
+    "precondition": "(and (clear A) (holding D))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -494,6 +518,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -524,6 +549,7 @@
      "?x": "A",
      "?y": "B"
     },
+    "precondition": "(and (clear B) (holding A))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -539,6 +565,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -569,6 +596,7 @@
      "?x": "B",
      "?y": "B"
     },
+    "precondition": "(and (clear B) (holding B))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -584,6 +612,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -614,6 +643,7 @@
      "?x": "C",
      "?y": "B"
     },
+    "precondition": "(and (clear B) (holding C))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -629,6 +659,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -659,6 +690,7 @@
      "?x": "D",
      "?y": "B"
     },
+    "precondition": "(and (clear B) (holding D))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -674,6 +706,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -704,6 +737,7 @@
      "?x": "A",
      "?y": "C"
     },
+    "precondition": "(and (clear C) (holding A))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -719,6 +753,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -749,6 +784,7 @@
      "?x": "B",
      "?y": "C"
     },
+    "precondition": "(and (clear C) (holding B))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -764,6 +800,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -794,6 +831,7 @@
      "?x": "C",
      "?y": "C"
     },
+    "precondition": "(and (clear C) (holding C))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -809,6 +847,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -839,6 +878,7 @@
      "?x": "D",
      "?y": "C"
     },
+    "precondition": "(and (clear C) (holding D))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -854,6 +894,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -884,6 +925,7 @@
      "?x": "A",
      "?y": "D"
     },
+    "precondition": "(and (clear D) (holding A))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -899,6 +941,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -929,6 +972,7 @@
      "?x": "B",
      "?y": "D"
     },
+    "precondition": "(and (clear D) (holding B))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -944,6 +988,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -974,6 +1019,7 @@
      "?x": "C",
      "?y": "D"
     },
+    "precondition": "(and (clear D) (holding C))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -989,6 +1035,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1019,6 +1066,7 @@
      "?x": "D",
      "?y": "D"
     },
+    "precondition": "(and (clear D) (holding D))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1036,6 +1084,7 @@
   ],
   "unstack": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1066,6 +1115,7 @@
      "?x": "A",
      "?y": "A"
     },
+    "precondition": "(and (clear A) (handempty) (on A A))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1085,6 +1135,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1115,6 +1166,7 @@
      "?x": "A",
      "?y": "B"
     },
+    "precondition": "(and (clear A) (handempty) (on A B))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1134,6 +1186,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1164,6 +1217,7 @@
      "?x": "A",
      "?y": "C"
     },
+    "precondition": "(and (clear A) (handempty) (on A C))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1183,6 +1237,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1213,6 +1268,7 @@
      "?x": "A",
      "?y": "D"
     },
+    "precondition": "(and (clear A) (handempty) (on A D))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1232,6 +1288,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1262,6 +1319,7 @@
      "?x": "B",
      "?y": "A"
     },
+    "precondition": "(and (clear B) (handempty) (on B A))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1281,6 +1339,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1311,6 +1370,7 @@
      "?x": "B",
      "?y": "B"
     },
+    "precondition": "(and (clear B) (handempty) (on B B))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1330,6 +1390,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1360,6 +1421,7 @@
      "?x": "B",
      "?y": "C"
     },
+    "precondition": "(and (clear B) (handempty) (on B C))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1379,6 +1441,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1409,6 +1472,7 @@
      "?x": "B",
      "?y": "D"
     },
+    "precondition": "(and (clear B) (handempty) (on B D))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1428,6 +1492,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1458,6 +1523,7 @@
      "?x": "C",
      "?y": "A"
     },
+    "precondition": "(and (clear C) (handempty) (on C A))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1477,6 +1543,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1507,6 +1574,7 @@
      "?x": "C",
      "?y": "B"
     },
+    "precondition": "(and (clear C) (handempty) (on C B))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1526,6 +1594,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1556,6 +1625,7 @@
      "?x": "C",
      "?y": "C"
     },
+    "precondition": "(and (clear C) (handempty) (on C C))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1575,6 +1645,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1605,6 +1676,7 @@
      "?x": "C",
      "?y": "D"
     },
+    "precondition": "(and (clear C) (handempty) (on C D))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1624,6 +1696,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1654,6 +1727,7 @@
      "?x": "D",
      "?y": "A"
     },
+    "precondition": "(and (clear D) (handempty) (on D A))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1673,6 +1747,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1703,6 +1778,7 @@
      "?x": "D",
      "?y": "B"
     },
+    "precondition": "(and (clear D) (handempty) (on D B))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1722,6 +1798,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1752,6 +1829,7 @@
      "?x": "D",
      "?y": "C"
     },
+    "precondition": "(and (clear D) (handempty) (on D C))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1771,6 +1849,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "clear",
@@ -1801,6 +1880,7 @@
      "?x": "D",
      "?y": "D"
     },
+    "precondition": "(and (clear D) (handempty) (on D D))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],

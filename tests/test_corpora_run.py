@@ -4,8 +4,11 @@ the DOMAIN filter, the empty-directory exit, and the written report."""
 import json
 import os
 import shutil
+import time
 
 import corpora_run
+import golden
+import pytest
 from golden import IPC
 
 BLOCKS = os.path.join(IPC, "blocks-strips-typed")
@@ -76,9 +79,23 @@ def test_report(tmp_path, monkeypatch):
     assert snap["domain"] == "potassco/ipc-2006/domains/pipes/domains/domain-1.pddl"
 
 
-def test_timeout(tmp_path, monkeypatch):
+def slow(*args):
+    time.sleep(5)
+
+
+@pytest.mark.parametrize("stage", ["DomainProblem", "diagnose"])
+def test_timeout_escapes_snapshot(tmp_path, monkeypatch, stage):
+    """The deadline must cut through snapshot()'s own exception handlers,
+    whether loading or validation is slow (review on #154)."""
     fake_corpora(tmp_path)
-    monkeypatch.setattr(corpora_run, "snapshot", lambda d, p: corpora_run._alarm())
-    assert run(monkeypatch, tmp_path, DOMAIN="blocks", CORPORA_OUT=str(tmp_path / "o")) == 0
-    summary = json.loads((tmp_path / "o" / "summary.json").read_text())
+    monkeypatch.setattr(golden, stage, slow)
+    start = time.monotonic()
+    out = tmp_path / "o"
+    assert run(monkeypatch, tmp_path, DOMAIN="blocks", CORPORA_OUT=str(out),
+               CORPORA_TIMEOUT="1") == 0
+    assert time.monotonic() - start < 3
+    summary = json.loads((out / "summary.json").read_text())
     assert summary == {"potassco": {"timeout": 1}}
+    snap = json.loads((out / "potassco/ipc-2000/domains/blocks/instances/instance-1.json")
+                      .read_text())
+    assert snap["timeout"] == 1 and "error" not in snap

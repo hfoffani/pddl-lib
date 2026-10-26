@@ -2,6 +2,7 @@
  "ground": {
   "make-product-p1": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "not-made",
@@ -17,6 +18,7 @@
     ],
     "name": "make-product-p1",
     "parameters": {},
+    "precondition": "(and (not-made p1) (started o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -34,6 +36,7 @@
   ],
   "make-product-p2": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "not-made",
@@ -49,6 +52,7 @@
     ],
     "name": "make-product-p2",
     "parameters": {},
+    "precondition": "(and (not-made p2) (started o1) (started o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -70,6 +74,7 @@
   ],
   "make-product-p3": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "not-made",
@@ -85,6 +90,7 @@
     ],
     "name": "make-product-p3",
     "parameters": {},
+    "precondition": "(and (not-made p3) (started o3) (started o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -106,6 +112,7 @@
   ],
   "make-product-p4": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "not-made",
@@ -121,6 +128,7 @@
     ],
     "name": "make-product-p4",
     "parameters": {},
+    "precondition": "(and (not-made p4) (started o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -138,6 +146,7 @@
   ],
   "make-product-p5": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "not-made",
@@ -153,6 +162,7 @@
     ],
     "name": "make-product-p5",
     "parameters": {},
+    "precondition": "(and (not-made p5) (started o5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -170,6 +180,7 @@
   ],
   "open-new-stack": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -190,6 +201,7 @@
      "?new-open": "n1",
      "?open": "n0"
     },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n0))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -206,6 +218,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -226,6 +239,7 @@
      "?new-open": "n2",
      "?open": "n1"
     },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -242,6 +256,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -262,6 +277,7 @@
      "?new-open": "n3",
      "?open": "n2"
     },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -278,6 +294,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -298,6 +315,7 @@
      "?new-open": "n4",
      "?open": "n3"
     },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -314,6 +332,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -334,6 +353,7 @@
      "?new-open": "n5",
      "?open": "n4"
     },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -352,6 +372,7 @@
   ],
   "ship-order-o1": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -378,6 +399,7 @@
      "?avail": "n0",
      "?new-avail": "n1"
     },
+    "precondition": "(and (made p2) (next-count n0 n1) (stacks-avail n0) (started o1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -402,6 +424,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -428,6 +451,7 @@
      "?avail": "n1",
      "?new-avail": "n2"
     },
+    "precondition": "(and (made p2) (next-count n1 n2) (stacks-avail n1) (started o1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -452,6 +476,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -478,6 +503,7 @@
      "?avail": "n2",
      "?new-avail": "n3"
     },
+    "precondition": "(and (made p2) (next-count n2 n3) (stacks-avail n2) (started o1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -502,6 +528,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -528,6 +555,7 @@
      "?avail": "n3",
      "?new-avail": "n4"
     },
+    "precondition": "(and (made p2) (next-count n3 n4) (stacks-avail n3) (started o1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -552,6 +580,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -578,6 +607,7 @@
      "?avail": "n4",
      "?new-avail": "n5"
     },
+    "precondition": "(and (made p2) (next-count n4 n5) (stacks-avail n4) (started o1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -604,6 +634,7 @@
   ],
   "ship-order-o2": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -630,6 +661,7 @@
      "?avail": "n0",
      "?new-avail": "n1"
     },
+    "precondition": "(and (made p1) (made p2) (next-count n0 n1) (stacks-avail n0) (started o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -658,6 +690,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -684,6 +717,7 @@
      "?avail": "n1",
      "?new-avail": "n2"
     },
+    "precondition": "(and (made p1) (made p2) (next-count n1 n2) (stacks-avail n1) (started o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -712,6 +746,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -738,6 +773,7 @@
      "?avail": "n2",
      "?new-avail": "n3"
     },
+    "precondition": "(and (made p1) (made p2) (next-count n2 n3) (stacks-avail n2) (started o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -766,6 +802,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -792,6 +829,7 @@
      "?avail": "n3",
      "?new-avail": "n4"
     },
+    "precondition": "(and (made p1) (made p2) (next-count n3 n4) (stacks-avail n3) (started o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -820,6 +858,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -846,6 +885,7 @@
      "?avail": "n4",
      "?new-avail": "n5"
     },
+    "precondition": "(and (made p1) (made p2) (next-count n4 n5) (stacks-avail n4) (started o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -876,6 +916,7 @@
   ],
   "ship-order-o3": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -902,6 +943,7 @@
      "?avail": "n0",
      "?new-avail": "n1"
     },
+    "precondition": "(and (made p3) (next-count n0 n1) (stacks-avail n0) (started o3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -926,6 +968,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -952,6 +995,7 @@
      "?avail": "n1",
      "?new-avail": "n2"
     },
+    "precondition": "(and (made p3) (next-count n1 n2) (stacks-avail n1) (started o3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -976,6 +1020,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1002,6 +1047,7 @@
      "?avail": "n2",
      "?new-avail": "n3"
     },
+    "precondition": "(and (made p3) (next-count n2 n3) (stacks-avail n2) (started o3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1026,6 +1072,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1052,6 +1099,7 @@
      "?avail": "n3",
      "?new-avail": "n4"
     },
+    "precondition": "(and (made p3) (next-count n3 n4) (stacks-avail n3) (started o3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1076,6 +1124,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1102,6 +1151,7 @@
      "?avail": "n4",
      "?new-avail": "n5"
     },
+    "precondition": "(and (made p3) (next-count n4 n5) (stacks-avail n4) (started o3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1128,6 +1178,7 @@
   ],
   "ship-order-o4": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1154,6 +1205,7 @@
      "?avail": "n0",
      "?new-avail": "n1"
     },
+    "precondition": "(and (made p3) (made p4) (next-count n0 n1) (stacks-avail n0) (started o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1182,6 +1234,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1208,6 +1261,7 @@
      "?avail": "n1",
      "?new-avail": "n2"
     },
+    "precondition": "(and (made p3) (made p4) (next-count n1 n2) (stacks-avail n1) (started o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1236,6 +1290,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1262,6 +1317,7 @@
      "?avail": "n2",
      "?new-avail": "n3"
     },
+    "precondition": "(and (made p3) (made p4) (next-count n2 n3) (stacks-avail n2) (started o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1290,6 +1346,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1316,6 +1373,7 @@
      "?avail": "n3",
      "?new-avail": "n4"
     },
+    "precondition": "(and (made p3) (made p4) (next-count n3 n4) (stacks-avail n3) (started o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1344,6 +1402,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1370,6 +1429,7 @@
      "?avail": "n4",
      "?new-avail": "n5"
     },
+    "precondition": "(and (made p3) (made p4) (next-count n4 n5) (stacks-avail n4) (started o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1400,6 +1460,7 @@
   ],
   "ship-order-o5": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1426,6 +1487,7 @@
      "?avail": "n0",
      "?new-avail": "n1"
     },
+    "precondition": "(and (made p5) (next-count n0 n1) (stacks-avail n0) (started o5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1450,6 +1512,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1476,6 +1539,7 @@
      "?avail": "n1",
      "?new-avail": "n2"
     },
+    "precondition": "(and (made p5) (next-count n1 n2) (stacks-avail n1) (started o5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1500,6 +1564,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1526,6 +1591,7 @@
      "?avail": "n2",
      "?new-avail": "n3"
     },
+    "precondition": "(and (made p5) (next-count n2 n3) (stacks-avail n2) (started o5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1550,6 +1616,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1576,6 +1643,7 @@
      "?avail": "n3",
      "?new-avail": "n4"
     },
+    "precondition": "(and (made p5) (next-count n3 n4) (stacks-avail n3) (started o5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1600,6 +1668,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1626,6 +1695,7 @@
      "?avail": "n4",
      "?new-avail": "n5"
     },
+    "precondition": "(and (made p5) (next-count n4 n5) (stacks-avail n4) (started o5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1652,6 +1722,7 @@
   ],
   "start-order": [
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1679,6 +1750,7 @@
      "?new-avail": "n0",
      "?o": "o1"
     },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n1) (waiting o1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1699,6 +1771,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1726,6 +1799,7 @@
      "?new-avail": "n0",
      "?o": "o2"
     },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n1) (waiting o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1746,6 +1820,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1773,6 +1848,7 @@
      "?new-avail": "n0",
      "?o": "o3"
     },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n1) (waiting o3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1793,6 +1869,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1820,6 +1897,7 @@
      "?new-avail": "n0",
      "?o": "o4"
     },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n1) (waiting o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1840,6 +1918,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1867,6 +1946,7 @@
      "?new-avail": "n0",
      "?o": "o5"
     },
+    "precondition": "(and (next-count n0 n1) (stacks-avail n1) (waiting o5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1887,6 +1967,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1914,6 +1995,7 @@
      "?new-avail": "n1",
      "?o": "o1"
     },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n2) (waiting o1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1934,6 +2016,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -1961,6 +2044,7 @@
      "?new-avail": "n1",
      "?o": "o2"
     },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n2) (waiting o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -1981,6 +2065,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2008,6 +2093,7 @@
      "?new-avail": "n1",
      "?o": "o3"
     },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n2) (waiting o3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2028,6 +2114,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2055,6 +2142,7 @@
      "?new-avail": "n1",
      "?o": "o4"
     },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n2) (waiting o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2075,6 +2163,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2102,6 +2191,7 @@
      "?new-avail": "n1",
      "?o": "o5"
     },
+    "precondition": "(and (next-count n1 n2) (stacks-avail n2) (waiting o5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2122,6 +2212,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2149,6 +2240,7 @@
      "?new-avail": "n2",
      "?o": "o1"
     },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n3) (waiting o1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2169,6 +2261,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2196,6 +2289,7 @@
      "?new-avail": "n2",
      "?o": "o2"
     },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n3) (waiting o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2216,6 +2310,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2243,6 +2338,7 @@
      "?new-avail": "n2",
      "?o": "o3"
     },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n3) (waiting o3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2263,6 +2359,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2290,6 +2387,7 @@
      "?new-avail": "n2",
      "?o": "o4"
     },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n3) (waiting o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2310,6 +2408,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2337,6 +2436,7 @@
      "?new-avail": "n2",
      "?o": "o5"
     },
+    "precondition": "(and (next-count n2 n3) (stacks-avail n3) (waiting o5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2357,6 +2457,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2384,6 +2485,7 @@
      "?new-avail": "n3",
      "?o": "o1"
     },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n4) (waiting o1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2404,6 +2506,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2431,6 +2534,7 @@
      "?new-avail": "n3",
      "?o": "o2"
     },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n4) (waiting o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2451,6 +2555,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2478,6 +2583,7 @@
      "?new-avail": "n3",
      "?o": "o3"
     },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n4) (waiting o3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2498,6 +2604,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2525,6 +2632,7 @@
      "?new-avail": "n3",
      "?o": "o4"
     },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n4) (waiting o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2545,6 +2653,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2572,6 +2681,7 @@
      "?new-avail": "n3",
      "?o": "o5"
     },
+    "precondition": "(and (next-count n3 n4) (stacks-avail n4) (waiting o5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2592,6 +2702,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2619,6 +2730,7 @@
      "?new-avail": "n4",
      "?o": "o1"
     },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n5) (waiting o1))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2639,6 +2751,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2666,6 +2779,7 @@
      "?new-avail": "n4",
      "?o": "o2"
     },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n5) (waiting o2))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2686,6 +2800,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2713,6 +2828,7 @@
      "?new-avail": "n4",
      "?o": "o3"
     },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n5) (waiting o3))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2733,6 +2849,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2760,6 +2877,7 @@
      "?new-avail": "n4",
      "?o": "o4"
     },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n5) (waiting o4))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
@@ -2780,6 +2898,7 @@
     ]
    },
    {
+    "conditional_effects": [],
     "effect_neg": [
      [
       "stacks-avail",
@@ -2807,6 +2926,7 @@
      "?new-avail": "n4",
      "?o": "o5"
     },
+    "precondition": "(and (next-count n4 n5) (stacks-avail n5) (waiting o5))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
