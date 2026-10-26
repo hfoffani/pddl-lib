@@ -43,3 +43,5 @@ e2e/llm/transcripts/*.md
 
 # full IPC corpora, fetched by scripts/fetch-corpora.sh (#153)
 .corpora/
+# oracle builds, by scripts/build-oracles.sh (#153)
+.oracles/

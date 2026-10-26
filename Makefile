@@ -67,6 +67,7 @@ test:
 # committing.
 golden:
 	$(PYTHON) tests/golden.py
+	$(PYTHON) tests/plans.py
 
 # Fetch the full IPC corpora at pinned commits into $(CORPORA_DIR) (~3 GB)
 corpora:
@@ -76,6 +77,18 @@ corpora:
 # (CORPORA_OUT). DOMAIN=blocks limits it. No corpora: message, exit 0.
 corpora-test:
 	$(PYTHON) tests/corpora_run.py
+
+# Fetch and build Fast Downward, VAL and INVAL (pinned) into $(ORACLES_DIR).
+# Needs cmake, a C++ compiler and sbcl.
+ORACLES_DIR ?= .oracles
+export ORACLES_DIR
+oracles:
+	scripts/build-oracles.sh
+
+# pddlpy vs the oracles on the committed pairs; ORACLE_CORPORA=1 runs the
+# fetched corpora instead (DOMAIN=... filters). Missing tools: tests skip.
+oracle:
+	$(PYTHON) -m pytest -m oracle -rs tests/test_oracle.py
 
 # Run tests with coverage report for pddlpy/pddl.py
 coverage:
@@ -146,6 +159,8 @@ help:
 	@echo "  golden       - Regenerate IPC subset golden files (tests/corpus/ipc)"
 	@echo "  corpora      - Fetch the full IPC corpora into CORPORA_DIR (default .corpora, ~3 GB)"
 	@echo "  corpora-test - Run pddlpy over the fetched corpora (DOMAIN=... to filter)"
+	@echo "  oracles      - Build Fast Downward, VAL, INVAL into ORACLES_DIR (default .oracles)"
+	@echo "  oracle       - Compare pddlpy with the oracles (ORACLE_CORPORA=1 for full corpora)"
 	@echo "  coverage     - Run tests with coverage report"
 	@echo "  lint         - Lint with ruff"
 	@echo "  typecheck    - Type-check with mypy"
@@ -156,4 +171,4 @@ help:
 	@echo "  testpublish  - Test package installation from TestPyPI (Docker)"
 	@echo "  e2e-llm      - Manual LLM+solver end-to-end (MODEL=..., needs OPENROUTER_API_KEY)"
 
-.PHONY: all init testgrammar pyparser test golden corpora corpora-test coverage lint typecheck build clean demo testpublish e2e-llm help
+.PHONY: all init testgrammar pyparser test golden corpora corpora-test oracles oracle coverage lint typecheck build clean demo testpublish e2e-llm help

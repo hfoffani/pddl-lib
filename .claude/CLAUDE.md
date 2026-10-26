@@ -19,6 +19,8 @@ make golden       # Regenerate IPC subset golden files; review the diff (#153)
 make corpora      # Fetch full IPC corpora (pinned) into $CORPORA_DIR (default .corpora), ~3 GB, opt-in
 make corpora-test # pddlpy over every fetched pair; report in $CORPORA_DIR/results; DOMAIN=... filters
                   # (Makefile reads KEY=value lines from an optional .env, e.g. CORPORA_DIR=/Volumes/ext/corpora)
+make oracles      # Build Fast Downward / VAL / INVAL (pinned) into $ORACLES_DIR (default .oracles)
+make oracle       # pytest -m oracle: pddlpy vs FD/VAL/INVAL; missing tools skip; ORACLE_CORPORA=1 for full corpora
 uv run pddlpy parse|ground|solve|validate DOMAIN PROBLEM   # the CLI
 uv run pddlpy-mcp # MCP server on stdio
 ```
@@ -35,6 +37,9 @@ uv run pddlpy-mcp # MCP server on stdio
 - `tests/corpus/ipc/` + `tests/golden.py` — IPC subset and its golden files
   (`test_golden.py`). A semantics change shows up as a golden mismatch:
   `make golden`, then review the diff (#153)
+- `tests/oracles.py` + `tests/test_oracle.py` — external oracle wrappers and the
+  `oracle`-marked checks (deselected by default). `tests/plans.py` writes the
+  valid + corrupted plan fixtures under `tests/corpus/ipc/*/plans/`
 - `docs/object-model.md`, `docs/llm-interaction.md` — reference + LLM worked example
 
 ## Architecture

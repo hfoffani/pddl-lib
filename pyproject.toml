@@ -85,6 +85,9 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["pddlpy", "tests"]
 python_files = ["test.py", "test_*.py"]
+# Oracle checks need external tools (#153): run them with `make oracle`.
+addopts = "-m 'not oracle'"
+markers = ["oracle: compares pddlpy with Fast Downward / VAL / INVAL"]
 
 [tool.coverage.run]
 source = ["pddlpy"]
