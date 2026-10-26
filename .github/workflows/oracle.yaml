@@ -146,6 +146,9 @@ jobs:
         if: always()
         with:
           name: oracle-${{ matrix.corpus }}
+          # The snapshots live under .corpora/, which upload-artifact skips
+          # unless told to include hidden files.
+          include-hidden-files: true
           path: |
             oracle-${{ matrix.corpus }}.xml
             report-${{ matrix.corpus }}.md

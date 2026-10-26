@@ -80,6 +80,9 @@ def test_fd_translate_and_solve(tmp_path, monkeypatch):
     fd = script(tmp_path / "fast-downward.py", FAKE_FD)
     monkeypatch.setenv("FAKE_CODE", "31")
     assert oracles.fd_translate(fd, DOMAIN, PROBLEM, 10) == 31
+    for code in ("20", "21"):  # translator out of memory / time: no verdict
+        monkeypatch.setenv("FAKE_CODE", code)
+        assert oracles.fd_translate(fd, DOMAIN, PROBLEM, 10) is None
     monkeypatch.setenv("FAKE_CODE", "0")
     monkeypatch.setenv("FAKE_PLAN", "(move rooma roomb)\n; cost = 1 (unit cost)\n")
     assert oracles.fd_solve(fd, DOMAIN, PROBLEM, 10) == (0, [("move", ("rooma", "roomb"))])

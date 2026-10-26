@@ -17,6 +17,7 @@ reachability. ``ORACLE_TIMEOUT`` (default 60) bounds each tool call.
 import functools
 import os
 import signal
+import sys
 
 import pytest
 from corpora_run import discover, per_domain
@@ -146,9 +147,9 @@ def pddlpy_plan(domain, problem):
 def memory_cap():
     """With ``ORACLE_MEMORY_MB`` set, cap this process's address space, so a
     runaway pddlpy search raises MemoryError instead of exhausting the
-    machine (it took a CI runner down). Linux only: macOS ignores it."""
+    machine (it took a CI runner down). Linux only: elsewhere (macOS) the setting is ignored."""
     mb = int(os.environ.get("ORACLE_MEMORY_MB") or 0)
-    if not mb:
+    if not mb or not sys.platform.startswith("linux"):
         yield
         return
     import resource

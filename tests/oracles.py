@@ -31,6 +31,8 @@ FD_TRANSLATE_UNSOLVABLE = 10
 FD_SEARCH_UNSOLVABLE = 11
 FD_TRANSLATE_CRITICAL_ERROR = 30
 FD_TRANSLATE_INPUT_ERROR = 31
+# Out of memory/time in the translator or search: no verdict on the input.
+FD_RESOURCE_LIMIT = {20, 21, 22, 23, 24}
 
 # REQUIREMENT_LABELS of FD's translator (translate/pddl/tasks.py); it
 # refuses any other key, so such domains stay outside the FD comparison.
@@ -117,12 +119,15 @@ def _fd_limits(timeout: float) -> List[str]:
 
 
 def fd_translate(fd: str, domain: str, problem: str, timeout: float) -> Optional[int]:
-    """Exit code of FD's translator on the pair (``None`` on timeout)."""
+    """Exit code of FD's translator on the pair; ``None`` when it ran out of
+    time or memory, which says nothing about whether it accepts the input."""
     with tempfile.TemporaryDirectory() as tmp:
         proc = _run(_command(fd) + _fd_limits(timeout) + [
             "--translate", os.path.abspath(domain), os.path.abspath(problem),
         ], timeout + FD_GRACE, cwd=tmp)
-    return None if proc is None else proc.returncode
+    if proc is None or proc.returncode in FD_RESOURCE_LIMIT:
+        return None
+    return proc.returncode
 
 
 def fd_solve(fd: str, domain: str, problem: str, timeout: float
