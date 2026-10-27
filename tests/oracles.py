@@ -161,44 +161,52 @@ def val(validate: str, domain: str, problem: str, plan_file: str,
         return None
     if proc.returncode == 0 and "Plan valid" in proc.stdout:
         return True
-    out = proc.stdout + proc.stderr
-    if _VAL_FATAL.search(out):
-        return None
-    errors = _val_errors(out)
-    if errors:
-        baseline = _val_input_errors(validate, domain, problem, timeout)
-        if baseline is None or baseline >= errors:
-            # The errors are all in the domain/problem, and VAL's recovery
-            # from them (e.g. dropping an action) is what rejected the plan.
+    fatal, errors = _val_trouble(proc.stdout + proc.stderr)
+    if fatal or errors:
+        # VAL's messages do not say whose fault the trouble is: "Error in
+        # type-checking!" comes from a broken domain (tyreworld) and from a
+        # plan naming an unknown object alike, and its error count covers
+        # domain, problem and plan. Ask VAL about the same input with an
+        # empty plan, which brings no trouble of its own.
+        baseline = _val_input_trouble(validate, domain, problem, timeout)
+        if baseline is None:
+            return None
+        base_fatal, base_errors = baseline
+        if (fatal and base_fatal) or (errors and base_errors >= errors):
+            # The input alone accounts for it; VAL's recovery from it (e.g.
+            # dropping an action it failed to parse, as on movie) is what
+            # rejected the plan.
             return None
     return False
 
 
-# VAL's fatal reports on the domain/problem: it stops before any plan.
+# VAL's fatal reports: definition and type-checking failures.
 _VAL_FATAL = re.compile(
     r"Problem in (domain|problem) definition|Type problem in (domain|problem)"
     r"|Error in type-checking")
-# VAL's parse error count covers the domain, the problem and the plan.
+# VAL's parse error count.
 _VAL_ERRORS = re.compile(r"Errors: (\d+)")
 
 
-def _val_errors(out: str) -> int:
-    return max((int(n) for n in _VAL_ERRORS.findall(out)), default=0)
+def _val_trouble(out: str) -> Tuple[bool, int]:
+    """``(fatal report?, parse error count)`` in VAL's output."""
+    errors = max((int(n) for n in _VAL_ERRORS.findall(out)), default=0)
+    return bool(_VAL_FATAL.search(out)), errors
 
 
-def _val_input_errors(validate: str, domain: str, problem: str,
-                      timeout: float) -> Optional[int]:
-    """VAL's parse error count on the domain and problem alone, i.e. with
-    an empty plan, which adds none of its own. ``None`` on timeout. VAL
-    recovers from some of these errors and still judges plans correctly
-    (openstacks), so only the errors a plan adds are held against it."""
+def _val_input_trouble(validate: str, domain: str, problem: str,
+                       timeout: float) -> Optional[Tuple[bool, int]]:
+    """``_val_trouble`` of VAL on the domain and problem with an empty plan;
+    ``None`` on timeout. VAL still judges plans correctly on some inputs it
+    complains about (openstacks), so only trouble the plan adds counts
+    against the plan."""
     with tempfile.TemporaryDirectory() as tmp:
         empty = os.path.join(tmp, "empty.plan")
         open(empty, "w").close()
         proc = _run([validate, domain, problem, empty], timeout)
     if proc is None:
         return None
-    return _val_errors(proc.stdout + proc.stderr)
+    return _val_trouble(proc.stdout + proc.stderr)
 
 
 def val_log(validate: str, domain: str, problem: str, plan_file: str,

@@ -120,6 +120,19 @@ def test_val_no_verdict_on_input_errors(tmp_path):
     assert oracles.val(bad, DOMAIN, PROBLEM, PLAN, 10) is False
 
 
+def test_val_type_error_in_the_plan_is_a_rejection(tmp_path):
+    """VAL's real output on the openstacks fixture whose plan names an
+    unknown object: the same 'Error in type-checking!' as a broken domain,
+    but an empty plan type-checks fine, so the plan is at fault."""
+    tool = script(tmp_path / "val", """
+if open(sys.argv[3]).read():
+    print("Errors: 0, warnings: 1\\nError: Error in type-checking!"); sys.exit(255)
+print("Plan executed successfully - checking goal\\nGoal not satisfied\\nPlan invalid")
+sys.exit(1)
+""")
+    assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is False
+
+
 # A VAL with INPUT parse errors in the domain/problem, plus one more when
 # the plan itself is broken (PLAN_ERROR set), and none from an empty plan.
 ERRORS_FROM = """
