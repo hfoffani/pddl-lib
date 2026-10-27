@@ -50,11 +50,13 @@ def test_known_causes_mark_failures(tmp_path):
 <testcase name="test_accept_reject_agrees_with_fd[potassco/ipc-2000/domains/blocks-strips-typed/instances/instance-1.pddl]"><failure message="exit 0"/></testcase>
 </testsuite>""")
     text = oracle_report.report([str(junit)], "T")
-    assert "**3 failures: 2 new, 1 with a known cause.**" in text
+    assert "**3 failures: 1 new, 2 with a known cause.**" in text
     lines = text.splitlines()
-    termes = next(i for i, ln in enumerate(lines) if "termes" in ln)
+    new = next(i for i, ln in enumerate(lines) if ln.startswith("- **NEW**"))
     blocks = next(i for i, ln in enumerate(lines) if "known: #157" in ln)
-    assert lines[termes].startswith("- **NEW**") and termes < blocks
+    assert new < blocks
+    # termes-opt18's goal ends with (not (has-block)), misread as (has-block)
+    assert "known: #138" in next(ln for ln in lines if "termes" in ln)
     # #157 covers the plan and solvability checks, not acceptance
     assert "- **NEW** `potassco/ipc-2000/domains/blocks-strips-typed" in text
     assert oracle_report.known_cause("test_accept_reject_agrees_with_fd",

@@ -33,6 +33,7 @@ KNOWN_CAUSES: List[Tuple[str, str, str]] = [
      "#141 (:derived ...) does not parse"),
     (r"fd_plan|solvability|pddlpy_plan",
      r"elevator-adl-full|elevators-00-full|miconic-fulladl|petri-net-alignment|snake-opt18"
+     r"|termes-opt18"
      r"|psr-middle-compiled-adl|tpp-metric",
      "#138 goal other than a positive conjunction (forall, not, numeric)"),
     (r"fd_plan|solvability", r"airport",
