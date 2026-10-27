@@ -74,7 +74,10 @@ plan = get("astar").solve(dp)        # or bfs/gbfs/ucs/temporal; None if unsolva
 5. `.github/workflows/oracle.yaml` (#153) is NOT a PR gate: weekly, `workflow_dispatch`
    (run it before a release), and on pushes to main touching pddl.g4 / pddl.py /
    diagnostics.py / _vendor. It builds FD/VAL/INVAL, samples the corpora
-   (`CORPORA_PER_DOMAIN`), and uploads a report. Coverage map: `docs/oracle-coverage.md`.
+   (`CORPORA_PER_DOMAIN`), and uploads a report. The `subset` job is strict (known
+   disagreements are strict xfails in `KNOWN`, tests/test_oracle.py); the corpus jobs
+   are report-only (disagreements → job summary + warning). Coverage map:
+   `docs/oracle-coverage.md`.
    GitHub disables scheduled workflows in public repos after 60 days without repo
    activity; re-enable it from the Actions tab.
 

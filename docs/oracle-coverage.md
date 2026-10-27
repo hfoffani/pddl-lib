@@ -63,6 +63,14 @@ No oracle covers the last six rows. pddlpy does not solve them, and FD
 refuses them. The golden files (`make golden`) and `make corpora-test`
 still record what pddlpy makes of those domains.
 
+## Strict and report-only
+
+The `subset` job (the committed pairs) is strict: any disagreement fails
+it, except the known ones listed in `KNOWN` in `tests/test_oracle.py`,
+which are strict xfails and so fail it once fixed. The corpus jobs are
+report-only: disagreements appear in the job summary and the artifact,
+with a warning annotation, while an interrupted or broken run still fails.
+
 ## Sampling
 
 A full pass over every pair (about 14,600) takes many hours, mostly in

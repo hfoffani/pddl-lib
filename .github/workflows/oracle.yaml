@@ -136,14 +136,26 @@ jobs:
         run: make corpora-test
       # pytest writes its JUnit XML only on exit: SIGINT it well before the
       # job limit, so a slow shard still reports what it checked.
+      # Report-only: disagreements with the oracles (pytest exit 1) are
+      # listed in the report and flagged as a warning, not a failure; the
+      # committed-pairs `subset` job is the strict check. Anything else (an
+      # interrupted or broken run) still fails the job.
       - name: Oracle checks
         env:
           ORACLE_CORPORA: "1"
           ORACLE_SHARD: ${{ matrix.shard }}/4
           CORPORA_PER_DOMAIN: ${{ inputs.oracle_per_domain || '1' }}
-        run: >-
-          timeout -s INT 270m .venv/bin/python -m pytest -m oracle -rs -q
-          tests/test_oracle.py --junitxml="oracle-$NAME.xml"
+        run: |
+          set +e
+          timeout -s INT 270m .venv/bin/python -m pytest -m oracle -rs -q \
+            tests/test_oracle.py --junitxml="oracle-$NAME.xml"
+          code=$?
+          set -e
+          if [ "$code" -eq 1 ]; then
+            echo "::warning title=Oracle disagreements ($NAME)::pddlpy disagrees with the oracles on some pairs; see the job summary."
+            exit 0
+          fi
+          exit "$code"
       - name: Report
         if: always()
         run: |
