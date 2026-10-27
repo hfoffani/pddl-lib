@@ -5,7 +5,7 @@
 Each FILE is a pytest JUnit XML (``make oracle PYTEST_ARGS=--junitxml=...``)
 or a ``summary.json`` from ``make corpora-test``. The report counts outcomes
 per oracle check and lists each failing pair with the first line of its
-message.
+message, marked with its known cause (``KNOWN_CAUSES``) or as **NEW**.
 """
 from __future__ import annotations
 
@@ -14,9 +14,40 @@ import collections
 import json
 import re
 import xml.etree.ElementTree as ET
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 MAX_LISTED = 50  # failures listed per check; the rest are counted
+
+# Known causes of disagreements on the corpora, so the report-only corpus
+# jobs set new ones apart: (check regex, pair regex, cause). Each entry was
+# checked against the failing files (oracle runs on #156). Remove an entry
+# once its cause is fixed; a failure matching no entry is reported as NEW.
+KNOWN_CAUSES: List[Tuple[str, str, str]] = [
+    (r"fd_plan|solvability",
+     r"classical/blocks/|blocks-strips-|classical/schedule/|schedule-adl-|freecell-strips-"
+     r"|ged-opt14-strips|genome-edit-distances|depots-strips-|/rovers|rovers-"
+     r"|logistics-round-2-strips",
+     "#157 identifier case (predicates, types, static facts)"),
+    (r"accept|fd_plan",
+     r"derived-predicates|classical/(psr-large|psr-middle|philosophers|optical-telegraphs)/",
+     "#141 (:derived ...) does not parse"),
+    (r"fd_plan|solvability|pddlpy_plan",
+     r"elevator-adl-full|elevators-00-full|miconic-fulladl|petri-net-alignment|snake-opt18"
+     r"|psr-middle-compiled-adl|tpp-metric",
+     "#138 goal other than a positive conjunction (forall, not, numeric)"),
+    (r"fd_plan|solvability", r"airport",
+     "#160 domain constants lose their type"),
+    (r"accept", r"classical/fridge/|classical/tyreworld/|pathways-propositional",
+     "FD rejects the input, pddlpy accepts it (not yet diagnosed)"),
+]
+
+
+def known_cause(check: str, pair: str) -> Optional[str]:
+    """The known cause of a failing (check, pair), or ``None`` if new."""
+    for check_re, pair_re, cause in KNOWN_CAUSES:
+        if re.search(check_re, check) and re.search(pair_re, pair):
+            return cause
+    return None
 
 
 def outcome(case: ET.Element) -> Tuple[str, str]:
@@ -34,21 +65,29 @@ def outcome(case: ET.Element) -> Tuple[str, str]:
 
 def junit_section(path: str) -> List[str]:
     counts: Dict[str, collections.Counter] = collections.defaultdict(collections.Counter)
-    failures: Dict[str, List[Tuple[str, str]]] = collections.defaultdict(list)
+    failures: Dict[str, List[Tuple[Optional[str], str, str]]] = collections.defaultdict(list)
     for case in ET.parse(path).getroot().iter("testcase"):
         m = re.match(r"([^\[]+)(?:\[(.*)\])?$", case.get("name", ""))
         check, pair = (m.group(1), m.group(2) or "") if m else (case.get("name", ""), "")
         kind, message = outcome(case)
         counts[check][kind] += 1
         if kind == "failed":
-            failures[check].append((pair, message.splitlines()[0] if message else ""))
-    lines = ["| Check | passed | failed | skipped | xfailed |", "|---|---|---|---|---|"]
+            cause = known_cause(check, pair)
+            counts[check]["new"] += cause is None
+            failures[check].append((cause, pair, message.splitlines()[0] if message else ""))
+    new = sum(n["new"] for n in counts.values())
+    failed = sum(n["failed"] for n in counts.values())
+    lines = ["**%d failures: %d new, %d with a known cause.**" % (failed, new, failed - new), "",
+             "| Check | passed | failed | new | skipped | xfailed |", "|---|---|---|---|---|---|"]
     for check, n in sorted(counts.items()):
-        lines.append("| `%s` | %d | %d | %d | %d |" % (
-            check, n["passed"], n["failed"], n["skipped"], n["xfailed"]))
+        lines.append("| `%s` | %d | %d | %d | %d | %d |" % (
+            check, n["passed"], n["failed"], n["new"], n["skipped"], n["xfailed"]))
     for check, items in sorted(failures.items()):
+        items.sort(key=lambda item: (item[0] is not None, item[1]))  # new first
         lines += ["", "**`%s` failures (%d)**" % (check, len(items)), ""]
-        lines += ["- `%s`: %s" % (pair, msg) for pair, msg in items[:MAX_LISTED]]
+        lines += ["- %s `%s`: %s" % ("**NEW**" if cause is None else "known: %s —" % cause,
+                                     pair, msg)
+                  for cause, pair, msg in items[:MAX_LISTED]]
         if len(items) > MAX_LISTED:
             lines.append("- ... and %d more" % (len(items) - MAX_LISTED))
     return lines

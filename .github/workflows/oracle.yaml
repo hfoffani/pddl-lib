@@ -162,6 +162,11 @@ jobs:
             uv run python tests/oracle_report.py --title "Oracle: $NAME" $files \
               | tee "report-$NAME.md" >> "$GITHUB_STEP_SUMMARY"
           fi
+          # Disagreements without a known cause (KNOWN_CAUSES in
+          # tests/oracle_report.py) get their own annotation.
+          if grep -q '\*\*NEW\*\*' "report-$NAME.md"; then
+            echo "::warning title=New oracle disagreements ($NAME)::failures with no known cause; see the job summary."
+          fi
       # The per-pair snapshots (shard 0) are the corpus's golden outputs: an
       # artifact, never committed.
       - uses: actions/upload-artifact@v7

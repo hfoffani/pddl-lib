@@ -76,7 +76,9 @@ plan = get("astar").solve(dp)        # or bfs/gbfs/ucs/temporal; None if unsolva
    diagnostics.py / _vendor. It builds FD/VAL/INVAL, samples the corpora
    (`CORPORA_PER_DOMAIN`), and uploads a report. The `subset` job is strict (known
    disagreements are strict xfails in `KNOWN`, tests/test_oracle.py); the corpus jobs
-   are report-only (disagreements → job summary + warning). Coverage map:
+   are report-only (disagreements → job summary + warning; each tagged with its known
+   cause from `KNOWN_CAUSES` in tests/oracle_report.py, else **NEW**). After fixing a
+   pddlpy bug, drop its entries from `KNOWN` and `KNOWN_CAUSES`. Coverage map:
    `docs/oracle-coverage.md`.
    GitHub disables scheduled workflows in public repos after 60 days without repo
    activity; re-enable it from the Actions tab.

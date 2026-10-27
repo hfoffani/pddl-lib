@@ -70,6 +70,11 @@ it, except the known ones listed in `KNOWN` in `tests/test_oracle.py`,
 which are strict xfails and so fail it once fixed. The corpus jobs are
 report-only: disagreements appear in the job summary and the artifact,
 with a warning annotation, while an interrupted or broken run still fails.
+The report tags each failure with its known cause (`KNOWN_CAUSES` in
+`tests/oracle_report.py`: an issue such as #157, matched by check and
+domain) or marks it **NEW**, lists new ones first, and adds a separate
+"New oracle disagreements" annotation when there are any. When a fix
+lands, remove its entry from `KNOWN_CAUSES`.
 
 ## Sampling
 
