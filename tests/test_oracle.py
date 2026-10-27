@@ -3,7 +3,9 @@
 Marked ``oracle`` and deselected from the default run. Each check skips
 when its tool is missing (see tests/oracles.py). Pairs: the committed IPC
 subset plus tests/corpus/oracle/, or, with ``ORACLE_CORPORA=1``, the full
-corpora under ``CORPORA_DIR`` (``DOMAIN`` filters).
+corpora under ``CORPORA_DIR`` (``DOMAIN`` filters, ``CORPORA_PER_DOMAIN``
+samples). ``ORACLE_SHARD=i/n`` keeps every n-th pair from the i-th, so CI
+can split a corpus across jobs.
 
   - FD's translator and pddlpy accept and reject the same files;
   - every plan FD finds replays in pddlpy and passes VAL;
@@ -80,7 +82,15 @@ def _pairs():
             for d, p in committed]
 
 
-PAIRS = _pairs()
+def shard(items, spec):
+    """``spec`` 'i/n' keeps items i, i+n, i+2n, ...; empty keeps all."""
+    if not spec:
+        return items
+    i, n = (int(x) for x in spec.split("/"))
+    return items[i::n]
+
+
+PAIRS = shard(_pairs(), os.environ.get("ORACLE_SHARD"))
 
 
 def params(check):
@@ -100,15 +110,6 @@ def need(path, what):
 
 
 @functools.lru_cache(maxsize=None)
-def pddlpy_accepts(domain, problem):
-    try:
-        DomainProblem(domain, problem)
-    except Exception:
-        return False
-    return not any(i["check"] == "syntax" for i in diagnose(domain, problem)["issues"])
-
-
-@functools.lru_cache(maxsize=None)
 def fd_result(domain, problem):
     return fd_solve(need(fast_downward_bin(), "Fast Downward"), domain, problem, TIMEOUT)
 
@@ -121,26 +122,73 @@ def _alarm(*_):
     raise _Timeout()
 
 
-@functools.lru_cache(maxsize=None)
-def pddlpy_plan(domain, problem):
-    """``(planner, plan)``; plan ``None`` if unsolvable. Skips when pddlpy
-    cannot load the pair, refuses it, or runs out of time."""
-    if not pddlpy_accepts(domain, problem):
-        pytest.skip("pddlpy rejects the pair")
-    dp = DomainProblem(domain, problem)
-    planner = "temporal" if dp.durative_operators() else "astar"
+def bounded(fn, *args):
+    """Run pddlpy work under ``ORACLE_TIMEOUT`` and the memory cap. Returns
+    ``(None, result)``, or ``(reason, None)`` when it ran out of either.
+    Every pddlpy call goes through here: one unbounded load, grounding or
+    search stalled a CI job for hours."""
     signal.signal(signal.SIGALRM, _alarm)
     signal.alarm(int(TIMEOUT))
     try:
-        return planner, get(planner).solve(dp)
-    except PlannerError as exc:
-        pytest.skip("pddlpy refuses: %s" % exc)
+        return None, fn(*args)
     except _Timeout:
-        pytest.skip("pddlpy timed out")
+        return "pddlpy timed out", None
     except MemoryError:
-        pytest.skip("pddlpy ran out of memory (ORACLE_MEMORY_MB)")
+        return "pddlpy ran out of memory (ORACLE_MEMORY_MB)", None
     finally:
         signal.alarm(0)
+
+
+def _accepts(domain, problem):
+    try:
+        DomainProblem(domain, problem)
+    except Exception:
+        return False
+    return not any(i["check"] == "syntax" for i in diagnose(domain, problem)["issues"])
+
+
+def _solve(domain, problem):
+    dp = DomainProblem(domain, problem)
+    planner = "temporal" if dp.durative_operators() else "astar"
+    try:
+        return planner, get(planner).solve(dp)
+    except PlannerError as exc:
+        return planner, exc
+
+
+# Outcomes are cached, timeouts included, so the checks sharing a pair do
+# not each wait out the same deadline.
+@functools.lru_cache(maxsize=None)
+def _accepts_outcome(domain, problem):
+    return bounded(_accepts, domain, problem)
+
+
+@functools.lru_cache(maxsize=None)
+def _solve_outcome(domain, problem):
+    return bounded(_solve, domain, problem)
+
+
+def pddlpy_accepts(domain, problem):
+    """Whether pddlpy loads the pair without syntax errors; skips the
+    calling check when that cannot be decided in time."""
+    reason, accepted = _accepts_outcome(domain, problem)
+    if reason:
+        pytest.skip(reason)
+    return accepted
+
+
+def pddlpy_plan(domain, problem):
+    """``(planner, plan)``; plan ``None`` if unsolvable. Skips when pddlpy
+    cannot load the pair, refuses it, or runs out of time or memory."""
+    if not pddlpy_accepts(domain, problem):
+        pytest.skip("pddlpy rejects the pair")
+    reason, result = _solve_outcome(domain, problem)
+    if reason:
+        pytest.skip(reason)
+    planner, plan = result
+    if isinstance(plan, PlannerError):
+        pytest.skip("pddlpy refuses: %s" % plan)
+    return planner, plan
 
 
 @pytest.fixture(autouse=True, scope="module")
@@ -184,7 +232,10 @@ def test_fd_plan_replays_in_pddlpy_and_val(domain, problem, tmp_path):
     write_plan(steps, plan_file)
     assert val(need(validate_bin(), "VAL"), domain, problem, plan_file, TIMEOUT) is True
     assert pddlpy_accepts(domain, problem), "pddlpy rejects a pair FD solves"
-    assert replay(DomainProblem(domain, problem), steps) is None
+    reason, failure = bounded(lambda: replay(DomainProblem(domain, problem), steps))
+    if reason:
+        pytest.skip(reason)
+    assert failure is None
 
 
 @pytest.mark.parametrize("domain,problem", params("pddlpy_plan"))

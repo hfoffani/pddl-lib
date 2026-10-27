@@ -16,7 +16,7 @@ on:
     inputs:
       oracle_per_domain:
         description: "Oracle checks: problems per domain variant (0 = all)"
-        default: "2"
+        default: "1"
       corpora_per_domain:
         description: "corpora-test: problems per domain variant (0 = all)"
         default: "5"
@@ -106,10 +106,14 @@ jobs:
     timeout-minutes: 330
     strategy:
       fail-fast: false
+      # Each corpus is split into 4 shards: one job got through about half of
+      # its oracle checks before the 6-hour limit.
       matrix:
         corpus: [potassco, classical]
+        shard: [0, 1, 2, 3]
     env:
       DOMAIN: ${{ matrix.corpus }}/
+      NAME: ${{ matrix.corpus }}-${{ matrix.shard }}
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v7
@@ -126,30 +130,40 @@ jobs:
       - name: Fetch corpus
         run: scripts/fetch-corpora.sh ${{ matrix.corpus }}
       - name: pddlpy over the corpus (snapshots + summary)
+        if: matrix.shard == 0
         env:
           CORPORA_PER_DOMAIN: ${{ inputs.corpora_per_domain || '5' }}
         run: make corpora-test
+      # pytest writes its JUnit XML only on exit: SIGINT it well before the
+      # job limit, so a slow shard still reports what it checked.
       - name: Oracle checks
         env:
           ORACLE_CORPORA: "1"
-          CORPORA_PER_DOMAIN: ${{ inputs.oracle_per_domain || '2' }}
-        run: make oracle PYTEST_ARGS="-q --junitxml=oracle-${{ matrix.corpus }}.xml"
+          ORACLE_SHARD: ${{ matrix.shard }}/4
+          CORPORA_PER_DOMAIN: ${{ inputs.oracle_per_domain || '1' }}
+        run: >-
+          timeout -s INT 270m .venv/bin/python -m pytest -m oracle -rs -q
+          tests/test_oracle.py --junitxml="oracle-$NAME.xml"
       - name: Report
         if: always()
         run: |
-          uv run python tests/oracle_report.py --title "Oracle: ${{ matrix.corpus }}" \
-            oracle-${{ matrix.corpus }}.xml .corpora/results/summary.json \
-            | tee report-${{ matrix.corpus }}.md >> "$GITHUB_STEP_SUMMARY"
-      # The per-pair snapshots are the corpus's golden outputs: an artifact,
-      # never committed.
+          files=$(ls "oracle-$NAME.xml" .corpora/results/summary.json 2>/dev/null || true)
+          if [ -z "$files" ]; then
+            echo "No oracle results for $NAME." | tee "report-$NAME.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            uv run python tests/oracle_report.py --title "Oracle: $NAME" $files \
+              | tee "report-$NAME.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      # The per-pair snapshots (shard 0) are the corpus's golden outputs: an
+      # artifact, never committed.
       - uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: oracle-${{ matrix.corpus }}
+          name: oracle-${{ env.NAME }}
           # The snapshots live under .corpora/, which upload-artifact skips
           # unless told to include hidden files.
           include-hidden-files: true
           path: |
-            oracle-${{ matrix.corpus }}.xml
-            report-${{ matrix.corpus }}.md
+            oracle-${{ env.NAME }}.xml
+            report-${{ env.NAME }}.md
             .corpora/results/

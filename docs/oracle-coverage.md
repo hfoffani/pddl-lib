@@ -68,6 +68,10 @@ still record what pddlpy makes of those domains.
 A full pass over every pair (about 14,600) takes many hours, mostly in
 pddlpy's grounding, so CI samples: `CORPORA_PER_DOMAIN` keeps the first N
 problems of each domain variant (the smallest, by IPC numbering). The
-workflow defaults to 5 for `corpora-test` and 2 for the oracle checks, and
-`workflow_dispatch` takes other values (0 means all). The per-pair
+workflow defaults to 5 for `corpora-test` and 1 for the oracle checks, and
+`workflow_dispatch` takes other values (0 means all). The oracle checks
+are also split into 4 shards per corpus (`ORACLE_SHARD=i/n`). At 2 problems
+per variant, one unsharded job got through only about half of a corpus in
+6 hours. Every pddlpy call is bounded by `ORACLE_TIMEOUT` and, on Linux,
+by `ORACLE_MEMORY_MB`; past either limit the check is skipped. The per-pair
 snapshots are uploaded as a workflow artifact and never committed.
