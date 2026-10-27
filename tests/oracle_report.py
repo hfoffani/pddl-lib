@@ -26,7 +26,7 @@ KNOWN_CAUSES: List[Tuple[str, str, str]] = [
     (r"fd_plan|solvability",
      r"classical/blocks/|blocks-strips-|classical/schedule/|schedule-adl-|freecell-strips-"
      r"|ged-opt14-strips|genome-edit-distances|depots-strips-|/rovers|rovers-"
-     r"|logistics-round-2-strips",
+     r"|logistics-round-2-strips|thoughtful",
      "#157 identifier case (predicates, types, static facts)"),
     (r"accept|fd_plan",
      r"derived-predicates|classical/(psr-large|psr-middle|philosophers|optical-telegraphs)/",

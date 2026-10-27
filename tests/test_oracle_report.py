@@ -59,6 +59,13 @@ def test_known_causes_mark_failures(tmp_path):
     assert "- **NEW** `potassco/ipc-2000/domains/blocks-strips-typed" in text
     assert oracle_report.known_cause("test_accept_reject_agrees_with_fd",
                                      "classical/classical/tyreworld/pfile1.pddl").startswith("FD rejects")
+    # (VALUE C0 N0) in :init vs (value ?c ?v) in the domain (oracle run on main)
+    for pair in ("classical/classical/thoughtful-sat14-strips/bootstrap-typed-01.pddl",
+                 "potassco/ipc-2014/domains/thoughtful-sequential-satisficing/instances/"
+                 "instance-1.pddl"):
+        for check in ("test_fd_plan_replays_in_pddlpy_and_val",
+                      "test_solvability_agrees_with_fd"):
+            assert oracle_report.known_cause(check, pair).startswith("#157")
 
 
 def test_long_failure_lists_are_capped(tmp_path, monkeypatch):
