@@ -164,8 +164,13 @@ def val(validate: str, domain: str, problem: str, plan_file: str,
     out = proc.stdout + proc.stderr
     if _VAL_FATAL.search(out):
         return None
-    if _VAL_ERRORS.search(out) and not _val_reads_input(validate, domain, problem, timeout):
-        return None
+    errors = _val_errors(out)
+    if errors:
+        baseline = _val_input_errors(validate, domain, problem, timeout)
+        if baseline is None or baseline >= errors:
+            # The errors are all in the domain/problem, and VAL's recovery
+            # from them (e.g. dropping an action) is what rejected the plan.
+            return None
     return False
 
 
@@ -173,22 +178,27 @@ def val(validate: str, domain: str, problem: str, plan_file: str,
 _VAL_FATAL = re.compile(
     r"Problem in (domain|problem) definition|Type problem in (domain|problem)"
     r"|Error in type-checking")
-# VAL's parse error count. It includes errors in the plan (an unknown
-# object), so it alone does not tell whose fault it is.
-_VAL_ERRORS = re.compile(r"Errors: [1-9]")
+# VAL's parse error count covers the domain, the problem and the plan.
+_VAL_ERRORS = re.compile(r"Errors: (\d+)")
 
 
-def _val_reads_input(validate: str, domain: str, problem: str, timeout: float) -> bool:
-    """Whether VAL parses the domain and problem cleanly: checked against an
-    empty plan, which cannot contribute parse errors of its own."""
+def _val_errors(out: str) -> int:
+    return max((int(n) for n in _VAL_ERRORS.findall(out)), default=0)
+
+
+def _val_input_errors(validate: str, domain: str, problem: str,
+                      timeout: float) -> Optional[int]:
+    """VAL's parse error count on the domain and problem alone, i.e. with
+    an empty plan, which adds none of its own. ``None`` on timeout. VAL
+    recovers from some of these errors and still judges plans correctly
+    (openstacks), so only the errors a plan adds are held against it."""
     with tempfile.TemporaryDirectory() as tmp:
         empty = os.path.join(tmp, "empty.plan")
         open(empty, "w").close()
         proc = _run([validate, domain, problem, empty], timeout)
     if proc is None:
-        return False
-    out = proc.stdout + proc.stderr
-    return not (_VAL_FATAL.search(out) or _VAL_ERRORS.search(out))
+        return None
+    return _val_errors(proc.stdout + proc.stderr)
 
 
 def val_log(validate: str, domain: str, problem: str, plan_file: str,

@@ -120,25 +120,30 @@ def test_val_no_verdict_on_input_errors(tmp_path):
     assert oracles.val(bad, DOMAIN, PROBLEM, PLAN, 10) is False
 
 
-# A VAL whose parse errors come from the domain (on any plan, even empty)
-# or only from the plan (none on an empty plan).
+# A VAL with INPUT parse errors in the domain/problem, plus one more when
+# the plan itself is broken (PLAN_ERROR set), and none from an empty plan.
 ERRORS_FROM = """
-plan_text = open(sys.argv[3]).read()
-if os.environ["FROM"] == "domain" or plan_text:
-    print("Errors: 2, warnings: 6\\nError: Bad operator in plan!")
-    sys.exit(255)
-print("Errors: 0, warnings: 0\\nGoal not satisfied")
+empty = open(sys.argv[3]).read() == ""
+n = int(os.environ["INPUT"]) + (0 if empty or not os.environ.get("PLAN_ERROR") else 1)
+print("Errors: %d, warnings: 6" % n)
+print("Plan invalid")
 sys.exit(1)
 """
 
 
 def test_val_error_count_blames_the_right_input(tmp_path, monkeypatch):
-    """'Errors: N' alone is ambiguous: it counts plan errors too (a corrupted
-    fixture's unknown object) as well as domain errors (movie)."""
+    """'Errors: N' counts domain, problem and plan errors. Errors only in the
+    input, with the plan rejected, are no verdict (movie: VAL drops an
+    action it failed to parse); an error the plan adds is a rejection, even
+    on an input VAL recovers from (the openstacks fixture's unknown
+    object)."""
     tool = script(tmp_path / "val", ERRORS_FROM)
-    monkeypatch.setenv("FROM", "domain")
+    monkeypatch.setenv("INPUT", "2")
+    monkeypatch.delenv("PLAN_ERROR", raising=False)
     assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is None
-    monkeypatch.setenv("FROM", "plan")
+    monkeypatch.setenv("PLAN_ERROR", "1")
+    assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is False
+    monkeypatch.setenv("INPUT", "0")
     assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is False
     slow = script(tmp_path / "slow", 'if open(sys.argv[3]).read() == "":\n'
                                       '    time.sleep(5)\nprint("Errors: 1"); sys.exit(1)')
