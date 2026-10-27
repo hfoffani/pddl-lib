@@ -212,6 +212,24 @@ def val_log(validate: str, domain: str, problem: str, plan_file: str,
     return "VAL exit %d: %s" % (proc.returncode, " | ".join(text[-lines:]))
 
 
+def val_verdict_log(validate: str, domain: str, problem: str, plan_file: str,
+                    timeout: float) -> str:
+    """What ``val()`` saw: VAL's plain output on the plan and on an empty
+    plan (the input-error baseline), for a failure message."""
+    with tempfile.TemporaryDirectory() as tmp:
+        empty = os.path.join(tmp, "empty.plan")
+        open(empty, "w").close()
+        parts = []
+        for label, path in (("plan", plan_file), ("empty plan", empty)):
+            proc = _run([validate, domain, problem, path], timeout)
+            if proc is None:
+                parts.append("%s: timed out" % label)
+                continue
+            text = " | ".join((proc.stdout + proc.stderr).strip().splitlines()[-12:])
+            parts.append("%s: exit %d: %s" % (label, proc.returncode, text))
+    return " || ".join(parts)
+
+
 def inval(binary: str, domain: str, problem: str, plan_file: str,
           timeout: float) -> Optional[bool]:
     """INVAL's verdict, from its 'plan NAME: valid|not valid, ...' line."""

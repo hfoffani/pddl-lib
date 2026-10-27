@@ -145,6 +145,9 @@ def test_val_error_count_blames_the_right_input(tmp_path, monkeypatch):
     assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is False
     monkeypatch.setenv("INPUT", "0")
     assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is False
+    log = oracles.val_verdict_log(tool, DOMAIN, PROBLEM, PLAN, 10)
+    assert log == ("plan: exit 1: Errors: 1, warnings: 6 | Plan invalid || "
+                   "empty plan: exit 1: Errors: 0, warnings: 6 | Plan invalid")
     slow = script(tmp_path / "slow", 'if open(sys.argv[3]).read() == "":\n'
                                       '    time.sleep(5)\nprint("Errors: 1"); sys.exit(1)')
     assert oracles.val(slow, DOMAIN, PROBLEM, PLAN, 0.5) is None

@@ -42,6 +42,7 @@ from oracles import (
     replay,
     val,
     val_log,
+    val_verdict_log,
     validate_bin,
     write_plan,
 )
@@ -297,4 +298,5 @@ def test_plan_fixtures_per_validator(plan, tool):
     assert check(binary, domain, problem, plan, TIMEOUT) is True
     for kind in corruptions(read_plan(plan)):
         bad = plan[: -len(".plan")] + ".%s.plan" % kind
-        assert check(binary, domain, problem, bad, TIMEOUT) is False, kind
+        assert check(binary, domain, problem, bad, TIMEOUT) is False, "%s: %s" % (
+            kind, val_verdict_log(binary, domain, problem, bad, TIMEOUT) if tool == "VAL" else "")
