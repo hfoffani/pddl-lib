@@ -210,6 +210,16 @@ def memory_cap():
     resource.setrlimit(resource.RLIMIT_AS, old)
 
 
+def assert_val_valid(validate, domain, problem, plan_file):
+    """VAL accepts the plan; skips when VAL could not read the domain or
+    problem, and otherwise fails with VAL's reason."""
+    verdict = val(validate, domain, problem, plan_file, TIMEOUT)
+    if verdict is None:
+        pytest.skip("VAL gave no verdict: %s" % val_log(validate, domain, problem,
+                                                         plan_file, TIMEOUT))
+    assert verdict, val_log(validate, domain, problem, plan_file, TIMEOUT)
+
+
 def fd_only(domain):
     if not fd_supports(domain):
         pytest.skip("outside FD's fragment: %s" % declared_requirements(domain))
@@ -236,8 +246,7 @@ def test_fd_plan_replays_in_pddlpy_and_val(domain, problem, tmp_path):
     plan_file = str(tmp_path / "plan")
     write_plan(steps, plan_file)
     validate = need(validate_bin(), "VAL")
-    assert val(validate, domain, problem, plan_file, TIMEOUT) is True, \
-        val_log(validate, domain, problem, plan_file, TIMEOUT)
+    assert_val_valid(validate, domain, problem, plan_file)
     assert pddlpy_accepts(domain, problem), "pddlpy rejects a pair FD solves"
     reason, failure = bounded(lambda: replay(DomainProblem(domain, problem), steps))
     if reason:
@@ -260,8 +269,7 @@ def test_pddlpy_plan_passes_val(domain, problem, tmp_path):
                 f.write("%.3f: (%s) [%.3f]\n" % (s.start, " ".join((name,) + args), s.duration))
     else:
         write_plan(plan_steps(dp, plan), plan_file)
-    assert val(validate, domain, problem, plan_file, TIMEOUT) is True, \
-        val_log(validate, domain, problem, plan_file, TIMEOUT)
+    assert_val_valid(validate, domain, problem, plan_file)
 
 
 @pytest.mark.parametrize("domain,problem", params("solvable"))

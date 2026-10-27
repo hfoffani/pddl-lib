@@ -106,6 +106,21 @@ def test_val_verdict(tmp_path):
     assert oracles.val_log(slow, DOMAIN, PROBLEM, PLAN, 0.5) == "VAL timed out"
 
 
+def test_val_no_verdict_on_input_errors(tmp_path):
+    """VAL failing on the domain/problem itself is no verdict on the plan:
+    messages seen in the oracle run (movie, tyreworld)."""
+    for i, out in enumerate([
+        "No matching action defined for get-cheese\\n\\nErrors: 2, warnings: 6\\n"
+        "Error: Bad operator in plan!",
+        "Problem in domain definition!",
+        "x has bad type definition\\n\\nErrors: 0, warnings: 3\\nError: Error in type-checking!",
+    ]):
+        tool = script(tmp_path / ("v%d" % i), 'print("%s"); sys.exit(255)' % out)
+        assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is None
+    bad = script(tmp_path / "bad", 'print("Errors: 0, warnings: 1\\nGoal not satisfied"); sys.exit(1)')
+    assert oracles.val(bad, DOMAIN, PROBLEM, PLAN, 10) is False
+
+
 def test_inval_verdict(tmp_path):
     ok = script(tmp_path / "ok", 'print("plan p01.plan: valid, value: 11 (11 actions, 11 steps)")')
     bad = script(tmp_path / "bad", 'print("plan p01.plan: not valid, value: nil (2 actions)")')

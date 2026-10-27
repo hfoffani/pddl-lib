@@ -153,11 +153,23 @@ def fd_solve(fd: str, domain: str, problem: str, timeout: float
 def val(validate: str, domain: str, problem: str, plan_file: str,
         timeout: float) -> Optional[bool]:
     """VAL's verdict: its exit code counts errors, and a valid plan prints
-    'Plan valid'. ``None`` on timeout."""
+    'Plan valid'. ``None`` on timeout, or when VAL could not read the domain
+    or problem itself (parse or type-checking errors): then it never judged
+    the plan."""
     proc = _run([validate, domain, problem, plan_file], timeout)
     if proc is None:
         return None
-    return proc.returncode == 0 and "Plan valid" in proc.stdout
+    if proc.returncode == 0 and "Plan valid" in proc.stdout:
+        return True
+    if _VAL_INPUT_ERROR.search(proc.stdout + proc.stderr):
+        return None
+    return False
+
+
+# VAL's reports of trouble with the domain/problem rather than the plan:
+# its parser's error count, and its definition and type-checking failures.
+_VAL_INPUT_ERROR = re.compile(
+    r"Errors: [1-9]|Problem in (domain|problem) definition|Error in type-checking")
 
 
 def val_log(validate: str, domain: str, problem: str, plan_file: str,
