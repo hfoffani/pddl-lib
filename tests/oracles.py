@@ -31,6 +31,10 @@ FD_TRANSLATE_UNSOLVABLE = 10
 FD_SEARCH_UNSOLVABLE = 11
 FD_TRANSLATE_CRITICAL_ERROR = 30
 FD_TRANSLATE_INPUT_ERROR = 31
+# The translator's verdicts on its input. Any other exit (a resource limit,
+# a driver error, a kill signal such as 247 = -9) says nothing about it.
+FD_ACCEPTS = {FD_SUCCESS, FD_TRANSLATE_UNSOLVABLE}
+FD_REJECTS = {FD_TRANSLATE_CRITICAL_ERROR, FD_TRANSLATE_INPUT_ERROR}
 # Out of memory/time in the translator or search: no verdict on the input.
 FD_RESOURCE_LIMIT = {20, 21, 22, 23, 24}
 
@@ -154,6 +158,17 @@ def val(validate: str, domain: str, problem: str, plan_file: str,
     if proc is None:
         return None
     return proc.returncode == 0 and "Plan valid" in proc.stdout
+
+
+def val_log(validate: str, domain: str, problem: str, plan_file: str,
+            timeout: float, lines: int = 8) -> str:
+    """The last lines of VAL's verbose output on the plan (``-v``), for a
+    failure message that says why VAL rejected it."""
+    proc = _run([validate, "-v", domain, problem, plan_file], timeout)
+    if proc is None:
+        return "VAL timed out"
+    text = (proc.stdout + proc.stderr).strip().splitlines()
+    return "VAL exit %d: %s" % (proc.returncode, " | ".join(text[-lines:]))
 
 
 def inval(binary: str, domain: str, problem: str, plan_file: str,

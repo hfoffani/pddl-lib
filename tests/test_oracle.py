@@ -25,6 +25,8 @@ import pytest
 from corpora_run import discover, per_domain
 from golden import IPC, pairs
 from oracles import (
+    FD_ACCEPTS,
+    FD_REJECTS,
     FD_SEARCH_UNSOLVABLE,
     FD_SUCCESS,
     FD_TRANSLATE_UNSOLVABLE,
@@ -39,6 +41,7 @@ from oracles import (
     read_plan,
     replay,
     val,
+    val_log,
     validate_bin,
     write_plan,
 )
@@ -217,8 +220,10 @@ def test_accept_reject_agrees_with_fd(domain, problem):
     fd_only(domain)
     code = fd_translate(need(fast_downward_bin(), "Fast Downward"), domain, problem, TIMEOUT)
     if code is None:
-        pytest.skip("FD translator timed out")
-    fd_accepts = code in (FD_SUCCESS, FD_TRANSLATE_UNSOLVABLE)
+        pytest.skip("FD translator ran out of time or memory")
+    if code not in FD_ACCEPTS | FD_REJECTS:
+        pytest.skip("FD translator gave no verdict (exit %d)" % code)
+    fd_accepts = code in FD_ACCEPTS
     assert pddlpy_accepts(domain, problem) == fd_accepts, "FD translator exit %d" % code
 
 
@@ -230,7 +235,9 @@ def test_fd_plan_replays_in_pddlpy_and_val(domain, problem, tmp_path):
         pytest.skip("FD found no plan (exit %s)" % code)
     plan_file = str(tmp_path / "plan")
     write_plan(steps, plan_file)
-    assert val(need(validate_bin(), "VAL"), domain, problem, plan_file, TIMEOUT) is True
+    validate = need(validate_bin(), "VAL")
+    assert val(validate, domain, problem, plan_file, TIMEOUT) is True, \
+        val_log(validate, domain, problem, plan_file, TIMEOUT)
     assert pddlpy_accepts(domain, problem), "pddlpy rejects a pair FD solves"
     reason, failure = bounded(lambda: replay(DomainProblem(domain, problem), steps))
     if reason:
@@ -253,7 +260,8 @@ def test_pddlpy_plan_passes_val(domain, problem, tmp_path):
                 f.write("%.3f: (%s) [%.3f]\n" % (s.start, " ".join((name,) + args), s.duration))
     else:
         write_plan(plan_steps(dp, plan), plan_file)
-    assert val(validate, domain, problem, plan_file, TIMEOUT) is True
+    assert val(validate, domain, problem, plan_file, TIMEOUT) is True, \
+        val_log(validate, domain, problem, plan_file, TIMEOUT)
 
 
 @pytest.mark.parametrize("domain,problem", params("solvable"))

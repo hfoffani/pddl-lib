@@ -101,6 +101,9 @@ def test_val_verdict(tmp_path):
     assert oracles.val(ok, DOMAIN, PROBLEM, PLAN, 10) is True
     assert oracles.val(bad, DOMAIN, PROBLEM, PLAN, 10) is False
     assert oracles.val(slow, DOMAIN, PROBLEM, PLAN, 0.5) is None
+    assert oracles.val_log(bad, DOMAIN, PROBLEM, PLAN, 10) == \
+        "VAL exit 1: Goal not satisfied | Plan invalid"
+    assert oracles.val_log(slow, DOMAIN, PROBLEM, PLAN, 0.5) == "VAL timed out"
 
 
 def test_inval_verdict(tmp_path):
