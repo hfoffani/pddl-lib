@@ -3,8 +3,7 @@ name: Oracle
 # pddlpy vs Fast Downward / VAL / INVAL on the IPC corpora (#153). Never
 # part of the PR gate: it needs network, native builds and hours. Triggers:
 # weekly, on demand (e.g. before a release), and on pushes to main that
-# touch parsing semantics. The pull_request trigger only fires when this
-# file changes, to try the workflow itself before it reaches main.
+# touch parsing semantics. A full run takes about 40 minutes.
 #
 # GitHub disables scheduled workflows in public repos after 60 days without
 # repository activity; re-enable this one from the Actions tab.
@@ -27,9 +26,6 @@ on:
       - pddlpy/pddl.py
       - pddlpy/diagnostics.py
       - "pddlpy/_vendor/**"
-  pull_request:
-    paths:
-      - .github/workflows/oracle.yaml
 
 permissions:
   contents: read
