@@ -21,6 +21,7 @@ make corpora-test # pddlpy over every fetched pair; report in $CORPORA_DIR/resul
                   # (Makefile reads KEY=value lines from an optional .env, e.g. CORPORA_DIR=/Volumes/ext/corpora)
 make oracles      # Build Fast Downward / VAL / INVAL (pinned) into $ORACLES_DIR (default .oracles)
 make oracle       # pytest -m oracle: pddlpy vs FD/VAL/INVAL; missing tools skip; ORACLE_CORPORA=1 for full corpora
+                  # (CORPORA_PER_DOMAIN=N samples N problems per domain variant, also for corpora-test)
 uv run pddlpy parse|ground|solve|validate DOMAIN PROBLEM   # the CLI
 uv run pddlpy-mcp # MCP server on stdio
 ```
@@ -70,6 +71,17 @@ plan = get("astar").solve(dp)        # or bfs/gbfs/ucs/temporal; None if unsolva
 2. `make pyparser` if grammar changed
 3. `make` to test; `make lint` + `make typecheck` before pushing
 4. CI (`.github/workflows/ci.yaml`) runs tests (no Java) + 100%-coverage gate + ruff + mypy, plus a Java `grammar` job, on every PR
+5. `.github/workflows/oracle.yaml` (#153) is NOT a PR gate: weekly, `workflow_dispatch`
+   (run it before a release), and on pushes to main touching pddl.g4 / pddl.py /
+   diagnostics.py / _vendor. It builds FD/VAL/INVAL, samples the corpora
+   (`CORPORA_PER_DOMAIN`), and uploads a report. The `subset` job is strict (known
+   disagreements are strict xfails in `KNOWN`, tests/test_oracle.py); the corpus jobs
+   are report-only (disagreements → job summary + warning; each tagged with its known
+   cause from `KNOWN_CAUSES` in tests/oracle_report.py, else **NEW**). After fixing a
+   pddlpy bug, drop its entries from `KNOWN` and `KNOWN_CAUSES`. Coverage map:
+   `docs/oracle-coverage.md`.
+   GitHub disables scheduled workflows in public repos after 60 days without repo
+   activity; re-enable it from the Actions tab.
 
 ## Conventions
 - Grounded atoms are tuples `("predicate", "arg1", ...)`; ungrounded are `Atom`s

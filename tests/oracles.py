@@ -31,6 +31,12 @@ FD_TRANSLATE_UNSOLVABLE = 10
 FD_SEARCH_UNSOLVABLE = 11
 FD_TRANSLATE_CRITICAL_ERROR = 30
 FD_TRANSLATE_INPUT_ERROR = 31
+# The translator's verdicts on its input. Any other exit (a resource limit,
+# a driver error, a kill signal such as 247 = -9) says nothing about it.
+FD_ACCEPTS = {FD_SUCCESS, FD_TRANSLATE_UNSOLVABLE}
+FD_REJECTS = {FD_TRANSLATE_CRITICAL_ERROR, FD_TRANSLATE_INPUT_ERROR}
+# Out of memory/time in the translator or search: no verdict on the input.
+FD_RESOURCE_LIMIT = {20, 21, 22, 23, 24}
 
 # REQUIREMENT_LABELS of FD's translator (translate/pddl/tasks.py); it
 # refuses any other key, so such domains stay outside the FD comparison.
@@ -103,12 +109,29 @@ def fd_supports(domain: str) -> bool:
     return set(declared_requirements(domain)) <= FD_REQUIREMENTS
 
 
+# Blind A* can fill a CI runner's memory within seconds; past this cap FD
+# exits 20/22 (out of memory), which the checks treat as no verdict.
+FD_MEMORY = "2G"
+# Extra seconds before the subprocess timeout, so FD's own time limit fires
+# first and reports through its exit code.
+FD_GRACE = 10
+
+
+def _fd_limits(timeout: float) -> List[str]:
+    return ["--overall-time-limit", "%ds" % max(1, int(timeout)),
+            "--overall-memory-limit", FD_MEMORY]
+
+
 def fd_translate(fd: str, domain: str, problem: str, timeout: float) -> Optional[int]:
-    """Exit code of FD's translator on the pair (``None`` on timeout)."""
+    """Exit code of FD's translator on the pair; ``None`` when it ran out of
+    time or memory, which says nothing about whether it accepts the input."""
     with tempfile.TemporaryDirectory() as tmp:
-        proc = _run(_command(fd) + ["--translate", os.path.abspath(domain),
-                                    os.path.abspath(problem)], timeout, cwd=tmp)
-    return None if proc is None else proc.returncode
+        proc = _run(_command(fd) + _fd_limits(timeout) + [
+            "--translate", os.path.abspath(domain), os.path.abspath(problem),
+        ], timeout + FD_GRACE, cwd=tmp)
+    if proc is None or proc.returncode in FD_RESOURCE_LIMIT:
+        return None
+    return proc.returncode
 
 
 def fd_solve(fd: str, domain: str, problem: str, timeout: float
@@ -118,11 +141,11 @@ def fd_solve(fd: str, domain: str, problem: str, timeout: float
     ``None`` on timeout and the plan ``None`` when none was written."""
     with tempfile.TemporaryDirectory() as tmp:
         plan_file = os.path.join(tmp, "plan")
-        proc = _run(_command(fd) + [
+        proc = _run(_command(fd) + _fd_limits(timeout) + [
             "--plan-file", plan_file,
             os.path.abspath(domain), os.path.abspath(problem),
             "--search", "astar(blind())",
-        ], timeout, cwd=tmp)
+        ], timeout + FD_GRACE, cwd=tmp)
         plan = read_plan(plan_file) if os.path.exists(plan_file) else None
     return (None if proc is None else proc.returncode), plan
 
@@ -130,11 +153,89 @@ def fd_solve(fd: str, domain: str, problem: str, timeout: float
 def val(validate: str, domain: str, problem: str, plan_file: str,
         timeout: float) -> Optional[bool]:
     """VAL's verdict: its exit code counts errors, and a valid plan prints
-    'Plan valid'. ``None`` on timeout."""
+    'Plan valid'. ``None`` on timeout, or when VAL could not read the domain
+    or problem itself (parse or type-checking errors): then it never judged
+    the plan."""
     proc = _run([validate, domain, problem, plan_file], timeout)
     if proc is None:
         return None
-    return proc.returncode == 0 and "Plan valid" in proc.stdout
+    if proc.returncode == 0 and "Plan valid" in proc.stdout:
+        return True
+    fatal, errors = _val_trouble(proc.stdout + proc.stderr)
+    if fatal or errors:
+        # VAL's messages do not say whose fault the trouble is: "Error in
+        # type-checking!" comes from a broken domain (tyreworld) and from a
+        # plan naming an unknown object alike, and its error count covers
+        # domain, problem and plan. Ask VAL about the same input with an
+        # empty plan, which brings no trouble of its own.
+        baseline = _val_input_trouble(validate, domain, problem, timeout)
+        if baseline is None:
+            return None
+        base_fatal, base_errors = baseline
+        if (fatal and base_fatal) or (errors and base_errors >= errors):
+            # The input alone accounts for it; VAL's recovery from it (e.g.
+            # dropping an action it failed to parse, as on movie) is what
+            # rejected the plan.
+            return None
+    return False
+
+
+# VAL's fatal reports: definition and type-checking failures.
+_VAL_FATAL = re.compile(
+    r"Problem in (domain|problem) definition|Type problem in (domain|problem)"
+    r"|Error in type-checking")
+# VAL's parse error count.
+_VAL_ERRORS = re.compile(r"Errors: (\d+)")
+
+
+def _val_trouble(out: str) -> Tuple[bool, int]:
+    """``(fatal report?, parse error count)`` in VAL's output."""
+    errors = max((int(n) for n in _VAL_ERRORS.findall(out)), default=0)
+    return bool(_VAL_FATAL.search(out)), errors
+
+
+def _val_input_trouble(validate: str, domain: str, problem: str,
+                       timeout: float) -> Optional[Tuple[bool, int]]:
+    """``_val_trouble`` of VAL on the domain and problem with an empty plan;
+    ``None`` on timeout. VAL still judges plans correctly on some inputs it
+    complains about (openstacks), so only trouble the plan adds counts
+    against the plan."""
+    with tempfile.TemporaryDirectory() as tmp:
+        empty = os.path.join(tmp, "empty.plan")
+        open(empty, "w").close()
+        proc = _run([validate, domain, problem, empty], timeout)
+    if proc is None:
+        return None
+    return _val_trouble(proc.stdout + proc.stderr)
+
+
+def val_log(validate: str, domain: str, problem: str, plan_file: str,
+            timeout: float, lines: int = 8) -> str:
+    """The last lines of VAL's verbose output on the plan (``-v``), for a
+    failure message that says why VAL rejected it."""
+    proc = _run([validate, "-v", domain, problem, plan_file], timeout)
+    if proc is None:
+        return "VAL timed out"
+    text = (proc.stdout + proc.stderr).strip().splitlines()
+    return "VAL exit %d: %s" % (proc.returncode, " | ".join(text[-lines:]))
+
+
+def val_verdict_log(validate: str, domain: str, problem: str, plan_file: str,
+                    timeout: float) -> str:
+    """What ``val()`` saw: VAL's plain output on the plan and on an empty
+    plan (the input-error baseline), for a failure message."""
+    with tempfile.TemporaryDirectory() as tmp:
+        empty = os.path.join(tmp, "empty.plan")
+        open(empty, "w").close()
+        parts = []
+        for label, path in (("plan", plan_file), ("empty plan", empty)):
+            proc = _run([validate, domain, problem, path], timeout)
+            if proc is None:
+                parts.append("%s: timed out" % label)
+                continue
+            text = " | ".join((proc.stdout + proc.stderr).strip().splitlines()[-12:])
+            parts.append("%s: exit %d: %s" % (label, proc.returncode, text))
+    return " || ".join(parts)
 
 
 def inval(binary: str, domain: str, problem: str, plan_file: str,

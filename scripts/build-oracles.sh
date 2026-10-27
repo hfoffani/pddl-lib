@@ -45,7 +45,10 @@ build() {
       (cd "$dir" && python3 build.py release -j "$JOBS") ;;
     VAL)
       [ -x "$dir/build/bin/Validate" ] && return
-      cmake -S "$dir" -B "$dir/build" -DCMAKE_BUILD_TYPE=Release
+      # VAL declares cmake_minimum_required(VERSION 2.8); CMake 4 refuses
+      # anything below 3.5 unless told the policy floor explicitly.
+      cmake -S "$dir" -B "$dir/build" -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5
       cmake --build "$dir/build" --target Validate -j "$JOBS" ;;
     INVAL)
       [ -x "$dir/inval" ] && return

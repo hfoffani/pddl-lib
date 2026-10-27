@@ -60,6 +60,21 @@ def test_discover_both_layouts(tmp_path):
     assert len(corpora_run.discover(str(tmp_path), "pipes")) == 1
 
 
+def test_per_domain_sampling(tmp_path, monkeypatch):
+    """CORPORA_PER_DOMAIN keeps the first N problems per variant, in natural
+    order (instance-2 before instance-10)."""
+    fake_corpora(tmp_path)
+    inst = tmp_path / "potassco" / "ipc-2000" / "domains" / "blocks" / "instances"
+    for n in (10, 2):
+        shutil.copy(inst / "instance-1.pddl", inst / ("instance-%d.pddl" % n))
+    monkeypatch.setenv("CORPORA_PER_DOMAIN", "2")
+    pairs = corpora_run.discover(str(tmp_path), "blocks", corpora_run.per_domain())
+    assert [os.path.basename(p) for _, _, p in pairs] == ["instance-1.pddl", "instance-2.pddl"]
+    monkeypatch.setenv("CORPORA_PER_DOMAIN", "0")
+    assert corpora_run.per_domain() is None
+    assert len(corpora_run.discover(str(tmp_path), None, 1)) == 3
+
+
 def test_empty_corpora_exits_zero(tmp_path, monkeypatch, capsys):
     assert run(monkeypatch, tmp_path / "missing") == 0
     assert "no domain/problem pairs" in capsys.readouterr().out

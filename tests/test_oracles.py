@@ -80,6 +80,9 @@ def test_fd_translate_and_solve(tmp_path, monkeypatch):
     fd = script(tmp_path / "fast-downward.py", FAKE_FD)
     monkeypatch.setenv("FAKE_CODE", "31")
     assert oracles.fd_translate(fd, DOMAIN, PROBLEM, 10) == 31
+    for code in ("20", "21"):  # translator out of memory / time: no verdict
+        monkeypatch.setenv("FAKE_CODE", code)
+        assert oracles.fd_translate(fd, DOMAIN, PROBLEM, 10) is None
     monkeypatch.setenv("FAKE_CODE", "0")
     monkeypatch.setenv("FAKE_PLAN", "(move rooma roomb)\n; cost = 1 (unit cost)\n")
     assert oracles.fd_solve(fd, DOMAIN, PROBLEM, 10) == (0, [("move", ("rooma", "roomb"))])
@@ -87,6 +90,7 @@ def test_fd_translate_and_solve(tmp_path, monkeypatch):
     monkeypatch.setenv("FAKE_CODE", "11")
     assert oracles.fd_solve(fd, DOMAIN, PROBLEM, 10) == (11, None)
     monkeypatch.setenv("FAKE_SLEEP", "1")
+    monkeypatch.setattr(oracles, "FD_GRACE", 0)
     assert oracles.fd_translate(fd, DOMAIN, PROBLEM, 0.5) is None
 
 
@@ -96,6 +100,69 @@ def test_val_verdict(tmp_path):
     slow = script(tmp_path / "slow", "time.sleep(5)")
     assert oracles.val(ok, DOMAIN, PROBLEM, PLAN, 10) is True
     assert oracles.val(bad, DOMAIN, PROBLEM, PLAN, 10) is False
+    assert oracles.val(slow, DOMAIN, PROBLEM, PLAN, 0.5) is None
+    assert oracles.val_log(bad, DOMAIN, PROBLEM, PLAN, 10) == \
+        "VAL exit 1: Goal not satisfied | Plan invalid"
+    assert oracles.val_log(slow, DOMAIN, PROBLEM, PLAN, 0.5) == "VAL timed out"
+
+
+def test_val_no_verdict_on_input_errors(tmp_path):
+    """VAL failing on the domain/problem itself is no verdict on the plan:
+    messages seen in the oracle run (movie, tyreworld)."""
+    for i, out in enumerate([
+        "Problem in domain definition!",
+        "Type problem in problem specification!",
+        "x has bad type definition\\n\\nErrors: 0, warnings: 3\\nError: Error in type-checking!",
+    ]):
+        tool = script(tmp_path / ("v%d" % i), 'print("%s"); sys.exit(255)' % out)
+        assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is None
+    bad = script(tmp_path / "bad", 'print("Errors: 0, warnings: 1\\nGoal not satisfied"); sys.exit(1)')
+    assert oracles.val(bad, DOMAIN, PROBLEM, PLAN, 10) is False
+
+
+def test_val_type_error_in_the_plan_is_a_rejection(tmp_path):
+    """VAL's real output on the openstacks fixture whose plan names an
+    unknown object: the same 'Error in type-checking!' as a broken domain,
+    but an empty plan type-checks fine, so the plan is at fault."""
+    tool = script(tmp_path / "val", """
+if open(sys.argv[3]).read():
+    print("Errors: 0, warnings: 1\\nError: Error in type-checking!"); sys.exit(255)
+print("Plan executed successfully - checking goal\\nGoal not satisfied\\nPlan invalid")
+sys.exit(1)
+""")
+    assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is False
+
+
+# A VAL with INPUT parse errors in the domain/problem, plus one more when
+# the plan itself is broken (PLAN_ERROR set), and none from an empty plan.
+ERRORS_FROM = """
+empty = open(sys.argv[3]).read() == ""
+n = int(os.environ["INPUT"]) + (0 if empty or not os.environ.get("PLAN_ERROR") else 1)
+print("Errors: %d, warnings: 6" % n)
+print("Plan invalid")
+sys.exit(1)
+"""
+
+
+def test_val_error_count_blames_the_right_input(tmp_path, monkeypatch):
+    """'Errors: N' counts domain, problem and plan errors. Errors only in the
+    input, with the plan rejected, are no verdict (movie: VAL drops an
+    action it failed to parse); an error the plan adds is a rejection, even
+    on an input VAL recovers from (the openstacks fixture's unknown
+    object)."""
+    tool = script(tmp_path / "val", ERRORS_FROM)
+    monkeypatch.setenv("INPUT", "2")
+    monkeypatch.delenv("PLAN_ERROR", raising=False)
+    assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is None
+    monkeypatch.setenv("PLAN_ERROR", "1")
+    assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is False
+    monkeypatch.setenv("INPUT", "0")
+    assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is False
+    log = oracles.val_verdict_log(tool, DOMAIN, PROBLEM, PLAN, 10)
+    assert log == ("plan: exit 1: Errors: 1, warnings: 6 | Plan invalid || "
+                   "empty plan: exit 1: Errors: 0, warnings: 6 | Plan invalid")
+    slow = script(tmp_path / "slow", 'if open(sys.argv[3]).read() == "":\n'
+                                      '    time.sleep(5)\nprint("Errors: 1"); sys.exit(1)')
     assert oracles.val(slow, DOMAIN, PROBLEM, PLAN, 0.5) is None
 
 

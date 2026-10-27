@@ -1,0 +1,182 @@
+name: Oracle
+
+# pddlpy vs Fast Downward / VAL / INVAL on the IPC corpora (#153). Never
+# part of the PR gate: it needs network, native builds and hours. Triggers:
+# weekly, on demand (e.g. before a release), and on pushes to main that
+# touch parsing semantics. A full run takes about 40 minutes.
+#
+# GitHub disables scheduled workflows in public repos after 60 days without
+# repository activity; re-enable this one from the Actions tab.
+
+on:
+  schedule:
+    - cron: "17 4 * * 1"  # Mondays 04:17 UTC
+  workflow_dispatch:
+    inputs:
+      oracle_per_domain:
+        description: "Oracle checks: problems per domain variant (0 = all)"
+        default: "1"
+      corpora_per_domain:
+        description: "corpora-test: problems per domain variant (0 = all)"
+        default: "5"
+  push:
+    branches: [main]
+    paths:
+      - pddl.g4
+      - pddlpy/pddl.py
+      - pddlpy/diagnostics.py
+      - "pddlpy/_vendor/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: oracle-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  ORACLES_DIR: ${{ github.workspace }}/.oracles
+  CORPORA_DIR: ${{ github.workspace }}/.corpora
+  ORACLE_TIMEOUT: "30"
+  CORPORA_TIMEOUT: "30"
+  # Address-space cap for the oracle pytest process (FD caps itself at 2G):
+  # an uncapped run exhausted a runner and lost its report.
+  ORACLE_MEMORY_MB: "6144"
+
+jobs:
+  # Build FD, VAL and INVAL once; later jobs restore them from the cache.
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/cache@v6
+        id: cache
+        with:
+          path: .oracles
+          key: oracles-${{ runner.os }}-${{ hashFiles('scripts/build-oracles.sh', 'scripts/inval-sbcl.lsp') }}
+      - name: Toolchain
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: sudo apt-get update && sudo apt-get install -y sbcl flex bison
+      - name: Build oracles
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: scripts/build-oracles.sh
+
+  # The committed pairs (tests/corpus/ipc + tests/corpus/oracle).
+  subset:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.12"
+      - run: uv sync
+      - name: Oracle runtime
+        run: sudo apt-get update && sudo apt-get install -y sbcl
+      - uses: actions/cache/restore@v6
+        with:
+          path: .oracles
+          key: oracles-${{ runner.os }}-${{ hashFiles('scripts/build-oracles.sh', 'scripts/inval-sbcl.lsp') }}
+          fail-on-cache-miss: true
+      - name: Oracle checks
+        run: make oracle PYTEST_ARGS="--junitxml=oracle-subset.xml"
+      - name: Report
+        if: always()
+        run: |
+          uv run python tests/oracle_report.py --title "Oracle: committed pairs" oracle-subset.xml \
+            | tee report-subset.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: oracle-subset
+          path: |
+            oracle-subset.xml
+            report-subset.md
+
+  # The full corpora, sampled per domain variant, one job per corpus.
+  corpus:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      # Each corpus is split into 4 shards: one job got through about half of
+      # its oracle checks before the 6-hour limit.
+      matrix:
+        corpus: [potassco, classical]
+        shard: [0, 1, 2, 3]
+    env:
+      DOMAIN: ${{ matrix.corpus }}/
+      NAME: ${{ matrix.corpus }}-${{ matrix.shard }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.12"
+      - run: uv sync
+      - name: Oracle runtime
+        run: sudo apt-get update && sudo apt-get install -y sbcl
+      - uses: actions/cache/restore@v6
+        with:
+          path: .oracles
+          key: oracles-${{ runner.os }}-${{ hashFiles('scripts/build-oracles.sh', 'scripts/inval-sbcl.lsp') }}
+          fail-on-cache-miss: true
+      - name: Fetch corpus
+        run: scripts/fetch-corpora.sh ${{ matrix.corpus }}
+      - name: pddlpy over the corpus (snapshots + summary)
+        if: matrix.shard == 0
+        env:
+          CORPORA_PER_DOMAIN: ${{ inputs.corpora_per_domain || '5' }}
+        run: make corpora-test
+      # pytest writes its JUnit XML only on exit: SIGINT it well before the
+      # job limit, so a slow shard still reports what it checked.
+      # Report-only: disagreements with the oracles (pytest exit 1) are
+      # listed in the report and flagged as a warning, not a failure; the
+      # committed-pairs `subset` job is the strict check. Anything else (an
+      # interrupted or broken run) still fails the job.
+      - name: Oracle checks
+        env:
+          ORACLE_CORPORA: "1"
+          ORACLE_SHARD: ${{ matrix.shard }}/4
+          CORPORA_PER_DOMAIN: ${{ inputs.oracle_per_domain || '1' }}
+        run: |
+          set +e
+          timeout -s INT 270m .venv/bin/python -m pytest -m oracle -rs -q \
+            tests/test_oracle.py --junitxml="oracle-$NAME.xml"
+          code=$?
+          set -e
+          if [ "$code" -eq 1 ]; then
+            echo "::warning title=Oracle disagreements ($NAME)::pddlpy disagrees with the oracles on some pairs; see the job summary."
+            exit 0
+          fi
+          exit "$code"
+      - name: Report
+        if: always()
+        run: |
+          files=$(ls "oracle-$NAME.xml" .corpora/results/summary.json 2>/dev/null || true)
+          if [ -z "$files" ]; then
+            echo "No oracle results for $NAME." | tee "report-$NAME.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            uv run python tests/oracle_report.py --title "Oracle: $NAME" $files \
+              | tee "report-$NAME.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          # Disagreements without a known cause (KNOWN_CAUSES in
+          # tests/oracle_report.py) get their own annotation.
+          if grep -q '\*\*NEW\*\*' "report-$NAME.md"; then
+            echo "::warning title=New oracle disagreements ($NAME)::failures with no known cause; see the job summary."
+          fi
+      # The per-pair snapshots (shard 0) are the corpus's golden outputs: an
+      # artifact, never committed.
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: oracle-${{ env.NAME }}
+          # The snapshots live under .corpora/, which upload-artifact skips
+          # unless told to include hidden files.
+          include-hidden-files: true
+          path: |
+            oracle-${{ env.NAME }}.xml
+            report-${{ env.NAME }}.md
+            .corpora/results/

@@ -88,7 +88,7 @@ oracles:
 # pddlpy vs the oracles on the committed pairs; ORACLE_CORPORA=1 runs the
 # fetched corpora instead (DOMAIN=... filters). Missing tools: tests skip.
 oracle:
-	$(PYTHON) -m pytest -m oracle -rs tests/test_oracle.py
+	$(PYTHON) -m pytest -m oracle -rs tests/test_oracle.py $(PYTEST_ARGS)
 
 # Run tests with coverage report for pddlpy/pddl.py
 coverage:
