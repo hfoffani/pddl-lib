@@ -110,15 +110,39 @@ def test_val_no_verdict_on_input_errors(tmp_path):
     """VAL failing on the domain/problem itself is no verdict on the plan:
     messages seen in the oracle run (movie, tyreworld)."""
     for i, out in enumerate([
-        "No matching action defined for get-cheese\\n\\nErrors: 2, warnings: 6\\n"
-        "Error: Bad operator in plan!",
         "Problem in domain definition!",
+        "Type problem in problem specification!",
         "x has bad type definition\\n\\nErrors: 0, warnings: 3\\nError: Error in type-checking!",
     ]):
         tool = script(tmp_path / ("v%d" % i), 'print("%s"); sys.exit(255)' % out)
         assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is None
     bad = script(tmp_path / "bad", 'print("Errors: 0, warnings: 1\\nGoal not satisfied"); sys.exit(1)')
     assert oracles.val(bad, DOMAIN, PROBLEM, PLAN, 10) is False
+
+
+# A VAL whose parse errors come from the domain (on any plan, even empty)
+# or only from the plan (none on an empty plan).
+ERRORS_FROM = """
+plan_text = open(sys.argv[3]).read()
+if os.environ["FROM"] == "domain" or plan_text:
+    print("Errors: 2, warnings: 6\\nError: Bad operator in plan!")
+    sys.exit(255)
+print("Errors: 0, warnings: 0\\nGoal not satisfied")
+sys.exit(1)
+"""
+
+
+def test_val_error_count_blames_the_right_input(tmp_path, monkeypatch):
+    """'Errors: N' alone is ambiguous: it counts plan errors too (a corrupted
+    fixture's unknown object) as well as domain errors (movie)."""
+    tool = script(tmp_path / "val", ERRORS_FROM)
+    monkeypatch.setenv("FROM", "domain")
+    assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is None
+    monkeypatch.setenv("FROM", "plan")
+    assert oracles.val(tool, DOMAIN, PROBLEM, PLAN, 10) is False
+    slow = script(tmp_path / "slow", 'if open(sys.argv[3]).read() == "":\n'
+                                      '    time.sleep(5)\nprint("Errors: 1"); sys.exit(1)')
+    assert oracles.val(slow, DOMAIN, PROBLEM, PLAN, 0.5) is None
 
 
 def test_inval_verdict(tmp_path):

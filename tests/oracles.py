@@ -161,15 +161,34 @@ def val(validate: str, domain: str, problem: str, plan_file: str,
         return None
     if proc.returncode == 0 and "Plan valid" in proc.stdout:
         return True
-    if _VAL_INPUT_ERROR.search(proc.stdout + proc.stderr):
+    out = proc.stdout + proc.stderr
+    if _VAL_FATAL.search(out):
+        return None
+    if _VAL_ERRORS.search(out) and not _val_reads_input(validate, domain, problem, timeout):
         return None
     return False
 
 
-# VAL's reports of trouble with the domain/problem rather than the plan:
-# its parser's error count, and its definition and type-checking failures.
-_VAL_INPUT_ERROR = re.compile(
-    r"Errors: [1-9]|Problem in (domain|problem) definition|Error in type-checking")
+# VAL's fatal reports on the domain/problem: it stops before any plan.
+_VAL_FATAL = re.compile(
+    r"Problem in (domain|problem) definition|Type problem in (domain|problem)"
+    r"|Error in type-checking")
+# VAL's parse error count. It includes errors in the plan (an unknown
+# object), so it alone does not tell whose fault it is.
+_VAL_ERRORS = re.compile(r"Errors: [1-9]")
+
+
+def _val_reads_input(validate: str, domain: str, problem: str, timeout: float) -> bool:
+    """Whether VAL parses the domain and problem cleanly: checked against an
+    empty plan, which cannot contribute parse errors of its own."""
+    with tempfile.TemporaryDirectory() as tmp:
+        empty = os.path.join(tmp, "empty.plan")
+        open(empty, "w").close()
+        proc = _run([validate, domain, problem, empty], timeout)
+    if proc is None:
+        return False
+    out = proc.stdout + proc.stderr
+    return not (_VAL_FATAL.search(out) or _VAL_ERRORS.search(out))
 
 
 def val_log(validate: str, domain: str, problem: str, plan_file: str,
