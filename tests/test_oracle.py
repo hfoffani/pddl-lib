@@ -20,6 +20,7 @@ import functools
 import os
 import signal
 import sys
+import tempfile
 
 import pytest
 from corpora_run import discover, per_domain
@@ -213,12 +214,34 @@ def memory_cap():
 
 def assert_val_valid(validate, domain, problem, plan_file):
     """VAL accepts the plan; skips when VAL could not read the domain or
-    problem, and otherwise fails with VAL's reason."""
+    problem, or when VAL also rejects Fast Downward's plan for the pair (the
+    oracles disagree, e.g. movie), and otherwise fails with VAL's reason."""
     verdict = val(validate, domain, problem, plan_file, TIMEOUT)
     if verdict is None:
         pytest.skip("VAL gave no verdict: %s" % val_log(validate, domain, problem,
                                                          plan_file, TIMEOUT))
+    if not verdict:
+        disagreement = val_rejects_fd_plan(validate, domain, problem)
+        if disagreement:
+            pytest.skip("oracles disagree: VAL rejects FD's plan too: %s" % disagreement)
     assert verdict, val_log(validate, domain, problem, plan_file, TIMEOUT)
+
+
+@functools.lru_cache(maxsize=None)
+def val_rejects_fd_plan(validate, domain, problem):
+    """VAL's reason for rejecting Fast Downward's plan for the pair, or
+    ``None`` when it accepts it or there is no FD plan to judge."""
+    if fast_downward_bin() is None or not fd_supports(domain):
+        return None
+    _, steps = fd_result(domain, problem)
+    if steps is None:
+        return None
+    with tempfile.TemporaryDirectory() as tmp:
+        plan_file = os.path.join(tmp, "fd.plan")
+        write_plan(steps, plan_file)
+        if val(validate, domain, problem, plan_file, TIMEOUT) is not False:
+            return None
+        return val_log(validate, domain, problem, plan_file, TIMEOUT)
 
 
 def fd_only(domain):
