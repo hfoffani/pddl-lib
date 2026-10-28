@@ -1,4 +1,5 @@
 """The pddlpy CLI (#85): parse / ground / solve emit JSON with sane exit codes."""
+import io
 import json
 import os
 
@@ -197,3 +198,65 @@ def test_missing_subcommand_rejected(capsys):
     with pytest.raises(SystemExit) as exc:
         main([])
     assert exc.value.code == 2
+
+
+# --- validate-plan / simulate (#166) ----------------------------------------
+
+def _plan(tmp_path, text):
+    path = tmp_path / "plan"
+    path.write_text(text)
+    return str(path)
+
+
+def test_validate_plan_from_solve_output(capsys, monkeypatch):
+    _, solved, _ = _run(capsys, "solve", *_files("gripper"))
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps(solved)))
+    code, out, err = _run(capsys, "validate-plan", *_files("gripper"), "-")
+    assert code == 0 and err == ""
+    assert out == {"valid": True, "failure": None}
+
+
+def test_validate_plan_reports_failure(capsys, tmp_path):
+    plan = _plan(tmp_path, "(move rooma roomb)\n(move rooma roomb)\n")
+    code, out, _ = _run(capsys, "validate-plan", *_files("gripper"), plan)
+    assert code == 1 and out["valid"] is False
+    f = out["failure"]
+    assert (f["kind"], f["step"], f["action"]) == ("precondition", 2, "(move rooma roomb)")
+    assert f["unmet"] == ["(at-robby rooma)"]
+    assert ["at-robby", "roomb"] in f["state"]["atoms"]
+
+
+def test_simulate_trace(capsys, tmp_path):
+    plan = _plan(tmp_path, "0: (go a b) [5]\n")
+    code, out, _ = _run(capsys, "simulate", *_files("durative-action"), plan)
+    assert code == 0 and out["executed"] is True and out["failure"] is None
+    assert [(p["time"], p["event"], p["step"]) for p in out["trace"]] == [
+        (0.0, "start", 1), (5.0, "end", 1)]
+    assert out["final_state"] == out["trace"][-1]["state"]
+
+
+def test_simulate_failure_exit_1(capsys, tmp_path):
+    plan = _plan(tmp_path, "0: (go b a) [5]\n")
+    code, out, _ = _run(capsys, "simulate", *_files("durative-action"), plan)
+    assert code == 1 and out["failure"]["kind"] == "precondition"
+
+
+def test_numeric_state_rendering(capsys, tmp_path):
+    _, solved, _ = _run(capsys, "solve", "--planner", "ucs", *_files("travel"))
+    plan = _plan(tmp_path, json.dumps(solved))
+    code, out, _ = _run(capsys, "simulate", *_files("travel"), plan)
+    assert code == 0 and out["final_state"]["fluents"]["total-cost"] == 2.0
+
+
+@pytest.mark.parametrize("plan", ["nosuch.plan", None])
+def test_validate_plan_bad_input(capsys, tmp_path, plan):
+    path = plan or _plan(tmp_path, "not a plan\n")
+    code, out, err = _run(capsys, "validate-plan", *_files("blocksworld"), path)
+    assert code == 2 and out is None and "pddlpy: error:" in err
+
+
+def test_validate_plan_refused(capsys, tmp_path):
+    ipc = os.path.join(CORPUS, "ipc", "elevator-adl-full-typed")
+    code, _, err = _run(capsys, "validate-plan", os.path.join(ipc, "domain.pddl"),
+                        os.path.join(ipc, "p01.pddl"), _plan(tmp_path, ""))
+    assert code == 2 and "#138" in err

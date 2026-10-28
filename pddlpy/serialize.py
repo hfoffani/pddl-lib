@@ -1,7 +1,7 @@
 """JSON-friendly views of the object model (#85).
 
-Plain-dict renderings of ``DomainProblem``, grounded ``Operator`` and
-``Plan``, shared by the command-line interface (#85) and the MCP server
+Plain-dict renderings of ``DomainProblem``, grounded ``Operator``,
+``Plan`` and plan validation results (#166), shared by the command-line interface (#85) and the MCP server
 (#86). Everything returned is composed of JSON-serializable types only:
 atoms become sorted lists of token lists, sets become sorted lists, and
 numeric expressions are rendered through their ``repr``.
@@ -11,7 +11,15 @@ from __future__ import annotations
 from typing import Any, Dict, Iterable, List, Optional
 
 from pddlpy.pddl import DomainProblem, Operator
-from pddlpy.planning import Plan, TemporalPlan, atom_tuple
+from pddlpy.planning import (
+    Failure,
+    Plan,
+    Simulation,
+    State,
+    TemporalPlan,
+    Validation,
+    atom_tuple,
+)
 
 
 def atoms_list(atoms: Iterable[Any]) -> List[List[str]]:
@@ -92,4 +100,50 @@ def plan_dict(plan: Optional[Plan]) -> Dict[str, Any]:
             {"action": name, "args": dict(bindings)}
             for name, bindings in plan.action_names()
         ],
+    }
+
+
+def state_dict(state: State) -> Dict[str, Any]:
+    """A state: its atoms, and its numeric fluents keyed like
+    ``initial_numeric``."""
+    return {
+        "atoms": atoms_list(state.atoms),
+        "fluents": {" ".join(head): v for head, v in sorted(state.fluents.items())},
+    }
+
+
+def failure_dict(failure: Optional[Failure]) -> Optional[Dict[str, Any]]:
+    """Why a plan fails: ``kind``, ``message``, the 1-based ``step`` and its
+    ``action`` and ``time`` (null for an unmet goal), the ``unmet``
+    conditions or goal atoms, and the ``state`` they were checked in."""
+    if failure is None:
+        return None
+    return {
+        "kind": failure.kind,
+        "message": failure.message,
+        "step": failure.step,
+        "action": failure.action,
+        "time": failure.time,
+        "unmet": list(failure.unmet),
+        "state": state_dict(failure.state),
+    }
+
+
+def validation_dict(result: Validation) -> Dict[str, Any]:
+    """A ``validate_plan`` verdict."""
+    return {"valid": result.valid, "failure": failure_dict(result.failure)}
+
+
+def simulation_dict(sim: Simulation) -> Dict[str, Any]:
+    """A ``simulate`` run: the state after each happening part, up to the
+    first failure."""
+    return {
+        "executed": sim.executed,
+        "failure": failure_dict(sim.failure),
+        "trace": [
+            {"time": p.time, "event": p.event, "step": p.step, "action": p.action,
+             "state": state_dict(p.state)}
+            for p in sim.trace
+        ],
+        "final_state": state_dict(sim.state),
     }
