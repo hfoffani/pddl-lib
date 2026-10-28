@@ -45,4 +45,14 @@ CASES = [
      "mutex"),
     ("mutex-fluent", ADL, "0: (asg a)\n0: (inc a)\n", False, "mutex"),
     ("undefined-simultaneous", ADL, "0: (inc a)\n0: (low a)\n", False, "undefined-fluent"),
+    # additive updates accumulate, concurrently and within one action (#168 review)
+    ("additive-concurrent", ADL, "0: (h1 a)\n0: (h2 a)\n1: (need3 a)\n", True, None),
+    ("additive-one-action", ADL, "(h12 a)\n(need3 a)\n", True, None),
+    ("additive-sequential", ADL, "(h1 a)\n(h2 a)\n(need3 a)\n", True, None),
+    # a conditional branch counts only when its guard holds; the guard is not a read
+    ("inactive-branch-no-mutex", ADL, "0: (maybe a)\n0: (unlit a)\n1: (asg a)\n", True, None),
+    ("inactive-branch-undefined", ADL, "(wasg a)\n", True, None),
+    ("guard-read-vs-write", ADL, "0: (maybe a)\n0: (lampon)\n1: (asg a)\n", True, None),
+    ("active-branch-mutex", ADL, "0: (lampon)\n1: (maybe a)\n1: (unlit a)\n2: (asg a)\n",
+     False, "mutex"),
 ]

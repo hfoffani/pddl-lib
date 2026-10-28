@@ -86,6 +86,34 @@ def test_load_plan_detects_the_form():
         load_plan("{oops")
 
 
+@pytest.mark.parametrize("text", [
+    '[{"action": "a", "start": "nan"}]',
+    '[{"action": "a", "start": 0, "duration": "inf"}]',
+    "1e999: (a) [2]\n",
+])
+def test_non_finite_numbers_are_rejected(text):
+    """A NaN time never groups into a happening: simulate used to loop."""
+    with pytest.raises(PlanValidationError, match="bad number"):
+        load_plan(text)
+
+
+@pytest.mark.parametrize("step", [
+    PlanStep("a", (), float("nan"), 2.0),
+    PlanStep("a", (), 0.0, float("inf")),
+])
+def test_non_finite_plan_steps_are_rejected(step):
+    with pytest.raises(PlanValidationError, match="finite numbers"):
+        simulate(DomainProblem(*TEMPORAL), [step])
+
+
+def test_planner_state_accumulates_additive_effects():
+    """State.apply (the planners) agrees with the validator: two increases
+    of one fluent in one action add up."""
+    dp = DomainProblem(*ADL)
+    op = next(dp.ground_operator("h12"))
+    assert State.from_problem(dp).apply(op).fluents[("h",)] == 3.0
+
+
 def test_solve_output_round_trips():
     """The ``solve`` JSON (args keyed by variable) validates as written."""
     dp = DomainProblem(*ADL)

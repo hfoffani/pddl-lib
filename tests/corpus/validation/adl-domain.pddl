@@ -21,4 +21,17 @@
   (:action pick :parameters (?x ?y - ta)
     :precondition (and (or (lit ?x) (lamp)) (not (= ?x ?y)))
     :effect (and (when (lit ?x) (and (p ?y) (increase (h) 1))) (not (lit ?x))))
-  (:action light :parameters (?x - ta) :precondition (and) :effect (lit ?x)))
+  (:action light :parameters (?x - ta) :precondition (and) :effect (lit ?x))
+  ; additive updates: concurrent, and several in one action
+  (:action h1 :parameters (?x - ta) :precondition (p ?x) :effect (and (increase (h) 1)))
+  (:action h2 :parameters (?x - ta) :precondition (p ?x) :effect (and (increase (h) 2)))
+  (:action h12 :parameters (?x - ta) :precondition (p ?x)
+    :effect (and (increase (h) 1) (increase (h) 2)))
+  (:action need3 :parameters (?x - ta) :precondition (and (p ?x) (= (h) 3)) :effect (done))
+  ; conditional branches whose guard (lamp) is false
+  (:action maybe :parameters (?x - ta) :precondition (p ?x)
+    :effect (and (when (lamp) (lit ?x))))
+  (:action unlit :parameters (?x - ta) :precondition (p ?x) :effect (and (not (lit ?x))))
+  (:action wasg :parameters (?x - ta) :precondition (p ?x)
+    :effect (and (done) (when (lamp) (assign (f) (g)))))
+  (:action lampon :parameters () :precondition (and) :effect (lamp)))

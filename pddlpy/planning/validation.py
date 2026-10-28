@@ -30,6 +30,7 @@ outside :data:`VALIDATION_CAPABILITIES`.
 from __future__ import annotations
 
 import json
+import math
 import re
 from typing import (
     TYPE_CHECKING,
@@ -62,7 +63,7 @@ from pddlpy.pddl import (
 
 from .base import PlannerError
 from .search import ADL_CAPABILITIES
-from .state import GroundAtom, State, Valuation, atom_tuple
+from .state import GroundAtom, State, apply_numeric, atom_tuple
 
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem, Expr
@@ -120,8 +121,7 @@ def parse_plan(text: str) -> List[PlanStep]:
         time, dur = m.group("time"), m.group("dur")  # type: ignore[union-attr]
         try:
             steps.append(PlanStep(tokens[0], tuple(tokens[1:]),
-                                  None if time is None else float(time),
-                                  None if dur is None else float(dur)))
+                                  _number(time), _number(dur)))
         except ValueError:
             raise PlanValidationError("plan line %d has a bad number: %r" % (n, raw.strip()))
     return steps
@@ -169,7 +169,14 @@ class _Binding(str):
 
 
 def _number(value: Any) -> Optional[float]:
-    return None if value is None else float(value)
+    """``value`` as a finite float (``None`` stays ``None``); ``ValueError``
+    otherwise: a NaN or infinite time would never group into happenings."""
+    if value is None:
+        return None
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError("not a finite number: %r" % value)
+    return number
 
 
 def load_plan(text: str) -> List[PlanStep]:
@@ -340,48 +347,16 @@ class _Part:
             return sorted(missing) + sorted(present)
         return _literal_unmet(a, self.event, state)
 
-    def reads(self) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
-        a = self.action
-        if isinstance(a, Operator):
-            atoms, fluents = _cond_reads(a.precondition)
-            if a.precondition is None:
-                atoms |= {atom_tuple(x) for x in a.precondition_pos | a.precondition_neg}
-            for ce in a.conditional_effects:
-                more, morefl = _cond_reads(ce.condition)
-                atoms |= more
-                fluents |= morefl
-            for eff in _numeric_effects(a):
-                fluents.update(_expr_fluents(eff.expr))
-            return atoms, fluents
-        return ({atom_tuple(x) for x in a.condition_pos[self.event]
-                 | a.condition_neg[self.event]}, set())
-
-    def writes(self) -> Tuple[Set[GroundAtom], Set[GroundAtom], Dict[GroundAtom, str]]:
-        """``(adds, deletes, {fluent: op})``, conditional effects included."""
-        a = self.action
-        if isinstance(a, Operator):
-            adds = {atom_tuple(x) for x in a.effect_pos}
-            dels = {atom_tuple(x) for x in a.effect_neg}
-            for ce in a.conditional_effects:
-                adds |= {atom_tuple(x) for x in ce.add}
-                dels |= {atom_tuple(x) for x in ce.dele}
-            return adds, dels, {e.head.head: e.op for e in _numeric_effects(a)}
-        return ({atom_tuple(x) for x in a.effect_pos[self.event]},
-                {atom_tuple(x) for x in a.effect_neg[self.event]}, {})
-
-    def undefined(self, state: State) -> List[str]:
-        """Fluents this part reads that have no value in ``state``."""
-        if not isinstance(self.action, Operator):
-            return []
-        _, fluents = self.reads()
-        return sorted(_atom_text(f) for f in fluents if f not in state.fluents)
-
-    def effects(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom], Valuation]:
-        """``(adds, deletes, fluent updates)`` evaluated in ``state``."""
+    # Effects, reads and writes are taken in the state before the happening:
+    # a conditional effect counts only when its guard holds there, as in VAL.
+    # The guard itself is not a read for the mutex check (VAL does not count
+    # it either).
+    def _fired(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom], List[Any]]:
+        """``(adds, deletes, numeric effects)`` that take effect in ``state``."""
         a = self.action
         if isinstance(a, DurativeAction):
-            adds, dels, _ = self.writes()
-            return adds, dels, {}
+            return ({atom_tuple(x) for x in a.effect_pos[self.event]},
+                    {atom_tuple(x) for x in a.effect_neg[self.event]}, [])
         adds = {atom_tuple(x) for x in a.effect_pos}
         dels = {atom_tuple(x) for x in a.effect_neg}
         nums = list(a.effect_num)
@@ -390,12 +365,37 @@ class _Part:
                 adds |= {atom_tuple(x) for x in ce.add}
                 dels |= {atom_tuple(x) for x in ce.dele}
                 nums.extend(ce.num)
-        return adds, dels, dict(e.apply(state.fluents) for e in nums)
+        return adds, dels, nums
 
+    def reads(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+        """``(atoms, fluents)`` the conditions and fired effects read."""
+        a = self.action
+        if isinstance(a, DurativeAction):
+            return ({atom_tuple(x) for x in a.condition_pos[self.event]
+                     | a.condition_neg[self.event]}, set())
+        atoms, fluents = _cond_reads(a.precondition)
+        if a.precondition is None:
+            atoms |= {atom_tuple(x) for x in a.precondition_pos | a.precondition_neg}
+        for eff in self._fired(state)[2]:
+            fluents.update(_expr_fluents(eff.expr))
+        return atoms, fluents
 
-def _numeric_effects(a: Operator) -> List[Any]:
-    """Every numeric effect of ``a``, conditional ones included."""
-    return list(a.effect_num) + [e for ce in a.conditional_effects for e in ce.num]
+    def writes(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom], Dict[GroundAtom, str]]:
+        """``(adds, deletes, {fluent: op})`` of the fired effects."""
+        adds, dels, nums = self._fired(state)
+        return adds, dels, {e.head.head: e.op for e in nums}
+
+    def undefined(self, state: State) -> List[str]:
+        """Fluents this part reads that have no value in ``state``."""
+        _, fluents = self.reads(state)
+        return sorted(_atom_text(f) for f in fluents if f not in state.fluents)
+
+    def effects(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom],
+                                             List[Tuple[GroundAtom, str, float]]]:
+        """``(adds, deletes, numeric updates)``, the updates as
+        ``(fluent, op, value)`` for :func:`apply_numeric`."""
+        adds, dels, nums = self._fired(state)
+        return adds, dels, [(e.head.head, e.op, e.expr.value(state.fluents)) for e in nums]
 
 
 def _literal_unmet(a: DurativeAction, when: str, state: State) -> List[str]:
@@ -409,10 +409,11 @@ def _literal_unmet(a: DurativeAction, when: str, state: State) -> List[str]:
 _ADDITIVE = {"increase", "decrease"}
 
 
-def _mutex(parts: List[_Part]) -> Optional[Tuple[_Part, _Part, str]]:
+def _mutex(parts: List[_Part], state: State) -> Optional[Tuple[_Part, _Part, str]]:
     """The first interfering pair of parts in one happening, with the atom
-    or fluent they contend for."""
-    io = [(p, p.reads(), p.writes()) for p in parts]
+    or fluent they contend for. Simultaneous increases / decreases of a
+    fluent do not interfere; they accumulate."""
+    io = [(p, p.reads(state), p.writes(state)) for p in parts]
     for i, (p, (pr, prf), (pa, pd, pf)) in enumerate(io):
         for q, (qr, qrf), (qa, qd, qf) in io[i + 1:]:
             clash = (pa & qd) | (pd & qa) | ((pa | pd) & qr) | ((qa | qd) & pr)
@@ -454,6 +455,11 @@ def _resolve(dp: "DomainProblem", steps: List[PlanStep]) -> Tuple[List[_Part], O
         return parts, Failure(kind, "step %d %s: %s" % (i, s, msg), i, str(s), s.time, (), initial)
 
     for i, s in enumerate(steps, 1):
+        try:
+            _number(s.time), _number(s.duration)
+        except (TypeError, ValueError):
+            raise PlanValidationError(
+                "step %d %s: time and duration must be finite numbers" % (i, s))
         name = actions.get(s.name.lower())
         if name is None:
             return fail("unknown-action", "the domain has no action %r" % s.name, i, s)
@@ -545,22 +551,20 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
             if undefined:
                 return fail("undefined-fluent", "reads fluents with no value",
                             p, undefined, state)
-        clash = _mutex(happening) if len(happening) > 1 else None
+        clash = _mutex(happening, state) if len(happening) > 1 else None
         if clash:
             p, q, what = clash
             return fail("mutex", "interferes with step %d %s over %s "
                         "(separate them in time)" % (q.step, q.text, what), p, [what], state)
         adds: Set[GroundAtom] = set()
         dels: Set[GroundAtom] = set()
-        updates: Valuation = {}
+        updates: List[Tuple[GroundAtom, str, float]] = []
         for p in happening:
             a, d, u = p.effects(state)
             adds |= a
             dels |= d
-            updates.update(u)
-        fluents = dict(state.fluents)
-        fluents.update(updates)
-        state = State((state.atoms - dels) | adds, fluents)
+            updates.extend(u)
+        state = State((state.atoms - dels) | adds, apply_numeric(state.fluents, updates))
         for p in happening:
             if p.event == "start":
                 active[p.step] = p

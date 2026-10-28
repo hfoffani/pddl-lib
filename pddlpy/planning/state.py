@@ -48,6 +48,33 @@ def atom_tuple(atom: Any) -> GroundAtom:
     return tuple(atom)
 
 
+def apply_numeric(fluents: Mapping[GroundAtom, float],
+                  updates: Iterable[Tuple[GroundAtom, str, float]]) -> Valuation:
+    """The valuation after simultaneous numeric effects, each given as
+    ``(fluent, op, value)`` with ``value`` already evaluated in ``fluents``.
+
+    ``increase`` / ``decrease`` accumulate: two increases of a fluent by 1
+    and 2 add 3, as in VAL. ``assign`` / ``scale-up`` / ``scale-down`` set the
+    fluent from its pre-state value; additive updates then apply on top.
+    """
+    out = dict(fluents)
+    delta: Dict[GroundAtom, float] = {}
+    for key, op, value in updates:
+        if op == "increase":
+            delta[key] = delta.get(key, 0.0) + value
+        elif op == "decrease":
+            delta[key] = delta.get(key, 0.0) - value
+        elif op == "assign":
+            out[key] = value
+        elif op == "scale-up":
+            out[key] = fluents.get(key, 0.0) * value
+        else:  # scale-down; the grammar allows no other assignOp
+            out[key] = fluents.get(key, 0.0) / value
+    for key, d in delta.items():
+        out[key] = out.get(key, 0.0) + d
+    return out
+
+
 class State:
     """An immutable, hashable planning state.
 
@@ -125,10 +152,8 @@ class State:
                 num_effects.extend(ce.num)
         fluents: Valuation = self._fluents
         if num_effects:
-            updates = [eff.apply(self._fluents) for eff in num_effects]
-            fluents = dict(self._fluents)
-            for key, value in updates:
-                fluents[key] = value
+            fluents = apply_numeric(self._fluents, [
+                (eff.head.head, eff.op, eff.expr.value(self._fluents)) for eff in num_effects])
         return State((self._atoms - delete) | add, fluents)
 
     def satisfies(self, goals: Iterable[Any]) -> bool:

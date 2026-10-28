@@ -73,3 +73,16 @@ def test_plan_basics():
     assert len(plan) == 1
     assert plan.cost == 1
     assert plan.action_names() == [("pick-up", {"?x": "a"})]
+
+
+def test_apply_numeric():
+    from pddlpy.planning.state import apply_numeric
+    f, g, h = ("f",), ("g",), ("h",)
+    before = {f: 2.0, g: 8.0, h: 1.0}
+    after = apply_numeric(before, [
+        (f, "scale-up", 3.0), (g, "scale-down", 4.0),
+        (h, "increase", 1.0), (h, "increase", 2.0), (h, "decrease", 0.5),
+        (("k",), "assign", 5.0), (("k",), "increase", 1.0),
+    ])
+    assert after == {f: 6.0, g: 2.0, h: 3.5, ("k",): 6.0}
+    assert before == {f: 2.0, g: 8.0, h: 1.0}  # pre-state untouched
