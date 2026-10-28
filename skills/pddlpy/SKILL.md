@@ -1,6 +1,6 @@
 ---
 name: pddlpy
-description: Parse PDDL domain/problem files and solve them with pddlpy, via the pddlpy CLI (JSON output) or the Python API. Use when working with PDDL planning files — parsing a domain/problem, inspecting the initial state/goals/operators, grounding actions, evaluating numeric fluents or action costs, or running a reference planner (BFS/A*/GBFS/UCS, or temporal for durative actions) to produce a plan.
+description: Parse PDDL domain/problem files, solve them, and validate or simulate plans with pddlpy, via the pddlpy CLI (JSON output) or the Python API. Use when working with PDDL planning files — parsing a domain/problem, inspecting the initial state/goals/operators, grounding actions, evaluating numeric fluents or action costs, running a reference planner (BFS/A*/GBFS/UCS, or temporal for durative actions), or checking a plan (yours or another tool's) step by step.
 ---
 
 # pddlpy
@@ -34,6 +34,9 @@ pddlpy parse    domain.pddl problem.pddl            # object-model summary
 pddlpy ground   domain.pddl problem.pddl move       # grounded instances of one action
 pddlpy solve    domain.pddl problem.pddl --planner ucs   # default planner: astar
 pddlpy validate domain.pddl problem.pddl            # diagnostics for PDDL you wrote
+pddlpy validate-plan domain.pddl problem.pddl plan.txt   # does this plan reach the goal?
+pddlpy simulate      domain.pddl problem.pddl plan.txt   # state after each step
+pddlpy solve d.pddl p.pddl | pddlpy validate-plan d.pddl p.pddl -   # plan from stdin
 ```
 
 **If you write or edit PDDL yourself** (e.g. translating a problem from
@@ -43,12 +46,26 @@ over undeclared predicates, unknown objects, operators grounding to zero
 instances, and malformed durative actions. Exit `0` = clean, `1` = issues
 in the JSON `issues` list.
 
-Exit codes: `0` success, `1` search found no plan / validate found issues,
-`2` bad input (missing file, unknown operator/planner, unsupported
-`:requirements`). Drop to the Python API below when you need
-`State`/`GroundedTask`, custom binders, or anything the subcommands don't
-cover. (The MCP server `pddlpy-mcp` exposes the same four operations as
-tools over stdio.)
+**Never trust a plan you produced by reasoning: check it with
+`validate-plan`.** A plan file is one `(action arg ...)` per line (`;`
+comments allowed), `time: (action arg ...) [duration]` for durative actions,
+or the JSON `solve` prints. On failure the JSON `failure` gives `kind`
+(`precondition`, `goal`, `unknown-action`, `arity`, `unknown-object`,
+`type`, `duration`, `invariant`, `end-condition`, `mutex`,
+`undefined-fluent`), the 1-based `step` and its `action`, the `unmet`
+conditions (or goal atoms still false), and the `state` at that point: fix
+that step and validate again. The semantics are VAL's: simultaneous
+happenings (within 0.001) must not touch the same atoms, and a durative
+step needs its `[duration]`.
+
+Exit codes: `0` success, `1` search found no plan / validate found issues /
+the plan is invalid or a step cannot run, `2` bad input (missing file,
+unreadable plan, unknown operator/planner, unsupported `:requirements`, or a
+plan pddlpy cannot judge — see Gotchas). Drop to the Python API below when
+you need `State`/`GroundedTask`, custom binders, or anything the subcommands
+don't cover. (The MCP server `pddlpy-mcp` exposes the same operations as
+tools over stdio: `parse`, `ground`, `solve`, `validate`, `validate_plan`,
+`simulate`; the plan tools take the plan text, not a path.)
 
 ## Parse a domain + problem
 
@@ -91,6 +108,20 @@ domains), `temporal` (durative actions; returns a schedule with start times and
 a `makespan`). A planner raises `UnsupportedRequirementsError` if a domain declares
 `:requirements` it does not support.
 
+## Validate or simulate a plan
+
+```python
+from pddlpy.planning import load_plan, simulate, validate_plan
+
+steps = load_plan(open("plan.txt").read())   # IPC text or JSON
+result = validate_plan(dp, steps)
+if not result.valid:
+    f = result.failure    # kind, message, step, action, time, unmet, state
+sim = simulate(dp, steps) # sim.trace: (time, event, step, action, state) per happening
+```
+
+Both raise `PlanValidationError` when the plan cannot be read or judged.
+
 ## Work with states directly
 
 ```python
@@ -117,7 +148,10 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   error (e.g. `(not (p))` is read as `(p)`), so plans for such goals are wrong
   ([#138](https://github.com/hfoffani/pddl-lib/issues/138)). Not supported at all: `:derived-predicates`, `:constraints`,
   `:preferences` in goals, timed initial literals, duration inequalities,
-  `:object-fluents`. Full status per requirement:
+  `:object-fluents`. `validate-plan` / `simulate` refuse (exit 2) what
+  the model cannot represent instead of guessing: syntax errors, goals that
+  are not a conjunction of atoms, durative actions with numeric, conditional
+  or quantified parts or duration inequalities. Full status per requirement:
   [docs/pddl-support.md](https://github.com/hfoffani/pddl-lib/blob/main/docs/pddl-support.md).
 - **Durative actions** (`:durative-actions`) parse into `DurativeAction`
   (`dp.durative_operators()`) and are solved only by `temporal`, under

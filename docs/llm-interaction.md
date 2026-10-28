@@ -133,6 +133,36 @@ three-hop back road (2+2+3 = 7).
 That closing step — three JSON steps into a sentence — is the easy direction,
 where an LLM of any size shines.
 
+## 6. When the model plans on its own
+
+*Not part of the captured conversation; the outputs below are pinned by
+`tests/test_llm_doc.py`.* Sometimes a model answers with a plan of its own,
+or gets one from another tool. `validate-plan` (MCP: `validate_plan`)
+checks it step by step, with the semantics of VAL, the reference plan
+validator. A plausible guess that cuts across from the junction to the
+river:
+
+```
+(drive depot junction)
+(drive junction riverside)
+(drive riverside town)
+```
+
+```json
+{"valid": false,
+ "failure": {"kind": "precondition", "step": 2,
+             "action": "(drive junction riverside)",
+             "message": "step 2 (drive junction riverside) at time 2: preconditions not satisfied; no value for (toll junction riverside)",
+             "unmet": ["(road junction riverside)"],
+             "state": {"atoms": [["at", "junction"], ...], "fluents": {"total-cost": 5.0, ...}}}}
+```
+
+The failure names the step, the condition that does not hold and the
+state at that point: there is no road from the junction to the river. The
+model can fix that step and validate again, or let `solve` plan. The plan
+`solve` returns validates as is: pipe it in with
+`pddlpy solve ... | pddlpy validate-plan DOMAIN PROBLEM -`.
+
 ## Running it yourself
 
 The curated reference version of this domain lives in

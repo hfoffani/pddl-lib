@@ -24,6 +24,7 @@ make oracles      # Build Fast Downward / VAL / INVAL (pinned) into $ORACLES_DIR
 make oracle       # pytest -m oracle: pddlpy vs FD/VAL/INVAL; missing tools skip; ORACLE_CORPORA=1 for full corpora
                   # (CORPORA_PER_DOMAIN=N samples N problems per domain variant, also for corpora-test)
 uv run pddlpy parse|ground|solve|validate DOMAIN PROBLEM   # the CLI
+uv run pddlpy validate-plan|simulate DOMAIN PROBLEM PLAN  # plan checks (#166)
 uv run pddlpy-mcp # MCP server on stdio
 ```
 
@@ -33,8 +34,10 @@ uv run pddlpy-mcp # MCP server on stdio
 - `pddlpy/binding.py` — Pluggable variable binders (StaticPrunedBinder default)
 - `pddlpy/planning/` — State/Plan/GroundedTask, Planner ABC + registry, bfs/astar/gbfs/ucs/temporal
 - `pddlpy/cli.py` + `pddlpy/serialize.py` — CLI (#85) and its JSON renderings
-- `pddlpy/mcpserver.py` — MCP server, tools parse/ground/solve/validate (#86)
+- `pddlpy/mcpserver.py` — MCP server, tools parse/ground/solve/validate/validate_plan/simulate (#86, #166)
 - `pddlpy/diagnostics.py` — `diagnose()` behind `validate` (#94)
+- `pddlpy/planning/validation.py` — `validate_plan` / `simulate`, VAL semantics (#166);
+  probes shared with the oracle suite in `tests/validation_cases.py`
 - `tests/` — the pytest suite (+ `tests/corpus/` PDDL pairs); `pddlpy/test.py` is legacy unittest
 - `tests/corpus/ipc/` + `tests/golden.py` — IPC subset and its golden files
   (`test_golden.py`). A semantics change shows up as a golden mismatch:

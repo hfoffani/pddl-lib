@@ -23,6 +23,19 @@ def test_courier_pair_validates_clean(capsys):
     assert out == {"valid": True, "issues": []}
 
 
+def test_validate_plan_catches_the_guess(capsys, tmp_path):
+    plan = tmp_path / "guess.plan"
+    plan.write_text("(drive depot junction)\n(drive junction riverside)\n(drive riverside town)\n")
+    code, out = _run(capsys, "validate-plan", DOMAIN, PROBLEM, str(plan))
+    assert code == 1
+    f = out["failure"]
+    assert (f["kind"], f["step"], f["action"]) == ("precondition", 2, "(drive junction riverside)")
+    assert f["unmet"] == ["(road junction riverside)"]
+    assert f["message"].endswith("; no value for (toll junction riverside)")
+    assert ["at", "junction"] in f["state"]["atoms"]
+    assert f["state"]["fluents"]["total-cost"] == 5.0
+
+
 def test_ucs_beats_the_intuitive_answers(capsys):
     code, out = _run(capsys, "solve", DOMAIN, PROBLEM, "--planner", "ucs")
     assert code == 0

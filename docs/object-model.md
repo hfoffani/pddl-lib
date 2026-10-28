@@ -35,6 +35,7 @@ The entry point. Parses both files and exposes:
 | `ground_operator(name)` | iterator of grounded `Operator` instances |
 | `durative_operators()` | names of the durative actions (#23) |
 | `ground_durative_operator(name)` | iterator of grounded `DurativeAction` |
+| `ground(name, binding)` | the action `name` (instantaneous or durative) grounded under `{var: object}`, with no binder pruning (#166) |
 | `worldobjects()` | `{object: type or None}` |
 | `predicates()` | set of declared predicate names |
 | `types()` | `{type: supertype or None}` — the `:types` hierarchy (#22) |
@@ -43,6 +44,12 @@ The entry point. Parses both files and exposes:
 | `functions()` | `:functions` → ordered `(param, type)` list |
 | `initial_numeric()` | `{ground function head: value}` |
 | `metric()` | `(optimization, expr_text)` or `None` |
+
+`dp.syntax_errors` counts the syntax errors ANTLR recovered from while
+parsing; the model may misread such input. `dp.problem.simple_goal` is
+`False` when the goal is more than a conjunction of atoms (#138), and a
+`DurativeAction`'s `simple` is `False` when it has parts the model does not
+capture (numeric, conditional, quantified, duration inequalities).
 
 ### `Atom`
 A predicate applied to terms, e.g. `(on ?x ?y)`. `predicate` is
@@ -184,6 +191,47 @@ Because semantics are sequential (v1), actions never overlap: `over all` and
 `at end` are constrained only by the action's own start effects. **Required
 concurrency** (actions that must overlap, e.g. match/cellar) is out of scope —
 a follow-up to this planner.
+
+### Plan validation and simulation (#166)
+
+`validate_plan(dp, steps)` checks that a plan executes from the initial
+state and reaches the goal; `simulate(dp, steps)` returns the state after
+each happening without checking the goal. `steps` is a list of `PlanStep`
+(`name`, `args`, `time`, `duration`), read with `parse_plan(text)` (IPC
+format: `(act a b)` or `t: (act a b) [d]`, `;` comments), `plan_from_json`
+(the `solve` JSON or a list of `{action, args, start, duration}`) or
+`load_plan(text)` (either).
+
+- **`Validation`** — `valid`, `failure`, `simulation`.
+- **`Simulation`** — `trace` (a `TracePoint` per happening part: `time`,
+  `event` = `action` / `start` / `end`, 1-based `step`, `action`, `state`
+  after it), `failure`, final `state`, `executed`.
+- **`Failure`** — `kind` (`unknown-action`, `arity`, `unknown-object`,
+  `type`, `duration`, `precondition`, `end-condition`, `invariant`,
+  `undefined-fluent`, `mutex`, `goal`), `message`, `step`, `action`,
+  `time`, `unmet` (PDDL text) and the `state` they were checked in.
+
+The semantics are VAL's. Untimed steps run at times 1, 2, 3, ...;
+happenings at most `TOLERANCE / 10` (0.001) apart are one happening, whose
+parts are checked against the state before it and must not interfere (no
+add/delete or read/write of the same atom or fluent); a durative step needs
+a `[duration]` within `TOLERANCE` (0.01) of the declared one; `over all`
+conditions must hold after every happening from its start up to its end;
+reading a fluent with no value fails. Names match case-insensitively.
+`tests/test_oracle.py` checks the verdicts against VAL.
+
+What the model cannot represent raises `PlanValidationError` instead of a
+verdict: syntax errors, requirements outside `VALIDATION_CAPABILITIES`
+(ADL, numeric fluents, action costs, durative actions), goals beyond a
+conjunction of atoms (#138), and durative actions that are not `simple`.
+
+```python
+from pddlpy.planning import load_plan, validate_plan
+
+result = validate_plan(dp, load_plan("(pick ball1 rooma left)\n(move rooma roomb)\n"))
+if not result.valid:
+    print(result.failure.message, result.failure.unmet)
+```
 
 ## Known limitations
 
