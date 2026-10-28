@@ -15,10 +15,15 @@ PIP=uv pip
 
 export CLASSPATH:=.:$(ANTLRJARABS)
 
-# Local settings: KEY=value lines (no quotes) in an optional .env are
-# exported to every recipe. `make VAR=...` still overrides them.
--include .env
-export $(shell sed -n 's/^\([A-Za-z_][A-Za-z0-9_]*\)=.*/\1/p' .env 2>/dev/null)
+# Local settings: KEY=value lines in an optional .env are exported to every
+# recipe; `make VAR=...` still overrides them. Values may be quoted the shell
+# way: scripts/dotenv.sh strips the quotes, which make would otherwise keep.
+# Spaces in values survive the round trip as @SP@.
+ifneq (,$(wildcard .env))
+ENV_LINES := $(shell scripts/dotenv.sh .env | sed 's/ /@SP@/g')
+$(foreach line,$(ENV_LINES),$(eval $(subst @SP@, ,$(line))))
+export $(foreach line,$(ENV_LINES),$(firstword $(subst =, ,$(line))))
+endif
 
 # Full IPC corpora (#153): fetched outside the repo's tracked files. Point
 # CORPORA_DIR at an external disk to keep the ~3 GB off the laptop.

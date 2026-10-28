@@ -19,7 +19,9 @@ from __future__ import annotations
 
 import ast
 import collections
+import contextlib
 import glob
+import io
 import json
 import os
 import re
@@ -118,7 +120,11 @@ def run_pair(args: Tuple[Pair, str, str, int]) -> Tuple[str, str]:
     signal.signal(signal.SIGALRM, _alarm)
     signal.alarm(timeout)
     try:
-        snap: Dict[str, Any] = snapshot(dom, prob)
+        # The parser prints ANTLR syntax errors to stderr; across thousands
+        # of pairs that is noise, and the snapshot's validate verdict
+        # records the same errors.
+        with contextlib.redirect_stderr(io.StringIO()):
+            snap: Dict[str, Any] = snapshot(dom, prob)
         if "error" in snap:
             status = "crash"
         elif snap["validate"].get("valid"):

@@ -80,9 +80,11 @@ def test_empty_corpora_exits_zero(tmp_path, monkeypatch, capsys):
     assert "no domain/problem pairs" in capsys.readouterr().out
 
 
-def test_report(tmp_path, monkeypatch):
+def test_report(tmp_path, monkeypatch, capsys):
     fake_corpora(tmp_path)
     assert run(monkeypatch, tmp_path) == 0
+    # pipesworld has syntax errors: recorded in its snapshot, not printed
+    assert "no viable alternative" not in capsys.readouterr().err
     out = tmp_path / "results"
     summary = json.loads((out / "summary.json").read_text())
     # blocks-strips-typed reports an undeclared predicate; pipesworld crashes (#140)
@@ -91,6 +93,7 @@ def test_report(tmp_path, monkeypatch):
         (out / "potassco/ipc-2006/domains/pipes/instances/instance-1.json").read_text()
     )
     assert snap["error"]["type"] == "IndexError"
+    assert any(i["check"] == "syntax" for i in snap["validate"]["issues"])
     assert snap["domain"] == "potassco/ipc-2006/domains/pipes/domains/domain-1.pddl"
 
 
