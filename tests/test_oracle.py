@@ -351,9 +351,18 @@ def test_plan_verdicts_agree_with_val(domain, problem, tmp_path):
             if kind == "fd":
                 pytest.skip(why)
             continue
-        if ref != mine:
+        if ref != mine and not inval_sides_with(domain, problem, plan_file, mine):
             disagree.append("%s: VAL %s, pddlpy %s" % (kind, ref, mine))
     assert not disagree, "; ".join(disagree)
+
+
+def inval_sides_with(domain, problem, plan_file, verdict):
+    """Whether INVAL gives ``verdict`` where VAL does not: the oracles
+    disagree, and pddlpy sides with one of them. VAL accepts arguments to a
+    0-ary action (openstacks, pathways: the unknown-object corruption of a
+    plan starting with one); INVAL and pddlpy reject them."""
+    binary = inval_bin()
+    return binary is not None and inval(binary, domain, problem, plan_file, TIMEOUT) is verdict
 
 
 @pytest.mark.parametrize("domain,problem", params("pddlpy_verdict"))
@@ -366,6 +375,8 @@ def test_pddlpy_plan_verdict_agrees_with_val(domain, problem, tmp_path):
     ref, mine, why = verdicts(domain, problem, plan_file)
     if ref is None or mine is None:
         pytest.skip(why)
+    if ref is False and mine and val_rejects_fd_plan(need(validate_bin(), "VAL"), domain, problem):
+        pytest.skip("oracles disagree: VAL rejects FD's plan too")
     assert ref == mine, "VAL %s, pddlpy %s" % (ref, mine)
 
 
