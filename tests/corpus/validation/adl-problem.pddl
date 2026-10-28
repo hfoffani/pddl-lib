@@ -1,0 +1,5 @@
+(define (problem probe-adl-1)
+  (:domain probe-adl)
+  (:objects a c - ta b - tb)
+  (:init (p a) (= (f) 1) (= (h) 0))
+  (:goal (done)))

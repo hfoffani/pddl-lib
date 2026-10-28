@@ -1,0 +1,21 @@
+; Plan validation probes (roadmap step 3): ADL and numeric conditions and
+; effects. tests/test_oracle.py checks that VAL gives the verdicts that
+; tests/test_validation.py expects.
+(define (domain probe-adl)
+  (:requirements :typing :adl :fluents)
+  (:types ta tb)
+  (:predicates (p ?x - ta) (done) (lit ?x - ta) (lamp))
+  (:functions (f) (g) (h))
+  (:action rd :parameters (?x - ta)
+    :precondition (and (p ?x) (> (g) (- (* 2 (f)) (- 1))))
+    :effect (done))
+  (:action inc :parameters (?x - ta)
+    :precondition (p ?x)
+    :effect (and (done) (increase (g) 1)))
+  (:action asg :parameters (?x - ta)
+    :precondition (p ?x)
+    :effect (and (done) (assign (g) (f))))
+  (:action pick :parameters (?x ?y - ta)
+    :precondition (and (or (lit ?x) (lamp)) (not (= ?x ?y)))
+    :effect (and (when (lit ?x) (and (p ?y) (increase (h) 1))) (not (lit ?x))))
+  (:action light :parameters (?x - ta) :precondition (and) :effect (lit ?x)))
