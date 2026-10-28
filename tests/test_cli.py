@@ -255,6 +255,15 @@ def test_validate_plan_bad_input(capsys, tmp_path, plan):
     assert code == 2 and out is None and "pddlpy: error:" in err
 
 
+@pytest.mark.parametrize("command", ["validate-plan", "simulate"])
+def test_plan_not_utf8_is_bad_input(capsys, tmp_path, command):
+    """Undecodable plan bytes are unreadable input (exit 2), not a verdict."""
+    path = tmp_path / "plan"
+    path.write_bytes(b"; caf\xe9\n(pick-up a)\n")  # Latin-1 comment
+    code, out, err = _run(capsys, command, *_files("blocksworld"), str(path))
+    assert code == 2 and out is None and "pddlpy: error:" in err
+
+
 def test_validate_plan_refused(capsys, tmp_path):
     ipc = os.path.join(CORPUS, "ipc", "elevator-adl-full-typed")
     code, _, err = _run(capsys, "validate-plan", os.path.join(ipc, "domain.pddl"),

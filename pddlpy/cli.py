@@ -130,7 +130,7 @@ def _check_plan(args: argparse.Namespace, dp: DomainProblem) -> int:
             print(json.dumps(simulation_dict(sim), indent=2))
             return 0 if sim.executed else 1
         result = validate_plan(dp, steps)
-    except (OSError, PlannerError) as exc:
+    except (OSError, UnicodeError, PlannerError) as exc:  # unreadable or unjudgeable
         print("pddlpy: error: %s" % exc, file=sys.stderr)
         return 2
     print(json.dumps(validation_dict(result), indent=2))
