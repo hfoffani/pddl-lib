@@ -18,7 +18,8 @@ make examples     # Run the example showcase
 make golden       # Regenerate IPC subset golden files; review the diff (#153)
 make corpora      # Fetch full IPC corpora (pinned) into $CORPORA_DIR (default .corpora), ~3 GB, opt-in
 make corpora-test # pddlpy over every fetched pair; report in $CORPORA_DIR/results; DOMAIN=... filters
-                  # (Makefile reads KEY=value lines from an optional .env, e.g. CORPORA_DIR=/Volumes/ext/corpora)
+                  # (Makefile reads KEY=value lines from an optional .env, e.g. CORPORA_DIR=/Volumes/ext/corpora;
+                  #  shell-style quotes are stripped by scripts/dotenv.sh)
 make oracles      # Build Fast Downward / VAL / INVAL (pinned) into $ORACLES_DIR (default .oracles)
 make oracle       # pytest -m oracle: pddlpy vs FD/VAL/INVAL; missing tools skip; ORACLE_CORPORA=1 for full corpora
                   # (CORPORA_PER_DOMAIN=N samples N problems per domain variant, also for corpora-test)
