@@ -18,10 +18,10 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import List, Optional, Sequence, Tuple
 
 from pddlpy import DomainProblem
-from pddlpy.planning import GroundedTask, State
+from pddlpy.planning import PlanStep, validate_plan
 
 Step = Tuple[str, Tuple[str, ...]]
 
@@ -118,8 +118,12 @@ FD_GRACE = 10
 
 
 def _fd_limits(timeout: float) -> List[str]:
-    return ["--overall-time-limit", "%ds" % max(1, int(timeout)),
-            "--overall-memory-limit", FD_MEMORY]
+    limits = ["--overall-time-limit", "%ds" % max(1, int(timeout))]
+    # FD enforces memory limits only on Linux; elsewhere (macOS) it refuses
+    # the option with exit 37 (DRIVER_UNSUPPORTED).
+    if sys.platform.startswith("linux"):
+        limits += ["--overall-memory-limit", FD_MEMORY]
+    return limits
 
 
 def fd_translate(fd: str, domain: str, problem: str, timeout: float) -> Optional[int]:
@@ -286,21 +290,8 @@ def plan_steps(dp: DomainProblem, plan) -> List[Step]:
 
 
 def replay(dp: DomainProblem, steps: Sequence[Step]) -> Optional[str]:
-    """Execute ``steps`` with pddlpy's grounding and apply semantics.
-    Returns ``None`` if the plan reaches the goal, else why it fails."""
-    task = GroundedTask(dp)
-    index: Dict[Step, object] = {}
-    for op in task.actions:
-        key = (op.operator_name.lower(), tuple(a.lower() for a in _args(dp, op)))
-        index[key] = op
-    state: State = task.initial
-    for i, (name, args) in enumerate(steps, 1):
-        op = index.get((name.lower(), tuple(a.lower() for a in args)))
-        if op is None:
-            return "step %d (%s %s): not a grounded action" % (i, name, " ".join(args))
-        if not state.applicable(op):
-            return "step %d (%s %s): not applicable" % (i, name, " ".join(args))
-        state = state.apply(op)
-    if not task.is_goal(state):
-        return "goal not satisfied after %d steps" % len(steps)
-    return None
+    """Execute ``steps`` with pddlpy's plan validator. Returns ``None`` if
+    the plan reaches the goal, else why it fails. Raises ``PlannerError``
+    when pddlpy cannot judge the plan."""
+    result = validate_plan(dp, [PlanStep(name, tuple(args)) for name, args in steps])
+    return None if result.valid else result.failure.message  # type: ignore[union-attr]
