@@ -15,13 +15,13 @@ CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
 
 def test_no_python2_builtin_import():
     """#16: importing the library must not pull in the py2-only
-    `__builtin__` module."""
-    import importlib
+    `__builtin__` module. Checked in a fresh interpreter: reloading
+    pddlpy.pddl here would hand later tests new model classes."""
+    import subprocess
+    import sys
 
-    import pddlpy.pddl as pddl
-
-    importlib.reload(pddl)  # exercises the module's imports
-    assert "__builtin__" not in dir(pddl)
+    code = "import sys, pddlpy.pddl; assert '__builtin__' not in sys.modules"
+    subprocess.run([sys.executable, "-c", code], check=True)
 
 
 def test_durative_action_parses():

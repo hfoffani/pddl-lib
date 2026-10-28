@@ -40,10 +40,12 @@ from typing import (
     Sequence,
     Set,
     Tuple,
+    Union,
     cast,
 )
 
 from pddlpy._vendor.antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
+from pddlpy._vendor.antlr4.error.ErrorListener import ErrorListener
 
 from .binding import CartesianBinder, StaticPrunedBinder, VariableBinder
 from .pddlLexer import pddlLexer
@@ -660,6 +662,58 @@ def _is_simple_conjunction(cond: Condition) -> bool:
     return False
 
 
+def _positive_conjunction(cond: Condition) -> bool:
+    """True if ``cond`` is a positive atom or a conjunction of them."""
+    if isinstance(cond, And):
+        return all(_positive_conjunction(c) for c in cond.children)
+    return isinstance(cond, Lit)
+
+
+def _literal_conjunction(cond: Condition) -> bool:
+    """True if ``cond`` is a conjunction of literals (atoms or negated
+    atoms), the condition shape ``DurativeAction`` captures."""
+    if isinstance(cond, And):
+        return all(_literal_conjunction(c) for c in cond.children)
+    return isinstance(cond, Lit) or (isinstance(cond, Not) and isinstance(cond.child, Lit))
+
+
+def _simple_dagd(gd: Any) -> bool:
+    """True if a daGD context is a conjunction of time-tagged literal
+    conjunctions (no forall, no preference)."""
+    ptg = gd.prefTimedGD()
+    if ptg is not None:
+        tgd = ptg.timedGD()
+        return ptg.getChildCount() == 1 and _literal_conjunction(_build_condition(tgd.goalDesc()))
+    if gd.getChild(1).getText().lower() != 'and':
+        return False
+    return all(_simple_dagd(g) for g in gd.daGD())
+
+
+def _simple_daeffect(de: Any) -> bool:
+    """True if a daEffect context is a conjunction of time-tagged add /
+    delete effects (no numeric, when or forall)."""
+    te = de.timedEffect()
+    if te is not None:
+        ce = te.cEffect()
+        return ce is not None and ce.pEffect() is not None and ce.pEffect().assignOp() is None
+    if de.getChild(1).getText().lower() != 'and':
+        return False
+    return all(_simple_daeffect(e) for e in de.daEffect())
+
+
+def _simple_durative(body: Any) -> bool:
+    """True if a daDefBody context is fully captured by ``DurativeAction``:
+    a single (= ?duration NUMBER) and literal conditions / effects."""
+    sdcs = body.durationConstraint().simpleDurationConstraint()
+    if len(sdcs) != 1:
+        return False
+    sdc = sdcs[0]
+    if sdc.durOp() is None or sdc.durOp().getText() != '=' or sdc.durValue().NUMBER() is None:
+        return False
+    gd, de = body.daGD(), body.daEffect()
+    return (gd is None or _simple_dagd(gd)) and (de is None or _simple_daeffect(de))
+
+
 def _build_peffect(pe: Any) -> Effect:
     """Build an Effect from a pEffect context (assignment / add / delete)."""
     if pe.assignOp() is not None:
@@ -816,6 +870,11 @@ class DurativeAction():
                     atoms.
         effect_pos / effect_neg -- dicts keyed by 'start'/'end', each a set of
                     effect atoms to add / delete at that time point.
+        simple -- True when the definition is fully captured by the fields
+                    above: a fixed (= ?duration N) and conjunctions of
+                    time-tagged literals. Numeric, conditional, quantified or
+                    preference parts, and duration inequalities, are not
+                    modeled (#139, #143); plan validation refuses such actions.
     """
     CONDITION_TIMES = ('start', 'over', 'end')
     EFFECT_TIMES = ('start', 'end')
@@ -828,6 +887,7 @@ class DurativeAction():
         self.condition_neg: Dict[str, set] = {t: set() for t in self.CONDITION_TIMES}
         self.effect_pos: Dict[str, set] = {t: set() for t in self.EFFECT_TIMES}
         self.effect_neg: Dict[str, set] = {t: set() for t in self.EFFECT_TIMES}
+        self.simple = True
 
     def ground(self, varvals: VarVals) -> "DurativeAction":
         """Return a grounded copy with variables substituted and atoms turned
@@ -835,6 +895,7 @@ class DurativeAction():
         g = DurativeAction(self.operator_name)
         g.variable_list = dict(varvals)
         g.duration = self.duration
+        g.simple = self.simple
         for t in self.CONDITION_TIMES:
             g.condition_pos[t] = set(a.ground(varvals) for a in self.condition_pos[t])
             g.condition_neg[t] = set(a.ground(varvals) for a in self.condition_neg[t])
@@ -912,6 +973,7 @@ class DomainListener(pddlListener):
 
     def exitDurativeActionDef(self, ctx):
         action = self.scopes.pop()
+        action.simple = _simple_durative(ctx.daDefBody())
         self.durative_operators[action.operator_name] = action
 
     def enterSimpleDurationConstraint(self, ctx):
@@ -1120,6 +1182,9 @@ class ProblemListener(pddlListener):
         self.scopes = []
         self.init_numeric = {}
         self.metric = None
+        # False when the goal is more than a conjunction of positive atoms:
+        # ``goals`` then misreads it (#138).
+        self.simple_goal = True
 
     def enterMetricSpec(self, ctx):
         # Capture the optimization metric, e.g. ('minimize', '(total-cost)').
@@ -1143,6 +1208,7 @@ class ProblemListener(pddlListener):
 
     def exitGoal(self, ctx):
         self.goals = set( self.scopes.pop().atoms )
+        self.simple_goal = _positive_conjunction( _build_condition( ctx.goalDesc() ) )
 
     def enterAtomicNameFormula(self, ctx):
         pred = []
@@ -1195,6 +1261,16 @@ class ProblemListener(pddlListener):
             self.objects = dict( vs )
 
 
+class _ErrorCounter(ErrorListener):
+    """Counts the syntax errors ANTLR reports (and recovers from)."""
+    def __init__(self) -> None:
+        self.count = 0
+
+    def syntaxError(self, recognizer: Any, offendingSymbol: Any, line: int,
+                    column: int, msg: str, e: Any) -> None:
+        self.count += 1
+
+
 class DomainProblem():
 
     def __init__(self, domainfile: str, problemfile: str,
@@ -1215,6 +1291,11 @@ class DomainProblem():
         lexer = pddlLexer(inp)
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)
+        # Syntax errors ANTLR recovered from (lexer and parser): the model may
+        # misread the input, so plan validation refuses it.
+        errors = _ErrorCounter()
+        lexer.addErrorListener(errors)
+        parser.addErrorListener(errors)
         tree = parser.domain()
         self.domain = DomainListener()
         walker = ParseTreeWalker()
@@ -1224,7 +1305,10 @@ class DomainProblem():
         lexer = pddlLexer(inp)
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)
+        lexer.addErrorListener(errors)
+        parser.addErrorListener(errors)
         tree = parser.problem()
+        self.syntax_errors: int = errors.count
         self.problem = ProblemListener()
         walker = ParseTreeWalker()
         walker.walk(self.problem, tree)
@@ -1284,29 +1368,42 @@ class DomainProblem():
         """
         op = self.domain.operators[op_name]
         for st in self.binder.bind( self, op ):
-            gop = Operator(op_name)
-            # grounded values are object names; widen to the field's lifted type
-            gop.variable_list = cast(Dict[str, Optional[str]], st)
-            gop.precondition_connective = op.precondition_connective
-            gop.precondition_pos = set( [ a.ground( st ) for a in op.precondition_pos ] )
-            gop.precondition_neg = set( [ a.ground( st ) for a in op.precondition_neg ] )
-            gop.effect_pos = set( [ a.ground( st ) for a in op.effect_pos ] )
-            gop.effect_neg = set( [ a.ground( st ) for a in op.effect_neg ] )
-            gop.precondition_num = [ c.ground( st ) for c in op.precondition_num ]
-            gop.effect_num = [ e.ground( st ) for e in op.effect_num ]
-            # ADL (#10): ground the full precondition tree (expanding
-            # quantifiers over the world objects) and compile the effect tree
-            # into unconditional + conditional grounded effects.
-            if op.precondition_tree is not None:
-                gop.precondition = op.precondition_tree.ground( st, self )
-            if op.effect_tree is not None:
-                out = GroundEffects()
-                op.effect_tree.compile( st, self, out, None )
-                gop.effect_pos = out.add
-                gop.effect_neg = out.dele
-                gop.effect_num = out.num
-                gop.conditional_effects = out.cond
-            yield gop
+            yield self._ground_operator( op, st )
+
+    def ground(self, op_name: str, binding: Dict[str, str]) -> Union[Operator, DurativeAction]:
+        """Returns the instance of action ``op_name`` (instantaneous or
+        durative) under ``binding``, a {variable: object} dict, whether or not
+        a binder would generate it. Plan validation uses it to ground a plan
+        step as written.
+        """
+        if op_name in self.domain.operators:
+            return self._ground_operator( self.domain.operators[op_name], binding )
+        return self.domain.durative_operators[op_name].ground( binding )
+
+    def _ground_operator(self, op: Operator, st: Dict[str, str]) -> Operator:
+        gop = Operator(op.operator_name)
+        # grounded values are object names; widen to the field's lifted type
+        gop.variable_list = cast(Dict[str, Optional[str]], st)
+        gop.precondition_connective = op.precondition_connective
+        gop.precondition_pos = set( [ a.ground( st ) for a in op.precondition_pos ] )
+        gop.precondition_neg = set( [ a.ground( st ) for a in op.precondition_neg ] )
+        gop.effect_pos = set( [ a.ground( st ) for a in op.effect_pos ] )
+        gop.effect_neg = set( [ a.ground( st ) for a in op.effect_neg ] )
+        gop.precondition_num = [ c.ground( st ) for c in op.precondition_num ]
+        gop.effect_num = [ e.ground( st ) for e in op.effect_num ]
+        # ADL (#10): ground the full precondition tree (expanding
+        # quantifiers over the world objects) and compile the effect tree
+        # into unconditional + conditional grounded effects.
+        if op.precondition_tree is not None:
+            gop.precondition = op.precondition_tree.ground( st, self )
+        if op.effect_tree is not None:
+            out = GroundEffects()
+            op.effect_tree.compile( st, self, out, None )
+            gop.effect_pos = out.add
+            gop.effect_neg = out.dele
+            gop.effect_num = out.num
+            gop.conditional_effects = out.cond
+        return gop
 
     def ground_durative_operator(self, op_name: str) -> Iterator[DurativeAction]:
         """Returns an iterator of grounded DurativeAction instances (#23).
