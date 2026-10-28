@@ -29,7 +29,8 @@ CASES = [
     ("mutex-add-delete", TEMPORAL, "0: (a) [2]\n1: (k) [1]\n", False, "mutex"),
     ("instant-in-temporal", TEMPORAL, "0: (a) [2]\n2.5: (b) [3]\n6: (tick)\n", True, None),
     # instantaneous: steps, objects, types, numeric, ADL
-    ("undefined-fluent", ADL, "(rd a)\n", False, "undefined-fluent"),
+    ("undefined-fluent", ADL, "(low a)\n", False, "undefined-fluent"),
+    ("undefined-in-unmet", ADL, "(rd a)\n", False, "precondition"),
     ("numeric-precondition", ADL, "(asg a)\n(rd a)\n", False, "precondition"),
     ("increase-undefined", ADL, "(inc a)\n", True, None),
     ("wrong-type", ADL, "(asg b)\n", False, "type"),
@@ -43,5 +44,5 @@ CASES = [
     ("mutex-atom", ADL, "1: (light a)\n2: (light a)\n2: (pick a c)\n3: (inc c)\n", False,
      "mutex"),
     ("mutex-fluent", ADL, "0: (asg a)\n0: (inc a)\n", False, "mutex"),
-    ("undefined-simultaneous", ADL, "0: (inc a)\n0: (rd a)\n", False, "undefined-fluent"),
+    ("undefined-simultaneous", ADL, "0: (inc a)\n0: (low a)\n", False, "undefined-fluent"),
 ]

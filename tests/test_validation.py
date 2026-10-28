@@ -115,7 +115,9 @@ def test_unmet_renders_conditions():
     assert f.unmet == ("(> (g) (- (* 2 (f)) (- 1)))",)
     f = check(ADL, "(pick a a)\n").failure
     assert f.unmet == ("(or (lit a) (lamp))", "(not (= a a))")
-    assert check(ADL, "(rd a)\n").failure.unmet == ("(g)",)
+    assert check(ADL, "(low a)\n").failure.unmet == ("(g)",)
+    f = check(ADL, "(rd a)\n").failure
+    assert f.kind == "precondition" and f.message.endswith("; no value for (g)")
     f = check(TEMPORAL, "0: (a) [2]\n2.5: (b) [3]\n3: (c) [1]\n").failure
     assert (f.step, f.time, f.unmet) == (2, 5.5, ("(not (s))",))
 

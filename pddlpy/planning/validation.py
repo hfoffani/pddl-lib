@@ -533,15 +533,18 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
 
     for happening in _happenings(parts):
         for p in happening:
+            unmet = p.unmet(state)
             undefined = p.undefined(state)
+            if unmet:
+                kind = "end-condition" if p.event == "end" else "precondition"
+                msg = "%s not satisfied" % (
+                    "at end conditions" if p.event == "end" else "preconditions")
+                if undefined:
+                    msg += "; no value for %s" % ", ".join(undefined)
+                return fail(kind, msg, p, unmet, state)
             if undefined:
                 return fail("undefined-fluent", "reads fluents with no value",
                             p, undefined, state)
-            unmet = p.unmet(state)
-            if unmet:
-                kind = "end-condition" if p.event == "end" else "precondition"
-                return fail(kind, "%s not satisfied" % ("at end conditions"
-                            if p.event == "end" else "preconditions"), p, unmet, state)
         clash = _mutex(happening) if len(happening) > 1 else None
         if clash:
             p, q, what = clash
