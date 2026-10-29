@@ -443,5 +443,4 @@ This project is published under the
 
 ### Who do I talk to? ###
 
-For questions or requests post an issue here or tweet me at
-[@herchu](http://twitter.com/herchu)
+For questions or requests post an issue here.
