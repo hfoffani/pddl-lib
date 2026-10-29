@@ -49,6 +49,7 @@ CASES = [
     ("additive-concurrent", ADL, "0: (h1 a)\n0: (h2 a)\n1: (need3 a)\n", True, None),
     ("additive-one-action", ADL, "(h12 a)\n(need3 a)\n", True, None),
     ("additive-sequential", ADL, "(h1 a)\n(h2 a)\n(need3 a)\n", True, None),
+    ("numeric-read-vs-write", ADL, "1: (h12 a)\n2: (need3 a)\n2: (h1 a)\n", False, "mutex"),
     # a conditional branch counts only when its guard holds; a false guard
     # is not a read, a true one is; a guard's fluents must have values
     ("inactive-branch-no-mutex", ADL, "0: (maybe a)\n0: (unlit a)\n1: (asg a)\n", True, None),
@@ -59,4 +60,9 @@ CASES = [
     ("active-branch-mutex", ADL, "0: (lampon)\n1: (maybe a)\n1: (unlit a)\n2: (asg a)\n",
      False, "mutex"),
     ("undefined-guard", ADL, "(gguard a)\n", False, "undefined-fluent"),
+    # evaluation short-circuits: only fluents actually evaluated need values
+    ("and-guard-short-circuit", ADL, "(sguard a)\n", True, None),
+    ("or-guard-short-circuit", ADL, "(oguard a)\n", True, None),
+    ("or-precondition-short-circuit", ADL, "(opre a)\n", True, None),
+    ("and-guard-evaluated", ADL, "(lguard a)\n", False, "undefined-fluent"),
 ]

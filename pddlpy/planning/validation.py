@@ -322,6 +322,24 @@ def _cond_reads(c: Optional[Condition]) -> Tuple[Set[GroundAtom], Set[GroundAtom
     return atoms, fluents
 
 
+def _evaluated_fluents(c: Optional[Condition], state: State) -> Set[GroundAtom]:
+    """The fluents evaluating ``c`` in ``state`` reads. Like VAL, ``and`` /
+    ``or`` evaluate left to right and stop once the result is known, so a
+    fluent behind a false conjunct or a true disjunct is never read."""
+    if isinstance(c, NumericCond):
+        return set(_expr_fluents(c.constraint.lhs)) | set(_expr_fluents(c.constraint.rhs))
+    if isinstance(c, Not):
+        return _evaluated_fluents(c.child, state)
+    if isinstance(c, (And, Or)):
+        out: Set[GroundAtom] = set()
+        for child in c.children:
+            out |= _evaluated_fluents(child, state)
+            if child.holds(state.atoms, state.fluents) is not isinstance(c, And):
+                break  # a false conjunct / true disjunct settles it
+        return out
+    return set()  # Lit, Equality, or no condition
+
+
 class _Part:
     """One part of a happening: an instantaneous step, or the start or end
     of a durative one."""
@@ -392,12 +410,17 @@ class _Part:
         return adds, dels, {e.head.head: e.op for e in nums}
 
     def undefined(self, state: State) -> List[str]:
-        """Fluents this part evaluates that have no value in ``state``: its
-        reads, plus those of every guard, fired or not."""
-        _, fluents = self.reads(state)
-        if isinstance(self.action, Operator):
-            for ce in self.action.conditional_effects:
-                fluents |= _cond_reads(ce.condition)[1]
+        """Fluents this part evaluates that have no value in ``state``: those
+        its precondition and every guard (fired or not) actually read, and
+        the right-hand sides of its fired effects."""
+        a = self.action
+        if isinstance(a, DurativeAction):
+            return []
+        fluents = _evaluated_fluents(a.precondition, state)
+        for ce in a.conditional_effects:
+            fluents |= _evaluated_fluents(ce.condition, state)
+        for eff in self._fired(state)[2]:
+            fluents.update(_expr_fluents(eff.expr))
         return sorted(_atom_text(f) for f in fluents if f not in state.fluents)
 
     def effects(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom],

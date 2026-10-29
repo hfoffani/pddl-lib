@@ -37,4 +37,12 @@
   (:action lampon :parameters () :precondition (and) :effect (lamp))
   (:action lampoff :parameters () :precondition (and) :effect (and (not (lamp))))
   (:action gguard :parameters (?x - ta) :precondition (p ?x)
-    :effect (and (done) (when (> (g) 0) (lit ?x)))))
+    :effect (and (done) (when (> (g) 0) (lit ?x))))
+  ; short-circuited conditions: (g) has no value but is never evaluated
+  (:action sguard :parameters (?x - ta) :precondition (p ?x)
+    :effect (and (done) (when (and (lamp) (> (g) 0)) (lit ?x))))
+  (:action oguard :parameters (?x - ta) :precondition (p ?x)
+    :effect (and (done) (when (or (p ?x) (> (g) 0)) (lit ?x))))
+  (:action opre :parameters (?x - ta) :precondition (or (p ?x) (> (g) 0)) :effect (done))
+  (:action lguard :parameters (?x - ta) :precondition (p ?x)
+    :effect (and (done) (when (and (p ?x) (> (g) 0)) (lit ?x)))))
