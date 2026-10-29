@@ -11,13 +11,14 @@ on demand, and on pushes to `main` that touch parsing.
 | Oracle | Role | Checks |
 |---|---|---|
 | Fast Downward (translator + `astar(blind())`) | Reference parser and planner for classical PDDL | pddlpy accepts and rejects the same files; FD's plans replay in pddlpy; FD and pddlpy agree on solvable vs unsolvable |
-| VAL | **Primary plan validator** | FD's plans and pddlpy's plans (`astar`, or `temporal` for durative domains) are valid |
+| VAL | **Primary plan validator** | FD's plans and pddlpy's plans (`astar`, or `temporal` for durative domains) are valid; pddlpy's `validate_plan` gives VAL's verdict on them, on the corruptions of FD's plans, and on the probes in `tests/validation_cases.py` |
 | INVAL | Second plan validator | The plan fixtures (`tests/corpus/ipc/*/plans/`) are valid or invalid as labeled |
 
 VAL is the primary plan oracle because it covers temporal plans, which
 INVAL does not. Agreement between VAL and INVAL on the fixtures is the
-cross-check. Plan-validation agreement with pddlpy itself comes with
-`validate_plan` (roadmap step 3).
+cross-check. `validate_plan` (#166) follows VAL's semantics; where the
+object model cannot represent a domain (#138, #139, #143, syntax errors)
+it refuses the plan instead of judging it, and the check skips.
 
 FD only checks domains whose `:requirements` all fall within its
 translator's list. Its translator refuses any other key, so those domains

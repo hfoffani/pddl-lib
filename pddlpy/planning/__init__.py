@@ -36,6 +36,21 @@ from .temporal import (
     TemporalTask,
     apply_durative,
 )
+from .validation import (
+    TOLERANCE,
+    VALIDATION_CAPABILITIES,
+    Failure,
+    PlanStep,
+    PlanValidationError,
+    Simulation,
+    TracePoint,
+    Validation,
+    load_plan,
+    parse_plan,
+    plan_from_json,
+    simulate,
+    validate_plan,
+)
 
 __all__ = [
     "State",
@@ -67,4 +82,17 @@ __all__ = [
     "ScheduledAction",
     "apply_durative",
     "TEMPORAL_CAPABILITIES",
+    "PlanStep",
+    "PlanValidationError",
+    "Failure",
+    "TracePoint",
+    "Simulation",
+    "Validation",
+    "parse_plan",
+    "plan_from_json",
+    "load_plan",
+    "simulate",
+    "validate_plan",
+    "TOLERANCE",
+    "VALIDATION_CAPABILITIES",
 ]

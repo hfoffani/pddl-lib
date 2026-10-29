@@ -10,6 +10,9 @@ can split a corpus across jobs.
   - FD's translator and pddlpy accept and reject the same files;
   - every plan FD finds replays in pddlpy and passes VAL;
   - every plan pddlpy's planners return passes VAL;
+  - pddlpy's plan validator gives VAL's verdict on FD's plans and their
+    corruptions, on pddlpy's own plans, and on the probes in
+    tests/validation_cases.py;
   - FD and pddlpy agree on solvable vs unsolvable;
   - the plan fixtures are what they claim, per VAL and INVAL.
 
@@ -48,10 +51,11 @@ from oracles import (
     write_plan,
 )
 from plans import corruptions, fixtures
+from validation_cases import CASES
 
 from pddlpy import DomainProblem
 from pddlpy.diagnostics import diagnose
-from pddlpy.planning import PlannerError, get
+from pddlpy.planning import PlannerError, get, load_plan, validate_plan
 
 pytestmark = pytest.mark.oracle
 
@@ -60,14 +64,17 @@ ORACLE = os.path.join(os.path.dirname(__file__), "corpus", "oracle")
 
 # Known disagreements on the committed pairs, by (check, domain directory);
 # strict xfails, so a fix shows up as XPASS. Checks: accept, fd_plan,
-# pddlpy_plan, solvable.
+# pddlpy_plan, solvable, verdict, pddlpy_verdict.
 DERIVED = "(:derived ...) does not parse (#141)"
 CASE = "identifiers are case-sensitive: (CLEAR c) vs (clear ?x) (#157)"
 GOALS = "forall goal is misread (#138)"
+SAME_TIME = "temporal planner puts dependent happenings at one time point (#165)"
 KNOWN = {
     ("accept", "psr-middle-derived-predicates-adl"): DERIVED,
     ("fd_plan", "psr-middle-derived-predicates-adl"): DERIVED,
     ("fd_plan", "blocks-strips-typed"): CASE,
+    ("verdict", "blocks-strips-typed"): CASE,
+    ("pddlpy_plan", "temporal-charge"): SAME_TIME,
     ("solvable", "blocks-strips-typed"): CASE,
     ("fd_plan", "elevator-adl-full-typed"): GOALS,
     ("solvable", "elevator-adl-full-typed"): GOALS,
@@ -272,10 +279,105 @@ def test_fd_plan_replays_in_pddlpy_and_val(domain, problem, tmp_path):
     validate = need(validate_bin(), "VAL")
     assert_val_valid(validate, domain, problem, plan_file)
     assert pddlpy_accepts(domain, problem), "pddlpy rejects a pair FD solves"
-    reason, failure = bounded(lambda: replay(DomainProblem(domain, problem), steps))
+    reason, failure = bounded(_replay, domain, problem, steps)
     if reason:
         pytest.skip(reason)
+    if isinstance(failure, PlannerError):
+        pytest.skip("pddlpy cannot judge the plan: %s" % failure)
     assert failure is None
+
+
+def _replay(domain, problem, steps):
+    try:
+        return replay(DomainProblem(domain, problem), steps)
+    except PlannerError as exc:
+        return exc
+
+
+def write_pddlpy_plan(domain, problem, planner, plan, plan_file):
+    """Write a pddlpy plan as a plan file VAL reads."""
+    dp = DomainProblem(domain, problem)
+    if planner == "temporal":
+        with open(plan_file, "w", encoding="utf-8") as f:
+            for s in plan.steps:
+                name, args = plan_steps(dp, [s.action])[0]
+                f.write("%.3f: (%s) [%.3f]\n" % (s.start, " ".join((name,) + args), s.duration))
+    else:
+        write_plan(plan_steps(dp, plan), plan_file)
+
+
+def _validate(domain, problem, text):
+    try:
+        return validate_plan(DomainProblem(domain, problem), load_plan(text)).valid
+    except PlannerError as exc:
+        return exc
+
+
+def verdicts(domain, problem, plan_file):
+    """``(VAL's verdict, pddlpy's verdict, why)`` on a plan file. A verdict
+    is ``None`` when that tool gave none, and ``why`` then says why."""
+    validate = need(validate_bin(), "VAL")
+    ref = val(validate, domain, problem, plan_file, TIMEOUT)
+    if ref is None:
+        return None, None, "VAL gave no verdict"
+    with open(plan_file, encoding="utf-8") as f:
+        text = f.read()
+    reason, mine = bounded(_validate, domain, problem, text)
+    if reason:
+        return ref, None, reason
+    if isinstance(mine, PlannerError):
+        return ref, None, "pddlpy cannot judge the plan: %s" % mine
+    return ref, mine, ""
+
+
+@pytest.mark.parametrize("domain,problem", params("verdict"))
+def test_plan_verdicts_agree_with_val(domain, problem, tmp_path):
+    """pddlpy's validator and VAL agree on FD's plan and on each of its
+    corruptions (drop-first, drop-last, unknown-action, unknown-object)."""
+    fd_only(domain)
+    code, steps = fd_result(domain, problem)
+    if not steps:
+        pytest.skip("FD found no plan, or an empty one (exit %s)" % code)
+    if not pddlpy_accepts(domain, problem):
+        pytest.skip("pddlpy rejects the pair")
+    disagree = []
+    for kind, plan in [("fd", steps)] + sorted(corruptions(steps).items()):
+        plan_file = str(tmp_path / kind)
+        write_plan(plan, plan_file)
+        ref, mine, why = verdicts(domain, problem, plan_file)
+        if kind == "fd" and ref is False:
+            pytest.skip("oracles disagree: VAL rejects FD's plan")
+        if mine is None:
+            if kind == "fd":
+                pytest.skip(why)
+            continue
+        if ref != mine and not inval_sides_with(domain, problem, plan_file, mine):
+            disagree.append("%s: VAL %s, pddlpy %s" % (kind, ref, mine))
+    assert not disagree, "; ".join(disagree)
+
+
+def inval_sides_with(domain, problem, plan_file, verdict):
+    """Whether INVAL gives ``verdict`` where VAL does not: the oracles
+    disagree, and pddlpy sides with one of them. VAL accepts arguments to a
+    0-ary action (openstacks, pathways: the unknown-object corruption of a
+    plan starting with one); INVAL and pddlpy reject them."""
+    binary = inval_bin()
+    return binary is not None and inval(binary, domain, problem, plan_file, TIMEOUT) is verdict
+
+
+@pytest.mark.parametrize("domain,problem", params("pddlpy_verdict"))
+def test_pddlpy_plan_verdict_agrees_with_val(domain, problem, tmp_path):
+    planner, plan = pddlpy_plan(domain, problem)
+    if plan is None:
+        pytest.skip("pddlpy found no plan")
+    plan_file = str(tmp_path / "plan")
+    write_pddlpy_plan(domain, problem, planner, plan, plan_file)
+    ref, mine, why = verdicts(domain, problem, plan_file)
+    if ref is None or mine is None:
+        pytest.skip(why)
+    if ref is False and mine and val_rejects_fd_plan(need(validate_bin(), "VAL"), domain, problem):
+        pytest.skip("oracles disagree: VAL rejects FD's plan too")
+    assert ref == mine, "VAL %s, pddlpy %s" % (ref, mine)
 
 
 @pytest.mark.parametrize("domain,problem", params("pddlpy_plan"))
@@ -285,14 +387,7 @@ def test_pddlpy_plan_passes_val(domain, problem, tmp_path):
     if plan is None:
         pytest.skip("pddlpy found no plan")
     plan_file = str(tmp_path / "plan")
-    dp = DomainProblem(domain, problem)
-    if planner == "temporal":
-        with open(plan_file, "w", encoding="utf-8") as f:
-            for s in plan.steps:
-                name, args = plan_steps(dp, [s.action])[0]
-                f.write("%.3f: (%s) [%.3f]\n" % (s.start, " ".join((name,) + args), s.duration))
-    else:
-        write_plan(plan_steps(dp, plan), plan_file)
+    write_pddlpy_plan(domain, problem, planner, plan, plan_file)
     assert_val_valid(validate, domain, problem, plan_file)
 
 
@@ -323,3 +418,12 @@ def test_plan_fixtures_per_validator(plan, tool):
         bad = plan[: -len(".plan")] + ".%s.plan" % kind
         assert check(binary, domain, problem, bad, TIMEOUT) is False, "%s: %s" % (
             kind, val_verdict_log(binary, domain, problem, bad, TIMEOUT) if tool == "VAL" else "")
+
+
+@pytest.mark.parametrize("pair,text,valid", [c[1:4] for c in CASES], ids=[c[0] for c in CASES])
+def test_validation_cases_match_val(pair, text, valid, tmp_path):
+    """VAL gives the verdicts tests/test_validation.py expects of pddlpy."""
+    plan_file = str(tmp_path / "plan")
+    with open(plan_file, "w", encoding="utf-8") as f:
+        f.write(text)
+    assert val(need(validate_bin(), "VAL"), *pair, plan_file, TIMEOUT) is valid

@@ -23,7 +23,7 @@ MAX_LISTED = 50  # failures listed per check; the rest are counted
 # checked against the failing files (oracle runs on #156). Remove an entry
 # once its cause is fixed; a failure matching no entry is reported as NEW.
 KNOWN_CAUSES: List[Tuple[str, str, str]] = [
-    (r"fd_plan|solvability",
+    (r"fd_plan|solvability|plan_verdicts",
      r"classical/blocks/|blocks-strips-|classical/schedule/|schedule-adl-|freecell-strips-"
      r"|ged-opt14-strips|genome-edit-distances|depots-strips-|/rovers|rovers-"
      r"|logistics-round-2-strips|thoughtful",
@@ -36,7 +36,7 @@ KNOWN_CAUSES: List[Tuple[str, str, str]] = [
      r"|termes-opt18"
      r"|psr-middle-compiled-adl|tpp-metric",
      "#138 goal other than a positive conjunction (forall, not, numeric)"),
-    (r"fd_plan|solvability", r"airport",
+    (r"fd_plan|solvability|plan_verdicts", r"airport",
      "#160 domain constants lose their type"),
     (r"accept", r"classical/fridge/|classical/tyreworld/|pathways-propositional",
      "FD rejects the input, pddlpy accepts it (not yet diagnosed)"),
