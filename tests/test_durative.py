@@ -66,3 +66,21 @@ def test_durative_str():
     text = str(dp.domain.durative_operators["go"])
     assert "Durative Action: go" in text
     assert "Duration: 5.0" in text
+
+
+def test_forall_variables_are_not_parameters(tmp_path):
+    # #167: a forall in a durative condition or effect binds its own
+    # variables; they used to be added to the action's parameters.
+    domain = tmp_path / "d.pddl"
+    domain.write_text(
+        "(define (domain d) (:requirements :durative-actions)"
+        " (:predicates (p) (q ?x))"
+        " (:durative-action a :parameters (?y) :duration (= ?duration 2)"
+        "  :condition (forall (?x) (at start (q ?x)))"
+        "  :effect (forall (?z) (at end (q ?z)))))"
+    )
+    problem = tmp_path / "p.pddl"
+    problem.write_text("(define (problem p) (:domain d) (:objects o) (:init) (:goal (p)))")
+    dp = DomainProblem(str(domain), str(problem))
+    assert dp.domain.durative_operators["a"].variable_list == {"?y": None}
+    assert [g.variable_list for g in dp.ground_durative_operator("a")] == [{"?y": "o"}]

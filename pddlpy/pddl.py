@@ -1045,6 +1045,10 @@ class DomainListener(pddlListener):
 
     def enterTypedVariableList(self, ctx):
         # print("-> tvar")
+        # A forall in a durative action's condition or effect binds its own
+        # variables; they are not parameters of the action (#167).
+        if isinstance(ctx.parentCtx, (pddlParser.DaGDContext, pddlParser.DaEffectContext)):
+            return
         for v in ctx.VARIABLE():
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None

@@ -37,6 +37,9 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **`forall` variables became durative-action parameters** (#167): the
+  variables of a `forall` in a durative action's condition or effect were
+  added to its `:parameters`, so it grounded with an extra argument.
 - **Temporal plans failed VAL** (#165): the `temporal` planner started each
   step exactly when the previous one ended, so a step needing the previous
   step's effect shared its time point, which VAL rejects. Steps are now
