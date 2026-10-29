@@ -20,6 +20,8 @@ from typing import (
     Union,
 )
 
+from pddlpy.pddl import ieee_div
+
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem, DurativeAction, Operator
 
@@ -69,7 +71,7 @@ def apply_numeric(fluents: Mapping[GroundAtom, float],
         elif op == "scale-up":
             out[key] = fluents.get(key, 0.0) * value
         else:  # scale-down; the grammar allows no other assignOp
-            out[key] = fluents.get(key, 0.0) / value
+            out[key] = ieee_div(fluents.get(key, 0.0), value)
     for key, d in delta.items():
         out[key] = out.get(key, 0.0) + d
     return out

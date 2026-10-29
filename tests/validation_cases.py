@@ -65,4 +65,12 @@ CASES = [
     ("or-guard-short-circuit", ADL, "(oguard a)\n", True, None),
     ("or-precondition-short-circuit", ADL, "(opre a)\n", True, None),
     ("and-guard-evaluated", ADL, "(lguard a)\n", False, "undefined-fluent"),
+    # VAL's order: and evaluates atoms before comparisons, or keeps written order
+    ("and-guard-numeric-first", ADL, "(nguard a)\n", True, None),
+    ("not-and-numeric-first", ADL, "(nnot a)\n", True, None),
+    ("nested-or-in-and", ADL, "(nnest a)\n", True, None),
+    ("or-guard-numeric-first", ADL, "(oorder a)\n", False, "undefined-fluent"),
+    # division by zero is IEEE (an infinity), not an error
+    ("division-skipped", ADL, "(divskip a)\n", True, None),
+    ("division-by-zero", ADL, "(divpre a)\n", True, None),
 ]

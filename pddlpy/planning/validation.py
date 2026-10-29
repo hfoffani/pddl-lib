@@ -322,17 +322,33 @@ def _cond_reads(c: Optional[Condition]) -> Tuple[Set[GroundAtom], Set[GroundAtom
     return atoms, fluents
 
 
+def _rank(c: Condition) -> int:
+    """VAL's evaluation cost of a condition (``Proposition::rank``, first
+    component): 1 per numeric comparison, 0 per atom."""
+    if isinstance(c, NumericCond):
+        return 1
+    if isinstance(c, Not):
+        return _rank(c.child)
+    if isinstance(c, (And, Or)):
+        return sum(_rank(k) for k in c.children)
+    return 0
+
+
 def _evaluated_fluents(c: Optional[Condition], state: State) -> Set[GroundAtom]:
-    """The fluents evaluating ``c`` in ``state`` reads. Like VAL, ``and`` /
-    ``or`` evaluate left to right and stop once the result is known, so a
-    fluent behind a false conjunct or a true disjunct is never read."""
+    """The fluents evaluating ``c`` in ``state`` reads, in VAL's order
+    (``ConjGoal`` / ``DisjGoal::evaluate``): ``and`` evaluates its children
+    cheapest first (atoms before comparisons, a stable sort by
+    :func:`_rank`), ``or`` in written order, and both stop once the result
+    is known. A fluent behind a false conjunct or a true disjunct is never
+    read."""
     if isinstance(c, NumericCond):
         return set(_expr_fluents(c.constraint.lhs)) | set(_expr_fluents(c.constraint.rhs))
     if isinstance(c, Not):
         return _evaluated_fluents(c.child, state)
     if isinstance(c, (And, Or)):
         out: Set[GroundAtom] = set()
-        for child in c.children:
+        children = sorted(c.children, key=_rank) if isinstance(c, And) else c.children
+        for child in children:
             out |= _evaluated_fluents(child, state)
             if child.holds(state.atoms, state.fluents) is not isinstance(c, And):
                 break  # a false conjunct / true disjunct settles it

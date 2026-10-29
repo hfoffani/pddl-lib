@@ -29,6 +29,7 @@ solver layer built on top of this model.
 from __future__ import annotations
 
 import itertools
+import math
 import operator as _operator
 from typing import (
     AbstractSet,
@@ -85,6 +86,14 @@ class Atom():
 # (a mapping from a ground function head tuple to a number).
 # --------------------------------------------------------------------------
 
+def ieee_div(a: float, b: float) -> float:
+    """``a / b`` with IEEE semantics, as VAL computes it: dividing by zero
+    gives an infinity (or NaN for 0 / 0) instead of raising."""
+    if b == 0:
+        return math.nan if a == 0 or math.isnan(a) else math.copysign(math.inf, a) * math.copysign(1.0, b)
+    return a / b
+
+
 class Expr():
     """Base class for numeric expression nodes."""
     def ground(self, varvals: VarVals) -> "Expr":
@@ -124,7 +133,7 @@ class Fluent(Expr):
 class BinOp(Expr):
     """A binary arithmetic operation (+, -, *, /)."""
     _ops = {'+': _operator.add, '-': _operator.sub,
-            '*': _operator.mul, '/': _operator.truediv}
+            '*': _operator.mul, '/': lambda a, b: ieee_div(a, b)}
 
     def __init__(self, op: str, left: Expr, right: Expr) -> None:
         self.op = op
@@ -199,7 +208,7 @@ class NumericEffect():
         elif self.op == 'scale-up':
             new = valuation.get(key, 0.0) * rhs
         elif self.op == 'scale-down':
-            new = valuation.get(key, 0.0) / rhs
+            new = ieee_div(valuation.get(key, 0.0), rhs)
         else:  # pragma: no cover - grammar restricts assignOp to the above
             raise ValueError("unknown assign op: %s" % self.op)
         return key, new
