@@ -34,4 +34,7 @@
   (:action unlit :parameters (?x - ta) :precondition (p ?x) :effect (and (not (lit ?x))))
   (:action wasg :parameters (?x - ta) :precondition (p ?x)
     :effect (and (done) (when (lamp) (assign (f) (g)))))
-  (:action lampon :parameters () :precondition (and) :effect (lamp)))
+  (:action lampon :parameters () :precondition (and) :effect (lamp))
+  (:action lampoff :parameters () :precondition (and) :effect (and (not (lamp))))
+  (:action gguard :parameters (?x - ta) :precondition (p ?x)
+    :effect (and (done) (when (> (g) 0) (lit ?x)))))

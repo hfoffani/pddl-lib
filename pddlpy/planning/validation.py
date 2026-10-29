@@ -347,10 +347,10 @@ class _Part:
             return sorted(missing) + sorted(present)
         return _literal_unmet(a, self.event, state)
 
-    # Effects, reads and writes are taken in the state before the happening:
-    # a conditional effect counts only when its guard holds there, as in VAL.
-    # The guard itself is not a read for the mutex check (VAL does not count
-    # it either).
+    # Effects, reads and writes are taken in the state before the happening,
+    # as in VAL: a conditional effect counts only when its guard holds there.
+    # A guard that holds is a read for the mutex check; one that does not is
+    # not. Every guard is evaluated, so the fluents it needs must have values.
     def _fired(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom], List[Any]]:
         """``(adds, deletes, numeric effects)`` that take effect in ``state``."""
         a = self.action
@@ -368,7 +368,8 @@ class _Part:
         return adds, dels, nums
 
     def reads(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
-        """``(atoms, fluents)`` the conditions and fired effects read."""
+        """``(atoms, fluents)`` the conditions, the guards that hold and the
+        fired effects read."""
         a = self.action
         if isinstance(a, DurativeAction):
             return ({atom_tuple(x) for x in a.condition_pos[self.event]
@@ -376,6 +377,11 @@ class _Part:
         atoms, fluents = _cond_reads(a.precondition)
         if a.precondition is None:
             atoms |= {atom_tuple(x) for x in a.precondition_pos | a.precondition_neg}
+        for ce in a.conditional_effects:
+            if ce.condition.holds(state.atoms, state.fluents):
+                more, morefl = _cond_reads(ce.condition)
+                atoms |= more
+                fluents |= morefl
         for eff in self._fired(state)[2]:
             fluents.update(_expr_fluents(eff.expr))
         return atoms, fluents
@@ -386,8 +392,12 @@ class _Part:
         return adds, dels, {e.head.head: e.op for e in nums}
 
     def undefined(self, state: State) -> List[str]:
-        """Fluents this part reads that have no value in ``state``."""
+        """Fluents this part evaluates that have no value in ``state``: its
+        reads, plus those of every guard, fired or not."""
         _, fluents = self.reads(state)
+        if isinstance(self.action, Operator):
+            for ce in self.action.conditional_effects:
+                fluents |= _cond_reads(ce.condition)[1]
         return sorted(_atom_text(f) for f in fluents if f not in state.fluents)
 
     def effects(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom],
