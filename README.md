@@ -62,7 +62,11 @@ pddlpy simulate      domain.pddl problem.pddl plan.txt   # state after each step
 ```
 
 `solve` defaults to `astar`. `--planner` takes any registered planner: `bfs`,
-`astar`, `gbfs`, `ucs` or `temporal`.
+`astar`, `gbfs`, `ucs` or `temporal`. `--max-expansions N` and `--timeout
+SECONDS` bound the search. The result's `status` is `solved`, `unsolvable`
+(the search space was exhausted, so no plan exists) or `limit` (a bound was
+hit first, which proves nothing), and `validated` says whether the plan was
+checked with `validate-plan` before being returned.
 
 ```bash
 $ pddlpy solve tests/corpus/blocksworld-domain.pddl tests/corpus/blocksworld-problem.pddl | jq .cost
@@ -77,10 +81,11 @@ $ pddlpy solve tests/corpus/temporal-weld-domain.pddl tests/corpus/temporal-weld
 {"planner":"temporal","solved":true,"cost":6.0,"makespan":6.0,"length":1,"steps":[{"action":"steady-weld","args":{"?p":"p1"},"start":0.0,"duration":6.0,"end":6.0}]}
 ```
 
-Exit codes: `0` success, `1` the search finished without a plan, `validate`
+Exit codes: `0` success, `1` the search proved there is no plan, `validate`
 found issues, or the plan is invalid / a step cannot run, `2` bad input
 (missing file, unreadable plan, unknown operator, unsupported
-`:requirements`, or a plan pddlpy cannot judge).
+`:requirements`, or a plan pddlpy cannot judge), `3` `solve` hit
+`--max-expansions` or `--timeout` before finding a plan.
 
 `validate-plan` and `simulate` take a plan in the IPC format (`(move a b)`
 per line, or `0.0: (move a b) [2.0]` for durative actions) or as JSON, so

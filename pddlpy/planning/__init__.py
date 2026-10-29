@@ -8,6 +8,7 @@ imports nothing from this package.
 from .base import (
     Planner,
     PlannerError,
+    SearchLimitError,
     UnsupportedRequirementsError,
     validate_requirements,
 )
@@ -27,6 +28,7 @@ from .search import (
     GBFSPlanner,
     UniformCostPlanner,
 )
+from .solving import LIMIT, SOLVED, UNSOLVABLE, SolveResult, plan_steps, solve
 from .state import Plan, State, atom_tuple
 from .temporal import (
     TEMPORAL_CAPABILITIES,
@@ -95,4 +97,11 @@ __all__ = [
     "validate_plan",
     "TOLERANCE",
     "VALIDATION_CAPABILITIES",
+    "SearchLimitError",
+    "SolveResult",
+    "solve",
+    "plan_steps",
+    "SOLVED",
+    "UNSOLVABLE",
+    "LIMIT",
 ]

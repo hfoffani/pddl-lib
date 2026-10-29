@@ -20,7 +20,8 @@ domains work.
 ``TemporalPlanner`` (registered as ``"temporal"``) runs uniform-cost search
 over accumulated duration and returns a :class:`TemporalPlan` carrying
 per-step start times, durations and a ``makespan`` (= ``cost``), minimal for
-sequential schedules. *Required concurrency* (actions that must overlap, e.g.
+sequential schedules whose steps are ``SEPARATION`` apart (#165): the search
+charges each step its duration plus that gap. *Required concurrency* (actions that must overlap, e.g.
 matchcellar) is out of scope — a follow-up to this planner.
 """
 from __future__ import annotations
@@ -52,6 +53,12 @@ if TYPE_CHECKING:
 
 #: Parent-pointer map used to reconstruct a schedule.
 _CameFrom = Dict[State, Tuple[State, "PlanAction", float]]
+
+#: Time between the end of one scheduled step and the start of the next
+#: (#165). Plan validators (VAL) treat happenings within 0.001 of each other
+#: as simultaneous and reject them when one depends on the other; 0.01 is
+#: VAL's default tolerance, as used by POPF/OPTIC.
+SEPARATION = 0.01
 
 #: Requirements the temporal planner supports: the STRIPS set plus
 #: :durative-actions.
@@ -176,7 +183,8 @@ class TemporalTask:
 
 def _schedule(came_from: _CameFrom, state: State) -> TemporalPlan:
     """Walk parent pointers back to the start, then lay the actions end to
-    end — sequential semantics: each starts when the previous one finishes."""
+    end — sequential semantics: each starts ``SEPARATION`` after the
+    previous one finishes."""
     pairs: List[Tuple["PlanAction", float]] = []
     while state in came_from:
         prev, action, duration = came_from[state]
@@ -187,7 +195,7 @@ def _schedule(came_from: _CameFrom, state: State) -> TemporalPlan:
     clock = 0.0
     for action, duration in pairs:
         steps.append(ScheduledAction(action, clock, duration))
-        clock += duration
+        clock += duration + SEPARATION
     return TemporalPlan(steps)
 
 
@@ -204,6 +212,7 @@ class TemporalPlanner(Planner):
         self.check_capabilities(domainproblem)
         validate_durative_actions(domainproblem)
         task = TemporalTask(domainproblem)
+        self._start_search()
         start = task.initial
         counter = itertools.count()  # tie-breaker; keeps States out of compares
         frontier: List[Tuple[float, int, State]] = [(0.0, next(counter), start)]
@@ -215,8 +224,12 @@ class TemporalPlanner(Planner):
                 return _schedule(came_from, state)
             if g > best_g.get(state, g):
                 continue  # pragma: no cover - stale heap entry (lazy deletion)
+            self._expand()
             for action, duration, succ in task.successors(state):
-                ng = g + duration
+                # Each step costs its duration plus the gap after it, so g of
+                # a k-step path is its makespan + SEPARATION: ordering by g
+                # orders by the makespan the schedule will have (#165).
+                ng = g + duration + SEPARATION
                 if ng < best_g.get(succ, ng + 1.0):
                     best_g[succ] = ng
                     came_from[succ] = (state, action, duration)

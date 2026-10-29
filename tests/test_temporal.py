@@ -90,14 +90,50 @@ def test_at_end_condition_unsatisfiable_is_unsolvable():
 def test_mixed_instantaneous_and_durative():
     plan = get("temporal").solve(_charge())
     assert plan is not None
-    assert plan.makespan == 4.0
+    assert plan.makespan == 4.01
     assert plan.action_names() == [
         ("plug", {"?d": "phone"}),
         ("charge-battery", {"?d": "phone"}),
     ]
     plug, charge = plan.steps
     assert (plug.start, plug.duration) == (0.0, 0.0)  # zero-duration step
-    assert (charge.start, charge.duration, charge.end) == (0.0, 4.0, 4.0)
+    # #165: charge needs plug's effect, so it starts SEPARATION later.
+    assert (charge.start, charge.duration, charge.end) == (0.01, 4.0, 4.01)
+
+
+def test_separation_counts_in_the_makespan(tmp_path):
+    """#165 review: the search must rank by the makespan the schedule will
+    have. Direct (1.005) beats two dependent halves (0.5 + 0.01 + 0.5), though
+    the halves have the smaller total duration (1.0)."""
+    domain = tmp_path / "d.pddl"
+    domain.write_text(
+        "(define (domain d) (:requirements :durative-actions)"
+        " (:predicates (s) (m) (g))"
+        " (:durative-action direct :parameters () :duration (= ?duration 1.005)"
+        "  :condition (at start (s)) :effect (at end (g)))"
+        " (:durative-action h1 :parameters () :duration (= ?duration 0.5)"
+        "  :condition (at start (s)) :effect (at end (m)))"
+        " (:durative-action h2 :parameters () :duration (= ?duration 0.5)"
+        "  :condition (at start (m)) :effect (at end (g))))"
+    )
+    problem = tmp_path / "p.pddl"
+    problem.write_text("(define (problem p) (:domain d) (:init (s)) (:goal (g)))")
+    plan = get("temporal").solve(DomainProblem(str(domain), str(problem)))
+    assert [a.operator_name for a in plan.actions] == ["direct"]
+    assert plan.makespan == 1.005
+
+
+def test_temporal_plans_pass_the_validator():
+    """#165: the schedule passes validate_plan (VAL's semantics); with the
+    two steps at the same time point it would not."""
+    from pddlpy.planning import PlanStep, validate_plan
+    dp = _charge()
+    plan = get("temporal").solve(dp)
+    steps = [PlanStep(s.action.operator_name, tuple(s.action.variable_list.values()),
+                      s.start, s.duration) for s in plan.steps]
+    assert validate_plan(dp, steps).valid
+    same_time = [s._replace(time=0.0) for s in steps]
+    assert validate_plan(dp, same_time).failure.kind == "precondition"
 
 
 # -- effect timing: start effects at start, end effects at start+duration --

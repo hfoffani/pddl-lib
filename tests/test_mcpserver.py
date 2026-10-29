@@ -74,6 +74,14 @@ def test_solve_no_plan(tmp_path):
     problem.write_text("(define (problem t1) (:domain toy) (:init) (:goal (p)))")
     out = solve(str(domain), str(problem), planner="bfs")
     assert out["solved"] is False and out["steps"] is None
+    assert out["status"] == "unsolvable"
+
+
+def test_solve_limit():
+    out = solve(*_files("gripper"), planner="bfs", max_expansions=2)
+    assert out["status"] == "limit" and out["solved"] is False
+    out = solve(*_files("gripper"), timeout=60)
+    assert (out["status"], out["validated"]) == ("solved", True)
 
 
 def test_solve_unknown_planner():

@@ -11,18 +11,19 @@ Run with the ``pddlpy-mcp`` console script (stdio transport).
 """
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from mcp.server.mcpserver import MCPServer
 
 from pddlpy.diagnostics import diagnose
 from pddlpy.pddl import DomainProblem
-from pddlpy.planning import get, load_plan, registry, simulate, validate_plan
+from pddlpy.planning import load_plan, registry, simulate, validate_plan
+from pddlpy.planning import solve as solve_plan
 from pddlpy.serialize import (
     domain_problem_dict,
     operator_dict,
-    plan_dict,
     simulation_dict,
+    solve_dict,
     validation_dict,
 )
 
@@ -63,21 +64,26 @@ def ground(domain_file: str, problem_file: str, operator: str) -> Dict[str, Any]
 
 
 @server.tool()
-def solve(domain_file: str, problem_file: str, planner: str = "astar") -> Dict[str, Any]:
+def solve(domain_file: str, problem_file: str, planner: str = "astar",
+          max_expansions: Optional[int] = None,
+          timeout: Optional[float] = None) -> Dict[str, Any]:
     """Search for a plan on a PDDL domain/problem pair. ``planner`` is one of
     the registered planners: bfs, astar (default), gbfs, ucs (cost-optimal for
     :action-costs), or temporal (required for :durative-actions; steps carry
-    start/duration/end and the result a ``makespan``). Returns the plan
-    (solved/cost/length/steps), with ``solved: false`` when the search
-    exhausts without reaching the goal. Fails if the domain declares
-    :requirements the chosen planner does not support."""
+    start/duration/end and the result a ``makespan``). ``max_expansions`` /
+    ``timeout`` (seconds) bound the search. Returns the plan
+    (solved/cost/length/steps) and ``status``: solved, unsolvable (search
+    space exhausted: no plan exists) or limit (stopped at a bound: try a
+    larger one or another planner). ``validated`` says whether the plan was
+    checked with validate_plan. Fails if the domain declares :requirements
+    the chosen planner does not support."""
     if planner not in registry.names():
         raise ValueError(
             "unknown planner %r; known: %s" % (planner, registry.names())
         )
     dp = DomainProblem(domain_file, problem_file)
-    plan = get(planner).solve(dp)
-    return {"planner": planner, **plan_dict(plan)}
+    outcome = solve_plan(dp, planner, max_expansions, timeout)
+    return {"planner": planner, **solve_dict(outcome)}
 
 
 @server.tool()

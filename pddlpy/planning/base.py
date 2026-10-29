@@ -14,6 +14,7 @@ Two guards run before search (fail fast, PRD §7):
 """
 from __future__ import annotations
 
+import time
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, Dict, FrozenSet, Optional, Set
 
@@ -31,6 +32,11 @@ class PlannerError(Exception):
 
 class UnsupportedRequirementsError(PlannerError):
     """Raised when a domain's features/requirements are not supported."""
+
+
+class SearchLimitError(PlannerError):
+    """Raised when a search stops at ``max_expansions`` or ``timeout``: no
+    plan was found, but none was proven not to exist either."""
 
 
 # Map a detectable feature to the requirement keywords that permit it.
@@ -98,6 +104,31 @@ class Planner(ABC):
 
     #: requirement keywords this planner supports
     capabilities: FrozenSet[str] = frozenset()
+
+    def __init__(self, max_expansions: Optional[int] = None,
+                 timeout: Optional[float] = None) -> None:
+        """``max_expansions`` caps the states a search expands and
+        ``timeout`` its wall-clock seconds; past either, ``solve`` raises
+        :class:`SearchLimitError`. ``None`` (default) means no limit."""
+        self.max_expansions = max_expansions
+        self.timeout = timeout
+        self._expanded = 0
+        self._deadline: Optional[float] = None
+
+    def _start_search(self) -> None:
+        """Reset the limit counters; search planners call it first."""
+        self._expanded = 0
+        self._deadline = None if self.timeout is None else time.monotonic() + self.timeout
+
+    def _expand(self) -> None:
+        """Count one expanded state; raise once a limit is passed."""
+        self._expanded += 1
+        if self.max_expansions is not None and self._expanded > self.max_expansions:
+            raise SearchLimitError("%s stopped after %d expansions (max_expansions)"
+                                   % (type(self).__name__, self.max_expansions))
+        if self._deadline is not None and time.monotonic() > self._deadline:
+            raise SearchLimitError("%s stopped after %gs (timeout), %d expansions"
+                                   % (type(self).__name__, self.timeout or 0, self._expanded))
 
     def check_capabilities(self, domainproblem: "DomainProblem") -> None:
         """Raise if the domain declares a requirement beyond this planner's

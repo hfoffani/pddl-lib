@@ -15,6 +15,12 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   oracle suite. Domains the object model cannot represent are refused
   rather than judged.
 - `DomainProblem.ground(name, binding)`, `DomainProblem.syntax_errors`.
+- **Solve status and limits** (#166): `pddlpy solve` (and the MCP tool)
+  reports `status` — `solved`, `unsolvable` (search space exhausted) or
+  `limit` — and `validated`, and takes `--max-expansions` / `--timeout`
+  (MCP: `max_expansions`, `timeout`). Hitting a limit exits `3`. `solve`
+  validates its plan before returning it. Python: `pddlpy.planning.solve`,
+  `SearchLimitError`, and `max_expansions` / `timeout` on every planner.
 
 ### Changed
 - **No runtime dependencies** (#148): the ANTLR runtime (4.13.2, BSD-3-Clause)
@@ -31,6 +37,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **Temporal plans failed VAL** (#165): the `temporal` planner started each
+  step exactly when the previous one ended, so a step needing the previous
+  step's effect shared its time point, which VAL rejects. Steps are now
+  0.01 apart (`pddlpy.planning.temporal.SEPARATION`); makespans grow by
+  that gap per step.
 - **`validate` missed undeclared requirements** (#144): `diagnose()` (the
   `validate` CLI command and MCP tool) now runs the declared-vs-used
   `:requirements` check that `solve` runs, and reports a `requirements` error.
