@@ -349,11 +349,11 @@ More PDDL pairs for testing live in [`examples-pddl/`](examples-pddl/) and
 
 These are plans, not promises, and there are no dates. Roughly in order:
 
-1. Vendor the ANTLR runtime so `pip install pddlpy` has zero runtime
-   dependencies.
-2. An oracle test harness against Fast Downward, VAL and INVAL on the IPC
-   corpora.
-3. Plan validation and plan simulation with structured diagnostics.
+1. ~~Vendor the ANTLR runtime so `pip install pddlpy` has zero runtime
+   dependencies.~~ ![done](https://img.shields.io/badge/done-1a7f37)
+2. ~~An oracle test harness against Fast Downward, VAL and INVAL on the IPC
+   corpora.~~ ![done](https://img.shields.io/badge/done-1a7f37)
+3. ~~Plan validation and plan simulation with structured diagnostics.~~ ![done](https://img.shields.io/badge/done-1a7f37)
 4. Decide whether to keep ANTLR or replace the parser, before the grammar
    grows.
 5. Requirements by priority: goal-side ADL and `(either ...)`, timed initial
