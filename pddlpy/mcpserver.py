@@ -1,8 +1,9 @@
-"""MCP server (#86): parse / ground / solve as Model Context Protocol tools.
+"""MCP server (#86): parse / ground / solve / validate / validate_plan /
+simulate as Model Context Protocol tools.
 
 The runtime counterpart of the static Agent Skill in ``skills/pddlpy/`` —
-an LLM/agent connects over stdio and drives the library through three
-tools that mirror the CLI subcommands (#85) and return the same JSON
+an LLM/agent connects over stdio and drives the library through tools
+that mirror the CLI subcommands (#85) and return the same JSON
 shapes from ``pddlpy.serialize``.
 
 Requires the optional ``mcp`` dependency: ``pip install pddlpy[mcp]``.
@@ -16,14 +17,21 @@ from mcp.server.mcpserver import MCPServer
 
 from pddlpy.diagnostics import diagnose
 from pddlpy.pddl import DomainProblem
-from pddlpy.planning import get, registry
-from pddlpy.serialize import domain_problem_dict, operator_dict, plan_dict
+from pddlpy.planning import get, load_plan, registry, simulate, validate_plan
+from pddlpy.serialize import (
+    domain_problem_dict,
+    operator_dict,
+    plan_dict,
+    simulation_dict,
+    validation_dict,
+)
 
 server = MCPServer(
     "pddlpy",
     instructions=(
-        "Parse, validate, ground and solve PDDL domain/problem pairs. All tools "
-        "take filesystem paths to a domain file and a problem file."
+        "Parse, validate, ground and solve PDDL domain/problem pairs, and "
+        "validate or simulate plans. All tools take filesystem paths to a "
+        "domain file and a problem file."
     ),
 )
 
@@ -80,6 +88,33 @@ def validate(domain_file: str, problem_file: str) -> Dict[str, Any]:
     durative actions. Returns {valid, issues:[{severity, check, message}]}.
     Run this after writing or editing PDDL, before ground/solve."""
     return diagnose(domain_file, problem_file)
+
+
+@server.tool(name="validate_plan")
+def validate_plan_tool(domain_file: str, problem_file: str, plan: str) -> Dict[str, Any]:
+    """Check that a plan executes from the initial state and reaches the
+    goal, with VAL's semantics. ``plan`` is the plan text: one
+    '(action arg ...)' per line, 'time: (action arg ...) [duration]' for
+    temporal plans, or the JSON ``solve`` returns. Returns {valid, failure};
+    failure has kind (precondition, goal, unknown-action, arity, type,
+    duration, invariant, mutex, ...), message, the 1-based step, its action,
+    the unmet conditions or goal atoms, and the state at that point. Fails
+    when the plan cannot be read, or when pddlpy cannot judge the domain
+    (syntax errors, goals other than a conjunction of atoms, durative
+    actions with numeric or conditional parts)."""
+    return validation_dict(
+        validate_plan(DomainProblem(domain_file, problem_file), load_plan(plan)))
+
+
+@server.tool(name="simulate")
+def simulate_tool(domain_file: str, problem_file: str, plan: str) -> Dict[str, Any]:
+    """Execute a plan (same ``plan`` text as validate_plan) and return the
+    state after each step, or after each start and end of a durative step:
+    {executed, failure, trace:[{time, event, step, action, state}],
+    final_state}. Stops at the first step that cannot run; the goal is not
+    checked."""
+    return simulation_dict(
+        simulate(DomainProblem(domain_file, problem_file), load_plan(plan)))
 
 
 def main() -> None:

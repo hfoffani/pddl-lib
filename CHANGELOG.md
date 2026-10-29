@@ -5,6 +5,17 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 
 ## [Unreleased]
 
+### Added
+- **Plan validation and simulation** (#166): `pddlpy validate-plan` and
+  `pddlpy simulate` (MCP: `validate_plan`, `simulate`; Python:
+  `pddlpy.planning.validate_plan` / `simulate`). Plans in the IPC format or
+  JSON (`solve` output included). A failure reports the step, the unmet
+  conditions or goal atoms, and the state. Semantics follow VAL, including
+  overlapping durative actions; verdicts are checked against VAL by the
+  oracle suite. Domains the object model cannot represent are refused
+  rather than judged.
+- `DomainProblem.ground(name, binding)`, `DomainProblem.syntax_errors`.
+
 ### Changed
 - **No runtime dependencies** (#148): the ANTLR runtime (4.13.2, BSD-3-Clause)
   is vendored in `pddlpy/_vendor/antlr4`, and `antlr4-python3-runtime` is no

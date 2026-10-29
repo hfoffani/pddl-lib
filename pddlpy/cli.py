@@ -1,15 +1,21 @@
 """Command-line interface (#85): drive pddlpy without writing Python.
 
-Three subcommands over a domain/problem pair, all emitting JSON on stdout:
+Subcommands over a domain/problem pair, all emitting JSON on stdout:
 
-    pddlpy parse    DOMAIN PROBLEM             # object-model summary
-    pddlpy ground   DOMAIN PROBLEM OPERATOR    # grounded instances of one action
-    pddlpy solve    DOMAIN PROBLEM [--planner NAME]
-    pddlpy validate DOMAIN PROBLEM             # diagnostics (#94)
+    pddlpy parse         DOMAIN PROBLEM             # object-model summary
+    pddlpy ground        DOMAIN PROBLEM OPERATOR    # grounded instances of one action
+    pddlpy solve         DOMAIN PROBLEM [--planner NAME]
+    pddlpy validate      DOMAIN PROBLEM             # diagnostics (#94)
+    pddlpy validate-plan DOMAIN PROBLEM PLAN        # plan verdict (#166)
+    pddlpy simulate      DOMAIN PROBLEM PLAN        # state after each step (#166)
 
-Exit codes: 0 success; 1 solve found no plan / validate found issues;
-2 bad input (missing file, unknown operator/planner, unsupported
-:requirements).
+PLAN is a plan file in the IPC format or JSON (``solve`` output works), or
+``-`` for stdin.
+
+Exit codes: 0 success; 1 solve found no plan / validate found issues /
+the plan is invalid (validate-plan) or does not execute (simulate);
+2 bad input (missing file, unreadable plan, unknown operator/planner,
+unsupported :requirements, a plan pddlpy cannot judge).
 """
 from __future__ import annotations
 
@@ -20,8 +26,14 @@ from typing import List, Optional
 
 from pddlpy.diagnostics import diagnose
 from pddlpy.pddl import DomainProblem
-from pddlpy.planning import PlannerError, get, registry
-from pddlpy.serialize import domain_problem_dict, operator_dict, plan_dict
+from pddlpy.planning import PlannerError, get, load_plan, registry, simulate, validate_plan
+from pddlpy.serialize import (
+    domain_problem_dict,
+    operator_dict,
+    plan_dict,
+    simulation_dict,
+    validation_dict,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -36,10 +48,14 @@ def build_parser() -> argparse.ArgumentParser:
         ("ground", "list the grounded instances of one operator"),
         ("solve", "search for a plan"),
         ("validate", "check the pair for common translation errors"),
+        ("validate-plan", "check that a plan reaches the goal"),
+        ("simulate", "list the state after each step of a plan"),
     ):
         cmd = sub.add_parser(name, help=help_)
         cmd.add_argument("domain", help="path to the domain PDDL file")
         cmd.add_argument("problem", help="path to the problem PDDL file")
+        if name in ("validate-plan", "simulate"):
+            cmd.add_argument("plan", help="plan file (IPC format or JSON), or - for stdin")
         if name == "ground":
             cmd.add_argument("operator", help="operator name to ground")
         if name == "solve":
@@ -61,7 +77,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         except FileNotFoundError as exc:
             print("pddlpy: error: %s" % exc, file=sys.stderr)
             return 2
-        print(json.dumps(result, indent=2))
+        print(json.dumps(result, indent=2, allow_nan=False))
         return 0 if not result["issues"] else 1
 
     try:
@@ -69,6 +85,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     except FileNotFoundError as exc:
         print("pddlpy: error: %s" % exc, file=sys.stderr)
         return 2
+
+    if args.command in ("validate-plan", "simulate"):
+        return _check_plan(args, dp)
 
     if args.command == "parse":
         result = domain_problem_dict(dp)
@@ -91,11 +110,31 @@ def main(argv: Optional[List[str]] = None) -> int:
             print("pddlpy: error: %s" % exc, file=sys.stderr)
             return 2
         result = {"planner": args.planner, **plan_dict(plan)}
-        print(json.dumps(result, indent=2))
+        print(json.dumps(result, indent=2, allow_nan=False))
         return 0 if plan is not None else 1
 
-    print(json.dumps(result, indent=2))
+    print(json.dumps(result, indent=2, allow_nan=False))
     return 0
+
+
+def _check_plan(args: argparse.Namespace, dp: DomainProblem) -> int:
+    try:
+        if args.plan == "-":
+            text = sys.stdin.read()
+        else:
+            with open(args.plan, encoding="utf-8") as f:
+                text = f.read()
+        steps = load_plan(text)
+        if args.command == "simulate":
+            sim = simulate(dp, steps)
+            print(json.dumps(simulation_dict(sim), indent=2, allow_nan=False))
+            return 0 if sim.executed else 1
+        result = validate_plan(dp, steps)
+    except (OSError, UnicodeError, PlannerError) as exc:  # unreadable or unjudgeable
+        print("pddlpy: error: %s" % exc, file=sys.stderr)
+        return 2
+    print(json.dumps(validation_dict(result), indent=2, allow_nan=False))
+    return 0 if result.valid else 1
 
 
 if __name__ == "__main__":  # pragma: no cover

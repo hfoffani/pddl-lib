@@ -49,7 +49,7 @@ not needed to install or use the package.
 
 ### Command-line interface ###
 
-The `pddlpy` command has four subcommands. All of them print JSON on stdout,
+The `pddlpy` command has six subcommands. All of them print JSON on stdout,
 so an agent or a shell pipeline can use them without writing Python:
 
 ```bash
@@ -57,6 +57,8 @@ pddlpy parse    domain.pddl problem.pddl            # object-model summary
 pddlpy ground   domain.pddl problem.pddl pick-up    # grounded instances of one action
 pddlpy solve    domain.pddl problem.pddl --planner ucs
 pddlpy validate domain.pddl problem.pddl            # diagnostics (see below)
+pddlpy validate-plan domain.pddl problem.pddl plan.txt   # does the plan reach the goal?
+pddlpy simulate      domain.pddl problem.pddl plan.txt   # state after each step
 ```
 
 `solve` defaults to `astar`. `--planner` takes any registered planner: `bfs`,
@@ -75,9 +77,21 @@ $ pddlpy solve tests/corpus/temporal-weld-domain.pddl tests/corpus/temporal-weld
 {"planner":"temporal","solved":true,"cost":6.0,"makespan":6.0,"length":1,"steps":[{"action":"steady-weld","args":{"?p":"p1"},"start":0.0,"duration":6.0,"end":6.0}]}
 ```
 
-Exit codes: `0` success, `1` the search finished without a plan or `validate`
-found issues, `2` bad input (missing file, unknown operator, unsupported
-`:requirements`).
+Exit codes: `0` success, `1` the search finished without a plan, `validate`
+found issues, or the plan is invalid / a step cannot run, `2` bad input
+(missing file, unreadable plan, unknown operator, unsupported
+`:requirements`, or a plan pddlpy cannot judge).
+
+`validate-plan` and `simulate` take a plan in the IPC format (`(move a b)`
+per line, or `0.0: (move a b) [2.0]` for durative actions) or as JSON, so
+`solve` output pipes straight in (`-` reads stdin). The verdict follows VAL,
+the reference plan validator, and a failure names the step, the unmet
+conditions or goal atoms, and the state at that point:
+
+```bash
+$ pddlpy validate-plan domain.pddl problem.pddl guess.plan | jq -c '.failure | {kind, step, unmet}'
+{"kind":"precondition","step":2,"unmet":["(road junction riverside)"]}
+```
 
 `validate` is the feedback step for a write PDDL, validate, fix, solve loop.
 A bare parse is not enough because ANTLR recovers from syntax errors and only
@@ -104,8 +118,9 @@ $ pddlpy validate domain.pddl problem.pddl
 ### MCP server ###
 
 The [Model Context Protocol](https://modelcontextprotocol.io) server exposes
-the same four operations as tools: `parse`, `ground`, `solve` and `validate`.
-They return the same JSON as the CLI.
+the same operations as tools: `parse`, `ground`, `solve`, `validate`,
+`validate_plan` and `simulate`. They return the same JSON as the CLI; the
+plan tools take the plan text instead of a file.
 
 ```bash
 pip install "pddlpy[mcp]"

@@ -9,7 +9,15 @@ import pytest
 from mcp import Client, StdioServerParameters
 
 from pddlpy import mcpserver
-from pddlpy.mcpserver import ground, parse, server, solve, validate
+from pddlpy.mcpserver import (
+    ground,
+    parse,
+    server,
+    simulate_tool,
+    solve,
+    validate,
+    validate_plan_tool,
+)
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
 
@@ -79,9 +87,36 @@ def test_validate_clean_pair():
     assert validate(*_files("blocksworld")) == {"valid": True, "issues": []}
 
 
+def test_validate_plan_from_solve():
+    files = _files("gripper")
+    plan = json.dumps(solve(*files))
+    assert validate_plan_tool(*files, plan=plan) == {"valid": True, "failure": None}
+    out = validate_plan_tool(*files, plan="(move rooma roomb)\n(move rooma roomb)\n")
+    assert out["failure"]["kind"] == "precondition" and out["failure"]["step"] == 2
+
+
+def test_simulate_tool():
+    out = simulate_tool(*_files("durative-action"), plan="0: (go a b) [5]")
+    assert out["executed"] and [p["event"] for p in out["trace"]] == ["start", "end"]
+
+
+def test_simulate_tool_non_finite_fluent(tmp_path):
+    """IEEE division by zero yields an infinity: a string, not null."""
+    domain = tmp_path / "d.pddl"
+    domain.write_text("(define (domain d) (:requirements :fluents) (:predicates (p))"
+                      " (:functions (f)) (:action a :parameters () :precondition (and)"
+                      " :effect (and (p) (assign (f) (/ 1 0)))))")
+    problem = tmp_path / "p.pddl"
+    problem.write_text("(define (problem p) (:domain d) (:init (= (f) 0)) (:goal (p)))")
+    result = asyncio.run(server.call_tool(
+        "simulate", {"domain_file": str(domain), "problem_file": str(problem), "plan": "(a)"}))
+    assert result.structured_content["result"]["final_state"]["fluents"] == {"f": "inf"}
+
+
 def test_tools_registered():
     tools = asyncio.run(server.list_tools())
-    assert sorted(t.name for t in tools) == ["ground", "parse", "solve", "validate"]
+    assert sorted(t.name for t in tools) == [
+        "ground", "parse", "simulate", "solve", "validate", "validate_plan"]
     for t in tools:
         assert t.description  # every tool documents itself
 
@@ -132,7 +167,7 @@ def test_stdio_handshake_versions(version):
         assert init["result"]["protocolVersion"] == version
         _rpc(proc, {"jsonrpc": "2.0", "method": "notifications/initialized"})
         tools = _rpc(proc, {"jsonrpc": "2.0", "id": 2, "method": "tools/list"})
-        assert len(tools["result"]["tools"]) == 4
+        assert len(tools["result"]["tools"]) == 6
     finally:
         proc.kill()
         proc.wait()
