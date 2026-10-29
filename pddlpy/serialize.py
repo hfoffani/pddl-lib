@@ -16,6 +16,7 @@ from pddlpy.planning import (
     Failure,
     Plan,
     Simulation,
+    SolveResult,
     State,
     TemporalPlan,
     Validation,
@@ -111,6 +112,13 @@ def plan_dict(plan: Optional[Plan]) -> Dict[str, Any]:
             for name, bindings in plan.action_names()
         ],
     }
+
+
+def solve_dict(result: SolveResult) -> Dict[str, Any]:
+    """A ``planning.solve`` outcome: ``plan_dict`` plus ``status``
+    (solved / unsolvable / limit), ``validated`` and ``message``."""
+    return {"status": result.status, "validated": result.validated,
+            "message": result.message, **plan_dict(result.plan)}
 
 
 def state_dict(state: State) -> Dict[str, Any]:

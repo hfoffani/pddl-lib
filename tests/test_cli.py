@@ -136,8 +136,21 @@ def test_solve_no_plan(capsys, tmp_path):
     code, out, _ = _run(capsys, "solve", str(domain), str(problem), "--planner", "bfs")
     assert code == 1
     assert out == {
-        "planner": "bfs", "solved": False, "cost": None, "length": None, "steps": None,
+        "planner": "bfs", "status": "unsolvable", "validated": False,
+        "message": "search space exhausted: no plan exists",
+        "solved": False, "cost": None, "length": None, "steps": None,
     }
+
+
+def test_solve_reports_validation_and_limits(capsys):
+    code, out, _ = _run(capsys, "solve", *_files("gripper"))
+    assert code == 0 and (out["status"], out["validated"]) == ("solved", True)
+    code, out, _ = _run(capsys, "solve", *_files("gripper"), "--planner", "bfs",
+                        "--max-expansions", "2")
+    assert code == 3 and out["status"] == "limit" and out["solved"] is False
+    assert "max_expansions" in out["message"]
+    code, out, _ = _run(capsys, "solve", *_files("gripper"), "--timeout", "0")
+    assert code == 3 and "timeout" in out["message"]
 
 
 def test_solve_unsupported_requirements(capsys, tmp_path):

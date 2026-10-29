@@ -4,7 +4,7 @@ Subcommands over a domain/problem pair, all emitting JSON on stdout:
 
     pddlpy parse         DOMAIN PROBLEM             # object-model summary
     pddlpy ground        DOMAIN PROBLEM OPERATOR    # grounded instances of one action
-    pddlpy solve         DOMAIN PROBLEM [--planner NAME]
+    pddlpy solve         DOMAIN PROBLEM [--planner NAME] [--max-expansions N] [--timeout S]
     pddlpy validate      DOMAIN PROBLEM             # diagnostics (#94)
     pddlpy validate-plan DOMAIN PROBLEM PLAN        # plan verdict (#166)
     pddlpy simulate      DOMAIN PROBLEM PLAN        # state after each step (#166)
@@ -12,10 +12,15 @@ Subcommands over a domain/problem pair, all emitting JSON on stdout:
 PLAN is a plan file in the IPC format or JSON (``solve`` output works), or
 ``-`` for stdin.
 
-Exit codes: 0 success; 1 solve found no plan / validate found issues /
-the plan is invalid (validate-plan) or does not execute (simulate);
-2 bad input (missing file, unreadable plan, unknown operator/planner,
-unsupported :requirements, a plan pddlpy cannot judge).
+``solve`` reports ``status``: ``solved``, ``unsolvable`` (search space
+exhausted) or ``limit`` (stopped at --max-expansions / --timeout), and
+validates the plan it found (``validated``).
+
+Exit codes: 0 success; 1 solve proved there is no plan / validate found
+issues / the plan is invalid (validate-plan) or does not execute
+(simulate); 2 bad input (missing file, unreadable plan, unknown
+operator/planner, unsupported :requirements, a plan pddlpy cannot judge);
+3 solve hit a limit before finding a plan.
 """
 from __future__ import annotations
 
@@ -26,12 +31,21 @@ from typing import List, Optional
 
 from pddlpy.diagnostics import diagnose
 from pddlpy.pddl import DomainProblem
-from pddlpy.planning import PlannerError, get, load_plan, registry, simulate, validate_plan
+from pddlpy.planning import (
+    LIMIT,
+    SOLVED,
+    PlannerError,
+    load_plan,
+    registry,
+    simulate,
+    solve,
+    validate_plan,
+)
 from pddlpy.serialize import (
     domain_problem_dict,
     operator_dict,
-    plan_dict,
     simulation_dict,
+    solve_dict,
     validation_dict,
 )
 
@@ -65,6 +79,10 @@ def build_parser() -> argparse.ArgumentParser:
                 choices=registry.names(),
                 help="planner to use (default: astar)",
             )
+            cmd.add_argument("--max-expansions", type=int, metavar="N",
+                             help="stop after expanding N states (exit 3)")
+            cmd.add_argument("--timeout", type=float, metavar="SECONDS",
+                             help="stop after SECONDS of search (exit 3)")
     return parser
 
 
@@ -105,13 +123,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         }
     else:  # solve
         try:
-            plan = get(args.planner).solve(dp)
+            outcome = solve(dp, args.planner, args.max_expansions, args.timeout)
         except PlannerError as exc:
             print("pddlpy: error: %s" % exc, file=sys.stderr)
             return 2
-        result = {"planner": args.planner, **plan_dict(plan)}
+        result = {"planner": args.planner, **solve_dict(outcome)}
         print(json.dumps(result, indent=2, allow_nan=False))
-        return 0 if plan is not None else 1
+        return {SOLVED: 0, LIMIT: 3}.get(outcome.status, 1)
 
     print(json.dumps(result, indent=2, allow_nan=False))
     return 0

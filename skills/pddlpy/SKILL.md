@@ -33,6 +33,7 @@ pipeable to `jq`:
 pddlpy parse    domain.pddl problem.pddl            # object-model summary
 pddlpy ground   domain.pddl problem.pddl move       # grounded instances of one action
 pddlpy solve    domain.pddl problem.pddl --planner ucs   # default planner: astar
+pddlpy solve    domain.pddl problem.pddl --timeout 30    # also --max-expansions N
 pddlpy validate domain.pddl problem.pddl            # diagnostics for PDDL you wrote
 pddlpy validate-plan domain.pddl problem.pddl plan.txt   # does this plan reach the goal?
 pddlpy simulate      domain.pddl problem.pddl plan.txt   # state after each step
@@ -58,8 +59,14 @@ that step and validate again. The semantics are VAL's: simultaneous
 happenings (within 0.001) must not touch the same atoms, and a durative
 step needs its `[duration]`.
 
-Exit codes: `0` success, `1` search found no plan / validate found issues /
-the plan is invalid or a step cannot run, `2` bad input (missing file,
+`solve` reports `status`: `solved`, `unsolvable` (no plan exists — tell
+the user, or fix the PDDL) or `limit` (stopped at a bound: nothing proven;
+retry with a larger bound or another planner). It validates its own plan
+(`validated: true`).
+
+Exit codes: `0` success, `1` search proved there is no plan / validate found
+issues / the plan is invalid or a step cannot run, `3` solve hit a limit,
+`2` bad input (missing file,
 unreadable plan, unknown operator/planner, unsupported `:requirements`, or a
 plan pddlpy cannot judge — see Gotchas). Drop to the Python API below when
 you need `State`/`GroundedTask`, custom binders, or anything the subcommands

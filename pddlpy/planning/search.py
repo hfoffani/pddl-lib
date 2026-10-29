@@ -75,6 +75,7 @@ class BFSPlanner(Planner):
 
     def solve(self, domainproblem: "DomainProblem") -> Optional[Plan]:
         task = self.prepare(domainproblem)
+        self._start_search()
         start = task.initial
         if task.is_goal(start):
             return Plan([])
@@ -83,6 +84,7 @@ class BFSPlanner(Planner):
         came_from: _CameFrom = {}
         while frontier:
             state = frontier.popleft()
+            self._expand()
             for action, succ in task.successors(state):
                 if succ in visited:
                     continue
@@ -111,6 +113,7 @@ class _BestFirstPlanner(Planner):
 
     def solve(self, domainproblem: "DomainProblem") -> Optional[Plan]:
         task = self.prepare(domainproblem)
+        self._start_search()
         goal_atoms = frozenset(atom_tuple(a) for a in task.goals)
         start = task.initial
         counter = itertools.count()  # tie-breaker; keeps States out of compares
@@ -127,6 +130,7 @@ class _BestFirstPlanner(Planner):
                 return Plan(actions, cost=plan_cost(state, actions))
             if g > best_g.get(state, g):
                 continue  # pragma: no cover - stale heap entry (lazy deletion)
+            self._expand()
             for action, succ in task.successors(state):
                 ng = g + self._step_cost(action, state)
                 if ng < best_g.get(succ, ng + 1):

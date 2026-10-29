@@ -168,7 +168,10 @@ the `:durative-actions` capability and returns a `TemporalPlan`.
   Returns the successor `State`, or `None` if any condition fails.
 - **`TemporalPlanner`** (`get("temporal")`) — uniform-cost search over
   accumulated duration; instantaneous actions participate as zero-duration
-  steps, so mixed domains work. Returns a makespan-minimal sequential schedule.
+  steps, so mixed domains work. Returns a makespan-minimal sequential
+  schedule; consecutive steps are `SEPARATION` (0.01) apart, and the search
+  charges each step that gap, so plans that
+  depend on the previous step's effects pass VAL (#165).
 - **`TemporalPlan`** — a `Plan` whose `steps` are `ScheduledAction`s
   (`action`, `start`, `duration`, `end`); its `makespan` doubles as the plan
   `cost`. The CLI and MCP `solve` render the schedule too (#119): each JSON
@@ -232,6 +235,19 @@ result = validate_plan(dp, load_plan("(pick ball1 rooma left)\n(move rooma roomb
 if not result.valid:
     print(result.failure.message, result.failure.unmet)
 ```
+
+### Solving with a verdict (#166)
+
+`solve(dp, planner="astar", max_expansions=None, timeout=None)` runs a
+registered planner and returns a `SolveResult`: `status` is `SOLVED`,
+`UNSOLVABLE` (the search space was exhausted) or `LIMIT` (the planner
+raised `SearchLimitError` at `max_expansions` expanded states or `timeout`
+seconds); `plan`; `validated` (the plan passed `validate_plan`; `False` when
+the validator refuses the domain); `message`. A plan that fails validation
+raises `PlannerError`. The CLI and MCP `solve` use it. Every `Planner`
+takes the two limits as constructor keywords (`get("bfs", timeout=10)`);
+`Planner.solve` itself is unchanged. `plan_steps(dp, plan)` turns a `Plan`
+into `PlanStep`s for `validate_plan`.
 
 ## Known limitations
 
