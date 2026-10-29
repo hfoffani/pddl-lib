@@ -264,6 +264,28 @@ def test_plan_not_utf8_is_bad_input(capsys, tmp_path, command):
     assert code == 2 and out is None and "pddlpy: error:" in err
 
 
+def test_non_finite_fluents_stay_strict_json(capsys, tmp_path):
+    """IEEE division by zero: the output parses as strict JSON (no bare
+    Infinity / NaN) and names the values."""
+    domain = tmp_path / "d.pddl"
+    domain.write_text("(define (domain d) (:requirements :fluents) (:predicates (p))"
+                      " (:functions (f) (g) (z)) (:action a :parameters () :precondition (and)"
+                      " :effect (and (p) (assign (f) (/ 1 0)) (assign (g) (/ (- 0 1) 0))"
+                      " (assign (z) (/ 0 0)))))")
+    problem = tmp_path / "p.pddl"
+    problem.write_text("(define (problem p) (:domain d) (:init (= (f) 0) (= (g) 0) (= (z) 0))"
+                       " (:goal (p)))")
+    code = main(["simulate", str(domain), str(problem), _plan(tmp_path, "(a)\n")])
+    text = capsys.readouterr().out
+
+    def strict(token):
+        raise ValueError("non-strict JSON literal %s" % token)
+
+    out = json.loads(text, parse_constant=strict)
+    assert code == 0
+    assert out["final_state"]["fluents"] == {"f": "inf", "g": "-inf", "z": "nan"}
+
+
 def test_validate_plan_refused(capsys, tmp_path):
     ipc = os.path.join(CORPUS, "ipc", "elevator-adl-full-typed")
     code, _, err = _run(capsys, "validate-plan", os.path.join(ipc, "domain.pddl"),

@@ -8,7 +8,8 @@ numeric expressions are rendered through their ``repr``.
 """
 from __future__ import annotations
 
-from typing import Any, Dict, Iterable, List, Optional
+import math
+from typing import Any, Dict, Iterable, List, Optional, Union
 
 from pddlpy.pddl import DomainProblem, Operator
 from pddlpy.planning import (
@@ -20,6 +21,15 @@ from pddlpy.planning import (
     Validation,
     atom_tuple,
 )
+
+
+def number(value: float) -> Union[float, str]:
+    """A number for JSON: finite values as they are, an infinity or NaN
+    (IEEE division by zero) as ``"inf"`` / ``"-inf"`` / ``"nan"``, which
+    strict JSON has no literal for."""
+    if math.isfinite(value):
+        return value
+    return "nan" if math.isnan(value) else ("inf" if value > 0 else "-inf")
 
 
 def atoms_list(atoms: Iterable[Any]) -> List[List[str]]:
@@ -78,8 +88,8 @@ def plan_dict(plan: Optional[Plan]) -> Dict[str, Any]:
     if isinstance(plan, TemporalPlan):
         return {
             "solved": True,
-            "cost": plan.cost,
-            "makespan": plan.makespan,
+            "cost": number(plan.cost),
+            "makespan": number(plan.makespan),
             "length": len(plan),
             "steps": [
                 {
@@ -94,7 +104,7 @@ def plan_dict(plan: Optional[Plan]) -> Dict[str, Any]:
         }
     return {
         "solved": True,
-        "cost": plan.cost,
+        "cost": number(plan.cost),
         "length": len(plan),
         "steps": [
             {"action": name, "args": dict(bindings)}
@@ -108,7 +118,7 @@ def state_dict(state: State) -> Dict[str, Any]:
     ``initial_numeric``."""
     return {
         "atoms": atoms_list(state.atoms),
-        "fluents": {" ".join(head): v for head, v in sorted(state.fluents.items())},
+        "fluents": {" ".join(head): number(v) for head, v in sorted(state.fluents.items())},
     }
 
 

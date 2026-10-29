@@ -77,7 +77,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         except FileNotFoundError as exc:
             print("pddlpy: error: %s" % exc, file=sys.stderr)
             return 2
-        print(json.dumps(result, indent=2))
+        print(json.dumps(result, indent=2, allow_nan=False))
         return 0 if not result["issues"] else 1
 
     try:
@@ -110,10 +110,10 @@ def main(argv: Optional[List[str]] = None) -> int:
             print("pddlpy: error: %s" % exc, file=sys.stderr)
             return 2
         result = {"planner": args.planner, **plan_dict(plan)}
-        print(json.dumps(result, indent=2))
+        print(json.dumps(result, indent=2, allow_nan=False))
         return 0 if plan is not None else 1
 
-    print(json.dumps(result, indent=2))
+    print(json.dumps(result, indent=2, allow_nan=False))
     return 0
 
 
@@ -127,13 +127,13 @@ def _check_plan(args: argparse.Namespace, dp: DomainProblem) -> int:
         steps = load_plan(text)
         if args.command == "simulate":
             sim = simulate(dp, steps)
-            print(json.dumps(simulation_dict(sim), indent=2))
+            print(json.dumps(simulation_dict(sim), indent=2, allow_nan=False))
             return 0 if sim.executed else 1
         result = validate_plan(dp, steps)
     except (OSError, UnicodeError, PlannerError) as exc:  # unreadable or unjudgeable
         print("pddlpy: error: %s" % exc, file=sys.stderr)
         return 2
-    print(json.dumps(validation_dict(result), indent=2))
+    print(json.dumps(validation_dict(result), indent=2, allow_nan=False))
     return 0 if result.valid else 1
 
 

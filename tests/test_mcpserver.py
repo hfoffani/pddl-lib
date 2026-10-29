@@ -100,6 +100,19 @@ def test_simulate_tool():
     assert out["executed"] and [p["event"] for p in out["trace"]] == ["start", "end"]
 
 
+def test_simulate_tool_non_finite_fluent(tmp_path):
+    """IEEE division by zero yields an infinity: a string, not null."""
+    domain = tmp_path / "d.pddl"
+    domain.write_text("(define (domain d) (:requirements :fluents) (:predicates (p))"
+                      " (:functions (f)) (:action a :parameters () :precondition (and)"
+                      " :effect (and (p) (assign (f) (/ 1 0)))))")
+    problem = tmp_path / "p.pddl"
+    problem.write_text("(define (problem p) (:domain d) (:init (= (f) 0)) (:goal (p)))")
+    result = asyncio.run(server.call_tool(
+        "simulate", {"domain_file": str(domain), "problem_file": str(problem), "plan": "(a)"}))
+    assert result.structured_content["result"]["final_state"]["fluents"] == {"f": "inf"}
+
+
 def test_tools_registered():
     tools = asyncio.run(server.list_tools())
     assert sorted(t.name for t in tools) == [
