@@ -153,16 +153,17 @@ default `astar`). For an agent that translates natural language into PDDL,
 For agents that work from files instead of MCP, there is also an Agent Skill in
 [`skills/pddlpy/`](skills/pddlpy/SKILL.md).
 
-**Why pair an LLM with a solver at all?** LLMs translate problems into PDDL
-well but are unreliable at producing plans, let alone optimal ones. Handing the
-search to a solver uses each for what it is good at.
-[`docs/llm-interaction.md`](docs/llm-interaction.md) walks through a complete
-example (natural language, PDDL, `pddlpy solve`, natural language) on a small
-cost-optimal routing problem where the intuitive answer is wrong.
-Background reading: *LLM+P* ([arXiv:2304.11477](https://arxiv.org/abs/2304.11477)),
-the paper behind this pipeline, and *PlanBench*
-([arXiv:2206.10498](https://arxiv.org/abs/2206.10498)) on why direct LLM
-planning falls short.
+> [!IMPORTANT]
+> **Why pair an LLM with a solver at all?** LLMs translate problems into PDDL
+> well but are unreliable at producing plans, let alone optimal ones. Handing the
+> search to a solver uses each for what it is good at.
+> [`docs/llm-interaction.md`](docs/llm-interaction.md) walks through a complete
+> example (natural language, PDDL, `pddlpy solve`, natural language) on a small
+> cost-optimal routing problem where the intuitive answer is wrong.
+> Background reading: *LLM+P* ([arXiv:2304.11477](https://arxiv.org/abs/2304.11477)),
+> the paper behind this pipeline, and *PlanBench*
+> ([arXiv:2206.10498](https://arxiv.org/abs/2206.10498)) on why direct LLM
+> planning falls short.
 
 ### Supported :requirements ###
 
@@ -432,9 +433,8 @@ Publishing](https://docs.pypi.org/trusted-publishers/)). See
 
 ### Contribution guidelines ###
 
-I'd appreciate any feedback you send like pull requests, bug reports, etc.
-
-Please, use the issue tracker at will.
+Feedback is really appreciated. Since code is, regrettably, free now,
+I prefer you contact through the issue tracker instead of PRs.
 
 ### License ###
 
