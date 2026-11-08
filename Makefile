@@ -138,6 +138,13 @@ MODEL?=qwen/qwen-2.5-72b-instruct
 e2e-llm:
 	$(UV) run --with mcp,httpx python e2e/llm/harness.py --model $(MODEL)
 
+# LLM playground: scenarios x arms (bare/python/pddlpy) x models. MANUAL, never CI.
+# make playground ARGS="run blocksworld --arm bare,python,pddlpy --model openai/gpt-5"
+# make playground ARGS=list | ARGS="show maintenance" | ARGS=check
+ARGS?=list
+playground:
+	$(UV) run --with mcp,httpx python e2e/llm/playground.py $(ARGS)
+
 # Test published package from TestPyPI using Docker
 testpublish:
 	@echo "Testing pddlpy installation from TestPyPI..."
@@ -175,5 +182,6 @@ help:
 	@echo "  examples     - Run the example showcase (examples/)"
 	@echo "  testpublish  - Test package installation from TestPyPI (Docker)"
 	@echo "  e2e-llm      - Manual LLM+solver end-to-end (MODEL=..., needs OPENROUTER_API_KEY)"
+	@echo "  playground   - LLM playground: scenarios x arms x models (ARGS=..., see e2e/llm/README.md)"
 
-.PHONY: all init testgrammar pyparser test golden corpora corpora-test oracles oracle coverage lint typecheck build clean demo testpublish e2e-llm help
+.PHONY: all init testgrammar pyparser test golden corpora corpora-test oracles oracle coverage lint typecheck build clean demo testpublish e2e-llm playground help
