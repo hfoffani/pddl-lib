@@ -90,6 +90,40 @@ def test_untyped_worldobjects_exclude_predicate_names():
     assert {g.variable_list["?x"] for g in groundings} == {"a", "b", "c"}
 
 
+@pytest.mark.parametrize("objects_section", ["", "(:objects)"])
+def test_inferred_objects_keep_constant_types(tmp_path, objects_section):
+    """#160: with no problem :objects, objects inferred (untyped) from :init
+    and :goal must not override the domain's typed :constants. Many constants
+    make the old hash-order-dependent merge fail reliably."""
+    names = [f"plane_{i}" for i in range(64)]
+    constants = dict.fromkeys([*names, "unused"], "airplane")
+    domain = tmp_path / "domain.pddl"
+    problem = tmp_path / "problem.pddl"
+    domain.write_text(
+        "(define (domain airport) (:requirements :strips :typing)"
+        " (:types airplane)"
+        f" (:constants {' '.join(constants)} - airplane)"
+        " (:predicates (ready ?p - airplane) (done ?p - airplane) (marker ?x))"
+        " (:action move :parameters (?p - airplane)"
+        " :precondition (ready ?p) :effect (done ?p)))"
+    )
+    problem.write_text(
+        "(define (problem flight) (:domain airport)"
+        f" {objects_section}"
+        f" (:init {' '.join(f'(ready {n})' for n in names)} (marker init_only))"
+        " (:goal (and (done plane_0) (marker goal_only))))"
+    )
+    dp = DomainProblem(str(domain), str(problem))
+    assert all(dp.problem.objects[n] is None for n in names)
+
+    objects = dp.worldobjects()
+    assert {n: objects[n] for n in constants} == constants
+    assert objects["init_only"] is None
+    assert objects["goal_only"] is None
+    assert set(dp.candidate_objects("airplane")) == set(constants)
+    assert {op.variable_list["?p"] for op in dp.ground_operator("move")} == set(names)
+
+
 def test_trailing_comment_without_newline(tmp_path):
     """#19: a comment on the final line with no trailing newline must not
     break the lexer."""

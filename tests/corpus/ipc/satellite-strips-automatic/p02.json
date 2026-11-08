@@ -2302,13 +2302,7 @@
   }
  },
  "validate": {
-  "issues": [
-   {
-    "check": "requirements",
-    "message": "domain uses negative-preconditions but does not declare a matching requirement (one of [':adl', ':negative-preconditions'])",
-    "severity": "error"
-   }
-  ],
-  "valid": false
+  "issues": [],
+  "valid": true
  }
 }
