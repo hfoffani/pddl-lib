@@ -1515,7 +1515,8 @@ class DomainProblem():
         """Returns a dictionary of key value pairs where the key is the name of
         an object and the value is it's type (None in case is untyped.)
         """
-        return dict( self.domain.objects.items() | self.problem.objects.items() )
+        # Declared constants take precedence over inferred, untyped problem objects.
+        return self.problem.objects | self.domain.objects
 
 
 
