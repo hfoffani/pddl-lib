@@ -37,6 +37,10 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **An empty `Plan` was falsy** (#180): `Plan` had `__len__` but no
+  `__bool__`, so `if plan:` read the zero-step plan (goal already true in
+  `:init`) as "no solution". A `Plan` is now always truthy; planners still
+  return `None` when there is no plan.
 - **`(not (= ...))` counted as a negative precondition** (#159): the
   requirements check made a negated equality require `:negative-preconditions`
   (or `:adl`), so domains declaring only `:equality` were refused by `solve`

@@ -73,7 +73,7 @@ def main() -> None:
             continue
         finally:
             signal.alarm(0)
-        if not plan:  # unsolvable, or empty: nothing to corrupt
+        if plan is None or not len(plan):  # unsolvable, or empty: nothing to corrupt
             continue
         steps = plan_steps(dp, plan)
         out = plans_dir(problem)
