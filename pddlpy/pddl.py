@@ -674,6 +674,11 @@ def _is_simple_conjunction(cond: Condition) -> bool:
     return False
 
 
+def _is_til(initel: Any) -> bool:
+    """True for a timed initial literal, ``(at NUMBER literal)`` (#142)."""
+    return initel.nameLiteral() is not None and initel.NUMBER() is not None
+
+
 def _positive_conjunction(cond: Condition) -> bool:
     """True if ``cond`` is a positive atom or a conjunction of them."""
     if isinstance(cond, And):
@@ -1216,6 +1221,9 @@ class ProblemListener(pddlListener):
         # ``goals`` then misreads it (#138).
         self.simple_goal = True
         self.constraints = False  # a (:constraints ...) block was read (#140)
+        # Timed initial literals, (at N lit) in :init, as (time, Atom,
+        # positive). Kept out of ``initialstate``: they are not true at 0 (#142).
+        self.timed_literals = []
 
     def enterProbConstraints(self, ctx):
         # Not modeled: walk it in a throwaway scope (#140).
@@ -1241,6 +1249,14 @@ class ProblemListener(pddlListener):
         if ctx.fHead() is not None and ctx.NUMBER() is not None:
             head = _parse_fhead(ctx.fHead())
             self.init_numeric[head] = float(ctx.NUMBER().getText())
+        elif _is_til(ctx):
+            self.scopes.append(Scope())  # its atom must not reach the init scope
+
+    def exitInitEl(self, ctx):
+        if _is_til(ctx):
+            atom = self.scopes.pop().atoms[0]
+            positive = ctx.nameLiteral().getChildCount() == 1  # no (not ...)
+            self.timed_literals.append((float(ctx.NUMBER().getText()), atom, positive))
 
     def enterGoal(self, ctx):
         self.scopes.append(Scope())

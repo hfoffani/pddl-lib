@@ -33,7 +33,7 @@ planners, not a wish list.
 | `:duration-inequalities` | 2.1 | no | none | no | Declaring it is a syntax error. Without the key, `(and (>= ?duration 1) (<= ?duration 3))` parses, but the last bound becomes a fixed duration ([#143]). |
 | `:continuous-effects` | 2.1 | no | none | no | The key and `#t` are not recognized (syntax error). |
 | `:derived-predicates` | 2.2 | no | none | no | The key is recognized, but `(:derived ...)` blocks do not parse ([#141]). |
-| `:timed-initial-literals` | 2.2 | wrong | none | no | `(at 5 (p))` in `:init` parses, but the literal goes into the initial state as true at time 0. Every planner refuses the key; if a domain omits it, plans can be wrong ([#142]). |
+| `:timed-initial-literals` | 2.2 | yes | none | no | `(at 5 (p))` in `:init` is kept out of `initialstate()` and stored with its time in `dp.problem.timed_literals`. `solve` and `validate-plan` refuse it, and `validate` reports an `unsupported` error, even when the key is not declared ([#142]). |
 | `:preferences` | 3.0 | no | none | no | The key is recognized; `preference` in goals or `:action` preconditions does not parse (it does parse inside durative-action conditions, and is ignored there). Planners refuse the key. |
 | `:constraints` | 3.0 | partly | none | no | Declaring the key is a syntax error ([#140]). A `(:constraints ...)` block in the domain or problem loads but is not modeled: `solve` and `validate-plan` refuse it, and `validate` reports an `unsupported` error. |
 | `:action-costs` | 3.1 | yes | ucs (cost-optimal); bfs, astar, gbfs, temporal | yes | `(increase (total-cost) ...)` and `(:metric minimize (total-cost))`. Every planner reports `Plan.cost`, but only ucs minimizes it. temporal minimizes makespan. |

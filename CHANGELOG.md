@@ -37,6 +37,12 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **Timed initial literals were true at time 0** (#142): `(at N lit)` in
+  `:init` went into `initialstate()`, so a domain that did not declare
+  `:timed-initial-literals` was solved as if the literal held from the
+  start. TILs are now kept out of the initial state, stored as
+  `dp.problem.timed_literals` (`(time, atom, positive)`), and refused by
+  `solve` / `validate-plan` and reported by `validate`.
 - **Non-conjunctive goals were silently misread** (#138): `(not (p))` was
   read as `(p)`, `or` as `and`, numeric goals were dropped, so `solve` could
   return wrong plans or an empty plan as `solved`. Goals other than a
