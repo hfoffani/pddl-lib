@@ -37,6 +37,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **Domain constants randomly lost their type** (#160): when a problem
+  inferred its objects from `:init`/`:goal`, `worldobjects()` merged them
+  with the domain's typed `:constants` through a set union, so the result
+  depended on the hash seed and typed parameters could fail to bind. Declared
+  types now always win. Thanks to @Rainyyyyyyy111 (#175).
 - **`forall` variables became durative-action parameters** (#167): the
   variables of a `forall` in a durative action's condition or effect were
   added to its `:parameters`, so it grounded with an extra argument.

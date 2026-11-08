@@ -36,8 +36,6 @@ KNOWN_CAUSES: List[Tuple[str, str, str]] = [
      r"|termes-opt18"
      r"|psr-middle-compiled-adl|tpp-metric",
      "#138 goal other than a positive conjunction (forall, not, numeric)"),
-    (r"fd_plan|solvability|plan_verdicts", r"airport",
-     "#160 domain constants lose their type"),
     (r"accept", r"classical/fridge/|classical/tyreworld/|pathways-propositional",
      "FD rejects the input, pddlpy accepts it (not yet diagnosed)"),
 ]
