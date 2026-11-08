@@ -9,12 +9,15 @@ and a makespan.
 """
 import os
 
+import pytest
+
 from pddlpy import DomainProblem
 from pddlpy.planning import (
     DurativeState,
     ScheduledAction,
     TemporalPlan,
     TemporalPlanner,
+    UnsupportedRequirementsError,
     apply_durative,
     get,
 )
@@ -99,6 +102,22 @@ def test_mixed_instantaneous_and_durative():
     assert (plug.start, plug.duration) == (0.0, 0.0)  # zero-duration step
     # #165: charge needs plug's effect, so it starts SEPARATION later.
     assert (charge.start, charge.duration, charge.end) == (0.01, 4.0, 4.01)
+
+
+def test_numeric_durative_action_refused(tmp_path):
+    """#139: the durative model drops numeric conditions and effects, so the
+    planner must refuse instead of scheduling past (>= (f) 1) with f = 0."""
+    d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
+    d.write_text(
+        "(define (domain t) (:requirements :strips :durative-actions :numeric-fluents)"
+        " (:predicates (p ?x) (q ?x)) (:functions (f))"
+        " (:durative-action go :parameters (?x) :duration (= ?duration 2)"
+        "  :condition (and (at start (p ?x)) (at start (>= (f) 1)))"
+        "  :effect (and (at end (q ?x)) (at end (decrease (f) 1)))))")
+    p.write_text("(define (problem p) (:domain t) (:objects a)"
+                 " (:init (p a) (= (f) 0)) (:goal (q a)))")
+    with pytest.raises(UnsupportedRequirementsError, match="go has numeric"):
+        TemporalPlanner().solve(DomainProblem(str(d), str(p)))
 
 
 def test_separation_counts_in_the_makespan(tmp_path):

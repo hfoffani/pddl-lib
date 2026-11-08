@@ -37,6 +37,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **temporal planner ignored numeric parts of durative actions** (#139): it
+  scheduled durative actions as if their numeric conditions and effects (and
+  conditional or quantified parts) were absent, returning invalid plans. It
+  now refuses such actions with `UnsupportedRequirementsError` (CLI exit `2`).
+  Instantaneous actions keep full numeric support.
 - **An empty `Plan` was falsy** (#180): `Plan` had `__len__` but no
   `__bool__`, so `if plan:` read the zero-step plan (goal already true in
   `:init`) as "no solution". A `Plan` is now always truthy; planners still
