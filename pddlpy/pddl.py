@@ -1224,6 +1224,9 @@ class ProblemListener(pddlListener):
         # Timed initial literals, (at N lit) in :init, as (time, Atom,
         # positive). Kept out of ``initialstate``: they are not true at 0 (#142).
         self.timed_literals = []
+        # (not (p ...)) in :init, untimed: false anyway under the closed-world
+        # assumption, so kept out of ``initialstate`` (#186).
+        self.negative_init = []
 
     def enterProbConstraints(self, ctx):
         # Not modeled: walk it in a throwaway scope (#140).
@@ -1257,6 +1260,14 @@ class ProblemListener(pddlListener):
             atom = self.scopes.pop().atoms[0]
             positive = ctx.nameLiteral().getChildCount() == 1  # no (not ...)
             self.timed_literals.append((float(ctx.NUMBER().getText()), atom, positive))
+
+    def enterNameLiteral(self, ctx):
+        if ctx.getChildCount() > 1 and not _is_til(ctx.parentCtx):
+            self.scopes.append(Scope())  # untimed (not ...): not an init atom
+
+    def exitNameLiteral(self, ctx):
+        if ctx.getChildCount() > 1 and not _is_til(ctx.parentCtx):
+            self.negative_init.append(self.scopes.pop().atoms[0])
 
     def enterGoal(self, ctx):
         self.scopes.append(Scope())

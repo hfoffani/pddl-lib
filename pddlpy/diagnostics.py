@@ -83,6 +83,10 @@ def _condition_atoms(dp: DomainProblem) -> Iterator[Tuple[str, Any]]:
                     yield "durative action %r" % name, atom
 
 
+def _fmt(atom: Tuple[str, ...]) -> str:
+    return "(%s)" % " ".join(atom)
+
+
 def _issue(severity: str, check: str, message: str) -> Dict[str, str]:
     return {"severity": severity, "check": check, "message": message}
 
@@ -134,6 +138,20 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
             "error", "unknown_object",
             "object %r is not declared in :objects (used in %s)"
             % (term, ", ".join(sorted(unknown[term])))))
+
+    # (not ...) in :init (#186): false anyway (closed world), so ignored; an
+    # error when the same atom is also asserted.
+    init = {atom_tuple(a) for a in dp.initialstate()}
+    for atom in dp.problem.negative_init:
+        t = atom_tuple(atom)
+        if t in init:
+            issues.append(_issue(
+                "error", "negative_init",
+                "%s is both asserted and negated in :init" % _fmt(t)))
+        else:
+            issues.append(_issue(
+                "warning", "negative_init",
+                "(not %s) in :init is ignored: atoms not listed are false" % _fmt(t)))
 
     # Operators that ground to zero instances: legal, but in an agent-written
     # translation almost always a mistyped object, type, or static predicate.

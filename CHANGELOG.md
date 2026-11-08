@@ -37,6 +37,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **`(not (p))` in `:init` was read as `(p)`** (#186): the negation was
+  ignored, so the atom started true. It is now kept out of the initial
+  state (closed world: it is false anyway) and stored in
+  `dp.problem.negative_init`. `validate` warns that it is ignored
+  (`negative_init`), or reports an error when the atom is also asserted.
 - **Timed initial literals were true at time 0** (#142): `(at N lit)` in
   `:init` went into `initialstate()`, so a domain that did not declare
   `:timed-initial-literals` was solved as if the literal held from the
