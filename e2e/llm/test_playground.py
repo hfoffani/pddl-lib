@@ -47,8 +47,10 @@ def test_grade_truncated_plan_goal_not_reached(name, plans):
 
 
 @pytest.mark.parametrize("name", ALL)
-def test_grade_out_of_order_plan_invalid(name, plans):
-    g = grader.grade(scenarios.load(name), "\n".join(reversed(plans[name])))
+def test_grade_unknown_object_invalid(name, plans):
+    first = plans[name][0].strip("()").split()
+    bogus = "(%s %s)" % (first[0], " ".join(["nowhere"] * (len(first) - 1)))
+    g = grader.grade(scenarios.load(name), "\n".join([bogus] + plans[name]))
     assert g.verdict == grader.INVALID, g
 
 
@@ -62,6 +64,9 @@ def test_grade_suboptimal():
     sc = scenarios.load("courier")
     g = grader.grade(sc, "Just take the highway: (drive depot town)")
     assert (g.verdict, g.cost) == (grader.SUBOPTIMAL, 10.0)
+    greedy = "(workat day1 madrid) (workat day2 madrid) (workat day3 paris)"
+    g = grader.grade(scenarios.load("maintenance"), greedy)
+    assert (g.verdict, g.cost) == (grader.SUBOPTIMAL, 3.0)
 
 
 def test_grade_extractor_path():
