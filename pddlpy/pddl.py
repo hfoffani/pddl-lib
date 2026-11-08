@@ -941,6 +941,7 @@ class DomainListener(pddlListener):
         self.durative_operators = {}
         self.scopes = []
         self.negativescopes = []
+        self.constraints = False  # a (:constraints ...) block was read (#140)
         self.requirements = set()
         self.predicates = set()  # declared predicate names (#12)
         self.functions = {}
@@ -1078,6 +1079,17 @@ class DomainListener(pddlListener):
         else:
             scope.addnegatom(Atom(pred))
 
+    def enterConstraints(self, ctx):
+        # (:constraints ...) is not modeled; walk it in a throwaway scope so
+        # its atoms land nowhere, and record that it was there (#140).
+        self.constraints = True
+        self.scopes.append(Scope())
+        self.negativescopes.append(False)
+
+    def exitConstraints(self, ctx):
+        self.negativescopes.pop()
+        self.scopes.pop()
+
     def enterPrecondition(self, ctx):
         self.scopes.append(Scope())
 
@@ -1203,6 +1215,15 @@ class ProblemListener(pddlListener):
         # False when the goal is more than a conjunction of positive atoms:
         # ``goals`` then misreads it (#138).
         self.simple_goal = True
+        self.constraints = False  # a (:constraints ...) block was read (#140)
+
+    def enterProbConstraints(self, ctx):
+        # Not modeled: walk it in a throwaway scope (#140).
+        self.constraints = True
+        self.scopes.append(Scope())
+
+    def exitProbConstraints(self, ctx):
+        self.scopes.pop()
 
     def enterMetricSpec(self, ctx):
         # Capture the optimization metric, e.g. ('minimize', '(total-cost)').

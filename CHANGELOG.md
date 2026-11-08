@@ -37,6 +37,12 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **`(:constraints ...)` crashed the loader** (#140): any constraints block,
+  in the domain or the problem, raised `IndexError`, so `validate` crashed
+  too. The block now loads; it is not modeled, so `solve` and
+  `validate-plan` refuse it (exit `2`) and `validate` reports an
+  `unsupported` error. New `pddlpy.planning.check_modeled()`. Declaring
+  `:constraints` in `:requirements` is still a syntax error.
 - **temporal planner ignored numeric parts of durative actions** (#139): it
   scheduled durative actions as if their numeric conditions and effects (and
   conditional or quantified parts) were absent, returning invalid plans. It

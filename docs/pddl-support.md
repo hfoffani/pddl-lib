@@ -35,7 +35,7 @@ planners, not a wish list.
 | `:derived-predicates` | 2.2 | no | none | no | The key is recognized, but `(:derived ...)` blocks do not parse ([#141]). |
 | `:timed-initial-literals` | 2.2 | wrong | none | no | `(at 5 (p))` in `:init` parses, but the literal goes into the initial state as true at time 0. Every planner refuses the key; if a domain omits it, plans can be wrong ([#142]). |
 | `:preferences` | 3.0 | no | none | no | The key is recognized; `preference` in goals or `:action` preconditions does not parse (it does parse inside durative-action conditions, and is ignored there). Planners refuse the key. |
-| `:constraints` | 3.0 | no | none | no | Declaring the key is a syntax error, and a `(:constraints ...)` block in the domain or problem crashes the loader ([#140]). |
+| `:constraints` | 3.0 | partly | none | no | Declaring the key is a syntax error ([#140]). A `(:constraints ...)` block in the domain or problem loads but is not modeled: `solve` and `validate-plan` refuse it, and `validate` reports an `unsupported` error. |
 | `:action-costs` | 3.1 | yes | ucs (cost-optimal); bfs, astar, gbfs, temporal | yes | `(increase (total-cost) ...)` and `(:metric minimize (total-cost))`. Every planner reports `Plan.cost`, but only ucs minimizes it. temporal minimizes makespan. |
 | `:object-fluents` | 3.1 | no | none | no | Not recognized (syntax error). |
 | `:domain-axioms`, `:subgoals-through-axioms`, `:safety-constraints`, `:expression-evaluation`, `:open-world`, `:true-negation`, `:ucpop` | 1.2 | no | none | no | Not recognized (syntax error). |

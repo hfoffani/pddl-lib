@@ -40,7 +40,7 @@ from typing import (
     Tuple,
 )
 
-from .base import Planner, UnsupportedRequirementsError, validate_requirements
+from .base import Planner, UnsupportedRequirementsError, check_modeled, validate_requirements
 from .durative import validate_durative_actions
 from .registry import register
 from .search import STRIPS_CAPABILITIES
@@ -221,6 +221,7 @@ class TemporalPlanner(Planner):
 
     def solve(self, domainproblem: "DomainProblem") -> Optional[TemporalPlan]:
         validate_requirements(domainproblem)
+        check_modeled(domainproblem)
         self.check_capabilities(domainproblem)
         validate_durative_actions(domainproblem)
         _refuse_unmodeled(domainproblem)

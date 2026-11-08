@@ -61,7 +61,7 @@ from pddlpy.pddl import (
     Or,
 )
 
-from .base import PlannerError
+from .base import PlannerError, UnsupportedRequirementsError, check_modeled
 from .search import ADL_CAPABILITIES
 from .state import GroundAtom, State, apply_numeric, atom_tuple
 
@@ -490,6 +490,10 @@ def check_supported(dp: "DomainProblem") -> None:
     if not dp.problem.simple_goal:
         raise PlanValidationError(
             "plan validation supports only goals that are a conjunction of atoms (#138)")
+    try:
+        check_modeled(dp)
+    except UnsupportedRequirementsError as exc:
+        raise PlanValidationError("plan validation: %s" % exc)
 
 
 def _resolve(dp: "DomainProblem", steps: List[PlanStep]) -> Tuple[List[_Part], Optional[Failure]]:

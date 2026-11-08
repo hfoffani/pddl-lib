@@ -93,6 +93,14 @@ def validate_requirements(domainproblem: "DomainProblem") -> None:
             )
 
 
+def check_modeled(domainproblem: "DomainProblem") -> None:
+    """Refuse input the object model reads but drops, so nothing is solved
+    or judged as if it were absent: ``(:constraints ...)`` (#140)."""
+    if domainproblem.domain.constraints or domainproblem.problem.constraints:
+        raise UnsupportedRequirementsError(
+            "(:constraints ...) is not supported yet (#140)")
+
+
 class Planner(ABC):
     """Abstract solver. Subclasses declare ``capabilities`` and implement
     ``solve``.
@@ -143,6 +151,7 @@ class Planner(ABC):
     def prepare(self, domainproblem: "DomainProblem") -> GroundedTask:
         """Run #9 + capability checks, then build the GroundedTask."""
         validate_requirements(domainproblem)
+        check_modeled(domainproblem)
         self.check_capabilities(domainproblem)
         return GroundedTask(domainproblem)
 

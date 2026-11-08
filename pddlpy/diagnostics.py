@@ -24,6 +24,7 @@ from pddlpy.planning import (
     DurativeValidationError,
     UnsupportedRequirementsError,
     atom_tuple,
+    check_modeled,
     validate_durative_actions,
     validate_requirements,
 )
@@ -148,6 +149,12 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
         validate_requirements(dp)
     except UnsupportedRequirementsError as exc:
         issues.append(_issue("error", "requirements", str(exc)))
+
+    # Parts the model reads but drops (#140): solve refuses them too.
+    try:
+        check_modeled(dp)
+    except UnsupportedRequirementsError as exc:
+        issues.append(_issue("error", "unsupported", str(exc)))
 
     # Durative structure (duration positive, parameters/predicates declared).
     try:
