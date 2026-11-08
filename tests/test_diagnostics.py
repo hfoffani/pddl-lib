@@ -113,7 +113,7 @@ def test_undeclared_requirement_matches_solve(w):
     dom = w("d.pddl", "(define (domain t) (:requirements :strips :equality)"
                       " (:predicates (p ?x) (q ?x))"
                       " (:action go :parameters (?x ?y)"
-                      "  :precondition (and (p ?x) (not (= ?x ?y))) :effect (q ?y)))")
+                      "  :precondition (and (p ?x) (not (q ?y))) :effect (q ?y)))")
     prob = w("p.pddl", "(define (problem p) (:domain t) (:objects a b)"
                        " (:init (p a)) (:goal (q b)))")
     report = diagnose(dom, prob)

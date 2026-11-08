@@ -311,6 +311,23 @@ def test_undeclared_conditional_effect_rejected(tmp_path):
         validate_requirements(dp)
 
 
+def test_negated_equality_needs_only_equality(tmp_path):
+    """#159: (not (= ?a ?b)) is not a negative precondition."""
+    dp, d, p = _inline(
+        tmp_path,
+        "(define (domain d) (:requirements :strips :equality)\n"
+        " (:predicates (p ?x))\n"
+        " (:action a :parameters (?x ?y)"
+        " :precondition (not (= ?x ?y)) :effect (p ?x)))",
+        "(define (problem pr) (:domain d) (:objects o1 o2) (:init) (:goal (p o1)))",
+    )
+    used = _used_features(dp)
+    assert "equality" in used
+    assert "negative-preconditions" not in used
+    validate_requirements(dp)
+    assert diagnose(d, p)["valid"]
+
+
 def test_planners_accept_adl():
     for name in ("briefcase", "rooms"):
         BFSPlanner().check_capabilities(_dp(name))  # no raise

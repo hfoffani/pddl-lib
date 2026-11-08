@@ -37,6 +37,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **`(not (= ...))` counted as a negative precondition** (#159): the
+  requirements check made a negated equality require `:negative-preconditions`
+  (or `:adl`), so domains declaring only `:equality` were refused by `solve`
+  and reported invalid by `validate` (e.g. IPC satellite and hiking). It now
+  needs only `:equality`.
 - **Domain constants randomly lost their type** (#160): when a problem
   inferred its objects from `:init`/`:goal`, `worldobjects()` merged them
   with the domain's typed `:constants` through a set union, so the result

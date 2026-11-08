@@ -311,6 +311,9 @@ class Not(Condition):
         return not self.child.holds(atoms, fluents)
 
     def features(self) -> Set[str]:
+        # (not (= ...)) needs only :equality (#159).
+        if isinstance(self.child, Equality):
+            return self.child.features()
         return {"negative-preconditions"} | self.child.features()
 
     def atoms(self) -> Iterator[Atom]:
