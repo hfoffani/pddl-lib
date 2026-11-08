@@ -107,6 +107,20 @@ def test_sandbox_blocks_network_and_outside_writes(tmp_path):
     assert (tmp_path / "inside.txt").read_text() == "ok"
 
 
+@pytest.mark.skipif(sys.platform != "darwin", reason="sandbox-exec is macOS only")
+def test_sandbox_blocks_reads_outside(tmp_path):
+    code = "open(%r).read()" % str(pathlib.Path(__file__).resolve())
+    out = json.loads(sandbox.run_python(code, tmp_path))
+    assert "PermissionError" in out["stderr"], out
+
+
+def test_sandbox_fails_closed(tmp_path, monkeypatch):
+    monkeypatch.setattr(sandbox.shutil, "which", lambda name: None)
+    out = json.loads(sandbox.run_python("print(1)", tmp_path))
+    assert "no sandbox" in out["error"]
+    assert not list(tmp_path.iterdir())
+
+
 @pytest.mark.parametrize("arm", playground.ARMS)
 def test_dry_run(arm, tmp_path):
     if arm == "pddlpy":
