@@ -37,6 +37,12 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **Non-conjunctive goals were silently misread** (#138): `(not (p))` was
+  read as `(p)`, `or` as `and`, numeric goals were dropped, so `solve` could
+  return wrong plans or an empty plan as `solved`. Goals other than a
+  conjunction of positive atoms are now refused by `solve` (exit `2`) and
+  reported by `validate` as an `unsupported` error. Supporting them is on
+  the roadmap.
 - **`(:constraints ...)` crashed the loader** (#140): any constraints block,
   in the domain or the problem, raised `IndexError`, so `validate` crashed
   too. The block now loads; it is not modeled, so `solve` and

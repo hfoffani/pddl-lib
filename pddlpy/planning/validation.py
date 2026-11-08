@@ -487,9 +487,6 @@ def check_supported(dp: "DomainProblem") -> None:
     if unsupported:
         raise PlanValidationError(
             "plan validation does not support %s" % sorted(unsupported))
-    if not dp.problem.simple_goal:
-        raise PlanValidationError(
-            "plan validation supports only goals that are a conjunction of atoms (#138)")
     try:
         check_modeled(dp)
     except UnsupportedRequirementsError as exc:
