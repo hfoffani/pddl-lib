@@ -45,3 +45,15 @@ def test_timed_negation_is_a_timed_literal(tmp_path):
     assert dp.problem.negative_init == []
     assert [(t, atom_tuple(a), pos) for t, a, pos in dp.problem.timed_literals] == [
         (3.0, ("p", "a"), False)]
+
+
+def test_declaration_checks_cover_init_literals_kept_out_of_the_state(tmp_path):
+    """Review on #188: negated and timed init literals are not in the
+    initial state, but must still name declared predicates and objects."""
+    for init, check in [("(not (p missing))", "unknown_object"),
+                        ("(not (typo a))", "undeclared_predicate"),
+                        ("(at 3 (p missing))", "unknown_object"),
+                        ("(at 3 (not (typo a)))", "undeclared_predicate")]:
+        report = diagnose(*_pair(tmp_path, init))
+        assert report["valid"] is False, init
+        assert check in {i["check"] for i in report["issues"]}, init
