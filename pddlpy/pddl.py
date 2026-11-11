@@ -704,6 +704,8 @@ def _simple_dagd(gd: Any) -> bool:
 def _simple_daeffect(de: Any) -> bool:
     """True if a daEffect context is a conjunction of time-tagged add /
     delete effects (no numeric, when or forall)."""
+    if de.daGD() is not None:
+        return False  # (when <daGD> <timedEffect>): its child is timed too
     te = de.timedEffect()
     if te is not None:
         ce = te.cEffect()

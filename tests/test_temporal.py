@@ -104,20 +104,30 @@ def test_mixed_instantaneous_and_durative():
     assert (charge.start, charge.duration, charge.end) == (0.01, 4.0, 4.01)
 
 
-def test_numeric_durative_action_refused(tmp_path):
-    """#139: the durative model drops numeric conditions and effects, so the
-    planner must refuse instead of scheduling past (>= (f) 1) with f = 0."""
+@pytest.mark.parametrize("condition,effect", [
+    ("(and (at start (p ?x)) (at start (>= (f) 1)))",
+     "(and (at end (q ?x)) (at end (decrease (f) 1)))"),
+    # review on #182: the timed effect inside a when hid its numeric guard
+    ("(and)", "(when (at start (>= (f) 1)) (at end (q ?x)))"),
+    ("(and)", "(and (when (at start (p ?x)) (at end (q ?x))))"),
+])
+def test_unmodeled_durative_action_refused(tmp_path, condition, effect):
+    """#139: the durative model drops numeric, conditional and quantified
+    parts, so the planner must refuse instead of scheduling past them (here
+    (>= (f) 1) with f = 0). Requirements are left undeclared on purpose:
+    the structural check must not depend on them."""
     d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
     d.write_text(
         "(define (domain t) (:requirements :strips :durative-actions :numeric-fluents)"
         " (:predicates (p ?x) (q ?x)) (:functions (f))"
         " (:durative-action go :parameters (?x) :duration (= ?duration 2)"
-        "  :condition (and (at start (p ?x)) (at start (>= (f) 1)))"
-        "  :effect (and (at end (q ?x)) (at end (decrease (f) 1)))))")
+        "  :condition %s :effect %s))" % (condition, effect))
     p.write_text("(define (problem p) (:domain t) (:objects a)"
                  " (:init (p a) (= (f) 0)) (:goal (q a)))")
+    dp = DomainProblem(str(d), str(p))
+    assert dp.domain.durative_operators["go"].simple is False
     with pytest.raises(UnsupportedRequirementsError, match="go has numeric"):
-        TemporalPlanner().solve(DomainProblem(str(d), str(p)))
+        TemporalPlanner().solve(dp)
 
 
 def test_separation_counts_in_the_makespan(tmp_path):
