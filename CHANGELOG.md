@@ -41,6 +41,10 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **`(:metric minimize (total-time))` was a syntax error** (#158), and the
+  parser's recovery dropped the rest of the problem: objects, `:init` and
+  goals came out empty for IPC temporal problems. It now parses, and
+  `metric()` returns `("minimize", "(total-time)")`.
 - **Identifiers were case-sensitive** (#157): `(CLEAR C)` in `:init` did not
   match `(clear ?x)`, nor `Hoist` the type `hoist`, so IPC pairs such as
   blocks-strips-typed and depots were reported unsolvable or ungroundable.

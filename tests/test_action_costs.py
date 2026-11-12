@@ -35,6 +35,16 @@ def test_metric_captured():
     assert _travel().metric() == ("minimize", "(total-cost)")
 
 
+def test_total_time_metric_parses():
+    """#158: (total-time) was a syntax error, and the recovery dropped the
+    whole problem (objects, init, goals)."""
+    ipc = os.path.join(CORPUS, "ipc", "match-cellar-temporal-satisficing")
+    dp = DomainProblem(os.path.join(ipc, "domain.pddl"), os.path.join(ipc, "p01.pddl"))
+    assert dp.syntax_errors == 0
+    assert dp.metric() == ("minimize", "(total-time)")
+    assert dp.goals() and dp.initialstate()
+
+
 def test_action_cost_reads_total_cost_increase():
     dp = _travel()
     state = State.from_problem(dp)

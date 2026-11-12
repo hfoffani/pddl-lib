@@ -3,11 +3,269 @@
  "ground_durative": {},
  "parse": {
   "durative_operators": [],
-  "goals": [],
-  "initial_numeric": {},
-  "initial_state": [],
-  "metric": null,
-  "objects": {},
+  "goals": [
+   [
+    "communicated_image_data",
+    "objective1",
+    "high_res"
+   ],
+   [
+    "communicated_rock_data",
+    "waypoint3"
+   ],
+   [
+    "communicated_soil_data",
+    "waypoint2"
+   ]
+  ],
+  "initial_numeric": {
+   "energy rover0": 50.0,
+   "recharge-rate rover0": 11.0
+  },
+  "initial_state": [
+   [
+    "at",
+    "rover0",
+    "waypoint3"
+   ],
+   [
+    "at_lander",
+    "general",
+    "waypoint0"
+   ],
+   [
+    "at_rock_sample",
+    "waypoint1"
+   ],
+   [
+    "at_rock_sample",
+    "waypoint2"
+   ],
+   [
+    "at_rock_sample",
+    "waypoint3"
+   ],
+   [
+    "at_soil_sample",
+    "waypoint0"
+   ],
+   [
+    "at_soil_sample",
+    "waypoint2"
+   ],
+   [
+    "at_soil_sample",
+    "waypoint3"
+   ],
+   [
+    "available",
+    "rover0"
+   ],
+   [
+    "calibration_target",
+    "camera0",
+    "objective1"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint0",
+    "waypoint3"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint1",
+    "waypoint2"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint1",
+    "waypoint3"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint2",
+    "waypoint1"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint3",
+    "waypoint0"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint3",
+    "waypoint1"
+   ],
+   [
+    "channel_free",
+    "general"
+   ],
+   [
+    "empty",
+    "rover0store"
+   ],
+   [
+    "equipped_for_imaging",
+    "rover0"
+   ],
+   [
+    "equipped_for_rock_analysis",
+    "rover0"
+   ],
+   [
+    "equipped_for_soil_analysis",
+    "rover0"
+   ],
+   [
+    "in_sun",
+    "waypoint0"
+   ],
+   [
+    "on_board",
+    "camera0",
+    "rover0"
+   ],
+   [
+    "store_of",
+    "rover0store",
+    "rover0"
+   ],
+   [
+    "supports",
+    "camera0",
+    "colour"
+   ],
+   [
+    "supports",
+    "camera0",
+    "high_res"
+   ],
+   [
+    "visible",
+    "waypoint0",
+    "waypoint1"
+   ],
+   [
+    "visible",
+    "waypoint0",
+    "waypoint2"
+   ],
+   [
+    "visible",
+    "waypoint0",
+    "waypoint3"
+   ],
+   [
+    "visible",
+    "waypoint1",
+    "waypoint0"
+   ],
+   [
+    "visible",
+    "waypoint1",
+    "waypoint2"
+   ],
+   [
+    "visible",
+    "waypoint1",
+    "waypoint3"
+   ],
+   [
+    "visible",
+    "waypoint2",
+    "waypoint0"
+   ],
+   [
+    "visible",
+    "waypoint2",
+    "waypoint1"
+   ],
+   [
+    "visible",
+    "waypoint2",
+    "waypoint3"
+   ],
+   [
+    "visible",
+    "waypoint3",
+    "waypoint0"
+   ],
+   [
+    "visible",
+    "waypoint3",
+    "waypoint1"
+   ],
+   [
+    "visible",
+    "waypoint3",
+    "waypoint2"
+   ],
+   [
+    "visible_from",
+    "objective0",
+    "waypoint0"
+   ],
+   [
+    "visible_from",
+    "objective0",
+    "waypoint1"
+   ],
+   [
+    "visible_from",
+    "objective0",
+    "waypoint2"
+   ],
+   [
+    "visible_from",
+    "objective0",
+    "waypoint3"
+   ],
+   [
+    "visible_from",
+    "objective1",
+    "waypoint0"
+   ],
+   [
+    "visible_from",
+    "objective1",
+    "waypoint1"
+   ],
+   [
+    "visible_from",
+    "objective1",
+    "waypoint2"
+   ],
+   [
+    "visible_from",
+    "objective1",
+    "waypoint3"
+   ]
+  ],
+  "metric": {
+   "expression": "(total-time)",
+   "optimization": "minimize"
+  },
+  "objects": {
+   "camera0": "camera",
+   "colour": "mode",
+   "general": "lander",
+   "high_res": "mode",
+   "low_res": "mode",
+   "objective0": "objective",
+   "objective1": "objective",
+   "rover0": "rover",
+   "rover0store": "store",
+   "waypoint0": "waypoint",
+   "waypoint1": "waypoint",
+   "waypoint2": "waypoint",
+   "waypoint3": "waypoint"
+  },
   "operators": [],
   "predicates": [],
   "requirements": [],
@@ -18,11 +276,6 @@
    {
     "check": "syntax",
     "message": "domain file: line 2:50 no viable alternative at input '(define(domainrover)(:requirements:typing:durative-actions:fluents:duration'",
-    "severity": "error"
-   },
-   {
-    "check": "syntax",
-    "message": "problem file: line 69:19 no viable alternative at input '(define(problemroverprob1234)(:domainrover)(:objectsgeneral-landercolourhigh_reslow_res-moderover0-roverrover0store-storewaypoint0waypoint1waypoint2waypoint3-waypointcamera0-cameraobjective0objective1-objective)(:init(visiblewaypoint1waypoint0)(visiblewaypoint0waypoint1)(visiblewaypoint2waypoint0)(visiblewaypoint0waypoint2)(visiblewaypoint2waypoint1)(visiblewaypoint1waypoint2)(visiblewaypoint3waypoint0)(visiblewaypoint0waypoint3)(visiblewaypoint3waypoint1)(visiblewaypoint1waypoint3)(visiblewaypoint3waypoint2)(visiblewaypoint2waypoint3)(at_soil_samplewaypoint0)(in_sunwaypoint0)(at_rock_samplewaypoint1)(at_soil_samplewaypoint2)(at_rock_samplewaypoint2)(at_soil_samplewaypoint3)(at_rock_samplewaypoint3)(at_landergeneralwaypoint0)(channel_freegeneral)(=(energyrover0)50)(=(recharge-raterover0)11)(atrover0waypoint3)(availablerover0)(store_ofrover0storerover0)(emptyrover0store)(equipped_for_soil_analysisrover0)(equipped_for_rock_analysisrover0)(equipped_for_imagingrover0)(can_traverserover0waypoint3waypoint0)(can_traverserover0waypoint0waypoint3)(can_traverserover0waypoint3waypoint1)(can_traverserover0waypoint1waypoint3)(can_traverserover0waypoint1waypoint2)(can_traverserover0waypoint2waypoint1)(on_boardcamera0rover0)(calibration_targetcamera0objective1)(supportscamera0colour)(supportscamera0high_res)(visible_fromobjective0waypoint0)(visible_fromobjective0waypoint1)(visible_fromobjective0waypoint2)(visible_fromobjective0waypoint3)(visible_fromobjective1waypoint0)(visible_fromobjective1waypoint1)(visible_fromobjective1waypoint2)(visible_fromobjective1waypoint3))(:goal(and(communicated_soil_datawaypoint2)(communicated_rock_datawaypoint3)(communicated_image_dataobjective1high_res)))(:metricminimize(total-time'",
     "severity": "error"
    }
   ],

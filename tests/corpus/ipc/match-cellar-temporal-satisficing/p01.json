@@ -1,19 +1,219 @@
 {
  "ground": {},
  "ground_durative": {
-  "light_match": [],
-  "mend_fuse": []
+  "light_match": [
+   {
+    "name": "light_match",
+    "parameters": {
+     "?match": "match0"
+    }
+   },
+   {
+    "name": "light_match",
+    "parameters": {
+     "?match": "match1"
+    }
+   },
+   {
+    "name": "light_match",
+    "parameters": {
+     "?match": "match2"
+    }
+   }
+  ],
+  "mend_fuse": [
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse0",
+     "?match": "match0"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse0",
+     "?match": "match1"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse0",
+     "?match": "match2"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse1",
+     "?match": "match0"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse1",
+     "?match": "match1"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse1",
+     "?match": "match2"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse2",
+     "?match": "match0"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse2",
+     "?match": "match1"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse2",
+     "?match": "match2"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse3",
+     "?match": "match0"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse3",
+     "?match": "match1"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse3",
+     "?match": "match2"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse4",
+     "?match": "match0"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse4",
+     "?match": "match1"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse4",
+     "?match": "match2"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse5",
+     "?match": "match0"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse5",
+     "?match": "match1"
+    }
+   },
+   {
+    "name": "mend_fuse",
+    "parameters": {
+     "?fuse": "fuse5",
+     "?match": "match2"
+    }
+   }
+  ]
  },
  "parse": {
   "durative_operators": [
    "light_match",
    "mend_fuse"
   ],
-  "goals": [],
+  "goals": [
+   [
+    "mended",
+    "fuse0"
+   ],
+   [
+    "mended",
+    "fuse1"
+   ],
+   [
+    "mended",
+    "fuse2"
+   ],
+   [
+    "mended",
+    "fuse3"
+   ],
+   [
+    "mended",
+    "fuse4"
+   ],
+   [
+    "mended",
+    "fuse5"
+   ]
+  ],
   "initial_numeric": {},
-  "initial_state": [],
-  "metric": null,
-  "objects": {},
+  "initial_state": [
+   [
+    "handfree"
+   ],
+   [
+    "unused",
+    "match0"
+   ],
+   [
+    "unused",
+    "match1"
+   ],
+   [
+    "unused",
+    "match2"
+   ]
+  ],
+  "metric": {
+   "expression": "(total-time)",
+   "optimization": "minimize"
+  },
+  "objects": {
+   "fuse0": "fuse",
+   "fuse1": "fuse",
+   "fuse2": "fuse",
+   "fuse3": "fuse",
+   "fuse4": "fuse",
+   "fuse5": "fuse",
+   "match0": "match",
+   "match1": "match",
+   "match2": "match"
+  },
   "operators": [],
   "predicates": [
    "handfree",
@@ -31,13 +231,7 @@
   }
  },
  "validate": {
-  "issues": [
-   {
-    "check": "syntax",
-    "message": "problem file: line 22:20 no viable alternative at input '(define(problempfile0)(:domainmatchcellar)(:objectsmatch0match1match2-matchfuse0fuse1fuse2fuse3fuse4fuse5-fuse)(:init(handfree)(unusedmatch0)(unusedmatch1)(unusedmatch2))(:goal(and(mendedfuse0)(mendedfuse1)(mendedfuse2)(mendedfuse3)(mendedfuse4)(mendedfuse5)))(:metricminimize(total-time'",
-    "severity": "error"
-   }
-  ],
-  "valid": false
+  "issues": [],
+  "valid": true
  }
 }

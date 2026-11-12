@@ -1,11 +1,538 @@
 {
  "ground": {},
  "ground_durative": {
-  "deliver-anytime": [],
-  "deliver-ontime": [],
-  "drive": [],
-  "load": [],
-  "unload": []
+  "deliver-anytime": [
+   {
+    "name": "deliver-anytime",
+    "parameters": {
+     "?l": "l1",
+     "?p": "package1"
+    }
+   },
+   {
+    "name": "deliver-anytime",
+    "parameters": {
+     "?l": "l1",
+     "?p": "package2"
+    }
+   },
+   {
+    "name": "deliver-anytime",
+    "parameters": {
+     "?l": "l1",
+     "?p": "package3"
+    }
+   },
+   {
+    "name": "deliver-anytime",
+    "parameters": {
+     "?l": "l2",
+     "?p": "package1"
+    }
+   },
+   {
+    "name": "deliver-anytime",
+    "parameters": {
+     "?l": "l2",
+     "?p": "package2"
+    }
+   },
+   {
+    "name": "deliver-anytime",
+    "parameters": {
+     "?l": "l2",
+     "?p": "package3"
+    }
+   },
+   {
+    "name": "deliver-anytime",
+    "parameters": {
+     "?l": "l3",
+     "?p": "package1"
+    }
+   },
+   {
+    "name": "deliver-anytime",
+    "parameters": {
+     "?l": "l3",
+     "?p": "package2"
+    }
+   },
+   {
+    "name": "deliver-anytime",
+    "parameters": {
+     "?l": "l3",
+     "?p": "package3"
+    }
+   }
+  ],
+  "deliver-ontime": [
+   {
+    "name": "deliver-ontime",
+    "parameters": {
+     "?l": "l1",
+     "?p": "package1"
+    }
+   },
+   {
+    "name": "deliver-ontime",
+    "parameters": {
+     "?l": "l1",
+     "?p": "package2"
+    }
+   },
+   {
+    "name": "deliver-ontime",
+    "parameters": {
+     "?l": "l1",
+     "?p": "package3"
+    }
+   },
+   {
+    "name": "deliver-ontime",
+    "parameters": {
+     "?l": "l2",
+     "?p": "package1"
+    }
+   },
+   {
+    "name": "deliver-ontime",
+    "parameters": {
+     "?l": "l2",
+     "?p": "package2"
+    }
+   },
+   {
+    "name": "deliver-ontime",
+    "parameters": {
+     "?l": "l2",
+     "?p": "package3"
+    }
+   },
+   {
+    "name": "deliver-ontime",
+    "parameters": {
+     "?l": "l3",
+     "?p": "package1"
+    }
+   },
+   {
+    "name": "deliver-ontime",
+    "parameters": {
+     "?l": "l3",
+     "?p": "package2"
+    }
+   },
+   {
+    "name": "deliver-ontime",
+    "parameters": {
+     "?l": "l3",
+     "?p": "package3"
+    }
+   }
+  ],
+  "drive": [
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l1",
+     "?t": "truck1",
+     "?to": "l1"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l1",
+     "?t": "truck1",
+     "?to": "l2"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l1",
+     "?t": "truck1",
+     "?to": "l3"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l2",
+     "?t": "truck1",
+     "?to": "l1"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l2",
+     "?t": "truck1",
+     "?to": "l2"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l2",
+     "?t": "truck1",
+     "?to": "l3"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l3",
+     "?t": "truck1",
+     "?to": "l1"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l3",
+     "?t": "truck1",
+     "?to": "l2"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l3",
+     "?t": "truck1",
+     "?to": "l3"
+    }
+   }
+  ],
+  "load": [
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   }
+  ],
+  "unload": [
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   }
+  ]
  },
  "parse": {
   "durative_operators": [
@@ -15,11 +542,128 @@
    "load",
    "unload"
   ],
-  "goals": [],
-  "initial_numeric": {},
-  "initial_state": [],
-  "metric": null,
-  "objects": {},
+  "goals": [
+   [
+    "delivered",
+    "package1",
+    "l1"
+   ],
+   [
+    "delivered",
+    "package2",
+    "l2"
+   ],
+   [
+    "delivered",
+    "package3",
+    "l2"
+   ]
+  ],
+  "initial_numeric": {
+   "drive-time l1 l2": 406.3,
+   "drive-time l1 l3": 73.1,
+   "drive-time l2 l1": 406.3,
+   "drive-time l2 l3": 356.8,
+   "drive-time l3 l1": 73.1,
+   "drive-time l3 l2": 356.8
+  },
+  "initial_state": [
+   [
+    "at",
+    "package1",
+    "l3"
+   ],
+   [
+    "at",
+    "package2",
+    "l3"
+   ],
+   [
+    "at",
+    "package3",
+    "l1"
+   ],
+   [
+    "at",
+    "truck1",
+    "l2"
+   ],
+   [
+    "closer",
+    "a1",
+    "a2"
+   ],
+   [
+    "connected",
+    "l1",
+    "l2"
+   ],
+   [
+    "connected",
+    "l1",
+    "l3"
+   ],
+   [
+    "connected",
+    "l2",
+    "l1"
+   ],
+   [
+    "connected",
+    "l2",
+    "l3"
+   ],
+   [
+    "connected",
+    "l3",
+    "l1"
+   ],
+   [
+    "connected",
+    "l3",
+    "l2"
+   ],
+   [
+    "deliverable",
+    "package1",
+    "l1"
+   ],
+   [
+    "deliverable",
+    "package2",
+    "l2"
+   ],
+   [
+    "deliverable",
+    "package3",
+    "l2"
+   ],
+   [
+    "free",
+    "a1",
+    "truck1"
+   ],
+   [
+    "free",
+    "a2",
+    "truck1"
+   ]
+  ],
+  "metric": {
+   "expression": "(total-time)",
+   "optimization": "minimize"
+  },
+  "objects": {
+   "a1": "truckarea",
+   "a2": "truckarea",
+   "l1": "location",
+   "l2": "location",
+   "l3": "location",
+   "package1": "package",
+   "package2": "package",
+   "package3": "package",
+   "truck1": "truck"
+  },
   "operators": [],
   "predicates": [
    "at",
@@ -49,8 +693,13 @@
  "validate": {
   "issues": [
    {
-    "check": "syntax",
-    "message": "problem file: line 46:19 no viable alternative at input '(define(problemtruck-1)(:domaintrucks-timetil)(:objectstruck1-truckpackage1-packagepackage2-packagepackage3-packagel1-locationl2-locationl3-locationa1-truckareaa2-truckarea)(:init(attruck1l2)(freea1truck1)(freea2truck1)(closera1a2)(atpackage1l3)(atpackage2l3)(atpackage3l1)(connectedl1l2)(connectedl1l3)(connectedl2l1)(connectedl2l3)(connectedl3l1)(connectedl3l2)(deliverablepackage1l1)(deliverablepackage2l2)(deliverablepackage3l2)(at919.7(not(deliverablepackage1l1)))(at919.7(not(deliverablepackage2l2)))(at1813.7(not(deliverablepackage3l2)))(=(drive-timel1l2)406.3)(=(drive-timel1l3)73.1)(=(drive-timel2l1)406.3)(=(drive-timel2l3)356.8)(=(drive-timel3l1)73.1)(=(drive-timel3l2)356.8))(:goal(and(deliveredpackage1l1)(deliveredpackage2l2)(deliveredpackage3l2)))(:metricminimize(total-time'",
+    "check": "unsupported",
+    "message": "timed initial literals, (at N ...) in :init, are not supported yet (#142)",
+    "severity": "error"
+   },
+   {
+    "check": "durative",
+    "message": "durative action 'load' references undeclared parameter '?a2'",
     "severity": "error"
    }
   ],
