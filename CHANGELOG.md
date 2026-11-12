@@ -44,8 +44,9 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 - **Identifiers were case-sensitive** (#157): `(CLEAR C)` in `:init` did not
   match `(clear ?x)`, nor `Hoist` the type `hoist`, so IPC pairs such as
   blocks-strips-typed and depots were reported unsolvable or ungroundable.
-  PDDL names are case-insensitive; they now match in any case. Plans in
-  JSON may also spell `args` variables in any case.
+  PDDL names are case-insensitive; they now match in any case, also where
+  callers pass them: `ground` (CLI, MCP, `dp.ground_operator`) and plan
+  steps, including `args` variables in JSON plans.
 - **`(not (p))` in `:init` was read as `(p)`** (#186): the negation was
   ignored, so the atom started true. It is now kept out of the initial
   state (closed world: it is false anyway) and stored in

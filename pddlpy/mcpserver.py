@@ -53,6 +53,7 @@ def ground(domain_file: str, problem_file: str, operator: str) -> Dict[str, Any]
     with the list of known operators if ``operator`` is not in the domain.
     Untyped domains can ground to many instances (objects^parameters)."""
     dp = DomainProblem(domain_file, problem_file)
+    operator = operator.lower()  # names are case-insensitive (#157)
     if operator not in dp.operators():
         raise ValueError(
             "unknown operator %r; known: %s" % (operator, sorted(dp.operators()))

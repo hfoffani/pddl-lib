@@ -40,3 +40,10 @@ def test_plans_match_in_any_case(tmp_path):
     for text in ("(UNSTACK A b)\n", '[{"action": "UnStack", "args": ["A", "B"]}]',
                  '[{"action": "unstack", "args": {"?X": "A", "?y": "b"}}]'):
         assert validate_plan(dp, load_plan(text)).valid, text
+
+
+def test_grounding_entry_points_match_in_any_case(tmp_path):
+    """Review on #190: callers may spell action names as the domain does."""
+    dp = DomainProblem(*_pair(tmp_path))
+    assert len(list(dp.ground_operator("Unstack"))) == 2
+    assert dp.ground("UNSTACK", {"?x": "a", "?y": "b"}).operator_name == "unstack"

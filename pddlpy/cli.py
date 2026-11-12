@@ -110,6 +110,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.command == "parse":
         result = domain_problem_dict(dp)
     elif args.command == "ground":
+        args.operator = args.operator.lower()  # names are case-insensitive (#157)
         if args.operator not in dp.operators():
             print(
                 "pddlpy: error: unknown operator %r; known: %s"

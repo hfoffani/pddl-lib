@@ -1437,8 +1437,9 @@ class DomainProblem():
         is a grounded instance.
 
         returns -- An iterator of Operator instances.
+        Names match in any case (#157).
         """
-        op = self.domain.operators[op_name]
+        op = self.domain.operators[op_name.lower()]
         for st in self.binder.bind( self, op ):
             yield self._ground_operator( op, st )
 
@@ -1446,8 +1447,9 @@ class DomainProblem():
         """Returns the instance of action ``op_name`` (instantaneous or
         durative) under ``binding``, a {variable: object} dict, whether or not
         a binder would generate it. Plan validation uses it to ground a plan
-        step as written.
+        step as written. Names match in any case (#157).
         """
+        op_name = op_name.lower()
         if op_name in self.domain.operators:
             return self._ground_operator( self.domain.operators[op_name], binding )
         return self.domain.durative_operators[op_name].ground( binding )
@@ -1482,8 +1484,9 @@ class DomainProblem():
 
         Durative actions always use the cartesian binder: their conditions are
         time-tagged and static-precondition pruning does not apply.
+        Names match in any case (#157).
         """
-        op = self.domain.durative_operators[op_name]
+        op = self.domain.durative_operators[op_name.lower()]
         for st in CartesianBinder().bind( self, op ):
             yield op.ground( st )
 
