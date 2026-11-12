@@ -41,6 +41,13 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **Parsing is ~2.7x faster, and a syntax error no longer empties the
+  file**: the grammar's `domain` and `problem` rules had two alternatives
+  identical up to the end of the file, so ANTLR read every token before
+  choosing one, and recovery from a syntax error dropped the whole file.
+  The largest corpus problem (nomystery p09, 1.4 MB) parses in 4.6 s instead
+  of 12.4 s; IPC pairs with one unsupported construct now load the rest
+  (the pair still reports the syntax error and is refused by `solve`).
 - **`solve` answered for input it had skipped** (#141): the parser recovers
   from a syntax error by dropping what it cannot read, such as a standard
   `(:derived (r ?x) ...)` rule, and `solve` then reported "no plan exists"

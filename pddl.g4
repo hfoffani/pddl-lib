@@ -71,19 +71,11 @@ pddlDoc : domain | problem;
 /************* DOMAINS ****************************/
 
 domain
+    // One alternative: two that differ only in where the optional
+    // contextDef goes are identical without it, and ANTLR then looks
+    // ahead to the end of the file to choose.
     : '(' 'define' domainName
-      requireDef?
-      contextDef?
-      typesDef?
-      constantsDef?
-      predicatesDef?
-      functionsDef?
-      constraints?
-      structureDef*
-      ')'
-    | '(' 'define' domainName
-      contextDef?
-      requireDef?
+      ( requireDef contextDef? | contextDef requireDef? )?
       typesDef?
       constantsDef?
       predicatesDef?
@@ -383,21 +375,9 @@ fExpT
 /************* PROBLEMS ****************************/
 
 problem
+    // One alternative, as in domain: no lookahead to the end of the file.
     : '(' 'define' problemDecl
-      problemDomain
-      requireDef?
-      contextDef?
-      objectDecl?
-      init
-      goal
-      probConstraints?
-      metricSpec?
-      // lengthSpec? This is not defined anywhere in the BNF spec
-      ')'
-    | '(' 'define' problemDecl
-      contextDef?
-      problemDomain
-      requireDef?
+      ( problemDomain requireDef? contextDef? | contextDef problemDomain requireDef? )
       objectDecl?
       init
       goal

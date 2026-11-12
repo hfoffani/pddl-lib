@@ -530,6 +530,7 @@
   "objects": {
    "cb1": "device",
    "cb2": "device",
+   "earth": "device",
    "l1": "line",
    "l10": "line",
    "l11": "line",
@@ -551,18 +552,57 @@
    "sd6": "device",
    "sd7": "device",
    "sd8": "device",
-   "sd9": "device"
+   "sd9": "device",
+   "side1": "side",
+   "side2": "side"
   },
   "operators": [],
-  "predicates": [],
-  "requirements": [],
-  "types": {}
+  "predicates": [
+   "affected",
+   "breaker",
+   "closed",
+   "con",
+   "ext",
+   "faulty",
+   "fed",
+   "unsafe",
+   "upstream"
+  ],
+  "requirements": [
+   ":adl",
+   ":derived-predicates"
+  ],
+  "types": {
+   "device": null,
+   "line": null,
+   "side": null
+  }
  },
  "validate": {
   "issues": [
    {
     "check": "syntax",
-    "message": "domain file: line 16:25 no viable alternative at input '(define(domainpsr)(:requirements:adl:derived-predicates)(:typesdevicesideline)(:constantsside1side2-sideearth-device)(:predicates(ext?l-line?x-device?s-side)(breaker?x-device)(closed?x-device)(faulty?l-line)(con?x-device?sx-side?y-device?sy-side)(upstream?x-device?sx-side?y-device?sy-side)(unsafe?x-device?sx-side)(affected?x-device)(fed?l-line))(:derived(upstream?x-'",
+    "message": "domain file: line 16:25 extraneous input '-' expecting {'(', ')', 'at', 'over', NAME, VARIABLE}",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "domain file: line 16:38 extraneous input '-' expecting {'(', ')', 'at', 'over', NAME, VARIABLE}",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "domain file: line 16:48 extraneous input '-' expecting {'(', ')', 'at', 'over', NAME, VARIABLE}",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "domain file: line 16:61 extraneous input '-' expecting {'(', ')', 'at', 'over', NAME, VARIABLE}",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "domain file: line 17:6 missing ')' at '('",
     "severity": "error"
    }
   ],

@@ -1337,6 +1337,19 @@ class _ErrorCounter(ErrorListener):
         self.count += 1
 
 
+def _walk(listener: Any, tree: Any, errors: "_ErrorCounter") -> None:
+    """Walk ``tree`` into ``listener``. A tree ANTLR recovered from syntax
+    errors can lack the children the listener expects; the walk then stops
+    and the model stays partial, which is safe: ``syntax_errors`` makes
+    solve and plan validation refuse it, and ``validate`` reports the
+    errors. Without syntax errors, an exception is a bug and propagates."""
+    try:
+        ParseTreeWalker().walk(listener, tree)
+    except Exception:
+        if not errors.count:
+            raise
+
+
 def source_stream(path: str) -> InputStream:
     """The lexer input for the PDDL file ``path``: read as UTF-8 (#103) and
     lowercased, since PDDL identifiers are case-insensitive (#157). Names
@@ -1370,8 +1383,7 @@ class DomainProblem():
         parser.addErrorListener(errors)
         tree = parser.domain()
         self.domain = DomainListener()
-        walker = ParseTreeWalker()
-        walker.walk(self.domain, tree)
+        _walk(self.domain, tree, errors)
         # problem
         inp = source_stream(problemfile)
         lexer = pddlLexer(inp)
@@ -1382,8 +1394,7 @@ class DomainProblem():
         tree = parser.problem()
         self.syntax_errors: int = errors.count
         self.problem = ProblemListener()
-        walker = ParseTreeWalker()
-        walker.walk(self.problem, tree)
+        _walk(self.problem, tree, errors)
         # Variable binding strategy used by ground_operator (#12).
         self.binder: VariableBinder = binder if binder is not None else StaticPrunedBinder()
 
