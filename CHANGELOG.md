@@ -41,6 +41,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **Names spelled like keywords were syntax errors** (#163): an object,
+  constant, type or argument named `or`, `and`, `start`, `domain`, ... (in
+  any case) broke the parse and dropped the rest of `:objects`, e.g. the
+  object `OR` in the large IPC blocksworld problems. They are names now.
+  Predicate, function and action names still can't be keywords.
 - **Parsing is ~2.7x faster, and a syntax error no longer empties the
   file**: the grammar's `domain` and `problem` rules had two alternatives
   identical up to the end of the file, so ANTLR read every token before

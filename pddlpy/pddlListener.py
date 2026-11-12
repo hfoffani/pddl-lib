@@ -683,5 +683,14 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#symbol.
+    def enterSymbol(self, ctx:pddlParser.SymbolContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#symbol.
+    def exitSymbol(self, ctx:pddlParser.SymbolContext):
+        pass
+
+
 
 del pddlParser

@@ -134,7 +134,7 @@ atomicFunctionSkeleton
 	: '(' functionSymbol typedVariableList ')'
 	;
 
-functionSymbol : name ;
+functionSymbol : symbol ;
 
 functionType : 'number' ; // Currently in PDDL only numeric functions are allowed
 
@@ -150,7 +150,7 @@ atomicFormulaSkeleton
 	: '(' predicate typedVariableList ')'
 	;
 
-predicate : name ;
+predicate : symbol ;
 
 // If have any typed variables, they must come FIRST!
 typedVariableList
@@ -180,7 +180,7 @@ actionDef
            actionDefBody ')'
     ;
 
-actionSymbol : name ;
+actionSymbol : symbol ;
 
 
 // Should allow preGD instead of goalDesc for preconditions -
@@ -502,7 +502,23 @@ REQUIRE_KEY
  * allowing keywords as identifier where allowed
  * may need more to specify
  */
+// A name: objects, constants, types, arguments (#163). PDDL names are any
+// letter-led identifier, so a word the lexer reads as a keyword token is a
+// name here too.
 name
+	: symbol
+	| 'all' | 'always' | 'always-within' | 'and' | 'assign' | 'at-most-once'
+	| 'decrease' | 'define' | 'domain' | 'either' | 'end' | 'exists'
+	| 'forall' | 'hold-after' | 'hold-during' | 'imply' | 'increase'
+	| 'is-violated' | 'maximize' | 'minimize' | 'not' | 'number' | 'or'
+	| 'preference' | 'problem' | 'scale-down' | 'scale-up' | 'sometime'
+	| 'sometime-after' | 'sometime-before' | 'start' | 'total-time' | 'when'
+	| 'within'
+	;
+
+// Predicate, function and action names: keywords stay out, so (and),
+// (not ...) and (or ...) keep one reading.
+symbol
 	: NAME
 	| 'at'
 	| 'over'

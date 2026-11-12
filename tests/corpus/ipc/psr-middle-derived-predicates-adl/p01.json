@@ -582,22 +582,22 @@
   "issues": [
    {
     "check": "syntax",
-    "message": "domain file: line 16:25 extraneous input '-' expecting {'(', ')', 'at', 'over', NAME, VARIABLE}",
+    "message": "domain file: line 16:25 extraneous input '-' expecting {'(', 'define', ')', 'domain', 'either', 'number', 'and', 'or', 'not', 'imply', 'exists', 'forall', 'preference', 'at', 'over', 'start', 'end', 'all', 'when', 'assign', 'scale-up', 'scale-down', 'increase', 'decrease', 'problem', 'minimize', 'maximize', 'total-time', 'is-violated', 'always', 'sometime', 'within', 'at-most-once', 'sometime-after', 'sometime-before', 'always-within', 'hold-during', 'hold-after', NAME, VARIABLE}",
     "severity": "error"
    },
    {
     "check": "syntax",
-    "message": "domain file: line 16:38 extraneous input '-' expecting {'(', ')', 'at', 'over', NAME, VARIABLE}",
+    "message": "domain file: line 16:38 extraneous input '-' expecting {'(', 'define', ')', 'domain', 'either', 'number', 'and', 'or', 'not', 'imply', 'exists', 'forall', 'preference', 'at', 'over', 'start', 'end', 'all', 'when', 'assign', 'scale-up', 'scale-down', 'increase', 'decrease', 'problem', 'minimize', 'maximize', 'total-time', 'is-violated', 'always', 'sometime', 'within', 'at-most-once', 'sometime-after', 'sometime-before', 'always-within', 'hold-during', 'hold-after', NAME, VARIABLE}",
     "severity": "error"
    },
    {
     "check": "syntax",
-    "message": "domain file: line 16:48 extraneous input '-' expecting {'(', ')', 'at', 'over', NAME, VARIABLE}",
+    "message": "domain file: line 16:48 extraneous input '-' expecting {'(', 'define', ')', 'domain', 'either', 'number', 'and', 'or', 'not', 'imply', 'exists', 'forall', 'preference', 'at', 'over', 'start', 'end', 'all', 'when', 'assign', 'scale-up', 'scale-down', 'increase', 'decrease', 'problem', 'minimize', 'maximize', 'total-time', 'is-violated', 'always', 'sometime', 'within', 'at-most-once', 'sometime-after', 'sometime-before', 'always-within', 'hold-during', 'hold-after', NAME, VARIABLE}",
     "severity": "error"
    },
    {
     "check": "syntax",
-    "message": "domain file: line 16:61 extraneous input '-' expecting {'(', ')', 'at', 'over', NAME, VARIABLE}",
+    "message": "domain file: line 16:61 extraneous input '-' expecting {'(', 'define', ')', 'domain', 'either', 'number', 'and', 'or', 'not', 'imply', 'exists', 'forall', 'preference', 'at', 'over', 'start', 'end', 'all', 'when', 'assign', 'scale-up', 'scale-down', 'increase', 'decrease', 'problem', 'minimize', 'maximize', 'total-time', 'is-violated', 'always', 'sometime', 'within', 'at-most-once', 'sometime-after', 'sometime-before', 'always-within', 'hold-during', 'hold-after', NAME, VARIABLE}",
     "severity": "error"
    },
    {
