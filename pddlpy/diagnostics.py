@@ -141,9 +141,11 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
     for where, atoms in ((":init", _init_atoms(dp)), (":goal", dp.goals())):
         for atom in atoms:
             for term in atom_tuple(atom)[1:]:
-                # a ?variable comes from a quantified goal, reported as
-                # unsupported (#138), not an object
-                if term not in objects and not term.startswith("?"):
+                # in a quantified goal (reported as unsupported, #138) a
+                # ?variable is bound, not an object; in a positive goal it
+                # is free, and an error
+                bound = term.startswith("?") and not dp.problem.simple_goal
+                if term not in objects and not bound:
                     unknown.setdefault(term, set()).add(where)
     for term in sorted(unknown):
         issues.append(_issue(
