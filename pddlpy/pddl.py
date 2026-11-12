@@ -45,7 +45,7 @@ from typing import (
     cast,
 )
 
-from pddlpy._vendor.antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
+from pddlpy._vendor.antlr4 import CommonTokenStream, InputStream, ParseTreeWalker
 from pddlpy._vendor.antlr4.error.ErrorListener import ErrorListener
 
 from .binding import CartesianBinder, StaticPrunedBinder, VariableBinder
@@ -1337,6 +1337,14 @@ class _ErrorCounter(ErrorListener):
         self.count += 1
 
 
+def source_stream(path: str) -> InputStream:
+    """The lexer input for the PDDL file ``path``: read as UTF-8 (#103) and
+    lowercased, since PDDL identifiers are case-insensitive (#157). Names
+    therefore come out lowercase, as Fast Downward and VAL print them."""
+    with open(path, "rb") as f:  # binary: keep line endings as written
+        return InputStream(f.read().decode("utf-8").lower())
+
+
 class DomainProblem():
 
     def __init__(self, domainfile: str, problemfile: str,
@@ -1351,9 +1359,7 @@ class DomainProblem():
                   the .binder attribute later, to override grounding.
         """
         # domain
-        # ANTLR's FileStream defaults to ASCII; PDDL files may carry UTF-8
-        # (typically in comments) -- see #103.
-        inp = FileStream(domainfile, encoding="utf-8")
+        inp = source_stream(domainfile)
         lexer = pddlLexer(inp)
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)
@@ -1367,7 +1373,7 @@ class DomainProblem():
         walker = ParseTreeWalker()
         walker.walk(self.domain, tree)
         # problem
-        inp = FileStream(problemfile, encoding="utf-8")
+        inp = source_stream(problemfile)
         lexer = pddlLexer(inp)
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)

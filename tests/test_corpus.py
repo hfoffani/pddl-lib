@@ -58,7 +58,7 @@ def test_goals_non_empty(benchmark):
 
 def test_uppercase_keywords_parse():
     """#20 / #36: uppercase PDDL keywords ((:INIT ...), (DEFINE ...)) must
-    parse identically to lowercase, while identifiers keep their case."""
+    parse identically to lowercase (identifiers too, #157)."""
     domainfile = os.path.join(CORPUS, "blocksworld-domain.pddl")
     upper = DomainProblem(
         domainfile, os.path.join(CORPUS, "blocksworld-upper-problem.pddl")

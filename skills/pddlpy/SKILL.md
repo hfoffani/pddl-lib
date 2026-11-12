@@ -165,8 +165,9 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
 - **Durative actions** (`:durative-actions`) parse into `DurativeAction`
   (`dp.durative_operators()`) and are solved only by `temporal`, under
   sequential semantics: domains that require overlapping actions are not solved.
-- Uppercase keywords (`(:INIT ...)`) are fine — keywords are case-insensitive;
-  identifiers keep their case.
+- Case does not matter: keywords and names are case-insensitive, and names
+  come out lowercase (`(CLEAR A)` is reported as `(clear a)`), as in Fast
+  Downward and VAL.
 
 ## Developing pddl-lib itself (repo checkout only)
 

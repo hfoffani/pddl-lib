@@ -15,9 +15,9 @@ from __future__ import annotations
 
 from typing import Any, Dict, Iterator, List, Set, Tuple
 
-from pddlpy._vendor.antlr4 import CommonTokenStream, FileStream
+from pddlpy._vendor.antlr4 import CommonTokenStream
 from pddlpy._vendor.antlr4.error.ErrorListener import ErrorListener
-from pddlpy.pddl import DomainProblem
+from pddlpy.pddl import DomainProblem, source_stream
 from pddlpy.pddlLexer import pddlLexer
 from pddlpy.pddlParser import pddlParser
 from pddlpy.planning import (
@@ -45,7 +45,7 @@ def _syntax_errors(path: str, rule: str) -> List[str]:
     """Parse ``path`` with the grammar rule ``rule`` ('domain' or 'problem')
     and return the collected syntax errors."""
     collector = _CollectingErrorListener()
-    lexer = pddlLexer(FileStream(path, encoding="utf-8"))  # UTF-8 PDDL, #103
+    lexer = pddlLexer(source_stream(path))
     lexer.removeErrorListeners()
     lexer.addErrorListener(collector)
     parser = pddlParser(CommonTokenStream(lexer))

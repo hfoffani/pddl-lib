@@ -6,96 +6,96 @@
   "goals": [
    [
     "on",
-    "B0",
-    "A3"
+    "b0",
+    "a3"
    ],
    [
     "on",
-    "B1",
-    "A1"
+    "b1",
+    "a1"
    ],
    [
     "on",
-    "B6",
-    "A2"
+    "b6",
+    "a2"
    ]
   ],
   "initial_numeric": {
-   "speed S12": 1.0,
-   "speed S13": 1.0
+   "speed s12": 1.0,
+   "speed s13": 1.0
   },
   "initial_state": [
    [
     "connect",
-    "A1",
-    "A2",
-    "S12"
+    "a1",
+    "a2",
+    "s12"
    ],
    [
     "connect",
-    "A1",
-    "A3",
-    "S13"
+    "a1",
+    "a3",
+    "s13"
    ],
    [
     "first",
-    "B2",
-    "S13"
+    "b2",
+    "s13"
    ],
    [
     "first",
-    "B5",
-    "S12"
+    "b5",
+    "s12"
    ],
    [
     "is-product",
-    "B0",
+    "b0",
     "rat-a"
    ],
    [
     "is-product",
-    "B1",
+    "b1",
     "gasoleo"
    ],
    [
     "is-product",
-    "B2",
+    "b2",
     "rat-a"
    ],
    [
     "is-product",
-    "B3",
+    "b3",
     "oca1"
    ],
    [
     "is-product",
-    "B4",
+    "b4",
     "gasoleo"
    ],
    [
     "is-product",
-    "B5",
+    "b5",
     "gasoleo"
    ],
    [
     "is-product",
-    "B6",
+    "b6",
     "lco"
    ],
    [
     "is-product",
-    "B7",
+    "b7",
     "oca1"
    ],
    [
     "last",
-    "B2",
-    "S13"
+    "b2",
+    "s13"
    ],
    [
     "last",
-    "B5",
-    "S12"
+    "b5",
+    "s12"
    ],
    [
     "may-interface",
@@ -204,66 +204,66 @@
    ],
    [
     "normal",
-    "S12"
+    "s12"
    ],
    [
     "normal",
-    "S13"
+    "s13"
    ],
    [
     "on",
-    "B0",
-    "A1"
+    "b0",
+    "a1"
    ],
    [
     "on",
-    "B1",
-    "A3"
+    "b1",
+    "a3"
    ],
    [
     "on",
-    "B3",
-    "A1"
+    "b3",
+    "a1"
    ],
    [
     "on",
-    "B4",
-    "A2"
+    "b4",
+    "a2"
    ],
    [
     "on",
-    "B6",
-    "A3"
+    "b6",
+    "a3"
    ],
    [
     "on",
-    "B7",
-    "A1"
+    "b7",
+    "a1"
    ],
    [
     "unitary",
-    "S12"
+    "s12"
    ],
    [
     "unitary",
-    "S13"
+    "s13"
    ]
   ],
   "metric": null,
   "objects": {
-   "A1": "area",
-   "A2": "area",
-   "A3": "area",
-   "B0": "batch-atom",
-   "B1": "batch-atom",
-   "B2": "batch-atom",
-   "B3": "batch-atom",
-   "B4": "batch-atom",
-   "B5": "batch-atom",
-   "B6": "batch-atom",
-   "B7": "batch-atom",
-   "S12": "pipe",
-   "S13": "pipe"
+   "a1": "area",
+   "a2": "area",
+   "a3": "area",
+   "b0": "batch-atom",
+   "b1": "batch-atom",
+   "b2": "batch-atom",
+   "b3": "batch-atom",
+   "b4": "batch-atom",
+   "b5": "batch-atom",
+   "b6": "batch-atom",
+   "b7": "batch-atom",
+   "s12": "pipe",
+   "s13": "pipe"
   },
   "operators": [],
   "predicates": [],

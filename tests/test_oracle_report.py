@@ -45,29 +45,26 @@ def test_known_causes_mark_failures(tmp_path):
     new ones; the cause depends on both the check and the pair."""
     junit = tmp_path / "o.xml"
     junit.write_text("""<testsuite>
-<testcase name="test_solvability_agrees_with_fd[potassco/ipc-2000/domains/blocks-strips-typed/instances/instance-1.pddl]"><failure message="assert False"/></testcase>
+<testcase name="test_solvability_agrees_with_fd[classical/classical/psr-middle-derived-predicates-adl/p01.pddl]"><failure message="assert False"/></testcase>
 <testcase name="test_solvability_agrees_with_fd[classical/classical/termes-opt18/p01.pddl]"><failure message="assert False"/></testcase>
-<testcase name="test_accept_reject_agrees_with_fd[potassco/ipc-2000/domains/blocks-strips-typed/instances/instance-1.pddl]"><failure message="exit 0"/></testcase>
+<testcase name="test_accept_reject_agrees_with_fd[classical/classical/psr-middle-derived-predicates-adl/p01.pddl]"><failure message="exit 0"/></testcase>
 </testsuite>""")
     text = oracle_report.report([str(junit)], "T")
     assert "**3 failures: 1 new, 2 with a known cause.**" in text
     lines = text.splitlines()
     new = next(i for i, ln in enumerate(lines) if ln.startswith("- **NEW**"))
-    blocks = next(i for i, ln in enumerate(lines) if "known: #157" in ln)
-    assert new < blocks
+    termes = next(i for i, ln in enumerate(lines) if "termes" in ln)
+    assert new < termes
     # termes-opt18's goal ends with (not (has-block)), misread as (has-block)
-    assert "known: #138" in next(ln for ln in lines if "termes" in ln)
-    # #157 covers the plan and solvability checks, not acceptance
-    assert "- **NEW** `potassco/ipc-2000/domains/blocks-strips-typed" in text
+    assert "known: #138" in lines[termes]
+    # #141 covers acceptance and FD plan replay, not solvability
+    assert "- **NEW** `classical/classical/psr-middle-derived-predicates-adl" in text
     assert oracle_report.known_cause("test_accept_reject_agrees_with_fd",
                                      "classical/classical/tyreworld/pfile1.pddl").startswith("FD rejects")
-    # (VALUE C0 N0) in :init vs (value ?c ?v) in the domain (oracle run on main)
-    for pair in ("classical/classical/thoughtful-sat14-strips/bootstrap-typed-01.pddl",
-                 "potassco/ipc-2014/domains/thoughtful-sequential-satisficing/instances/"
-                 "instance-1.pddl"):
-        for check in ("test_fd_plan_replays_in_pddlpy_and_val",
-                      "test_solvability_agrees_with_fd"):
-            assert oracle_report.known_cause(check, pair).startswith("#157")
+    # #157 is fixed: identifier case is no longer a known cause
+    assert oracle_report.known_cause(
+        "test_solvability_agrees_with_fd",
+        "classical/classical/thoughtful-sat14-strips/bootstrap-typed-01.pddl") is None
 
 
 def test_long_failure_lists_are_capped(tmp_path, monkeypatch):

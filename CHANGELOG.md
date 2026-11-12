@@ -35,8 +35,17 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   and the server is ported from `FastMCP` to `MCPServer`. `pddlpy-mcp` serves
   2026-07-28 clients and still accepts the 2024-11-05 to 2025-11-25 handshake;
   tests connect over stdio at each version.
+- **Names are lowercased** (#157): `parse`, `ground`, `solve` and
+  `validate` print every name (predicates, actions, types, objects,
+  constants) in lowercase, as Fast Downward and VAL do, whatever the case
+  in the PDDL files.
 
 ### Fixed
+- **Identifiers were case-sensitive** (#157): `(CLEAR C)` in `:init` did not
+  match `(clear ?x)`, nor `Hoist` the type `hoist`, so IPC pairs such as
+  blocks-strips-typed and depots were reported unsolvable or ungroundable.
+  PDDL names are case-insensitive; they now match in any case. Plans in
+  JSON may also spell `args` variables in any case.
 - **`(not (p))` in `:init` was read as `(p)`** (#186): the negation was
   ignored, so the atom started true. It is now kept out of the initial
   state (closed world: it is false anyway) and stored in

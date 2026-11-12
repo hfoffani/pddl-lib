@@ -645,8 +645,8 @@
   ],
   "types": {
    "attendant": "passenger",
-   "conflict_A": "passenger",
-   "conflict_B": "passenger",
+   "conflict_a": "passenger",
+   "conflict_b": "passenger",
    "floor": "object",
    "going_down": "passenger",
    "going_nonstop": "passenger",
