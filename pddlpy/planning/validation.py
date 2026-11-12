@@ -526,7 +526,7 @@ def _resolve(dp: "DomainProblem", steps: List[PlanStep]) -> Tuple[List[_Part], O
                         % (name, len(params), len(s.args)), i, s)
         args = list(s.args)
         if all(isinstance(a, _Binding) for a in args) and args:
-            by_var = {a.variable: a for a in args}  # type: ignore[attr-defined]
+            by_var = {a.variable.lower(): a for a in args}  # type: ignore[attr-defined]
             if set(by_var) != {v for v, _ in params}:
                 return fail("arity", "%s takes parameters %s"
                             % (name, " ".join(v for v, _ in params)), i, s)

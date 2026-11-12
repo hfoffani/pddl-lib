@@ -23,11 +23,6 @@ MAX_LISTED = 50  # failures listed per check; the rest are counted
 # checked against the failing files (oracle runs on #156). Remove an entry
 # once its cause is fixed; a failure matching no entry is reported as NEW.
 KNOWN_CAUSES: List[Tuple[str, str, str]] = [
-    (r"fd_plan|solvability|plan_verdicts",
-     r"classical/blocks/|blocks-strips-|classical/schedule/|schedule-adl-|freecell-strips-"
-     r"|ged-opt14-strips|genome-edit-distances|depots-strips-|/rovers|rovers-"
-     r"|logistics-round-2-strips|thoughtful",
-     "#157 identifier case (predicates, types, static facts)"),
     (r"accept|fd_plan",
      r"derived-predicates|classical/(psr-large|psr-middle|philosophers|optical-telegraphs)/",
      "#141 (:derived ...) does not parse"),

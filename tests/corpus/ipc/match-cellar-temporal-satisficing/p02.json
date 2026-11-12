@@ -1,13 +1,13 @@
 {
  "ground": {},
  "ground_durative": {
-  "LIGHT_MATCH": [],
-  "MEND_FUSE": []
+  "light_match": [],
+  "mend_fuse": []
  },
  "parse": {
   "durative_operators": [
-   "LIGHT_MATCH",
-   "MEND_FUSE"
+   "light_match",
+   "mend_fuse"
   ],
   "goals": [],
   "initial_numeric": {},

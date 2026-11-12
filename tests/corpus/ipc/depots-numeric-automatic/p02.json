@@ -1,10 +1,685 @@
 {
  "ground": {
-  "Drive": [],
-  "Drop": [],
-  "Lift": [],
-  "Load": [],
-  "Unload": []
+  "drive": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "depot0",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck0 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "depot0",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck0 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "depot0",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck0 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor0",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck0 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor0",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck0 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor0",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck0 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor1",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck0 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor1",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck0 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor1",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck0 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "depot0",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck1 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "depot0",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck1 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "depot0",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck1 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor0",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck1 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor0",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck1 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor0",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck1 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor1",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck1 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor1",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck1 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor1",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck1 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ]
+   }
+  ],
+  "drop": {
+   "truncated_at": 50
+  },
+  "lift": {
+   "truncated_at": 50
+  },
+  "load": {
+   "truncated_at": 50
+  },
+  "unload": {
+   "truncated_at": 50
+  }
  },
  "ground_durative": {},
  "parse": {
@@ -153,28 +828,28 @@
    "optimization": "minimize"
   },
   "objects": {
-   "crate0": "Crate",
-   "crate1": "Crate",
-   "crate2": "Crate",
-   "crate3": "Crate",
-   "depot0": "Depot",
-   "distributor0": "Distributor",
-   "distributor1": "Distributor",
-   "hoist0": "Hoist",
-   "hoist1": "Hoist",
-   "hoist2": "Hoist",
-   "pallet0": "Pallet",
-   "pallet1": "Pallet",
-   "pallet2": "Pallet",
-   "truck0": "Truck",
-   "truck1": "Truck"
+   "crate0": "crate",
+   "crate1": "crate",
+   "crate2": "crate",
+   "crate3": "crate",
+   "depot0": "depot",
+   "distributor0": "distributor",
+   "distributor1": "distributor",
+   "hoist0": "hoist",
+   "hoist1": "hoist",
+   "hoist2": "hoist",
+   "pallet0": "pallet",
+   "pallet1": "pallet",
+   "pallet2": "pallet",
+   "truck0": "truck",
+   "truck1": "truck"
   },
   "operators": [
-   "Drive",
-   "Drop",
-   "Lift",
-   "Load",
-   "Unload"
+   "drive",
+   "drop",
+   "lift",
+   "load",
+   "unload"
   ],
   "predicates": [
    "at",
@@ -201,33 +876,7 @@
   }
  },
  "validate": {
-  "issues": [
-   {
-    "check": "zero_groundings",
-    "message": "operator 'Drive' grounds to zero instances",
-    "severity": "warning"
-   },
-   {
-    "check": "zero_groundings",
-    "message": "operator 'Drop' grounds to zero instances",
-    "severity": "warning"
-   },
-   {
-    "check": "zero_groundings",
-    "message": "operator 'Lift' grounds to zero instances",
-    "severity": "warning"
-   },
-   {
-    "check": "zero_groundings",
-    "message": "operator 'Load' grounds to zero instances",
-    "severity": "warning"
-   },
-   {
-    "check": "zero_groundings",
-    "message": "operator 'Unload' grounds to zero instances",
-    "severity": "warning"
-   }
-  ],
+  "issues": [],
   "valid": true
  }
 }

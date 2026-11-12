@@ -38,8 +38,9 @@ def test_parse_summary():
     assert out["metric"] is None
 
 
-def test_ground_operator():
-    out = ground(*_files("blocksworld"), operator="pick-up")
+@pytest.mark.parametrize("name", ["pick-up", "Pick-Up"])  # any case (#157)
+def test_ground_operator(name):
+    out = ground(*_files("blocksworld"), operator=name)
     assert out["operator"] == "pick-up"
     g = next(g for g in out["groundings"] if g["parameters"] == {"?x": "a"})
     assert ["holding", "a"] in g["effect_pos"]

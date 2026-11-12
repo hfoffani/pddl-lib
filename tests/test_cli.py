@@ -62,8 +62,9 @@ def test_parse_missing_file(capsys):
 
 # --- ground --------------------------------------------------------------
 
-def test_ground_operator(capsys):
-    code, out, _ = _run(capsys, "ground", *_files("blocksworld"), "pick-up")
+@pytest.mark.parametrize("name", ["pick-up", "PICK-UP"])  # any case (#157)
+def test_ground_operator(capsys, name):
+    code, out, _ = _run(capsys, "ground", *_files("blocksworld"), name)
     assert code == 0
     assert out["operator"] == "pick-up"
     groundings = out["groundings"]

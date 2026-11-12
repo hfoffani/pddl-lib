@@ -1,10 +1,4643 @@
 {
  "ground": {
-  "Drive": [],
-  "Drop": [],
-  "Lift": [],
-  "Load": [],
-  "Unload": []
+  "drive": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "depot0",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck0 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "depot0",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck0 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "depot0",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck0 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor0",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck0 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor0",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck0 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor0",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck0 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor1",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck0 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor1",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck0 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck0",
+     "?y": "distributor1",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck0 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "depot0",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck1 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "depot0",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck1 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "depot0",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck1 depot0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor0",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck1 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor0",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck1 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor0",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck1 distributor0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor1",
+     "?z": "depot0"
+    },
+    "precondition": "(and (at truck1 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor1",
+     "?z": "distributor0"
+    },
+    "precondition": "(and (at truck1 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('fuel-cost',) 10.0)"
+    ],
+    "effect_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ],
+    "name": "drive",
+    "parameters": {
+     "?x": "truck1",
+     "?y": "distributor1",
+     "?z": "distributor1"
+    },
+    "precondition": "(and (at truck1 distributor1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ]
+    ]
+   }
+  ],
+  "drop": {
+   "truncated_at": 50
+  },
+  "lift": {
+   "truncated_at": 50
+  },
+  "load": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0')) (at hoist0 depot0) (at truck0 depot0) (lifting hoist0 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0')) (at hoist0 distributor0) (at truck0 distributor0) (lifting hoist0 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0')) (at hoist0 distributor1) (at truck0 distributor1) (lifting hoist0 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1')) (at hoist0 depot0) (at truck1 depot0) (lifting hoist0 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1')) (at hoist0 distributor0) (at truck1 distributor0) (lifting hoist0 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1')) (at hoist0 distributor1) (at truck1 distributor1) (lifting hoist0 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0')) (at hoist0 depot0) (at truck0 depot0) (lifting hoist0 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0')) (at hoist0 distributor0) (at truck0 distributor0) (lifting hoist0 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0')) (at hoist0 distributor1) (at truck0 distributor1) (lifting hoist0 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1')) (at hoist0 depot0) (at truck1 depot0) (lifting hoist0 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1')) (at hoist0 distributor0) (at truck1 distributor0) (lifting hoist0 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1')) (at hoist0 distributor1) (at truck1 distributor1) (lifting hoist0 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0')) (at hoist1 depot0) (at truck0 depot0) (lifting hoist1 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0')) (at hoist1 distributor0) (at truck0 distributor0) (lifting hoist1 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0')) (at hoist1 distributor1) (at truck0 distributor1) (lifting hoist1 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1')) (at hoist1 depot0) (at truck1 depot0) (lifting hoist1 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1')) (at hoist1 distributor0) (at truck1 distributor0) (lifting hoist1 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1')) (at hoist1 distributor1) (at truck1 distributor1) (lifting hoist1 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0')) (at hoist1 depot0) (at truck0 depot0) (lifting hoist1 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0')) (at hoist1 distributor0) (at truck0 distributor0) (lifting hoist1 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0')) (at hoist1 distributor1) (at truck0 distributor1) (lifting hoist1 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1')) (at hoist1 depot0) (at truck1 depot0) (lifting hoist1 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1')) (at hoist1 distributor0) (at truck1 distributor0) (lifting hoist1 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1')) (at hoist1 distributor1) (at truck1 distributor1) (lifting hoist1 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0')) (at hoist2 depot0) (at truck0 depot0) (lifting hoist2 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0')) (at hoist2 distributor0) (at truck0 distributor0) (lifting hoist2 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0')) (at hoist2 distributor1) (at truck0 distributor1) (lifting hoist2 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate0')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1')) (at hoist2 depot0) (at truck1 depot0) (lifting hoist2 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1')) (at hoist2 distributor0) (at truck1 distributor0) (lifting hoist2 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1')) (at hoist2 distributor1) (at truck1 distributor1) (lifting hoist2 crate0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate0')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0')) (at hoist2 depot0) (at truck0 depot0) (lifting hoist2 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0')) (at hoist2 distributor0) (at truck0 distributor0) (lifting hoist2 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0')) (at hoist2 distributor1) (at truck0 distributor1) (lifting hoist2 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck0') ('weight', 'crate1')) ('load_limit', 'truck0'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1')) (at hoist2 depot0) (at truck1 depot0) (lifting hoist2 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1')) (at hoist2 distributor0) (at truck1 distributor0) (lifting hoist2 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "effect_num": [
+     "(increase ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "name": "load",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1')) (at hoist2 distributor1) (at truck1 distributor1) (lifting hoist2 crate1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [
+     "(<= (+ ('current_load', 'truck1') ('weight', 'crate1')) ('load_limit', 'truck1'))"
+    ],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ]
+   }
+  ],
+  "unload": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist0 depot0) (at truck0 depot0) (available hoist0) (in crate0 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist0 distributor0) (at truck0 distributor0) (available hoist0) (in crate0 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist0 distributor1) (at truck0 distributor1) (available hoist0) (in crate0 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist0 depot0) (at truck1 depot0) (available hoist0) (in crate0 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist0 distributor0) (at truck1 distributor0) (available hoist0) (in crate0 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist0",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist0 distributor1) (at truck1 distributor1) (available hoist0) (in crate0 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist0 depot0) (at truck0 depot0) (available hoist0) (in crate1 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist0 distributor0) (at truck0 distributor0) (available hoist0) (in crate1 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist0 distributor1) (at truck0 distributor1) (available hoist0) (in crate1 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist0 depot0) (at truck1 depot0) (available hoist0) (in crate1 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist0 distributor0) (at truck1 distributor0) (available hoist0) (in crate1 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist0",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist0",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist0 distributor1) (at truck1 distributor1) (available hoist0) (in crate1 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist0",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist0"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist1 depot0) (at truck0 depot0) (available hoist1) (in crate0 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist1 distributor0) (at truck0 distributor0) (available hoist1) (in crate0 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist1 distributor1) (at truck0 distributor1) (available hoist1) (in crate0 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist1 depot0) (at truck1 depot0) (available hoist1) (in crate0 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist1 distributor0) (at truck1 distributor0) (available hoist1) (in crate0 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist1",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist1 distributor1) (at truck1 distributor1) (available hoist1) (in crate0 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist1 depot0) (at truck0 depot0) (available hoist1) (in crate1 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist1 distributor0) (at truck0 distributor0) (available hoist1) (in crate1 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist1 distributor1) (at truck0 distributor1) (available hoist1) (in crate1 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist1 depot0) (at truck1 depot0) (available hoist1) (in crate1 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist1 distributor0) (at truck1 distributor0) (available hoist1) (in crate1 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist1",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist1",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist1 distributor1) (at truck1 distributor1) (available hoist1) (in crate1 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist1",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist1"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist2 depot0) (at truck0 depot0) (available hoist2) (in crate0 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist2 distributor0) (at truck0 distributor0) (available hoist2) (in crate0 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist2 distributor1) (at truck0 distributor1) (available hoist2) (in crate0 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist2 depot0) (at truck1 depot0) (available hoist2) (in crate0 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist2 distributor0) (at truck1 distributor0) (available hoist2) (in crate0 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate0'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate0"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist2",
+     "?y": "crate0",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist2 distributor1) (at truck1 distributor1) (available hoist2) (in crate0 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate0",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist2 depot0) (at truck0 depot0) (available hoist2) (in crate1 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck0",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist2 distributor0) (at truck0 distributor0) (available hoist2) (in crate1 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck0') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck0"
+    },
+    "precondition": "(and (at hoist2 distributor1) (at truck0 distributor1) (available hoist2) (in crate1 truck0))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck0",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck0"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "depot0",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist2 depot0) (at truck1 depot0) (available hoist2) (in crate1 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "depot0"
+     ],
+     [
+      "at",
+      "truck1",
+      "depot0"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor0",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist2 distributor0) (at truck1 distributor0) (available hoist2) (in crate1 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor0"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor0"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ],
+    "effect_num": [
+     "(decrease ('current_load', 'truck1') ('weight', 'crate1'))"
+    ],
+    "effect_pos": [
+     [
+      "lifting",
+      "hoist2",
+      "crate1"
+     ]
+    ],
+    "name": "unload",
+    "parameters": {
+     "?p": "distributor1",
+     "?x": "hoist2",
+     "?y": "crate1",
+     "?z": "truck1"
+    },
+    "precondition": "(and (at hoist2 distributor1) (at truck1 distributor1) (available hoist2) (in crate1 truck1))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "at",
+      "hoist2",
+      "distributor1"
+     ],
+     [
+      "at",
+      "truck1",
+      "distributor1"
+     ],
+     [
+      "available",
+      "hoist2"
+     ],
+     [
+      "in",
+      "crate1",
+      "truck1"
+     ]
+    ]
+   }
+  ]
  },
  "ground_durative": {},
  "parse": {
@@ -121,26 +4754,26 @@
    "optimization": "minimize"
   },
   "objects": {
-   "crate0": "Crate",
-   "crate1": "Crate",
-   "depot0": "Depot",
-   "distributor0": "Distributor",
-   "distributor1": "Distributor",
-   "hoist0": "Hoist",
-   "hoist1": "Hoist",
-   "hoist2": "Hoist",
-   "pallet0": "Pallet",
-   "pallet1": "Pallet",
-   "pallet2": "Pallet",
-   "truck0": "Truck",
-   "truck1": "Truck"
+   "crate0": "crate",
+   "crate1": "crate",
+   "depot0": "depot",
+   "distributor0": "distributor",
+   "distributor1": "distributor",
+   "hoist0": "hoist",
+   "hoist1": "hoist",
+   "hoist2": "hoist",
+   "pallet0": "pallet",
+   "pallet1": "pallet",
+   "pallet2": "pallet",
+   "truck0": "truck",
+   "truck1": "truck"
   },
   "operators": [
-   "Drive",
-   "Drop",
-   "Lift",
-   "Load",
-   "Unload"
+   "drive",
+   "drop",
+   "lift",
+   "load",
+   "unload"
   ],
   "predicates": [
    "at",
@@ -167,33 +4800,7 @@
   }
  },
  "validate": {
-  "issues": [
-   {
-    "check": "zero_groundings",
-    "message": "operator 'Drive' grounds to zero instances",
-    "severity": "warning"
-   },
-   {
-    "check": "zero_groundings",
-    "message": "operator 'Drop' grounds to zero instances",
-    "severity": "warning"
-   },
-   {
-    "check": "zero_groundings",
-    "message": "operator 'Lift' grounds to zero instances",
-    "severity": "warning"
-   },
-   {
-    "check": "zero_groundings",
-    "message": "operator 'Load' grounds to zero instances",
-    "severity": "warning"
-   },
-   {
-    "check": "zero_groundings",
-    "message": "operator 'Unload' grounds to zero instances",
-    "severity": "warning"
-   }
-  ],
+  "issues": [],
   "valid": true
  }
 }

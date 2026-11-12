@@ -45,7 +45,7 @@ from typing import (
     cast,
 )
 
-from pddlpy._vendor.antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
+from pddlpy._vendor.antlr4 import CommonTokenStream, InputStream, ParseTreeWalker
 from pddlpy._vendor.antlr4.error.ErrorListener import ErrorListener
 
 from .binding import CartesianBinder, StaticPrunedBinder, VariableBinder
@@ -1337,6 +1337,14 @@ class _ErrorCounter(ErrorListener):
         self.count += 1
 
 
+def source_stream(path: str) -> InputStream:
+    """The lexer input for the PDDL file ``path``: read as UTF-8 (#103) and
+    lowercased, since PDDL identifiers are case-insensitive (#157). Names
+    therefore come out lowercase, as Fast Downward and VAL print them."""
+    with open(path, "rb") as f:  # binary: keep line endings as written
+        return InputStream(f.read().decode("utf-8").lower())
+
+
 class DomainProblem():
 
     def __init__(self, domainfile: str, problemfile: str,
@@ -1351,9 +1359,7 @@ class DomainProblem():
                   the .binder attribute later, to override grounding.
         """
         # domain
-        # ANTLR's FileStream defaults to ASCII; PDDL files may carry UTF-8
-        # (typically in comments) -- see #103.
-        inp = FileStream(domainfile, encoding="utf-8")
+        inp = source_stream(domainfile)
         lexer = pddlLexer(inp)
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)
@@ -1367,7 +1373,7 @@ class DomainProblem():
         walker = ParseTreeWalker()
         walker.walk(self.domain, tree)
         # problem
-        inp = FileStream(problemfile, encoding="utf-8")
+        inp = source_stream(problemfile)
         lexer = pddlLexer(inp)
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)
@@ -1431,8 +1437,9 @@ class DomainProblem():
         is a grounded instance.
 
         returns -- An iterator of Operator instances.
+        Names match in any case (#157).
         """
-        op = self.domain.operators[op_name]
+        op = self.domain.operators[op_name.lower()]
         for st in self.binder.bind( self, op ):
             yield self._ground_operator( op, st )
 
@@ -1440,8 +1447,10 @@ class DomainProblem():
         """Returns the instance of action ``op_name`` (instantaneous or
         durative) under ``binding``, a {variable: object} dict, whether or not
         a binder would generate it. Plan validation uses it to ground a plan
-        step as written.
+        step as written. Names match in any case (#157).
         """
+        op_name = op_name.lower()
+        binding = {k.lower(): v.lower() for k, v in binding.items()}
         if op_name in self.domain.operators:
             return self._ground_operator( self.domain.operators[op_name], binding )
         return self.domain.durative_operators[op_name].ground( binding )
@@ -1476,8 +1485,9 @@ class DomainProblem():
 
         Durative actions always use the cartesian binder: their conditions are
         time-tagged and static-precondition pruning does not apply.
+        Names match in any case (#157).
         """
-        op = self.domain.durative_operators[op_name]
+        op = self.domain.durative_operators[op_name.lower()]
         for st in CartesianBinder().bind( self, op ):
             yield op.ground( st )
 
@@ -1503,8 +1513,10 @@ class DomainProblem():
     def candidate_objects(self, t) -> List[str]:
         """Returns the objects that can bind a parameter of type ``t``: any
         object whose type is ``t`` or a (transitive) subtype of it (#22).
-        Used by the variable binders (#12).
+        Used by the variable binders (#12). ``t`` matches in any case (#157);
+        ``None`` means untyped.
         """
+        t = t.lower() if t else t
         return [ k for k,v in self.worldobjects().items() if self._is_subtype(v, t) ]
 
     def static_predicates(self) -> set:
@@ -1537,8 +1549,10 @@ class DomainProblem():
     def subtypes_of(self, t: str) -> set:
         """Returns the set of all transitive subtypes of ``t`` (#22), excluding
         ``t`` itself. E.g. for the logistics hierarchy ``subtypes_of('physobj')``
-        is ``{'package', 'vehicle', 'truck', 'airplane'}``.
+        is ``{'package', 'vehicle', 'truck', 'airplane'}``. ``t`` matches in
+        any case (#157).
         """
+        t = t.lower()
         hierarchy = self.domain.types
         result = set()
         changed = True

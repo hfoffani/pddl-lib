@@ -66,13 +66,9 @@ ORACLE = os.path.join(os.path.dirname(__file__), "corpus", "oracle")
 # strict xfails, so a fix shows up as XPASS. Checks: accept, fd_plan,
 # pddlpy_plan, solvable, verdict, pddlpy_verdict.
 DERIVED = "(:derived ...) does not parse (#141)"
-CASE = "identifiers are case-sensitive: (CLEAR c) vs (clear ?x) (#157)"
 KNOWN = {
     ("accept", "psr-middle-derived-predicates-adl"): DERIVED,
     ("fd_plan", "psr-middle-derived-predicates-adl"): DERIVED,
-    ("fd_plan", "blocks-strips-typed"): CASE,
-    ("verdict", "blocks-strips-typed"): CASE,
-    ("solvable", "blocks-strips-typed"): CASE,
 }
 
 

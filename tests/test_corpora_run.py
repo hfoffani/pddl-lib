@@ -87,9 +87,10 @@ def test_report(tmp_path, monkeypatch, capsys):
     assert "no viable alternative" not in capsys.readouterr().err
     out = tmp_path / "results"
     summary = json.loads((out / "summary.json").read_text())
-    # blocks-strips-typed reports an undeclared predicate; pipesworld has
-    # syntax errors (its (:constraints ...) no longer crashes the loader, #140)
-    assert summary == {"classical": {"issues": 1}, "potassco": {"issues": 2}}
+    # blocks-strips-typed is valid once (CLEAR c) matches (clear ?x) (#157);
+    # pipesworld has syntax errors (its (:constraints ...) no longer crashes
+    # the loader, #140)
+    assert summary == {"classical": {"valid": 1}, "potassco": {"issues": 1, "valid": 1}}
     snap = json.loads(
         (out / "potassco/ipc-2006/domains/pipes/instances/instance-1.json").read_text()
     )
