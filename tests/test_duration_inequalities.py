@@ -19,6 +19,11 @@ CONSTRAINTS = [
     # review on #196: an equality next to an inequality is not a duration
     "(and (= ?duration 2) (<= ?duration 0))",
     "(and (<= ?duration 0) (= ?duration 2))",
+    # second review: timed leaves, in both orders
+    "(and (at start (= ?duration 2)) (<= ?duration 0))",
+    "(and (<= ?duration 0) (at start (= ?duration 2)))",
+    "(and (= ?duration 2) (at end (<= ?duration 0)))",
+    "(at start (= ?duration 2))",
 ]
 PROBLEM = "(define (problem p) (:domain t) (:objects a) (:init (p a)) (:goal (q a)))"
 
