@@ -1,7 +1,7 @@
 """#141 stopgap: the parser recovers from a syntax error by skipping what it
-cannot read, e.g. a standard (:derived (r ?x) ...) rule. Solving the rest
-answered for a different domain ("no plan exists"), so solve refuses any
-pair with syntax errors, as plan validation already did."""
+cannot read, e.g. (:derived ...) before it parsed, or a requirement key the
+grammar doesn't know. Solving the rest answers for a different domain, so
+solve refuses any pair with syntax errors, as plan validation already did."""
 import os
 
 import pytest
@@ -11,11 +11,10 @@ from pddlpy.cli import main
 from pddlpy.diagnostics import diagnose
 from pddlpy.planning import UnsupportedRequirementsError, get
 
-DOMAIN = ("(define (domain t) (:requirements :strips :derived-predicates)"
-          " (:predicates (p ?x) (q ?x) (r ?x))"
-          " (:derived (r ?x) (q ?x))"
+DOMAIN = ("(define (domain t) (:requirements :strips :object-fluents)"
+          " (:predicates (p ?x) (q ?x))"
           " (:action go :parameters (?x) :precondition (p ?x) :effect (q ?x)))")
-PROBLEM = "(define (problem p) (:domain t) (:objects a) (:init (p a)) (:goal (r a)))"
+PROBLEM = "(define (problem p) (:domain t) (:objects a) (:init (p a)) (:goal (q a)))"
 
 
 @pytest.fixture
@@ -46,7 +45,7 @@ def test_validate_reports_syntax_only(pair):
 IPC = os.path.join(os.path.dirname(__file__), "corpus", "ipc")
 
 
-@pytest.mark.parametrize("name", ["psr-middle-derived-predicates-adl", "tpp-preferences-simple"])
+@pytest.mark.parametrize("name", ["openstacks-net-benefit-optimal-adl", "tpp-preferences-simple"])
 def test_recovered_tree_loads_partially(name):
     """A tree ANTLR recovered from syntax errors can lack children the
     listener expects; the load stops there instead of crashing."""

@@ -40,6 +40,8 @@ def test_non_conjunctive_goal_refused(tmp_path, goal, planner):
     if planner == "bfs":
         issues = diagnose(d, p)["issues"]
         assert ("error", "unsupported") in {(i["severity"], i["check"]) for i in issues}
+        # quantified variables are not reported as unknown objects
+        assert "unknown_object" not in {i["check"] for i in issues}
 
 
 @pytest.mark.parametrize("goal", ["(q a)", "(and (q a))", "(and)"])

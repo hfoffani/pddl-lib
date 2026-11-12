@@ -41,6 +41,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **`(:derived (p ?x) GD)` was a syntax error** (#141): the grammar expected
+  a variable list where PDDL 2.2 has an atom. It now parses; the rule is
+  not modeled yet, so `validate` reports it as `unsupported` and `solve` /
+  `validate-plan` refuse it. `validate` no longer reports a quantified
+  goal's `?variable` as an unknown object.
 - **Duration inequalities became a fixed duration** (#143):
   `:duration-inequalities` was a syntax error, and without it
   `(and (>= ?duration 1) (<= ?duration 3))` set the duration to the last
