@@ -41,6 +41,12 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **Duration inequalities became a fixed duration** (#143):
+  `:duration-inequalities` was a syntax error, and without it
+  `(and (>= ?duration 1) (<= ?duration 3))` set the duration to the last
+  bound (3). The key now parses, only `(= ?duration N)` sets a duration,
+  and inequality durations are reported by `validate` and refused by
+  `temporal` and `validate-plan`.
 - **Names spelled like keywords were syntax errors** (#163): an object,
   constant, type or argument named `or`, `and`, `start`, `domain`, ... (in
   any case) broke the parse and dropped the rest of `:objects`, e.g. the

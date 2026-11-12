@@ -997,9 +997,12 @@ class DomainListener(pddlListener):
         self.durative_operators[action.operator_name] = action
 
     def enterSimpleDurationConstraint(self, ctx):
-        # Capture (= ?duration N) / (<= ?duration N) etc. when N is a literal.
+        # Capture (= ?duration N) when N is a literal. An inequality bound is
+        # not a duration (#143): the action is then not simple, and temporal
+        # and plan validation refuse it.
         durval = ctx.durValue()
-        if durval is not None and durval.NUMBER() is not None:
+        if (durval is not None and durval.NUMBER() is not None
+                and ctx.durOp().getText() == '='):
             da = self.scopes[-1]
             if isinstance(da, DurativeAction):
                 da.duration = float(durval.NUMBER().getText())

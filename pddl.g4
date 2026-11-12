@@ -492,6 +492,7 @@ REQUIRE_KEY
     | ':adl'
     | ':durative-actions'
     | ':derived-predicates'
+    | ':duration-inequalities'
     | ':timed-initial-literals'
     | ':preferences'
     | ':constraints'
