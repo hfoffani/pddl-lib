@@ -1450,6 +1450,7 @@ class DomainProblem():
         step as written. Names match in any case (#157).
         """
         op_name = op_name.lower()
+        binding = {k.lower(): v.lower() for k, v in binding.items()}
         if op_name in self.domain.operators:
             return self._ground_operator( self.domain.operators[op_name], binding )
         return self.domain.durative_operators[op_name].ground( binding )
@@ -1512,8 +1513,10 @@ class DomainProblem():
     def candidate_objects(self, t) -> List[str]:
         """Returns the objects that can bind a parameter of type ``t``: any
         object whose type is ``t`` or a (transitive) subtype of it (#22).
-        Used by the variable binders (#12).
+        Used by the variable binders (#12). ``t`` matches in any case (#157);
+        ``None`` means untyped.
         """
+        t = t.lower() if t else t
         return [ k for k,v in self.worldobjects().items() if self._is_subtype(v, t) ]
 
     def static_predicates(self) -> set:
@@ -1546,8 +1549,10 @@ class DomainProblem():
     def subtypes_of(self, t: str) -> set:
         """Returns the set of all transitive subtypes of ``t`` (#22), excluding
         ``t`` itself. E.g. for the logistics hierarchy ``subtypes_of('physobj')``
-        is ``{'package', 'vehicle', 'truck', 'airplane'}``.
+        is ``{'package', 'vehicle', 'truck', 'airplane'}``. ``t`` matches in
+        any case (#157).
         """
+        t = t.lower()
         hierarchy = self.domain.types
         result = set()
         changed = True

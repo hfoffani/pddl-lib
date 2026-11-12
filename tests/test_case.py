@@ -46,4 +46,17 @@ def test_grounding_entry_points_match_in_any_case(tmp_path):
     """Review on #190: callers may spell action names as the domain does."""
     dp = DomainProblem(*_pair(tmp_path))
     assert len(list(dp.ground_operator("Unstack"))) == 2
-    assert dp.ground("UNSTACK", {"?x": "a", "?y": "b"}).operator_name == "unstack"
+    g = dp.ground("UNSTACK", {"?X": "A", "?y": "B"})  # binding as written too
+    assert g.operator_name == "unstack" and ("on", "a", "b") in g.precondition_pos
+    assert dp.candidate_objects("BLOCK") == dp.candidate_objects("block") == ["a", "b"]
+    assert dp.candidate_objects(None) == []  # every object is typed
+
+
+def test_type_hierarchy_queries_match_in_any_case(tmp_path):
+    d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
+    d.write_text("(define (domain t) (:requirements :typing)"
+                 " (:types Vehicle - object Truck - Vehicle))")
+    p.write_text("(define (problem p) (:domain t) (:objects A - Truck) (:init) (:goal (and)))")
+    dp = DomainProblem(str(d), str(p))
+    assert dp.subtypes_of("Vehicle") == {"truck"}
+    assert dp.candidate_objects("Vehicle") == ["a"]

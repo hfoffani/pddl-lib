@@ -45,7 +45,8 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   match `(clear ?x)`, nor `Hoist` the type `hoist`, so IPC pairs such as
   blocks-strips-typed and depots were reported unsolvable or ungroundable.
   PDDL names are case-insensitive; they now match in any case, also where
-  callers pass them: `ground` (CLI, MCP, `dp.ground_operator`) and plan
+  callers pass them: `ground` (CLI, MCP, `dp.ground_operator`, `dp.ground`
+  and its binding), `dp.candidate_objects` / `dp.subtypes_of`, and plan
   steps, including `args` variables in JSON plans.
 - **`(not (p))` in `:init` was read as `(p)`** (#186): the negation was
   ignored, so the atom started true. It is now kept out of the initial
