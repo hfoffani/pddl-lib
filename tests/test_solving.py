@@ -18,7 +18,9 @@ from pddlpy.planning import (
     plan_steps,
     register,
     solve,
+    solving,
 )
+from pddlpy.planning.validation import PlanValidationError
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
 
@@ -78,16 +80,14 @@ def test_limits_reset_per_search():
     assert planner.solve(dp) is not None and planner.solve(dp) is not None
 
 
-def test_unvalidated_when_the_validator_refuses(tmp_path):
-    (tmp_path / "d.pddl").write_text("(define (domain d) (:predicates (p) (q))"
-                                     " (:action a :parameters () :effect (and (p) (q))))")
-    (tmp_path / "p.pddl").write_text("(define (problem p) (:domain d) (:init)"
-                                     " (:goal (or (p) (q))))")
-    dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
-    result = solve(dp, "bfs")
+def test_unvalidated_when_the_validator_refuses(monkeypatch):
+    def refuse(dp, steps):
+        raise PlanValidationError("cannot judge this")
+    monkeypatch.setattr(solving, "validate_plan", refuse)
+    result = solve(_dp("gripper"), "bfs")
     assert result.status == SOLVED
     assert result.validated is False
-    assert result.message.startswith("plan not validated:") and "#138" in result.message
+    assert result.message == "plan not validated: cannot judge this"
 
 
 class _Liar(Planner):

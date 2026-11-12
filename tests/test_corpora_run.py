@@ -12,7 +12,7 @@ import pytest
 from golden import IPC
 
 BLOCKS = os.path.join(IPC, "blocks-strips-typed")
-CRASH = os.path.join(IPC, "pipesworld-metric-time-constraints")
+PIPES = os.path.join(IPC, "pipesworld-metric-time-constraints")
 
 
 def fake_corpora(root):
@@ -24,8 +24,8 @@ def fake_corpora(root):
     per = root / "potassco" / "ipc-2006" / "domains" / "pipes"
     (per / "instances").mkdir(parents=True)
     (per / "domains").mkdir()
-    shutil.copy(os.path.join(CRASH, "domain.pddl"), per / "domains" / "domain-1.pddl")
-    shutil.copy(os.path.join(CRASH, "p01.pddl"), per / "instances" / "instance-1.pddl")
+    shutil.copy(os.path.join(PIPES, "domain.pddl"), per / "domains" / "domain-1.pddl")
+    shutil.copy(os.path.join(PIPES, "p01.pddl"), per / "instances" / "instance-1.pddl")
     # classical: pairs listed in api.py
     cl = root / "classical" / "classical" / "bw"
     cl.mkdir(parents=True)
@@ -87,14 +87,28 @@ def test_report(tmp_path, monkeypatch, capsys):
     assert "no viable alternative" not in capsys.readouterr().err
     out = tmp_path / "results"
     summary = json.loads((out / "summary.json").read_text())
-    # blocks-strips-typed reports an undeclared predicate; pipesworld crashes (#140)
-    assert summary == {"classical": {"issues": 1}, "potassco": {"crash": 1, "issues": 1}}
+    # blocks-strips-typed reports an undeclared predicate; pipesworld has
+    # syntax errors (its (:constraints ...) no longer crashes the loader, #140)
+    assert summary == {"classical": {"issues": 1}, "potassco": {"issues": 2}}
     snap = json.loads(
         (out / "potassco/ipc-2006/domains/pipes/instances/instance-1.json").read_text()
     )
-    assert snap["error"]["type"] == "IndexError"
+    assert "error" not in snap
     assert any(i["check"] == "syntax" for i in snap["validate"]["issues"])
     assert snap["domain"] == "potassco/ipc-2006/domains/pipes/domains/domain-1.pddl"
+
+
+def test_report_crash(tmp_path, monkeypatch):
+    """A pair the loader raises on is reported as a crash, with the error."""
+    bad = tmp_path / "potassco" / "ipc-x" / "domains" / "bad"
+    (bad / "instances").mkdir(parents=True)
+    (bad / "domain.pddl").write_bytes(b"(define (domain \xff))")  # not UTF-8 (#103)
+    shutil.copy(os.path.join(BLOCKS, "p01.pddl"), bad / "instances" / "instance-1.pddl")
+    assert run(monkeypatch, tmp_path) == 0
+    out = tmp_path / "results"
+    assert json.loads((out / "summary.json").read_text()) == {"potassco": {"crash": 1}}
+    snap = json.loads((out / "potassco/ipc-x/domains/bad/instances/instance-1.json").read_text())
+    assert snap["error"]["type"] == "UnicodeDecodeError"
 
 
 def slow(*args):

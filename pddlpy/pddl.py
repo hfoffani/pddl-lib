@@ -674,6 +674,11 @@ def _is_simple_conjunction(cond: Condition) -> bool:
     return False
 
 
+def _is_til(initel: Any) -> bool:
+    """True for a timed initial literal, ``(at NUMBER literal)`` (#142)."""
+    return initel.nameLiteral() is not None and initel.NUMBER() is not None
+
+
 def _positive_conjunction(cond: Condition) -> bool:
     """True if ``cond`` is a positive atom or a conjunction of them."""
     if isinstance(cond, And):
@@ -704,6 +709,8 @@ def _simple_dagd(gd: Any) -> bool:
 def _simple_daeffect(de: Any) -> bool:
     """True if a daEffect context is a conjunction of time-tagged add /
     delete effects (no numeric, when or forall)."""
+    if de.daGD() is not None:
+        return False  # (when <daGD> <timedEffect>): its child is timed too
     te = de.timedEffect()
     if te is not None:
         ce = te.cEffect()
@@ -939,6 +946,7 @@ class DomainListener(pddlListener):
         self.durative_operators = {}
         self.scopes = []
         self.negativescopes = []
+        self.constraints = False  # a (:constraints ...) block was read (#140)
         self.requirements = set()
         self.predicates = set()  # declared predicate names (#12)
         self.functions = {}
@@ -1076,6 +1084,17 @@ class DomainListener(pddlListener):
         else:
             scope.addnegatom(Atom(pred))
 
+    def enterConstraints(self, ctx):
+        # (:constraints ...) is not modeled; walk it in a throwaway scope so
+        # its atoms land nowhere, and record that it was there (#140).
+        self.constraints = True
+        self.scopes.append(Scope())
+        self.negativescopes.append(False)
+
+    def exitConstraints(self, ctx):
+        self.negativescopes.pop()
+        self.scopes.pop()
+
     def enterPrecondition(self, ctx):
         self.scopes.append(Scope())
 
@@ -1201,6 +1220,21 @@ class ProblemListener(pddlListener):
         # False when the goal is more than a conjunction of positive atoms:
         # ``goals`` then misreads it (#138).
         self.simple_goal = True
+        self.constraints = False  # a (:constraints ...) block was read (#140)
+        # Timed initial literals, (at N lit) in :init, as (time, Atom,
+        # positive). Kept out of ``initialstate``: they are not true at 0 (#142).
+        self.timed_literals = []
+        # (not (p ...)) in :init, untimed: false anyway under the closed-world
+        # assumption, so kept out of ``initialstate`` (#186).
+        self.negative_init = []
+
+    def enterProbConstraints(self, ctx):
+        # Not modeled: walk it in a throwaway scope (#140).
+        self.constraints = True
+        self.scopes.append(Scope())
+
+    def exitProbConstraints(self, ctx):
+        self.scopes.pop()
 
     def enterMetricSpec(self, ctx):
         # Capture the optimization metric, e.g. ('minimize', '(total-cost)').
@@ -1218,6 +1252,22 @@ class ProblemListener(pddlListener):
         if ctx.fHead() is not None and ctx.NUMBER() is not None:
             head = _parse_fhead(ctx.fHead())
             self.init_numeric[head] = float(ctx.NUMBER().getText())
+        elif _is_til(ctx):
+            self.scopes.append(Scope())  # its atom must not reach the init scope
+
+    def exitInitEl(self, ctx):
+        if _is_til(ctx):
+            atom = self.scopes.pop().atoms[0]
+            positive = ctx.nameLiteral().getChildCount() == 1  # no (not ...)
+            self.timed_literals.append((float(ctx.NUMBER().getText()), atom, positive))
+
+    def enterNameLiteral(self, ctx):
+        if ctx.getChildCount() > 1 and not _is_til(ctx.parentCtx):
+            self.scopes.append(Scope())  # untimed (not ...): not an init atom
+
+    def exitNameLiteral(self, ctx):
+        if ctx.getChildCount() > 1 and not _is_til(ctx.parentCtx):
+            self.negative_init.append(self.scopes.pop().atoms[0])
 
     def enterGoal(self, ctx):
         self.scopes.append(Scope())

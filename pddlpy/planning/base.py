@@ -93,6 +93,24 @@ def validate_requirements(domainproblem: "DomainProblem") -> None:
             )
 
 
+def check_modeled(domainproblem: "DomainProblem") -> None:
+    """Refuse input the object model reads but drops or misreads, so nothing
+    is solved or judged as if it were absent: goals other than a conjunction
+    of positive atoms (#138), ``(:constraints ...)`` (#140) and timed
+    initial literals (#142), even when their requirement is not declared."""
+    if not domainproblem.problem.simple_goal:
+        raise UnsupportedRequirementsError(
+            "only goals that are a conjunction of positive atoms are supported "
+            "yet; not, or, imply, exists, forall and numeric goals are not (#138)")
+    if domainproblem.problem.timed_literals:
+        raise UnsupportedRequirementsError(
+            "timed initial literals, (at N ...) in :init, are not supported "
+            "yet (#142)")
+    if domainproblem.domain.constraints or domainproblem.problem.constraints:
+        raise UnsupportedRequirementsError(
+            "(:constraints ...) is not supported yet (#140)")
+
+
 class Planner(ABC):
     """Abstract solver. Subclasses declare ``capabilities`` and implement
     ``solve``.
@@ -143,6 +161,7 @@ class Planner(ABC):
     def prepare(self, domainproblem: "DomainProblem") -> GroundedTask:
         """Run #9 + capability checks, then build the GroundedTask."""
         validate_requirements(domainproblem)
+        check_modeled(domainproblem)
         self.check_capabilities(domainproblem)
         return GroundedTask(domainproblem)
 

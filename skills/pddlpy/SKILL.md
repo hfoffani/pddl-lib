@@ -150,10 +150,12 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
 - **Type hierarchies** are supported: a parameter typed with a supertype
   binds objects of any transitive subtype (`dp.types()` / `dp.subtypes_of(t)`
   expose the hierarchy). `(either ...)` union types parse but bind no objects.
-- **Goals** must be a conjunction of positive atoms. `not`, `or`, `exists`,
-  `forall` and numeric comparisons in `(:goal ...)` are misread without an
-  error (e.g. `(not (p))` is read as `(p)`), so plans for such goals are wrong
-  ([#138](https://github.com/hfoffani/pddl-lib/issues/138)). Not supported at all: `:derived-predicates`, `:constraints`,
+- **Goals** must be a conjunction of positive atoms. `not`, `or`, `imply`,
+  `exists`, `forall` and numeric comparisons in `(:goal ...)` are refused:
+  `solve` / `validate-plan` exit 2, and `validate` reports an `unsupported`
+  error ([#138](https://github.com/hfoffani/pddl-lib/issues/138)). Rewrite
+  such goals as a positive conjunction, e.g. add a `(done)` predicate set by
+  a final action. Not supported at all: `:derived-predicates`, `:constraints`,
   `:preferences` in goals, timed initial literals, duration inequalities,
   `:object-fluents`. `validate-plan` / `simulate` refuse (exit 2) what
   the model cannot represent instead of guessing: syntax errors, goals that

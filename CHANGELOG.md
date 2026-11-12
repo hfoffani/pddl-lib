@@ -37,6 +37,34 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   tests connect over stdio at each version.
 
 ### Fixed
+- **`(not (p))` in `:init` was read as `(p)`** (#186): the negation was
+  ignored, so the atom started true. It is now kept out of the initial
+  state (closed world: it is false anyway) and stored in
+  `dp.problem.negative_init`. `validate` warns that it is ignored
+  (`negative_init`), or reports an error when the atom is also asserted.
+- **Timed initial literals were true at time 0** (#142): `(at N lit)` in
+  `:init` went into `initialstate()`, so a domain that did not declare
+  `:timed-initial-literals` was solved as if the literal held from the
+  start. TILs are now kept out of the initial state, stored as
+  `dp.problem.timed_literals` (`(time, atom, positive)`), and refused by
+  `solve` / `validate-plan` and reported by `validate`.
+- **Non-conjunctive goals were silently misread** (#138): `(not (p))` was
+  read as `(p)`, `or` as `and`, numeric goals were dropped, so `solve` could
+  return wrong plans or an empty plan as `solved`. Goals other than a
+  conjunction of positive atoms are now refused by `solve` (exit `2`) and
+  reported by `validate` as an `unsupported` error. Supporting them is on
+  the roadmap.
+- **`(:constraints ...)` crashed the loader** (#140): any constraints block,
+  in the domain or the problem, raised `IndexError`, so `validate` crashed
+  too. The block now loads; it is not modeled, so `solve` and
+  `validate-plan` refuse it (exit `2`) and `validate` reports an
+  `unsupported` error. New `pddlpy.planning.check_modeled()`. Declaring
+  `:constraints` in `:requirements` is still a syntax error.
+- **temporal planner ignored numeric parts of durative actions** (#139): it
+  scheduled durative actions as if their numeric conditions and effects (and
+  conditional or quantified parts) were absent, returning invalid plans. It
+  now refuses such actions with `UnsupportedRequirementsError` (CLI exit `2`).
+  Instantaneous actions keep full numeric support.
 - **An empty `Plan` was falsy** (#180): `Plan` had `__len__` but no
   `__bool__`, so `if plan:` read the zero-step plan (goal already true in
   `:init`) as "no solution". A `Plan` is now always truthy; planners still

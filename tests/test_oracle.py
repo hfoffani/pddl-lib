@@ -67,15 +67,12 @@ ORACLE = os.path.join(os.path.dirname(__file__), "corpus", "oracle")
 # pddlpy_plan, solvable, verdict, pddlpy_verdict.
 DERIVED = "(:derived ...) does not parse (#141)"
 CASE = "identifiers are case-sensitive: (CLEAR c) vs (clear ?x) (#157)"
-GOALS = "forall goal is misread (#138)"
 KNOWN = {
     ("accept", "psr-middle-derived-predicates-adl"): DERIVED,
     ("fd_plan", "psr-middle-derived-predicates-adl"): DERIVED,
     ("fd_plan", "blocks-strips-typed"): CASE,
     ("verdict", "blocks-strips-typed"): CASE,
     ("solvable", "blocks-strips-typed"): CASE,
-    ("fd_plan", "elevator-adl-full-typed"): GOALS,
-    ("solvable", "elevator-adl-full-typed"): GOALS,
 }
 
 

@@ -10,6 +10,7 @@ from .base import (
     PlannerError,
     SearchLimitError,
     UnsupportedRequirementsError,
+    check_modeled,
     validate_requirements,
 )
 from .costs import TOTAL_COST, action_cost, plan_cost
@@ -66,6 +67,7 @@ __all__ = [
     "Planner",
     "PlannerError",
     "UnsupportedRequirementsError",
+    "check_modeled",
     "validate_requirements",
     "registry",
     "register",

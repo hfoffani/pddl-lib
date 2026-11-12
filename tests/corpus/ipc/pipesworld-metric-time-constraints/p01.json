@@ -1,7 +1,274 @@
 {
- "error": {
-  "message": "list index out of range",
-  "type": "IndexError"
+ "ground": {},
+ "ground_durative": {},
+ "parse": {
+  "durative_operators": [],
+  "goals": [
+   [
+    "on",
+    "B0",
+    "A3"
+   ],
+   [
+    "on",
+    "B1",
+    "A1"
+   ],
+   [
+    "on",
+    "B6",
+    "A2"
+   ]
+  ],
+  "initial_numeric": {
+   "speed S12": 1.0,
+   "speed S13": 1.0
+  },
+  "initial_state": [
+   [
+    "connect",
+    "A1",
+    "A2",
+    "S12"
+   ],
+   [
+    "connect",
+    "A1",
+    "A3",
+    "S13"
+   ],
+   [
+    "first",
+    "B2",
+    "S13"
+   ],
+   [
+    "first",
+    "B5",
+    "S12"
+   ],
+   [
+    "is-product",
+    "B0",
+    "rat-a"
+   ],
+   [
+    "is-product",
+    "B1",
+    "gasoleo"
+   ],
+   [
+    "is-product",
+    "B2",
+    "rat-a"
+   ],
+   [
+    "is-product",
+    "B3",
+    "oca1"
+   ],
+   [
+    "is-product",
+    "B4",
+    "gasoleo"
+   ],
+   [
+    "is-product",
+    "B5",
+    "gasoleo"
+   ],
+   [
+    "is-product",
+    "B6",
+    "lco"
+   ],
+   [
+    "is-product",
+    "B7",
+    "oca1"
+   ],
+   [
+    "last",
+    "B2",
+    "S13"
+   ],
+   [
+    "last",
+    "B5",
+    "S12"
+   ],
+   [
+    "may-interface",
+    "gasoleo",
+    "gasoleo"
+   ],
+   [
+    "may-interface",
+    "gasoleo",
+    "lco"
+   ],
+   [
+    "may-interface",
+    "gasoleo",
+    "oc1b"
+   ],
+   [
+    "may-interface",
+    "gasoleo",
+    "oca1"
+   ],
+   [
+    "may-interface",
+    "gasoleo",
+    "rat-a"
+   ],
+   [
+    "may-interface",
+    "lco",
+    "gasoleo"
+   ],
+   [
+    "may-interface",
+    "lco",
+    "lco"
+   ],
+   [
+    "may-interface",
+    "lco",
+    "oc1b"
+   ],
+   [
+    "may-interface",
+    "lco",
+    "oca1"
+   ],
+   [
+    "may-interface",
+    "lco",
+    "rat-a"
+   ],
+   [
+    "may-interface",
+    "oc1b",
+    "gasoleo"
+   ],
+   [
+    "may-interface",
+    "oc1b",
+    "lco"
+   ],
+   [
+    "may-interface",
+    "oc1b",
+    "oc1b"
+   ],
+   [
+    "may-interface",
+    "oc1b",
+    "oca1"
+   ],
+   [
+    "may-interface",
+    "oca1",
+    "gasoleo"
+   ],
+   [
+    "may-interface",
+    "oca1",
+    "lco"
+   ],
+   [
+    "may-interface",
+    "oca1",
+    "oc1b"
+   ],
+   [
+    "may-interface",
+    "oca1",
+    "oca1"
+   ],
+   [
+    "may-interface",
+    "rat-a",
+    "gasoleo"
+   ],
+   [
+    "may-interface",
+    "rat-a",
+    "lco"
+   ],
+   [
+    "may-interface",
+    "rat-a",
+    "rat-a"
+   ],
+   [
+    "normal",
+    "S12"
+   ],
+   [
+    "normal",
+    "S13"
+   ],
+   [
+    "on",
+    "B0",
+    "A1"
+   ],
+   [
+    "on",
+    "B1",
+    "A3"
+   ],
+   [
+    "on",
+    "B3",
+    "A1"
+   ],
+   [
+    "on",
+    "B4",
+    "A2"
+   ],
+   [
+    "on",
+    "B6",
+    "A3"
+   ],
+   [
+    "on",
+    "B7",
+    "A1"
+   ],
+   [
+    "unitary",
+    "S12"
+   ],
+   [
+    "unitary",
+    "S13"
+   ]
+  ],
+  "metric": null,
+  "objects": {
+   "A1": "area",
+   "A2": "area",
+   "A3": "area",
+   "B0": "batch-atom",
+   "B1": "batch-atom",
+   "B2": "batch-atom",
+   "B3": "batch-atom",
+   "B4": "batch-atom",
+   "B5": "batch-atom",
+   "B6": "batch-atom",
+   "B7": "batch-atom",
+   "S12": "pipe",
+   "S13": "pipe"
+  },
+  "operators": [],
+  "predicates": [],
+  "requirements": [],
+  "types": {}
  },
  "validate": {
   "issues": [

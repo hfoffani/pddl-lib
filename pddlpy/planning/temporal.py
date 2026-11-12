@@ -40,7 +40,7 @@ from typing import (
     Tuple,
 )
 
-from .base import Planner, validate_requirements
+from .base import Planner, UnsupportedRequirementsError, check_modeled, validate_requirements
 from .durative import validate_durative_actions
 from .registry import register
 from .search import STRIPS_CAPABILITIES
@@ -199,6 +199,18 @@ def _schedule(came_from: _CameFrom, state: State) -> TemporalPlan:
     return TemporalPlan(steps)
 
 
+def _refuse_unmodeled(domainproblem: "DomainProblem") -> None:
+    """Refuse durative actions with parts the model drops (numeric,
+    conditional, quantified): searching without them returns wrong plans
+    (#139)."""
+    for name, action in sorted(domainproblem.domain.durative_operators.items()):
+        if not action.simple:
+            raise UnsupportedRequirementsError(
+                "temporal planner supports only durative actions with literal "
+                "conditions and effects; %s has numeric, conditional or "
+                "quantified parts (#139)" % name)
+
+
 class TemporalPlanner(Planner):
     """Uniform-cost search over accumulated duration (Dijkstra): returns a
     makespan-minimal *sequential* schedule as a :class:`TemporalPlan`, or
@@ -209,8 +221,10 @@ class TemporalPlanner(Planner):
 
     def solve(self, domainproblem: "DomainProblem") -> Optional[TemporalPlan]:
         validate_requirements(domainproblem)
+        check_modeled(domainproblem)
         self.check_capabilities(domainproblem)
         validate_durative_actions(domainproblem)
+        _refuse_unmodeled(domainproblem)
         task = TemporalTask(domainproblem)
         self._start_search()
         start = task.initial
