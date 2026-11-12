@@ -1000,6 +1000,13 @@ class DomainListener(pddlListener):
         # Capture (= ?duration N) when N is a literal. An inequality bound is
         # not a duration (#143): the action is then not simple, and temporal
         # and plan validation refuse it.
+        # The whole constraint must be equalities: (and (= ?duration 2)
+        # (<= ?duration 0)) is not a duration of 2.
+        parent = ctx.parentCtx
+        if isinstance(parent, pddlParser.DurationConstraintContext) and any(
+                s.durOp() is None or s.durOp().getText() != '='
+                for s in parent.simpleDurationConstraint()):
+            return
         durval = ctx.durValue()
         if (durval is not None and durval.NUMBER() is not None
                 and ctx.durOp().getText() == '='):
