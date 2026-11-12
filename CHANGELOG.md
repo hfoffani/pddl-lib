@@ -41,6 +41,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **`solve` answered for input it had skipped** (#141): the parser recovers
+  from a syntax error by dropping what it cannot read, such as a standard
+  `(:derived (r ?x) ...)` rule, and `solve` then reported "no plan exists"
+  for the rest. `solve` now refuses any pair with syntax errors (exit `2`),
+  as `validate-plan` already did. Parsing `:derived` is on the roadmap.
 - **Identifiers were case-sensitive** (#157): `(CLEAR C)` in `:init` did not
   match `(clear ?x)`, nor `Hoist` the type `hoist`, so IPC pairs such as
   blocks-strips-typed and depots were reported unsolvable or ungroundable.
