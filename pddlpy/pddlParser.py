@@ -228,7 +228,7 @@ def serializedATN():
         519,5,31,0,0,519,520,3,76,38,0,520,521,3,56,28,0,521,522,5,3,0,0,
         522,524,1,0,0,0,523,511,1,0,0,0,523,517,1,0,0,0,524,73,1,0,0,0,525,
         526,7,0,0,0,526,75,1,0,0,0,527,528,5,34,0,0,528,77,1,0,0,0,529,530,
-        5,1,0,0,530,531,5,35,0,0,531,532,3,40,20,0,532,533,3,56,28,0,533,
+        5,1,0,0,530,531,5,35,0,0,531,532,3,36,18,0,532,533,3,56,28,0,533,
         534,5,3,0,0,534,79,1,0,0,0,535,549,5,73,0,0,536,537,5,1,0,0,537,
         538,3,94,47,0,538,539,3,80,40,0,539,540,3,82,41,0,540,541,5,3,0,
         0,541,549,1,0,0,0,542,543,5,1,0,0,543,544,5,6,0,0,544,545,3,80,40,
@@ -3291,8 +3291,8 @@ class pddlParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def typedVariableList(self):
-            return self.getTypedRuleContext(pddlParser.TypedVariableListContext,0)
+        def atomicFormulaSkeleton(self):
+            return self.getTypedRuleContext(pddlParser.AtomicFormulaSkeletonContext,0)
 
 
         def goalDesc(self):
@@ -3324,7 +3324,7 @@ class pddlParser ( Parser ):
             self.state = 530
             self.match(pddlParser.T__34)
             self.state = 531
-            self.typedVariableList()
+            self.atomicFormulaSkeleton()
             self.state = 532
             self.goalDesc()
             self.state = 533

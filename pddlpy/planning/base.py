@@ -113,6 +113,9 @@ def check_modeled(domainproblem: "DomainProblem", syntax: bool = True) -> None:
         raise UnsupportedRequirementsError(
             "timed initial literals, (at N ...) in :init, are not supported "
             "yet (#142)")
+    if domainproblem.domain.derived:
+        raise UnsupportedRequirementsError(
+            "derived predicates, (:derived ...), are not supported yet (#141)")
     if domainproblem.domain.constraints or domainproblem.problem.constraints:
         raise UnsupportedRequirementsError(
             "(:constraints ...) is not supported yet (#140)")

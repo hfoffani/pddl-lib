@@ -947,6 +947,7 @@ class DomainListener(pddlListener):
         self.scopes = []
         self.negativescopes = []
         self.constraints = False  # a (:constraints ...) block was read (#140)
+        self.derived: List[str] = []  # heads of (:derived ...) rules (#141)
         self.requirements = set()
         self.predicates = set()  # declared predicate names (#12)
         self.functions = {}
@@ -1105,6 +1106,17 @@ class DomainListener(pddlListener):
         self.negativescopes.append(False)
 
     def exitConstraints(self, ctx):
+        self.negativescopes.pop()
+        self.scopes.pop()
+
+    def enterDerivedDef(self, ctx):
+        # (:derived (p ?x) GD) is not modeled yet; record its head and walk
+        # it in a throwaway scope so its atoms land nowhere (#141).
+        self.derived.append(ctx.atomicFormulaSkeleton().predicate().getText())
+        self.scopes.append(Scope())
+        self.negativescopes.append(False)
+
+    def exitDerivedDef(self, ctx):
         self.negativescopes.pop()
         self.scopes.pop()
 

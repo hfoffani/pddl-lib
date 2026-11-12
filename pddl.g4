@@ -265,7 +265,7 @@ interval : 'all' ;
 /************* DERIVED DEFINITIONS ****************************/
 
 derivedDef
-	: '(' ':derived' typedVariableList goalDesc ')'
+	: '(' ':derived' atomicFormulaSkeleton goalDesc ')'
 	;
 
 /************* EXPRESSIONS ****************************/
