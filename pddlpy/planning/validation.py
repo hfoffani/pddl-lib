@@ -22,8 +22,7 @@ The semantics follow VAL, the reference plan validator:
 * Reading a fluent that has no value fails the step.
 
 What the object model cannot represent is refused with
-:class:`PlanValidationError` rather than judged: syntax errors, goals other
-than a conjunction of atoms (#138), durative actions with numeric,
+:class:`PlanValidationError` rather than judged: syntax errors, durative actions with numeric,
 conditional, quantified or inequality parts (#139, #143), and requirements
 outside :data:`VALIDATION_CAPABILITIES`.
 """
@@ -59,11 +58,20 @@ from pddlpy.pddl import (
     NumericCond,
     Operator,
     Or,
+    undefined_marker,
 )
 
 from .base import PlannerError, UnsupportedRequirementsError, check_modeled
 from .search import ADL_CAPABILITIES
-from .state import GroundAtom, State, apply_numeric, atom_tuple
+from .state import (
+    GroundAtom,
+    State,
+    _evaluated_fluents,
+    _expr_fluents,
+    apply_numeric,
+    atom_tuple,
+    preference_undefined,
+)
 
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem, Expr
@@ -75,7 +83,8 @@ if TYPE_CHECKING:
 TOLERANCE = 0.01
 
 #: Requirements whose semantics the validator implements.
-VALIDATION_CAPABILITIES: FrozenSet[str] = ADL_CAPABILITIES | {":durative-actions"}
+VALIDATION_CAPABILITIES: FrozenSet[str] = ADL_CAPABILITIES | {
+    ":durative-actions", ":timed-initial-literals", ":preferences"}
 
 
 class PlanValidationError(PlannerError):
@@ -216,7 +225,8 @@ class Failure(NamedTuple):
 
 class TracePoint(NamedTuple):
     """The state after one happening part: ``event`` is ``action`` for an
-    instantaneous step, ``start`` / ``end`` for a durative one."""
+    instantaneous step, ``start`` / ``end`` for a durative one, ``til`` for
+    a timed initial literal (step 0, ``action`` its PDDL text)."""
 
     time: float
     event: str
@@ -288,16 +298,6 @@ def _unmet(c: Condition, state: State) -> List[str]:
 
 # -- reads and writes, for undefined fluents and mutexes --------------------
 
-def _expr_fluents(e: "Expr") -> Iterator[GroundAtom]:
-    if isinstance(e, Fluent):
-        yield e.head
-    elif isinstance(e, BinOp):
-        yield from _expr_fluents(e.left)
-        yield from _expr_fluents(e.right)
-    elif isinstance(e, Neg):
-        yield from _expr_fluents(e.operand)
-
-
 def _cond_reads(c: Optional[Condition]) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
     """``(atoms, fluents)`` a grounded condition reads."""
     atoms: Set[GroundAtom] = set()
@@ -320,40 +320,6 @@ def _cond_reads(c: Optional[Condition]) -> Tuple[Set[GroundAtom], Set[GroundAtom
     if c is not None:
         walk(c)
     return atoms, fluents
-
-
-def _rank(c: Condition) -> int:
-    """VAL's evaluation cost of a condition (``Proposition::rank``, first
-    component): 1 per numeric comparison, 0 per atom."""
-    if isinstance(c, NumericCond):
-        return 1
-    if isinstance(c, Not):
-        return _rank(c.child)
-    if isinstance(c, (And, Or)):
-        return sum(_rank(k) for k in c.children)
-    return 0
-
-
-def _evaluated_fluents(c: Optional[Condition], state: State) -> Set[GroundAtom]:
-    """The fluents evaluating ``c`` in ``state`` reads, in VAL's order
-    (``ConjGoal`` / ``DisjGoal::evaluate``): ``and`` evaluates its children
-    cheapest first (atoms before comparisons, a stable sort by
-    :func:`_rank`), ``or`` in written order, and both stop once the result
-    is known. A fluent behind a false conjunct or a true disjunct is never
-    read."""
-    if isinstance(c, NumericCond):
-        return set(_expr_fluents(c.constraint.lhs)) | set(_expr_fluents(c.constraint.rhs))
-    if isinstance(c, Not):
-        return _evaluated_fluents(c.child, state)
-    if isinstance(c, (And, Or)):
-        out: Set[GroundAtom] = set()
-        children = sorted(c.children, key=_rank) if isinstance(c, And) else c.children
-        for child in children:
-            out |= _evaluated_fluents(child, state)
-            if child.holds(state.atoms, state.fluents) is not isinstance(c, And):
-                break  # a false conjunct / true disjunct settles it
-        return out
-    return set()  # Lit, Equality, or no condition
 
 
 class _Part:
@@ -431,7 +397,7 @@ class _Part:
         the right-hand sides of its fired effects."""
         a = self.action
         if isinstance(a, DurativeAction):
-            return []
+            return _literal_undefined(a, self.event, state)
         fluents = _evaluated_fluents(a.precondition, state)
         for ce in a.conditional_effects:
             fluents |= _evaluated_fluents(ce.condition, state)
@@ -447,6 +413,34 @@ class _Part:
         return adds, dels, [(e.head.head, e.op, e.expr.value(state.fluents)) for e in nums]
 
 
+class _TilPart(_Part):
+    """A timed initial literal (#142): a happening part with no conditions
+    whose effect adds or deletes one atom. It joins the happening at its
+    time, so it is mutex with a step that touches its atom then."""
+
+    def __init__(self, time: float, atom: GroundAtom, positive: bool) -> None:
+        text = _atom_text(atom) if positive else "(not %s)" % _atom_text(atom)
+        super().__init__(time, "til", 0, "(at %g %s)" % (time, text), None)  # type: ignore[arg-type]
+        self.adds = {atom} if positive else set()
+        self.dels = set() if positive else {atom}
+
+    def unmet(self, state: State) -> List[str]:
+        return []
+
+    def undefined(self, state: State) -> List[str]:
+        return []
+
+    def reads(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+        return set(), set()
+
+    def writes(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom], Dict[GroundAtom, str]]:
+        return self.adds, self.dels, {}
+
+    def effects(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom],
+                                             List[Tuple[GroundAtom, str, float]]]:
+        return self.adds, self.dels, []
+
+
 def _literal_unmet(a: DurativeAction, when: str, state: State) -> List[str]:
     missing = [_atom_text(atom_tuple(x)) for x in a.condition_pos[when]
                if atom_tuple(x) not in state.atoms]
@@ -455,14 +449,28 @@ def _literal_unmet(a: DurativeAction, when: str, state: State) -> List[str]:
     return sorted(missing) + sorted(present)
 
 
+def _literal_undefined(a: DurativeAction, when: str, state: State) -> List[str]:
+    """The derived atoms the literal conditions read that are undefined (#141)."""
+    return sorted(_atom_text(atom_tuple(x))
+                  for x in a.condition_pos[when] | a.condition_neg[when]
+                  if undefined_marker(atom_tuple(x)) in state.atoms)
+
+
 _ADDITIVE = {"increase", "decrease"}
 
 
-def _mutex(parts: List[_Part], state: State) -> Optional[Tuple[_Part, _Part, str]]:
+def _mutex(parts: List[_Part], state: State, dp: "DomainProblem"
+           ) -> Optional[Tuple[_Part, _Part, str]]:
     """The first interfering pair of parts in one happening, with the atom
     or fluent they contend for. Simultaneous increases / decreases of a
-    fluent do not interfere; they accumulate."""
-    io = [(p, p.reads(state), p.writes(state)) for p in parts]
+    fluent do not interfere; they accumulate. Reading a derived atom reads
+    what its rules depend on (#141)."""
+    def reads(p: _Part) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+        atoms, fluents = p.reads(state)
+        more, morefl = dp.derived_reads(atoms)
+        return atoms | more, fluents | morefl
+
+    io = [(p, reads(p), p.writes(state)) for p in parts]
     for i, (p, (pr, prf), (pa, pd, pf)) in enumerate(io):
         for q, (qr, qrf), (qa, qd, qf) in io[i + 1:]:
             clash = (pa & qd) | (pd & qa) | ((pa | pd) & qr) | ((qa | qd) & pr)
@@ -485,7 +493,7 @@ def check_supported(dp: "DomainProblem") -> None:
         raise PlanValidationError(
             "plan validation does not support %s" % sorted(unsupported))
     try:
-        check_modeled(dp)
+        check_modeled(dp, timed=True, preferences=True)
     except UnsupportedRequirementsError as exc:
         raise PlanValidationError("plan validation: %s" % exc)
 
@@ -576,6 +584,8 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
     parts, failure = _resolve(dp, steps)
     if failure is not None:
         return Simulation((), failure, state)
+    # timed literals first, so a tie with a step keeps plan order after them
+    parts = [_TilPart(t, atom_tuple(a), pos) for t, a, pos in dp.problem.timed_literals] + parts
     trace: List[TracePoint] = []
     active: Dict[int, _Part] = {}  # step -> its start part, while running
 
@@ -598,9 +608,11 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
             if undefined:
                 return fail("undefined-fluent", "reads fluents with no value",
                             p, undefined, state)
-        clash = _mutex(happening, state) if len(happening) > 1 else None
+        clash = _mutex(happening, state, dp) if len(happening) > 1 else None
         if clash:
             p, q, what = clash
+            if isinstance(p, _TilPart):  # blame the plan's step
+                p, q = q, p
             return fail("mutex", "interferes with step %d %s over %s "
                         "(separate them in time)" % (q.step, q.text, what), p, [what], state)
         adds: Set[GroundAtom] = set()
@@ -611,7 +623,8 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
             adds |= a
             dels |= d
             updates.extend(u)
-        state = State((state.atoms - dels) | adds, apply_numeric(state.fluents, updates))
+        state = State((state.atoms - dels) | adds,
+                      apply_numeric(state.fluents, updates)).derived(dp)
         for p in happening:
             if p.event == "start":
                 active[p.step] = p
@@ -621,6 +634,10 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
             unmet = _literal_unmet(p.action, "over", state)  # type: ignore[arg-type]
             if unmet:
                 return fail("invariant", "over all conditions broken", p, unmet, state)
+            undefined = _literal_undefined(p.action, "over", state)  # type: ignore[arg-type]
+            if undefined:
+                return fail("undefined-fluent", "over all conditions read fluents with no value",
+                            p, undefined, state)
         trace.extend(TracePoint(p.time, p.event, p.step, p.text, state) for p in happening)
     return Simulation(tuple(trace), None, state)
 
@@ -632,10 +649,26 @@ def validate_plan(dp: "DomainProblem", steps: List[PlanStep]) -> Validation:
     sim = simulate(dp, steps)
     if sim.failure is not None:
         return Validation(False, sim.failure, sim)
-    missing = sorted(_atom_text(atom_tuple(g)) for g in dp.goals()
-                     if atom_tuple(g) not in sim.state.atoms)
+    goal = dp.goal_condition()  # any goal shape (#138)
+    state = sim.state
+    undefined = sorted(_atom_text(f) for f in _evaluated_fluents(goal, state)
+                       if f not in state.fluents)
+    missing = sorted(_unmet(goal, state))
+    if undefined and not missing:  # an undefined fluent read as 0 held
+        missing = [_cond_text(goal)]
     if missing:
-        f = Failure("goal", "goal not satisfied after %d steps" % len(steps),
-                    None, None, None, tuple(missing), sim.state)
+        msg = "goal not satisfied after %d steps" % len(steps)
+        if undefined:
+            msg += "; no value for %s" % ", ".join(undefined)
+        f = Failure("goal", msg, None, None, None, tuple(missing), state)
+        return Validation(False, f, sim)
+    # VAL evaluates every preference at the end: one that reads a fluent with
+    # no value fails the plan, while a false one only costs its penalty
+    undefined = sorted({_atom_text(f) for pref in dp.problem.preferences
+                        for g in pref.ground(dp)
+                        for f in preference_undefined(g, state)})
+    if undefined:
+        f = Failure("goal", "preferences read fluents with no value: %s" % ", ".join(undefined),
+                    None, None, None, tuple(undefined), state)
         return Validation(False, f, sim)
     return Validation(True, None, sim)

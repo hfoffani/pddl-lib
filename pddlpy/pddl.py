@@ -35,6 +35,7 @@ from typing import (
     AbstractSet,
     Any,
     Dict,
+    FrozenSet,
     Iterator,
     List,
     Optional,
@@ -624,13 +625,28 @@ def _atom_from_formula(ctx: Any) -> Atom:
     return Atom(pred)
 
 
+
+def _type_name(ctx) -> str:
+    """The type of a typed list: a name, or ``(either t1 t2 ...)`` (#200)."""
+    prims = [p.getText() for p in ctx.primType()]
+    if ctx.getChild(0).getText() == '(':
+        return '(either %s)' % ' '.join(prims)
+    return prims[0]
+
+
+def _either_members(t: Optional[str]) -> Optional[List[str]]:
+    """The member types of an ``(either ...)`` type, else ``None``."""
+    if t is not None and t.startswith('(either '):
+        return t[len('(either '):-1].split()
+    return None
+
 def _typed_var_list(ctx: Any) -> Dict[str, Optional[str]]:
     """Read a typedVariableList context into an ordered {var: type} dict."""
     varlist: Dict[str, Optional[str]] = {}
     for v in ctx.VARIABLE():
         varlist[v.getText()] = None
     for vs in ctx.singleTypeVarList():
-        t = vs.r_type().getText()
+        t = _type_name(vs.r_type())
         for v in vs.VARIABLE():
             varlist[v.getText()] = t
     return varlist
@@ -658,6 +674,246 @@ def _build_condition(gd: Any) -> Condition:
     body = _build_condition(subs[0])
     varlist = _typed_var_list(gd.typedVariableList())
     return Exists(varlist, body) if kw == 'exists' else Forall(varlist, body)
+
+
+class Preference():
+    """A goal preference, ``(preference name GD)`` (#201), possibly under
+    ``(forall (vars) ...)``: one instance per binding of ``params``, each
+    violated when its condition does not hold at the end of the plan."""
+
+    def __init__(self, name: Optional[str], params: Dict[str, Optional[str]],
+                 body: Condition) -> None:
+        self.name = name
+        self.params = dict(params)
+        self.body = body
+
+    def ground(self, dp: "DomainProblem") -> List[Condition]:
+        """The grounded condition of every instance."""
+        names = list(self.params)
+        domains = [dp.candidate_objects(self.params[v]) for v in names]
+        return [self.body.ground(dict(zip(names, combo)), dp)
+                for combo in itertools.product(*domains)]
+
+    def __repr__(self) -> str:
+        return "(preference %s %r)" % (self.name, self.body)
+
+
+def _build_pregd(ctx: Any, params: Dict[str, Optional[str]]
+                 ) -> Tuple[List[Condition], List[Preference]]:
+    """The hard conditions and the preferences of a preGD (#201)."""
+    first = ctx.getChild(1).getText().lower() if ctx.getChildCount() > 1 else None
+    if ctx.goalDesc() is None and first == 'and':
+        hard: List[Condition] = []
+        prefs: List[Preference] = []
+        for sub in ctx.preGD():
+            h, p = _build_pregd(sub, params)
+            hard += h
+            prefs += p
+        return hard, prefs
+    if ctx.goalDesc() is None:  # (forall (vars) preGD)
+        varlist = _typed_var_list(ctx.typedVariableList())
+        h, p = _build_pregd(ctx.preGD(0), {**params, **varlist})
+        return ([Forall(varlist, And(h))] if h else []), p
+    if first == 'preference':
+        name = ctx.name().getText().lower() if ctx.name() is not None else None
+        return [], [Preference(name, params, _build_condition(ctx.goalDesc()))]
+    return [_build_condition(ctx.goalDesc())], []
+
+
+#: A metric as a linear form (#201): coefficient per term, the terms being
+#: ``""`` (the constant), ``"total-cost"`` and ``"is-violated NAME"``.
+LinearMetric = Dict[str, float]
+
+
+def _scale(form: LinearMetric, k: float) -> LinearMetric:
+    return {t: k * c for t, c in form.items()}
+
+
+def _add(a: LinearMetric, b: LinearMetric) -> LinearMetric:
+    out = dict(a)
+    for t, c in b.items():
+        out[t] = out.get(t, 0.0) + c
+    return out
+
+
+def _linear_metric(m: Any) -> Optional[LinearMetric]:
+    """A metricFExp as a linear form over ``total-cost`` and preference
+    violations (#201), or ``None`` for any other expression."""
+    if m.NUMBER() is not None:
+        return {"": float(m.NUMBER().getText())}
+    first = m.getChild(1).getText().lower() if m.getChildCount() > 1 else m.getText().lower()
+    if first == 'is-violated':
+        return {"is-violated " + m.name(0).getText().lower(): 1.0}
+    if m.functionSymbol() is not None:
+        if first == 'total-cost' and not m.name():
+            return {"total-cost": 1.0}
+        return None  # another fluent, or total-time
+    subs = [_linear_metric(s) for s in m.metricFExp()]
+    if not subs or any(s is None for s in subs):
+        return None
+    forms = cast(List[LinearMetric], subs)
+    if len(forms) == 1:  # (- e)
+        return _scale(forms[0], -1.0)
+    if first == '+':
+        out: LinearMetric = {}
+        for f in forms:
+            out = _add(out, f)
+        return out
+    if first == '-':
+        return _add(forms[0], _scale(forms[1], -1.0))
+    if first == '/':
+        if len(forms) != 2 or set(forms[1]) != {""} or not forms[1][""]:
+            return None
+        return _scale(forms[0], 1.0 / forms[1][""])
+    # '*': every factor but one must be a constant
+    variable = [f for f in forms if set(f) - {""}]
+    if len(variable) > 1:
+        return None
+    k = 1.0
+    for f in forms:
+        if not variable or f is not variable[0]:
+            k *= f.get("", 0.0)
+    return _scale(variable[0], k) if variable else {"": k}
+def _ordered_params(tvl: Any) -> List[Tuple[str, Optional[str]]]:
+    """A typedVariableList's ``(variable, type)`` pairs in written order."""
+    params: List[Tuple[str, Optional[str]]] = []
+    for child in tvl.getChildren():
+        if isinstance(child, pddlParser.SingleTypeVarListContext):
+            t = _type_name(child.r_type())
+            params.extend((v.getText(), t) for v in child.VARIABLE())
+        else:
+            params.append((child.getText(), None))
+    return params
+
+
+def _polarities(cond: Condition, negated: bool = False) -> Iterator[Tuple[str, bool]]:
+    """``(predicate, negated)`` for each literal of an ungrounded condition."""
+    if isinstance(cond, Lit):
+        yield cond.atom.predicate[0], negated
+    elif isinstance(cond, Not):
+        yield from _polarities(cond.child, not negated)
+    elif isinstance(cond, (And, Or)):
+        for c in cond.children:
+            yield from _polarities(c, negated)
+    elif isinstance(cond, _Quantifier):
+        yield from _polarities(cond.body, negated)
+
+
+def _compares(cond: Condition) -> bool:
+    """True if an ungrounded condition has a numeric comparison."""
+    if isinstance(cond, NumericCond):
+        return True
+    if isinstance(cond, Not):
+        return _compares(cond.child)
+    if isinstance(cond, (And, Or)):
+        return any(_compares(c) for c in cond.children)
+    if isinstance(cond, _Quantifier):
+        return _compares(cond.body)
+    return False
+
+
+def _expr_fluents(e: Expr) -> Iterator[GroundAtom]:
+    """The function heads a numeric expression reads."""
+    if isinstance(e, Fluent):
+        yield e.head
+    elif isinstance(e, BinOp):
+        yield from _expr_fluents(e.left)
+        yield from _expr_fluents(e.right)
+    elif isinstance(e, Neg):
+        yield from _expr_fluents(e.operand)
+
+
+#: Marks a derived atom whose rule read a fluent with no value (#141): the
+#: state holds ``(UNDEFINED, pred, args...)`` instead of the atom, and any
+#: condition that reads the atom is undefined too.
+UNDEFINED = "#undefined"
+
+
+def undefined_marker(atom: GroundAtom) -> GroundAtom:
+    return (UNDEFINED,) + tuple(atom)
+
+
+def _rank(c: Condition) -> int:
+    """VAL's evaluation cost of a condition (``Proposition::rank``, first
+    component): 1 per numeric comparison, 0 per atom."""
+    if isinstance(c, NumericCond):
+        return 1
+    if isinstance(c, Not):
+        return _rank(c.child)
+    if isinstance(c, (And, Or)):
+        return sum(_rank(k) for k in c.children)
+    return 0
+
+
+def holds3(c: Condition, atoms: AbstractSet[GroundAtom], fluents: Valuation) -> Optional[bool]:
+    """Three-valued truth of a grounded condition, in VAL's evaluation order
+    (``ConjGoal`` / ``DisjGoal::evaluate``): ``None`` when it reads a fluent
+    with no value or an undefined derived atom (#141). ``and`` evaluates its
+    children cheapest first (atoms before comparisons, a stable sort by
+    rank), ``or`` in written order; both stop at the first child that
+    settles the result or is undefined."""
+    if isinstance(c, Lit):
+        atom = tuple(c.atom.predicate)
+        return None if undefined_marker(atom) in atoms else atom in atoms
+    if isinstance(c, NumericCond):
+        k = c.constraint
+        if any(f not in fluents for f in itertools.chain(_expr_fluents(k.lhs), _expr_fluents(k.rhs))):
+            return None
+        return c.holds(atoms, fluents)
+    if isinstance(c, Not):
+        v = holds3(c.child, atoms, fluents)
+        return None if v is None else not v
+    if isinstance(c, (And, Or)):
+        settle = isinstance(c, Or)  # the value that decides it
+        children = sorted(c.children, key=_rank) if isinstance(c, And) else c.children
+        for child in children:
+            v = holds3(child, atoms, fluents)
+            if v is None or v == settle:
+                return v
+        return not settle
+    return c.holds(atoms, fluents)  # Equality
+
+
+def _reads(c: Condition) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+    """``(atoms, fluents)`` a grounded condition mentions."""
+    if isinstance(c, Lit):
+        return {tuple(c.atom.predicate)}, set()
+    if isinstance(c, NumericCond):
+        k = c.constraint
+        return set(), set(_expr_fluents(k.lhs)) | set(_expr_fluents(k.rhs))
+    atoms: Set[GroundAtom] = set()
+    fluents: Set[GroundAtom] = set()
+    children = [c.child] if isinstance(c, Not) else c.children if isinstance(c, (And, Or)) else []
+    for child in children:
+        a, f = _reads(child)
+        atoms |= a
+        fluents |= f
+    return atoms, fluents
+
+
+class DerivedRule():
+    """A derived predicate rule, ``(:derived (p ?x - t) GD)`` (#141): the
+    atom ``(p o)`` holds in a state iff ``GD`` with ``?x = o`` does."""
+
+    def __init__(self, predicate: str, params: List[Tuple[str, Optional[str]]],
+                 body: Condition) -> None:
+        self.predicate = predicate
+        self.params = params
+        self.body = body
+
+    def ground(self, dp: "DomainProblem") -> List[Tuple[GroundAtom, Condition]]:
+        """``(head, grounded body)`` for every binding of the head."""
+        names = [v for v, _ in self.params]
+        domains = [dp.candidate_objects(t) for _, t in self.params]
+        out = []
+        for combo in itertools.product(*domains):
+            varvals = dict(zip(names, combo))
+            out.append(((self.predicate,) + tuple(combo), self.body.ground(varvals, dp)))
+        return out
+
+    def __repr__(self) -> str:
+        return "(:derived (%s %s) %r)" % (
+            self.predicate, " ".join(v for v, _ in self.params), self.body)
 
 
 def _is_simple_conjunction(cond: Condition) -> bool:
@@ -947,7 +1203,7 @@ class DomainListener(pddlListener):
         self.scopes = []
         self.negativescopes = []
         self.constraints = False  # a (:constraints ...) block was read (#140)
-        self.derived: List[str] = []  # heads of (:derived ...) rules (#141)
+        self.derived: List[DerivedRule] = []  # (:derived ...) rules (#141)
         self.requirements = set()
         self.predicates = set()  # declared predicate names (#12)
         self.functions = {}
@@ -975,7 +1231,7 @@ class DomainListener(pddlListener):
         for v in tvl.VARIABLE():
             params.append((v.getText(), None))
         for vs in tvl.singleTypeVarList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.VARIABLE():
                 params.append((v.getText(), t))
         self.functions[name] = params
@@ -1078,7 +1334,7 @@ class DomainListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeVarList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.VARIABLE():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1110,9 +1366,12 @@ class DomainListener(pddlListener):
         self.scopes.pop()
 
     def enterDerivedDef(self, ctx):
-        # (:derived (p ?x) GD) is not modeled yet; record its head and walk
-        # it in a throwaway scope so its atoms land nowhere (#141).
-        self.derived.append(ctx.atomicFormulaSkeleton().predicate().getText())
+        # (:derived (p ?x) GD) (#141): build the rule from the tree, and walk
+        # it in a throwaway scope so its atoms land nowhere else.
+        skel = ctx.atomicFormulaSkeleton()
+        self.derived.append(DerivedRule(skel.predicate().getText(),
+                                        _ordered_params(skel.typedVariableList()),
+                                        _build_condition(ctx.goalDesc())))
         self.scopes.append(Scope())
         self.negativescopes.append(False)
 
@@ -1216,7 +1475,7 @@ class DomainListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeNameList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.name():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1254,8 +1513,12 @@ class ProblemListener(pddlListener):
         self.init_numeric = {}
         self.metric = None
         # False when the goal is more than a conjunction of positive atoms:
-        # ``goals`` then misreads it (#138).
+        # ``goals`` then lists only its positive atoms; ``goal`` is the whole
+        # condition tree (#138).
         self.simple_goal = True
+        self.goal: Condition = And([])
+        self.preferences: List[Preference] = []  # goal preferences (#201)
+        self.metric_form: Optional[LinearMetric] = None
         self.constraints = False  # a (:constraints ...) block was read (#140)
         # Timed initial literals, (at N lit) in :init, as (time, Atom,
         # positive). Kept out of ``initialstate``: they are not true at 0 (#142).
@@ -1273,9 +1536,14 @@ class ProblemListener(pddlListener):
         self.scopes.pop()
 
     def enterMetricSpec(self, ctx):
-        # Capture the optimization metric, e.g. ('minimize', '(total-cost)').
+        # Capture the optimization metric, e.g. ('minimize', '(total-cost)'),
+        # as written (whitespace collapsed), and as a linear form (#201).
+        m = ctx.metricFExp()
+        text = m.start.getInputStream().getText(m.start.start, m.stop.stop)
         self.metric = (ctx.optimization().getText().lower(),
-                       ctx.metricFExp().getText())
+                       " ".join(text.replace("(", "( ").replace(")", " )").split())
+                       .replace("( ", "(").replace(" )", ")"))
+        self.metric_form = _linear_metric(m)
 
     def enterInit(self, ctx):
         self.scopes.append(Scope())
@@ -1308,9 +1576,20 @@ class ProblemListener(pddlListener):
     def enterGoal(self, ctx):
         self.scopes.append(Scope())
 
+    def enterPreGD(self, ctx):
+        if ctx.getChildCount() > 1 and ctx.getChild(1).getText().lower() == 'preference':
+            # a preference's atoms are no hard goal (#201)
+            self.scopes.append(Scope())
+
+    def exitPreGD(self, ctx):
+        if ctx.getChildCount() > 1 and ctx.getChild(1).getText().lower() == 'preference':
+            self.scopes.pop()
+
     def exitGoal(self, ctx):
         self.goals = set( self.scopes.pop().atoms )
-        self.simple_goal = _positive_conjunction( _build_condition( ctx.goalDesc() ) )
+        hard, self.preferences = _build_pregd( ctx.preGD(), {} )
+        self.goal = hard[0] if len(hard) == 1 else And(hard)
+        self.simple_goal = _positive_conjunction( self.goal )
 
     def enterAtomicNameFormula(self, ctx):
         pred = []
@@ -1338,7 +1617,7 @@ class ProblemListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeNameList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.name():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1359,7 +1638,8 @@ class ProblemListener(pddlListener):
                     vs.add( (s, None) )
             for a in self.goals:
                 for s in a.predicate[1:]:
-                    vs.add( (s, None) )
+                    if not s.startswith('?'):  # a ?variable is no object (#138)
+                        vs.add( (s, None) )
             self.objects = dict( vs )
 
 
@@ -1407,6 +1687,8 @@ class DomainProblem():
                   to StaticPrunedBinder. Pass a custom VariableBinder, or set
                   the .binder attribute later, to override grounding.
         """
+        self._grounded_strata: Optional[List[List[Tuple[GroundAtom, Condition]]]] = None
+        self._derived_deps: Optional[Dict[GroundAtom, Tuple[Set[GroundAtom], Set[GroundAtom]]]] = None
         # domain
         inp = source_stream(domainfile)
         lexer = pddlLexer(inp)
@@ -1549,12 +1831,25 @@ class DomainProblem():
         # the implicit None root and match an untyped parameter.
         if t is None:
             return ot is None
+        members = _either_members(t)
+        if members is not None:
+            return any(self._is_subtype(ot, m) for m in members)
+        # Climb the hierarchy; an (either ...) type branches to its members.
+        # One seen set covers every branch, so a cycle ends the walk.
         seen = set()
-        while ot is not None and ot not in seen:
-            if ot == t:
-                return True
+        stack = [ot]
+        while stack:
+            ot = stack.pop()
+            if ot is None or ot in seen:
+                continue
             seen.add(ot)
-            ot = self.domain.types.get(ot)
+            members = _either_members(ot)
+            if members is not None:
+                stack.extend(members)
+            elif ot == t:
+                return True
+            else:
+                stack.append(self.domain.types.get(ot))
         return False
 
     def candidate_objects(self, t) -> List[str]:
@@ -1583,7 +1878,130 @@ class DomainProblem():
             for time in da.EFFECT_TIMES:
                 for a in da.effect_pos[time] | da.effect_neg[time]:
                     modified.add(a.predicate[0])
+        # a derived predicate's truth changes with the state (#141)
+        modified |= self.derived_predicates()
         return set(self.domain.predicates) - modified
+
+    def derived_predicates(self) -> Set[str]:
+        """The names of the derived predicates (#141)."""
+        return {r.predicate for r in self.domain.derived}
+
+    def derived_strata(self) -> Optional[List[List[DerivedRule]]]:
+        """The ``(:derived ...)`` rules in evaluation order (#141): a rule
+        comes in a stratum after every derived predicate it reads, strictly
+        after those it reads negated. ``None`` if the rules are not
+        stratifiable (a derived predicate depends negatively on itself)."""
+        rules = self.domain.derived
+        names = self.derived_predicates()
+        level = dict.fromkeys(names, 0)
+        for _ in range(len(names) + 1):
+            changed = False
+            for r in rules:
+                for q, negated in _polarities(r.body):
+                    if q in names and level[r.predicate] < level[q] + negated:
+                        level[r.predicate] = level[q] + negated
+                        changed = True
+            if not changed:
+                return [[r for r in rules if level[r.predicate] == n]
+                        for n in sorted(set(level.values()))]
+        return None
+
+    def recursive_numeric_derived(self) -> List[str]:
+        """The recursive derived predicates whose rules read a numeric fluent,
+        directly or through other derived predicates (#141). VAL decides
+        such an atom on demand, and whether it reads a fluent with no value
+        depends on where the recursion started, so they are refused."""
+        names = self.derived_predicates()
+        deps: Dict[str, Set[str]] = {n: set() for n in names}
+        compares = set()
+        for r in self.domain.derived:
+            deps[r.predicate] |= {q for q, _ in _polarities(r.body) if q in names}
+            if _compares(r.body):
+                compares.add(r.predicate)
+
+        def reach(p: str) -> Set[str]:
+            seen: Set[str] = set()
+            todo = list(deps[p])
+            while todo:
+                q = todo.pop()
+                if q not in seen:
+                    seen.add(q)
+                    todo += deps[q]
+            return seen
+
+        return sorted(p for p in names
+                      if p in reach(p) and (reach(p) | {p}) & compares)
+
+    def _grounded_rules(self) -> List[List[Tuple[GroundAtom, Condition]]]:
+        if self._grounded_strata is None:
+            strata = self.derived_strata()
+            assert strata is not None, "rules are not stratifiable"
+            self._grounded_strata = [[g for r in s for g in r.ground(self)] for s in strata]
+        return self._grounded_strata
+
+    def derived_reads(self, atoms: AbstractSet[GroundAtom]
+                      ) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+        """``(atoms, fluents)`` that deciding the derived atoms among
+        ``atoms`` reads, through every rule that can derive them,
+        transitively (#141): what a read of a derived atom depends on."""
+        if self._derived_deps is None:
+            deps: Dict[GroundAtom, Tuple[Set[GroundAtom], Set[GroundAtom]]] = {}
+            for stratum in self._grounded_rules():
+                for head, body in stratum:
+                    a, f = _reads(body)
+                    da, df = deps.setdefault(head, (set(), set()))
+                    da |= a
+                    df |= f
+            self._derived_deps = deps
+        out_atoms: Set[GroundAtom] = set()
+        out_fluents: Set[GroundAtom] = set()
+        todo = [a for a in atoms if a in self._derived_deps]
+        seen: Set[GroundAtom] = set()
+        while todo:
+            head = todo.pop()
+            if head in seen:
+                continue
+            seen.add(head)
+            a, f = self._derived_deps[head]
+            out_atoms |= a
+            out_fluents |= f
+            todo.extend(x for x in a if x in self._derived_deps)
+        return out_atoms, out_fluents
+
+    def derive(self, atoms: AbstractSet[GroundAtom], fluents: Valuation) -> FrozenSet[GroundAtom]:
+        """``atoms`` with the derived atoms recomputed (#141): those already
+        there are dropped, then each stratum is evaluated to a fixpoint."""
+        names = self.derived_predicates()
+        out = {a for a in atoms if a[0] not in names and a[0] != UNDEFINED}
+        for stratum in self._grounded_rules():
+            pending = list(stratum)
+            changed = True
+            while changed:
+                changed = False
+                rest = []
+                for head, body in pending:
+                    if holds3(body, out, fluents):
+                        out.add(head)
+                        changed = True
+                    else:
+                        rest.append((head, body))
+                pending = rest
+            # VAL decides a derived atom on demand, trying its rules in
+            # written order: undefined if that reads a fluent with no value
+            # or an undefined atom before a true body, even when a later
+            # body holds. Marks only grow, so repeat until stable.
+            bodies: Dict[GroundAtom, List[Condition]] = {}
+            for head, body in stratum:
+                bodies.setdefault(head, []).append(body)
+            changed = True
+            while changed:
+                changed = False
+                for head, alternatives in bodies.items():
+                    mark = undefined_marker(head)
+                    if mark not in out and holds3(Or(alternatives), out, fluents) is None:
+                        out.add(mark)
+                        changed = True
+        return frozenset(out)
 
     def types(self) -> Dict[str, Optional[str]]:
         """Returns the declared type hierarchy as a dict mapping each subtype to
@@ -1597,21 +2015,11 @@ class DomainProblem():
         """Returns the set of all transitive subtypes of ``t`` (#22), excluding
         ``t`` itself. E.g. for the logistics hierarchy ``subtypes_of('physobj')``
         is ``{'package', 'vehicle', 'truck', 'airplane'}``. ``t`` matches in
-        any case (#157).
+        any case (#157). A type declared ``- (either t1 t2)`` is a subtype of
+        each member (#200).
         """
         t = t.lower()
-        hierarchy = self.domain.types
-        result = set()
-        changed = True
-        while changed:
-            changed = False
-            for sub, sup in hierarchy.items():
-                if sub in result:
-                    continue
-                if sup == t or sup in result:
-                    result.add(sub)
-                    changed = True
-        return result
+        return {sub for sub in self.domain.types if sub != t and self._is_subtype(sub, t)}
 
     def initialstate(self) -> set:
         """Returns a set of atoms (Atom objects) corresponding to the initial
@@ -1624,6 +2032,14 @@ class DomainProblem():
         defined in the problem file.
         """
         return self.problem.goals
+
+    def goal_condition(self) -> Condition:
+        """The whole goal as a grounded condition tree (#138): ``not``,
+        ``or``, ``imply``, ``exists``, ``forall`` and numeric comparisons
+        included, quantifiers expanded over the objects. Evaluate it with
+        ``holds(atoms, fluents)``. ``goals()`` lists only its positive atoms.
+        """
+        return self.problem.goal.ground({}, self)
 
     def worldobjects(self) -> Dict[str, Optional[str]]:
         """Returns a dictionary of key value pairs where the key is the name of

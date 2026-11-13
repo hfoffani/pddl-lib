@@ -17,7 +17,18 @@ from typing import Any, Dict, Iterator, List, Set, Tuple
 
 from pddlpy._vendor.antlr4 import CommonTokenStream
 from pddlpy._vendor.antlr4.error.ErrorListener import ErrorListener
-from pddlpy.pddl import DomainProblem, source_stream
+from pddlpy.pddl import (
+    And,
+    Condition,
+    DomainProblem,
+    Equality,
+    Lit,
+    Not,
+    NumericCond,
+    Or,
+    _Quantifier,
+    source_stream,
+)
 from pddlpy.pddlLexer import pddlLexer
 from pddlpy.pddlParser import pddlParser
 from pddlpy.planning import (
@@ -28,6 +39,8 @@ from pddlpy.planning import (
     validate_durative_actions,
     validate_requirements,
 )
+from pddlpy.planning.state import _expr_fluents
+from pddlpy.planning.temporal import contradictory_literals
 
 
 class _CollectingErrorListener(ErrorListener):
@@ -65,12 +78,19 @@ def _init_atoms(dp: DomainProblem) -> Iterator[Any]:
         yield atom
 
 
+def _goal_atoms(dp: DomainProblem) -> Iterator[Any]:
+    """The hard goal's atoms and every preference body's (#201)."""
+    yield from dp.goals()
+    for pref in dp.problem.preferences:
+        yield from pref.body.atoms()
+
+
 def _condition_atoms(dp: DomainProblem) -> Iterator[Tuple[str, Any]]:
     """Yield ``(where, atom)`` for every atom referenced by the model:
     init, goal, and each (durative) action's conditions and effects."""
     for atom in _init_atoms(dp):
         yield ":init", atom
-    for atom in dp.goals():
+    for atom in _goal_atoms(dp):
         yield ":goal", atom
     for name, op in dp.domain.operators.items():
         # Walk the ADL precondition/effect trees so atoms nested inside
@@ -99,6 +119,29 @@ def _fmt(atom: Tuple[str, ...]) -> str:
 
 def _issue(severity: str, check: str, message: str) -> Dict[str, str]:
     return {"severity": severity, "check": check, "message": message}
+
+
+def _free_variables(c: Condition, bound: frozenset = frozenset()) -> Iterator[str]:
+    """The ``?variables`` of a goal tree no quantifier binds (#138)."""
+    if isinstance(c, Lit):
+        terms: List[str] = list(c.atom.predicate[1:])
+    elif isinstance(c, Equality):
+        terms = [c.left, c.right]
+    elif isinstance(c, NumericCond):
+        terms = [t for f in _expr_fluents(c.constraint.lhs) for t in f[1:]]
+        terms += [t for f in _expr_fluents(c.constraint.rhs) for t in f[1:]]
+    elif isinstance(c, Not):
+        yield from _free_variables(c.child, bound)
+        return
+    elif isinstance(c, (And, Or)):
+        for child in c.children:
+            yield from _free_variables(child, bound)
+        return
+    else:
+        assert isinstance(c, _Quantifier)
+        yield from _free_variables(c.body, bound | frozenset(c.varlist))
+        return
+    yield from (t for t in terms if t.startswith("?") and t not in bound)
 
 
 def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
@@ -138,20 +181,30 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
     # Ground atoms (init/goal) naming objects that were never declared.
     objects = set(dp.worldobjects())
     unknown: Dict[str, Set[str]] = {}
-    for where, atoms in ((":init", _init_atoms(dp)), (":goal", dp.goals())):
+    for where, atoms in ((":init", _init_atoms(dp)), (":goal", _goal_atoms(dp))):
         for atom in atoms:
             for term in atom_tuple(atom)[1:]:
-                # in a quantified goal (reported as unsupported, #138) a
-                # ?variable is bound, not an object; in a positive goal it
-                # is free, and an error
-                bound = term.startswith("?") and not dp.problem.simple_goal
-                if term not in objects and not bound:
+                # ?variables: only the free ones are errors, below
+                if term not in objects and not term.startswith("?"):
                     unknown.setdefault(term, set()).add(where)
+    free = list(_free_variables(dp.problem.goal))
+    for pref in dp.problem.preferences:
+        free += _free_variables(pref.body, frozenset(pref.params))
+    for var in free:
+        unknown.setdefault(var, set()).add(":goal")
     for term in sorted(unknown):
         issues.append(_issue(
             "error", "unknown_object",
             "object %r is not declared in :objects (used in %s)"
             % (term, ", ".join(sorted(unknown[term])))))
+
+    # Timed initial literals (#142) that add and delete one atom at the same
+    # time are mutex (VAL): no plan can be valid.
+    for time, atom in contradictory_literals(dp.problem.timed_literals):
+        issues.append(_issue(
+            "error", "timed_literals",
+            "(%s) is both added and deleted by timed literals at time %g"
+            % (" ".join(atom), time)))
 
     # (not ...) in :init (#186): false anyway (closed world), so ignored; an
     # error when the same atom is also asserted.
@@ -184,7 +237,7 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
 
     # Parts the model reads but drops (#140): solve refuses them too.
     try:
-        check_modeled(dp, syntax=False)  # syntax errors are reported above
+        check_modeled(dp, syntax=False, timed=True, preferences=True)  # syntax errors are reported above
     except UnsupportedRequirementsError as exc:
         issues.append(_issue("error", "unsupported", str(exc)))
 

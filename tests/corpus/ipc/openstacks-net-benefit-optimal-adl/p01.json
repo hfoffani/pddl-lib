@@ -3084,11 +3084,6 @@
   "durative_operators": [],
   "goals": [
    [
-    "delivered",
-    "o1",
-    "p2"
-   ],
-   [
     "shipped",
     "o1"
    ],
@@ -3199,7 +3194,10 @@
     "o5"
    ]
   ],
-  "metric": null,
+  "metric": {
+   "expression": "(- 12 (+ (total-cost) (* (is-violated d-o1-p2) 1) (* (is-violated d-o2-p1) 1) (* (is-violated d-o2-p2) 1) (* (is-violated d-o3-p3) 1) (* (is-violated d-o4-p3) 1) (* (is-violated d-o4-p4) 1) (* (is-violated d-o5-p5) 1)))",
+   "optimization": "maximize"
+  },
   "objects": {
    "n0": "count",
    "n1": "count",
@@ -3250,16 +3248,6 @@
    {
     "check": "syntax",
     "message": "domain file: line 4:44 extraneous input ':goal' expecting {'(', ')', REQUIRE_KEY}",
-    "severity": "error"
-   },
-   {
-    "check": "syntax",
-    "message": "problem file: line 42:1 no viable alternative at input '(preference'",
-    "severity": "error"
-   },
-   {
-    "check": "syntax",
-    "message": "problem file: line 43:0 missing ')' at '('",
     "severity": "error"
    }
   ],

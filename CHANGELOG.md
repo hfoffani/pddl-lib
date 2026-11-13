@@ -6,6 +6,20 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 ## [Unreleased]
 
 ### Added
+- **Goal preferences** (#201): `(preference name GD)` in `(:goal ...)`,
+  also under `and` / `forall`, and `(is-violated name)` in `:metric`, parse.
+  The hard goal and the preferences are kept apart
+  (`dp.problem.preferences`). `ucs` minimizes a metric linear in
+  `(total-cost)` and `(is-violated ...)`, the soft goals compiled to costs
+  as in Keyder & Geffner (2009); the other planners refuse preferences.
+  `+` in a metric takes any number of arguments. `metric()` keeps the
+  expression's spacing.
+- **Derived predicates** (#141): `(:derived (p ?x) GD)` rules are solved by
+  `bfs`/`astar`/`gbfs`/`ucs` and judged by `validate-plan`. Derived atoms
+  are recomputed in every state (recursion to a fixpoint, negation by
+  strata); rules that are not stratifiable are refused. `temporal` refuses
+  them. `DomainProblem.derived_predicates()`, `derived_strata()` and
+  `derive()`; `State.derived(dp)`.
 - **Plan validation and simulation** (#166): `pddlpy validate-plan` and
   `pddlpy simulate` (MCP: `validate_plan`, `simulate`; Python:
   `pddlpy.planning.validate_plan` / `simulate`). Plans in the IPC format or
@@ -41,6 +55,24 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **Timed initial literals are solved and validated** (#142): `(at 5 (p))`
+  in `:init` was refused. `temporal` now plans with them (waiting for a
+  literal, applying the ones during an action to its `over all`
+  conditions), and `validate-plan` / `simulate` apply them as happenings
+  (`til` events in the trace), mutex with a step touching the same atom
+  then. The goal is judged after the last literal, as in VAL. The
+  classical planners still refuse them.
+- **Goals other than a conjunction of positive atoms are solved** (#138):
+  `not`, `or`, `imply`, `exists`, `forall`, `=` and numeric comparisons in
+  `(:goal ...)` were misread (a `(not (p))` goal was read as `(p)`), then
+  refused. The planners and `validate-plan` now evaluate the whole goal;
+  `DomainProblem.goal_condition()` exposes it. `validate-plan` reports the
+  failing conjuncts, and a goal reading a fluent with no value fails, as in
+  VAL. `astar`/`gbfs` use a blind heuristic for such goals.
+- **`(either t1 t2)` types bound no objects** (#200): an action with an
+  `(either ...)` parameter grounded to zero instances. It now binds objects
+  of any member type or its subtypes; objects and types declared
+  `- (either ...)` count as each member.
 - **`validate` reported quantified variables in durative conditions as
   undeclared parameters** (#193): in `(at start (forall (?y - a) (p ?y)))`,
   `?y` was taken for a parameter of the action. Such conditions are still

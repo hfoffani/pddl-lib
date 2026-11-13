@@ -9,7 +9,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Iterator, List, Tuple
 
-from .state import State
+from pddlpy.pddl import holds3
+
+from .state import State, goal_holds
 
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem, Operator
@@ -20,7 +22,8 @@ class GroundedTask:
 
     Attributes:
         initial -- the initial ``State``.
-        goals   -- the goal atoms (as parsed; checked via ``State.satisfies``).
+        goals   -- the goal's positive atoms (as parsed).
+        goal    -- the grounded goal condition (#138), checked by ``is_goal``.
         actions -- the list of all grounded ``Operator`` instances.
     """
 
@@ -28,6 +31,7 @@ class GroundedTask:
         self.domainproblem = domainproblem
         self.initial: State = State.from_problem(domainproblem)
         self.goals = domainproblem.goals()
+        self.goal = domainproblem.goal_condition()
         self.actions: List["Operator"] = [
             gop
             for name in domainproblem.operators()
@@ -37,9 +41,19 @@ class GroundedTask:
     def successors(self, state: State) -> Iterator[Tuple["Operator", State]]:
         """Yield ``(action, successor_state)`` for every applicable action."""
         for action in self.actions:
-            if state.applicable(action):
-                yield action, state.apply(action)
+            if state.applicable(action) and self._defined(action, state):
+                yield action, state.apply(action).derived(self.domainproblem)
+
+    def _defined(self, action: "Operator", state: State) -> bool:
+        """False if the precondition or a conditional-effect guard reads an
+        undefined derived atom (#141)."""
+        if not self.domainproblem.domain.derived:
+            return True
+        conditions = [ce.condition for ce in action.conditional_effects]
+        if action.precondition is not None:
+            conditions.append(action.precondition)
+        return all(holds3(c, state.atoms, state.fluents) is not None for c in conditions)
 
     def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""
-        return state.satisfies(self.goals)
+        return goal_holds(self.goal, state)

@@ -50,13 +50,10 @@ def test_known_causes_mark_failures(tmp_path):
 <testcase name="test_accept_reject_agrees_with_fd[classical/classical/tyreworld/pfile1.pddl]"><failure message="exit 0"/></testcase>
 </testsuite>""")
     text = oracle_report.report([str(junit)], "T")
-    assert "**3 failures: 1 new, 2 with a known cause.**" in text
+    assert "**3 failures: 2 new, 1 with a known cause.**" in text
     lines = text.splitlines()
-    new = next(i for i, ln in enumerate(lines) if ln.startswith("- **NEW**"))
-    termes = next(i for i, ln in enumerate(lines) if "termes" in ln)
-    assert new < termes
-    # termes-opt18's goal ends with (not (has-block)), misread as (has-block)
-    assert "known: #138" in lines[termes]
+    # #138 is fixed: termes-opt18's (not (has-block)) goal is no known cause
+    assert "- **NEW** `classical/classical/termes-opt18" in text
     # the cause depends on the check: tyreworld is known for acceptance only
     assert "known: FD rejects" in next(ln for ln in lines if "tyreworld" in ln)
     assert "- **NEW** `classical/classical/psr-middle-derived-predicates-adl" in text

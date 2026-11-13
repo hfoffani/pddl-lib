@@ -46,8 +46,12 @@ The entry point. Parses both files and exposes:
 | `metric()` | `(optimization, expr_text)` or `None` |
 
 `dp.syntax_errors` counts the syntax errors ANTLR recovered from while
-parsing; the model may misread such input. `dp.problem.simple_goal` is
-`False` when the goal is more than a conjunction of atoms (#138), and a
+parsing; the model may misread such input. `goals()` lists the goal's
+positive atoms; `dp.goal_condition()` is the whole goal as a grounded
+condition tree (`not`, `or`, `imply`, `exists`, `forall`, numeric
+comparisons; #138), evaluated with `holds(atoms, fluents)`.
+`dp.problem.simple_goal` is `False` when the goal is more than a
+conjunction of positive atoms. A
 `DurativeAction`'s `simple` is `False` when it has parts the model does not
 capture (numeric, conditional, quantified, duration inequalities).
 
@@ -225,8 +229,8 @@ reading a fluent with no value fails. Names match case-insensitively.
 
 What the model cannot represent raises `PlanValidationError` instead of a
 verdict: syntax errors, requirements outside `VALIDATION_CAPABILITIES`
-(ADL, numeric fluents, action costs, durative actions), goals beyond a
-conjunction of atoms (#138), and durative actions that are not `simple`.
+(ADL, numeric fluents, action costs, durative actions), and durative
+actions that are not `simple`.
 
 ```python
 from pddlpy.planning import load_plan, validate_plan
@@ -251,9 +255,6 @@ into `PlanStep`s for `validate_plan`.
 
 ## Known limitations
 
-- **Union types:** the `:types` hierarchy is supported (#22) — a parameter
-  typed with a supertype binds objects of any transitive subtype — but
-  `(either ...)` union types are not handled.
 - **ADL (#10):** conditional/universal effects, quantified and full-boolean
   preconditions and `=` equality are parsed, grounded and **solved** by the
   reference planners. One gap remains: ADL structure on the **goal** side of a

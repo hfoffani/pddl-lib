@@ -16,11 +16,24 @@ from typing import (
     List,
     Mapping,
     Optional,
+    Set,
     Tuple,
     Union,
 )
 
-from pddlpy.pddl import ieee_div
+from pddlpy.pddl import (
+    And,
+    Condition,
+    Lit,
+    Not,
+    NumericCond,
+    Or,
+    _expr_fluents,
+    _rank,
+    holds3,
+    ieee_div,
+    undefined_marker,
+)
 
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem, DurativeAction, Operator
@@ -112,8 +125,16 @@ class State:
     @classmethod
     def from_problem(cls, domainproblem: "DomainProblem") -> "State":
         """Build the initial state (atoms + numeric fluents) from a parsed
-        ``DomainProblem``."""
-        return cls(domainproblem.initialstate(), domainproblem.initial_numeric())
+        ``DomainProblem``, derived atoms included (#141)."""
+        state = cls(domainproblem.initialstate(), domainproblem.initial_numeric())
+        return state.derived(domainproblem)
+
+    def derived(self, domainproblem: "DomainProblem") -> "State":
+        """This state with its derived atoms recomputed (#141); itself if the
+        domain has no ``(:derived ...)`` rules."""
+        if not domainproblem.domain.derived:
+            return self
+        return State(domainproblem.derive(self._atoms, self._fluents), self._fluents)
 
     # -- planning operations (resolve #21) -------------------------------
     def applicable(self, operator: "Operator") -> bool:
@@ -227,3 +248,64 @@ class Plan:
             for a in self.actions
         )
         return "Plan[cost=%s]: %s" % (self.cost, steps)
+
+
+# -- fluents a condition reads, in VAL's order (#166, #138) -----------------
+
+def _evaluated_fluents(c: Optional[Condition], state: State) -> Set[GroundAtom]:
+    """The fluents evaluating ``c`` in ``state`` reads, in VAL's order
+    (``ConjGoal`` / ``DisjGoal::evaluate``): ``and`` evaluates its children
+    cheapest first (atoms before comparisons, a stable sort by
+    :func:`_rank`), ``or`` in written order, and both stop once the result
+    is known. A fluent behind a false conjunct or a true disjunct is never
+    read. A derived atom marked undefined (#141) counts as a read with no
+    value too."""
+    if isinstance(c, Lit):
+        atom = tuple(c.atom.predicate)
+        return {atom} if undefined_marker(atom) in state.atoms else set()
+    if isinstance(c, NumericCond):
+        return set(_expr_fluents(c.constraint.lhs)) | set(_expr_fluents(c.constraint.rhs))
+    if isinstance(c, Not):
+        return _evaluated_fluents(c.child, state)
+    if isinstance(c, (And, Or)):
+        out: Set[GroundAtom] = set()
+        children = sorted(c.children, key=_rank) if isinstance(c, And) else c.children
+        for child in children:
+            out |= _evaluated_fluents(child, state)
+            if child.holds(state.atoms, state.fluents) is not isinstance(c, And):
+                break  # a false conjunct / true disjunct settles it
+        return out
+    return set()  # Equality, or no condition
+
+
+def goal_holds(goal: Condition, state: State) -> bool:
+    """True if ``goal`` holds in ``state`` and evaluating it reads no fluent
+    without a value nor an undefined derived atom: VAL fails such a read
+    instead of reading 0 or false (#141)."""
+    return holds3(goal, state.atoms, state.fluents) is True
+
+
+def preference_undefined(pref: Condition, state: State) -> Set[GroundAtom]:
+    """The fluents with no value and the undefined derived atoms that judging
+    a preference instance at the end of a plan reads (#201), as VAL's
+    ``PreferenceGoal::evaluate``: the evaluation reads, and for a violated
+    instance the advice reads (``getAdviceProp``, and ``getAdviceNegProp``
+    under a ``not``): an ``and`` / ``or`` evaluates each child and asks for
+    advice only the ones that fail, a child failing when it does not hold
+    or, under an odd number of negations, when it holds."""
+    def evaluated(c: Condition) -> Set[GroundAtom]:
+        return {f for f in _evaluated_fluents(c, state) if f not in state.fluents}
+
+    def advice(c: Condition, positive: bool) -> Set[GroundAtom]:
+        if isinstance(c, Not):
+            return advice(c.child, not positive)
+        if not isinstance(c, (And, Or)):
+            return evaluated(c)
+        out: Set[GroundAtom] = set()
+        for child in c.children:
+            out |= evaluated(child)
+            if goal_holds(child, state) is not positive:
+                out |= advice(child, positive)
+        return out
+
+    return evaluated(pref) | (set() if goal_holds(pref, state) else advice(pref, True))
