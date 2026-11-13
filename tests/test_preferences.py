@@ -194,10 +194,15 @@ def _undefined(tmp_path, pref, init=""):
     # review on #206: VAL collects advice on every conjunct of a violated one
     ("(and (missing) (ready))", "(ready)"),
     ("(and (missing) (<= (f) 5))", "(f)"),
+    # review on #206: negative advice evaluates every child of a negated or
+    ("(not (or (ok) (ready)))", "(ready)"),
+    ("(not (or (ok) (<= (f) 5)))", "(f)"),
+    ("(not (not (and (missing) (ready))))", "(ready)"),
+    ("(imply (or (ok) (ready)) (missing))", "(ready)"),
 ])
 def test_undefined_preferences_fail(tmp_path, pref, unmet):
     """Review on #206: VAL fails a plan whose preference reads an unset fluent."""
-    dp = _undefined(tmp_path, pref)
+    dp = _undefined(tmp_path, pref, init="(ok)")
     failure = validate_plan(dp, []).failure
     assert failure.kind == "goal" and failure.unmet == (unmet,)
     assert validate_plan(dp, parse_plan("(set)\n")).valid

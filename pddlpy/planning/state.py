@@ -289,19 +289,23 @@ def preference_undefined(pref: Condition, state: State) -> Set[GroundAtom]:
     """The fluents with no value and the undefined derived atoms that judging
     a preference instance at the end of a plan reads (#201), as VAL's
     ``PreferenceGoal::evaluate``: the evaluation reads, and for a violated
-    instance the advice reads (``getAdviceProp``): an ``and`` / ``or``
-    evaluates each child and asks only the ones that fail for advice."""
+    instance the advice reads (``getAdviceProp``, and ``getAdviceNegProp``
+    under a ``not``): an ``and`` / ``or`` evaluates each child and asks for
+    advice only the ones that fail, a child failing when it does not hold
+    or, under an odd number of negations, when it holds."""
     def evaluated(c: Condition) -> Set[GroundAtom]:
         return {f for f in _evaluated_fluents(c, state) if f not in state.fluents}
 
-    def advice(c: Condition) -> Set[GroundAtom]:
+    def advice(c: Condition, positive: bool) -> Set[GroundAtom]:
+        if isinstance(c, Not):
+            return advice(c.child, not positive)
         if not isinstance(c, (And, Or)):
             return evaluated(c)
         out: Set[GroundAtom] = set()
         for child in c.children:
             out |= evaluated(child)
-            if not goal_holds(child, state):
-                out |= advice(child)
+            if goal_holds(child, state) is not positive:
+                out |= advice(child, positive)
         return out
 
-    return evaluated(pref) | (set() if goal_holds(pref, state) else advice(pref))
+    return evaluated(pref) | (set() if goal_holds(pref, state) else advice(pref, True))
