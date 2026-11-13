@@ -18,7 +18,7 @@ planners, not a wish list.
 | Requirement | PDDL | Parse | Solve | Validate plan | Notes |
 |---|---|---|---|---|---|
 | `:strips` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | yes | |
-| `:typing` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | yes | Multi-level hierarchies; a supertype parameter binds every transitive subtype. `(either ...)` parses but binds no objects (`validate` reports zero groundings). |
+| `:typing` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | yes | Multi-level hierarchies; a supertype parameter binds every transitive subtype. `(either t1 t2)` binds objects of any member type (#200). |
 | `:negative-preconditions` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | yes | Preconditions only, see goals below. |
 | `:disjunctive-preconditions` | 1.2 | yes | bfs, astar, gbfs, ucs | yes | Preconditions only. temporal refuses it. |
 | `:equality` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | yes | |
@@ -32,7 +32,7 @@ planners, not a wish list.
 | `:duration-inequalities` | 2.1 | partly | none | no | Parses, declared or not. An inequality bound is not taken as a duration: `validate` reports the action, and `temporal` and `validate-plan` refuse it ([#143]). |
 | `:continuous-effects` | 2.1 | no | none | no | The key and `#t` are not recognized (syntax error). |
 | `:derived-predicates` | 2.2 | yes | bfs, astar, gbfs, ucs | yes | `(:derived (p ?x) GD)` rules (`dp.domain.derived`) are recomputed in every state: recursive rules to a fixpoint, negated derived predicates by strata ([#141]). Rules that are not stratifiable are refused, and so are recursive rules that compare numeric fluents (VAL's verdict on those depends on where the recursion starts). temporal refuses derived predicates. Slow on large problems: every state re-evaluates every grounded rule. |
-| `:timed-initial-literals` | 2.2 | yes | none | no | `(at 5 (p))` in `:init` is kept out of `initialstate()` and stored with its time in `dp.problem.timed_literals`. `solve` and `validate-plan` refuse it, and `validate` reports an `unsupported` error, even when the key is not declared ([#142]). |
+| `:timed-initial-literals` | 2.2 | yes | temporal | yes | `(at 5 (p))` in `:init` is kept out of `initialstate()` and stored with its time in `dp.problem.timed_literals` ([#142]). temporal can wait for a literal or delay an action so it ends just after one, applies the ones that happen during an action to its `over all` conditions, treats literals that add and delete one atom at the same time as unsolvable (`validate` reports them), keeps every step start and end at least 0.001 away from a literal, and judges the goal after the last literal, as VAL does. Its schedules are not always makespan-minimal with literals. The classical planners refuse them. |
 | `:preferences` | 3.0 | no | none | no | The key is recognized; `preference` in goals or `:action` preconditions does not parse (it does parse inside durative-action conditions, and is ignored there). Planners refuse the key. |
 | `:constraints` | 3.0 | partly | none | no | Declaring the key is a syntax error ([#140]). A `(:constraints ...)` block in the domain or problem loads but is not modeled: `solve` and `validate-plan` refuse it, and `validate` reports an `unsupported` error. |
 | `:action-costs` | 3.1 | yes | ucs (cost-optimal); bfs, astar, gbfs, temporal | yes | `(increase (total-cost) ...)` and `(:metric minimize (total-cost))`. Every planner reports `Plan.cost`, but only ucs minimizes it. temporal minimizes makespan, and `(:metric minimize (total-time))` parses ([#158]). |

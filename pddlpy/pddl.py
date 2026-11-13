@@ -625,13 +625,28 @@ def _atom_from_formula(ctx: Any) -> Atom:
     return Atom(pred)
 
 
+
+def _type_name(ctx) -> str:
+    """The type of a typed list: a name, or ``(either t1 t2 ...)`` (#200)."""
+    prims = [p.getText() for p in ctx.primType()]
+    if ctx.getChild(0).getText() == '(':
+        return '(either %s)' % ' '.join(prims)
+    return prims[0]
+
+
+def _either_members(t: Optional[str]) -> Optional[List[str]]:
+    """The member types of an ``(either ...)`` type, else ``None``."""
+    if t is not None and t.startswith('(either '):
+        return t[len('(either '):-1].split()
+    return None
+
 def _typed_var_list(ctx: Any) -> Dict[str, Optional[str]]:
     """Read a typedVariableList context into an ordered {var: type} dict."""
     varlist: Dict[str, Optional[str]] = {}
     for v in ctx.VARIABLE():
         varlist[v.getText()] = None
     for vs in ctx.singleTypeVarList():
-        t = vs.r_type().getText()
+        t = _type_name(vs.r_type())
         for v in vs.VARIABLE():
             varlist[v.getText()] = t
     return varlist
@@ -1118,7 +1133,7 @@ class DomainListener(pddlListener):
         for v in tvl.VARIABLE():
             params.append((v.getText(), None))
         for vs in tvl.singleTypeVarList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.VARIABLE():
                 params.append((v.getText(), t))
         self.functions[name] = params
@@ -1221,7 +1236,7 @@ class DomainListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeVarList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.VARIABLE():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1362,7 +1377,7 @@ class DomainListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeNameList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.name():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1487,7 +1502,7 @@ class ProblemListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeNameList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.name():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1701,12 +1716,25 @@ class DomainProblem():
         # the implicit None root and match an untyped parameter.
         if t is None:
             return ot is None
+        members = _either_members(t)
+        if members is not None:
+            return any(self._is_subtype(ot, m) for m in members)
+        # Climb the hierarchy; an (either ...) type branches to its members.
+        # One seen set covers every branch, so a cycle ends the walk.
         seen = set()
-        while ot is not None and ot not in seen:
-            if ot == t:
-                return True
+        stack = [ot]
+        while stack:
+            ot = stack.pop()
+            if ot is None or ot in seen:
+                continue
             seen.add(ot)
-            ot = self.domain.types.get(ot)
+            members = _either_members(ot)
+            if members is not None:
+                stack.extend(members)
+            elif ot == t:
+                return True
+            else:
+                stack.append(self.domain.types.get(ot))
         return False
 
     def candidate_objects(self, t) -> List[str]:
@@ -1872,21 +1900,11 @@ class DomainProblem():
         """Returns the set of all transitive subtypes of ``t`` (#22), excluding
         ``t`` itself. E.g. for the logistics hierarchy ``subtypes_of('physobj')``
         is ``{'package', 'vehicle', 'truck', 'airplane'}``. ``t`` matches in
-        any case (#157).
+        any case (#157). A type declared ``- (either t1 t2)`` is a subtype of
+        each member (#200).
         """
         t = t.lower()
-        hierarchy = self.domain.types
-        result = set()
-        changed = True
-        while changed:
-            changed = False
-            for sub, sup in hierarchy.items():
-                if sub in result:
-                    continue
-                if sup == t or sup in result:
-                    result.add(sub)
-                    changed = True
-        return result
+        return {sub for sub in self.domain.types if sub != t and self._is_subtype(sub, t)}
 
     def initialstate(self) -> set:
         """Returns a set of atoms (Atom objects) corresponding to the initial

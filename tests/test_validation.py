@@ -222,10 +222,10 @@ def test_refuses_syntax_errors():
 
 
 def test_refuses_unsupported_requirements(tmp_path):
-    dp = _pair(tmp_path, "(define (domain d) (:requirements :strips :timed-initial-literals)"
+    dp = _pair(tmp_path, "(define (domain d) (:requirements :strips :preferences)"
                " (:predicates (p)) (:action a :parameters () :effect (p)))",
                "(define (problem p) (:domain d) (:init) (:goal (p)))")
-    with pytest.raises(PlanValidationError, match="timed-initial-literals"):
+    with pytest.raises(PlanValidationError, match="preferences"):
         simulate(dp, [])
 
 

@@ -93,10 +93,13 @@ def validate_requirements(domainproblem: "DomainProblem") -> None:
             )
 
 
-def check_modeled(domainproblem: "DomainProblem", syntax: bool = True) -> None:
+def check_modeled(domainproblem: "DomainProblem", syntax: bool = True,
+                  timed: bool = False) -> None:
     """Refuse input the object model reads but drops or misreads, so nothing
-    is solved or judged as if it were absent: ``(:constraints ...)`` (#140) and timed
-    initial literals (#142), even when their requirement is not declared.
+    is solved or judged as if it were absent: ``(:constraints ...)`` (#140)
+    and, unless ``timed`` (the caller handles time: the temporal planner,
+    plan validation, ``validate``), timed initial literals (#142), even when
+    their requirement is not declared.
     With ``syntax``, also input with syntax errors: the parser skips what it
     cannot read, e.g. a ``(:derived ...)`` rule (#141). ``diagnose`` reports
     those itself and passes ``syntax=False``."""
@@ -104,10 +107,10 @@ def check_modeled(domainproblem: "DomainProblem", syntax: bool = True) -> None:
         raise UnsupportedRequirementsError(
             "the domain or problem has syntax errors, so parts of it were "
             "skipped; run `pddlpy validate` (#141)")
-    if domainproblem.problem.timed_literals:
+    if domainproblem.problem.timed_literals and not timed:
         raise UnsupportedRequirementsError(
-            "timed initial literals, (at N ...) in :init, are not supported "
-            "yet (#142)")
+            "timed initial literals, (at N ...) in :init, need the temporal "
+            "planner (#142)")
     if domainproblem.domain.derived and domainproblem.derived_strata() is None:
         raise UnsupportedRequirementsError(
             "the (:derived ...) rules are not stratifiable: a derived predicate "

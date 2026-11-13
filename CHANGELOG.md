@@ -47,6 +47,13 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **Timed initial literals are solved and validated** (#142): `(at 5 (p))`
+  in `:init` was refused. `temporal` now plans with them (waiting for a
+  literal, applying the ones during an action to its `over all`
+  conditions), and `validate-plan` / `simulate` apply them as happenings
+  (`til` events in the trace), mutex with a step touching the same atom
+  then. The goal is judged after the last literal, as in VAL. The
+  classical planners still refuse them.
 - **Goals other than a conjunction of positive atoms are solved** (#138):
   `not`, `or`, `imply`, `exists`, `forall`, `=` and numeric comparisons in
   `(:goal ...)` were misread (a `(not (p))` goal was read as `(p)`), then
@@ -54,6 +61,10 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   `DomainProblem.goal_condition()` exposes it. `validate-plan` reports the
   failing conjuncts, and a goal reading a fluent with no value fails, as in
   VAL. `astar`/`gbfs` use a blind heuristic for such goals.
+- **`(either t1 t2)` types bound no objects** (#200): an action with an
+  `(either ...)` parameter grounded to zero instances. It now binds objects
+  of any member type or its subtypes; objects and types declared
+  `- (either ...)` count as each member.
 - **`validate` reported quantified variables in durative conditions as
   undeclared parameters** (#193): in `(at start (forall (?y - a) (p ?y)))`,
   `?y` was taken for a parameter of the action. Such conditions are still
