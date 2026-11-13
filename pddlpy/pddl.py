@@ -681,7 +681,7 @@ def _ordered_params(tvl: Any) -> List[Tuple[str, Optional[str]]]:
     params: List[Tuple[str, Optional[str]]] = []
     for child in tvl.getChildren():
         if isinstance(child, pddlParser.SingleTypeVarListContext):
-            t = child.r_type().getText()
+            t = _type_name(child.r_type())
             params.extend((v.getText(), t) for v in child.VARIABLE())
         else:
             params.append((child.getText(), None))
