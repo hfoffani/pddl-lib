@@ -74,10 +74,10 @@ TOLERANCE = 0.001
 
 def planned_duration(da: "DurativeAction") -> float:
     """The duration temporal gives ``da`` (#143): the shortest its bounds
-    allow, once that is more than ``TOLERANCE`` (its start and end are then
-    separate happenings); else ``SEPARATION``, capped by the upper bound."""
+    allow, but at least twice ``TOLERANCE`` when they allow that, so its
+    start and end are separate happenings."""
     lo, hi = da.bounds() or (0.0, 0.0)
-    return lo if lo > TOLERANCE else min(SEPARATION, hi)
+    return min(max(lo, 2 * TOLERANCE), hi)
 
 #: Requirements the temporal planner supports: the STRIPS set plus
 #: :durative-actions and :timed-initial-literals.

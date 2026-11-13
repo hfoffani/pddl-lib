@@ -30,7 +30,7 @@ def _dp(tmp_path, constraint, declared=True):
     ("(and (>= ?duration 1) (<= ?duration 3))", 1.0, ["1", "2.5", "3"], ["0.5", "4"]),
     ("(>= ?duration 2)", 2.0, ["2", "100"], ["1"]),
     # VAL accepts 0 here (it also accepts negative durations; pddlpy does not)
-    ("(<= ?duration 3)", 0.01, ["0.01", "0", "3", "3.0005"], ["4", "-1"]),
+    ("(<= ?duration 3)", 0.002, ["0.002", "0", "3", "3.0005"], ["4", "-1"]),
     ("(and (>= ?duration 2) (<= ?duration 2))", 2.0, ["2"], ["3"]),
     ("(and (= ?duration 2) (<= ?duration 5))", 2.0, ["2"], ["3"]),
 ])
@@ -113,7 +113,7 @@ def test_duration_kept_apart_from_the_start(tmp_path):
                   "  :condition (and (at start (p)) (at end (q)))"
                   "  :effect (and (at start (q)) (at end (done)))))",
                   "(define (problem x) (:domain t) (:init (p)) (:goal (done)))")
-    assert [s.duration for s in plan.steps] == [0.01]
+    assert [s.duration for s in plan.steps] == [0.002]
 
 
 def test_delayed_start_with_a_longer_duration(tmp_path):
@@ -129,16 +129,22 @@ def test_delayed_start_with_a_longer_duration(tmp_path):
     assert [(round(s.start, 3), s.duration) for s in plan.steps] == [(0.51, 1.5)]
 
 
-def test_short_duration_before_a_timed_literal(tmp_path):
+@pytest.mark.parametrize("bounds", [
+    "(and (>= ?duration 0.002) (<= ?duration 0.02))",
+    "(and (>= ?duration 0.0005) (<= ?duration 0.02))",
+    "(and (>= ?duration 0.001) (<= ?duration 0.02))",
+    "(<= ?duration 0.02)",
+])
+def test_short_duration_before_a_timed_literal(tmp_path, bounds):
     """Review on #210: 0.002 already separates start and end; 0.01 would
     cross the literal that breaks the invariant at 0.007."""
     plan = _solve(tmp_path,
                   "(define (domain t) (:requirements :strips :durative-actions"
                   " :duration-inequalities :timed-initial-literals) (:predicates (p) (q) (done))"
                   " (:durative-action go :parameters ()"
-                  "  :duration (and (>= ?duration 0.002) (<= ?duration 0.02))"
+                  "  :duration %s"
                   "  :condition (and (at start (p)) (over all (p)) (at end (q)))"
-                  "  :effect (and (at start (q)) (at end (done)))))",
+                  "  :effect (and (at start (q)) (at end (done)))))" % bounds,
                   "(define (problem x) (:domain t) (:init (p) (at 0.007 (not (p))))"
                   " (:goal (done)))")
     assert [s.duration for s in plan.steps] == [0.002]
