@@ -257,6 +257,16 @@ def test_recursion_through_numeric_reads_is_refused(tmp_path, rules, refused):
             check()
 
 
+def test_either_typed_rule_parameters(tmp_path):
+    domain = ("(define (domain e) (:requirements :typing :derived-predicates)"
+              " (:types a b) (:predicates (p ?x) (q ?x))"
+              " (:derived (q ?x - (either a b)) (p ?x))"
+              " (:action noop :parameters () :effect (and)))")
+    d, p = _pair(tmp_path, domain, "(define (problem e) (:domain e) (:objects i - a j - b)"
+                 " (:init (p i) (p j)) (:goal (and (q i) (q j))))")
+    assert get("bfs").solve(DomainProblem(d, p)) is not None
+
+
 def test_undefined_markers_are_not_serialized(tmp_path):
     from pddlpy.serialize import state_dict
     domain = ("(define (domain u) (:requirements :strips :derived-predicates :numeric-fluents)"
