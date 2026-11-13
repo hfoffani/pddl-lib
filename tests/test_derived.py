@@ -198,6 +198,28 @@ def test_precondition_reading_an_undefined_derived_atom(tmp_path):
     assert [n for n, _ in get("bfs").solve(dp).action_names()] == ["set", "use"]
 
 
+@pytest.mark.parametrize("rules, effect, goal", [
+    # the reader comes before the rule it reads (review on #205)
+    ("(:derived (r) (q)) (:derived (q) (<= (f) 5))", "(done)", "(and (done) (not (r)))"),
+    # a conditional-effect guard reads an undefined derived atom
+    ("(:derived (r) (q)) (:derived (q) (<= (f) 5))", "(when (not (q)) (done))", "(done)"),
+])
+def test_undefined_reads_need_the_fluent_set(tmp_path, rules, effect, goal):
+    domain = ("(define (domain u) (:requirements :adl :derived-predicates :numeric-fluents)"
+              " (:predicates (q) (r) (done)) (:functions (f)) %s"
+              " (:action use :parameters () :precondition (and) :effect %s)"
+              " (:action set :parameters () :effect (assign (f) 10)))" % (rules, effect))
+    d, p = _pair(tmp_path, domain,
+                 "(define (problem u) (:domain u) (:init) (:goal %s))" % goal)
+    dp = DomainProblem(d, p)
+    assert ("#undefined", "r") in State.from_problem(dp).atoms
+    assert not validate_plan(dp, parse_plan("(use)\n")).valid
+    for name in ("bfs", "astar", "gbfs", "ucs"):
+        plan = get(name).solve(dp)
+        text = "".join("(%s)\n" % n for n, _ in plan.action_names())
+        assert len(plan) == 2 and validate_plan(dp, parse_plan(text)).valid
+
+
 def test_undefined_markers_are_not_serialized(tmp_path):
     from pddlpy.serialize import state_dict
     domain = ("(define (domain u) (:requirements :strips :derived-predicates :numeric-fluents)"

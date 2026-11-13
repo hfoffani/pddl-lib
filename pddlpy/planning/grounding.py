@@ -45,10 +45,14 @@ class GroundedTask:
                 yield action, state.apply(action).derived(self.domainproblem)
 
     def _defined(self, action: "Operator", state: State) -> bool:
-        """False if the precondition reads an undefined derived atom (#141)."""
-        if not self.domainproblem.domain.derived or action.precondition is None:
+        """False if the precondition or a conditional-effect guard reads an
+        undefined derived atom (#141)."""
+        if not self.domainproblem.domain.derived:
             return True
-        return holds3(action.precondition, state.atoms, state.fluents) is not None
+        conditions = [ce.condition for ce in action.conditional_effects]
+        if action.precondition is not None:
+            conditions.append(action.precondition)
+        return all(holds3(c, state.atoms, state.fluents) is not None for c in conditions)
 
     def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""

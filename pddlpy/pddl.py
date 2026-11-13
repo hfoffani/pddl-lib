@@ -1805,10 +1805,17 @@ class DomainProblem():
                         rest.append((head, body))
                 pending = rest
             # what is left is false, or undefined: a body that reads a fluent
-            # with no value marks its head, so readers are undefined too
-            for head, body in pending:
-                if head not in out and holds3(body, out, fluents) is None:
-                    out.add(undefined_marker(head))
+            # with no value marks its head, so readers are undefined too, in
+            # any rule order and through recursion
+            changed = True
+            while changed:
+                changed = False
+                for head, body in pending:
+                    mark = undefined_marker(head)
+                    if mark not in out and head not in out \
+                            and holds3(body, out, fluents) is None:
+                        out.add(mark)
+                        changed = True
         return frozenset(out)
 
     def types(self) -> Dict[str, Optional[str]]:
