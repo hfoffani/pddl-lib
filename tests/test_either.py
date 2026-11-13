@@ -4,7 +4,7 @@ from pddlpy.planning import get
 
 DOMAIN = """(define (domain e) (:requirements :strips :typing)
   (:types vehicle - object truck plane - vehicle boat cargo - object
-          amphibian - (either truck boat))
+          amphibian - (either truck boat) small - amphibian)
   (:predicates (at ?v - (either truck boat)) (moved ?v - object))
   (:action go :parameters (?v - (EITHER truck boat))
     :precondition (at ?v) :effect (moved ?v)))"""
@@ -30,6 +30,9 @@ def test_either_parameter_binds_member_types(tmp_path):
     assert bound == ["a1", "b1", "t1", "x"]
     assert dp.candidate_objects("(either plane boat)") == ["p1", "b1", "a1", "y"]
     assert dp.types()["amphibian"] == "(either truck boat)"
+    assert dp.subtypes_of("truck") == {"amphibian", "small"}
+    assert dp.subtypes_of("vehicle") == {"truck", "plane", "amphibian", "small"}
+    assert dp.subtypes_of("object") == {"vehicle", "truck", "plane", "boat", "cargo", "amphibian", "small"}
 
 
 def test_either_domain_solves(tmp_path):

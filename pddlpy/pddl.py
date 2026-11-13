@@ -1625,21 +1625,11 @@ class DomainProblem():
         """Returns the set of all transitive subtypes of ``t`` (#22), excluding
         ``t`` itself. E.g. for the logistics hierarchy ``subtypes_of('physobj')``
         is ``{'package', 'vehicle', 'truck', 'airplane'}``. ``t`` matches in
-        any case (#157).
+        any case (#157). A type declared ``- (either t1 t2)`` is a subtype of
+        each member (#200).
         """
         t = t.lower()
-        hierarchy = self.domain.types
-        result = set()
-        changed = True
-        while changed:
-            changed = False
-            for sub, sup in hierarchy.items():
-                if sub in result:
-                    continue
-                if sup == t or sup in result:
-                    result.add(sub)
-                    changed = True
-        return result
+        return {sub for sub in self.domain.types if sub != t and self._is_subtype(sub, t)}
 
     def initialstate(self) -> set:
         """Returns a set of atoms (Atom objects) corresponding to the initial
