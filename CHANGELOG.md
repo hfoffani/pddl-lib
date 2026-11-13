@@ -9,7 +9,7 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 - **Duration inequalities** (#143): numeric bounds such as
   `(and (>= ?duration 1) (<= ?duration 3))` give a duration range
   (`DurativeAction.duration_range`, `bounds()`). `temporal` schedules the
-  shortest allowed duration (at least 0.002), or, around timed
+  lower bound (0.002 if it is 0.001 or less), or, around timed
   literals, the longest one or one stretched to end just after a literal, and `validate-plan` accepts any duration in the
   range. Timed and expression bounds are still refused.
 - **Goal preferences** (#201): `(preference name GD)` in `(:goal ...)`,

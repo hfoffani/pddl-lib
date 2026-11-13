@@ -129,13 +129,15 @@ def test_delayed_start_with_a_longer_duration(tmp_path):
     assert [(round(s.start, 3), s.duration) for s in plan.steps] == [(0.51, 1.5)]
 
 
-@pytest.mark.parametrize("bounds", [
-    "(and (>= ?duration 0.002) (<= ?duration 0.02))",
-    "(and (>= ?duration 0.0005) (<= ?duration 0.02))",
-    "(and (>= ?duration 0.001) (<= ?duration 0.02))",
-    "(<= ?duration 0.02)",
+@pytest.mark.parametrize("bounds, til, duration", [
+    ("(and (>= ?duration 0.002) (<= ?duration 0.02))", 0.007, 0.002),
+    ("(and (>= ?duration 0.0005) (<= ?duration 0.02))", 0.007, 0.002),
+    ("(and (>= ?duration 0.001) (<= ?duration 0.02))", 0.007, 0.002),
+    ("(<= ?duration 0.02)", 0.007, 0.002),
+    # a lower bound above the tolerance is kept as it is
+    ("(and (>= ?duration 0.0015) (<= ?duration 0.02))", 0.0028, 0.0015),
 ])
-def test_short_duration_before_a_timed_literal(tmp_path, bounds):
+def test_short_duration_before_a_timed_literal(tmp_path, bounds, til, duration):
     """Review on #210: 0.002 already separates start and end; 0.01 would
     cross the literal that breaks the invariant at 0.007."""
     plan = _solve(tmp_path,
@@ -145,6 +147,6 @@ def test_short_duration_before_a_timed_literal(tmp_path, bounds):
                   "  :duration %s"
                   "  :condition (and (at start (p)) (over all (p)) (at end (q)))"
                   "  :effect (and (at start (q)) (at end (done)))))" % bounds,
-                  "(define (problem x) (:domain t) (:init (p) (at 0.007 (not (p))))"
-                  " (:goal (done)))")
-    assert [s.duration for s in plan.steps] == [0.002]
+                  "(define (problem x) (:domain t) (:init (p) (at %g (not (p))))"
+                  " (:goal (done)))" % til)
+    assert [s.duration for s in plan.steps] == [duration]
