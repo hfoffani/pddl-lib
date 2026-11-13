@@ -40,6 +40,7 @@ from pddlpy.planning import (
     validate_requirements,
 )
 from pddlpy.planning.state import _expr_fluents
+from pddlpy.planning.temporal import contradictory_literals
 
 
 class _CollectingErrorListener(ErrorListener):
@@ -197,6 +198,14 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
             "object %r is not declared in :objects (used in %s)"
             % (term, ", ".join(sorted(unknown[term])))))
 
+    # Timed initial literals (#142) that add and delete one atom at the same
+    # time are mutex (VAL): no plan can be valid.
+    for time, atom in contradictory_literals(dp.problem.timed_literals):
+        issues.append(_issue(
+            "error", "timed_literals",
+            "(%s) is both added and deleted by timed literals at time %g"
+            % (" ".join(atom), time)))
+
     # (not ...) in :init (#186): false anyway (closed world), so ignored; an
     # error when the same atom is also asserted.
     init = {atom_tuple(a) for a in dp.initialstate()}
@@ -228,7 +237,7 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
 
     # Parts the model reads but drops (#140): solve refuses them too.
     try:
-        check_modeled(dp, syntax=False, preferences=True)  # syntax errors are reported above
+        check_modeled(dp, syntax=False, timed=True, preferences=True)  # syntax errors are reported above
     except UnsupportedRequirementsError as exc:
         issues.append(_issue("error", "unsupported", str(exc)))
 

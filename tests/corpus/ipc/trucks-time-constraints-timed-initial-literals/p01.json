@@ -693,11 +693,6 @@
  "validate": {
   "issues": [
    {
-    "check": "unsupported",
-    "message": "timed initial literals, (at N ...) in :init, are not supported yet (#142)",
-    "severity": "error"
-   },
-   {
     "check": "durative",
     "message": "durative action 'drive' has no simple numeric duration",
     "severity": "error"

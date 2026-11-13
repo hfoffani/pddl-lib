@@ -81,7 +81,8 @@ if TYPE_CHECKING:
 TOLERANCE = 0.01
 
 #: Requirements whose semantics the validator implements.
-VALIDATION_CAPABILITIES: FrozenSet[str] = ADL_CAPABILITIES | {":durative-actions", ":preferences"}
+VALIDATION_CAPABILITIES: FrozenSet[str] = ADL_CAPABILITIES | {
+    ":durative-actions", ":timed-initial-literals", ":preferences"}
 
 
 class PlanValidationError(PlannerError):
@@ -222,7 +223,8 @@ class Failure(NamedTuple):
 
 class TracePoint(NamedTuple):
     """The state after one happening part: ``event`` is ``action`` for an
-    instantaneous step, ``start`` / ``end`` for a durative one."""
+    instantaneous step, ``start`` / ``end`` for a durative one, ``til`` for
+    a timed initial literal (step 0, ``action`` its PDDL text)."""
 
     time: float
     event: str
@@ -409,6 +411,34 @@ class _Part:
         return adds, dels, [(e.head.head, e.op, e.expr.value(state.fluents)) for e in nums]
 
 
+class _TilPart(_Part):
+    """A timed initial literal (#142): a happening part with no conditions
+    whose effect adds or deletes one atom. It joins the happening at its
+    time, so it is mutex with a step that touches its atom then."""
+
+    def __init__(self, time: float, atom: GroundAtom, positive: bool) -> None:
+        text = _atom_text(atom) if positive else "(not %s)" % _atom_text(atom)
+        super().__init__(time, "til", 0, "(at %g %s)" % (time, text), None)  # type: ignore[arg-type]
+        self.adds = {atom} if positive else set()
+        self.dels = set() if positive else {atom}
+
+    def unmet(self, state: State) -> List[str]:
+        return []
+
+    def undefined(self, state: State) -> List[str]:
+        return []
+
+    def reads(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+        return set(), set()
+
+    def writes(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom], Dict[GroundAtom, str]]:
+        return self.adds, self.dels, {}
+
+    def effects(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom],
+                                             List[Tuple[GroundAtom, str, float]]]:
+        return self.adds, self.dels, []
+
+
 def _literal_unmet(a: DurativeAction, when: str, state: State) -> List[str]:
     missing = [_atom_text(atom_tuple(x)) for x in a.condition_pos[when]
                if atom_tuple(x) not in state.atoms]
@@ -420,11 +450,18 @@ def _literal_unmet(a: DurativeAction, when: str, state: State) -> List[str]:
 _ADDITIVE = {"increase", "decrease"}
 
 
-def _mutex(parts: List[_Part], state: State) -> Optional[Tuple[_Part, _Part, str]]:
+def _mutex(parts: List[_Part], state: State, dp: "DomainProblem"
+           ) -> Optional[Tuple[_Part, _Part, str]]:
     """The first interfering pair of parts in one happening, with the atom
     or fluent they contend for. Simultaneous increases / decreases of a
-    fluent do not interfere; they accumulate."""
-    io = [(p, p.reads(state), p.writes(state)) for p in parts]
+    fluent do not interfere; they accumulate. Reading a derived atom reads
+    what its rules depend on (#141)."""
+    def reads(p: _Part) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+        atoms, fluents = p.reads(state)
+        more, morefl = dp.derived_reads(atoms)
+        return atoms | more, fluents | morefl
+
+    io = [(p, reads(p), p.writes(state)) for p in parts]
     for i, (p, (pr, prf), (pa, pd, pf)) in enumerate(io):
         for q, (qr, qrf), (qa, qd, qf) in io[i + 1:]:
             clash = (pa & qd) | (pd & qa) | ((pa | pd) & qr) | ((qa | qd) & pr)
@@ -447,7 +484,7 @@ def check_supported(dp: "DomainProblem") -> None:
         raise PlanValidationError(
             "plan validation does not support %s" % sorted(unsupported))
     try:
-        check_modeled(dp, preferences=True)
+        check_modeled(dp, timed=True, preferences=True)
     except UnsupportedRequirementsError as exc:
         raise PlanValidationError("plan validation: %s" % exc)
 
@@ -538,6 +575,8 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
     parts, failure = _resolve(dp, steps)
     if failure is not None:
         return Simulation((), failure, state)
+    # timed literals first, so a tie with a step keeps plan order after them
+    parts = [_TilPart(t, atom_tuple(a), pos) for t, a, pos in dp.problem.timed_literals] + parts
     trace: List[TracePoint] = []
     active: Dict[int, _Part] = {}  # step -> its start part, while running
 
@@ -560,9 +599,11 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
             if undefined:
                 return fail("undefined-fluent", "reads fluents with no value",
                             p, undefined, state)
-        clash = _mutex(happening, state) if len(happening) > 1 else None
+        clash = _mutex(happening, state, dp) if len(happening) > 1 else None
         if clash:
             p, q, what = clash
+            if isinstance(p, _TilPart):  # blame the plan's step
+                p, q = q, p
             return fail("mutex", "interferes with step %d %s over %s "
                         "(separate them in time)" % (q.step, q.text, what), p, [what], state)
         adds: Set[GroundAtom] = set()
@@ -573,7 +614,8 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
             adds |= a
             dels |= d
             updates.extend(u)
-        state = State((state.atoms - dels) | adds, apply_numeric(state.fluents, updates))
+        state = State((state.atoms - dels) | adds,
+                      apply_numeric(state.fluents, updates)).derived(dp)
         for p in happening:
             if p.event == "start":
                 active[p.step] = p

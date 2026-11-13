@@ -94,10 +94,12 @@ def validate_requirements(domainproblem: "DomainProblem") -> None:
 
 
 def check_modeled(domainproblem: "DomainProblem", syntax: bool = True,
-                  preferences: bool = False) -> None:
+                  timed: bool = False, preferences: bool = False) -> None:
     """Refuse input the object model reads but drops or misreads, so nothing
-    is solved or judged as if it were absent: ``(:constraints ...)`` (#140) and timed
-    initial literals (#142), even when their requirement is not declared.
+    is solved or judged as if it were absent: ``(:constraints ...)`` (#140)
+    and, unless ``timed`` (the caller handles time: the temporal planner,
+    plan validation, ``validate``), timed initial literals (#142), even when
+    their requirement is not declared.
     With ``syntax``, also input with syntax errors: the parser skips what it
     cannot read, e.g. a ``(:derived ...)`` rule (#141). ``diagnose`` reports
     those itself and passes ``syntax=False``. Unless ``preferences`` (the
@@ -110,13 +112,19 @@ def check_modeled(domainproblem: "DomainProblem", syntax: bool = True,
     if domainproblem.problem.preferences and not preferences:
         raise UnsupportedRequirementsError(
             "goal preferences, (preference ...), need the ucs planner (#201)")
-    if domainproblem.problem.timed_literals:
+    if domainproblem.problem.timed_literals and not timed:
         raise UnsupportedRequirementsError(
-            "timed initial literals, (at N ...) in :init, are not supported "
-            "yet (#142)")
-    if domainproblem.domain.derived:
+            "timed initial literals, (at N ...) in :init, need the temporal "
+            "planner (#142)")
+    if domainproblem.domain.derived and domainproblem.derived_strata() is None:
         raise UnsupportedRequirementsError(
-            "derived predicates, (:derived ...), are not supported yet (#141)")
+            "the (:derived ...) rules are not stratifiable: a derived predicate "
+            "depends on its own negation (#141)")
+    recursive = domainproblem.domain.derived and domainproblem.recursive_numeric_derived()
+    if recursive:
+        raise UnsupportedRequirementsError(
+            "recursive (:derived ...) rules that compare numeric fluents are "
+            "not supported: %s (#141)" % ", ".join(recursive))
     if domainproblem.domain.constraints or domainproblem.problem.constraints:
         raise UnsupportedRequirementsError(
             "(:constraints ...) is not supported yet (#140)")

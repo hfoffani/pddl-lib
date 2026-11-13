@@ -1589,13 +1589,7 @@
   }
  },
  "validate": {
-  "issues": [
-   {
-    "check": "unsupported",
-    "message": "derived predicates, (:derived ...), are not supported yet (#141)",
-    "severity": "error"
-   }
-  ],
-  "valid": false
+  "issues": [],
+  "valid": true
  }
 }
