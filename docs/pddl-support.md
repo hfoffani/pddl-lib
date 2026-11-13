@@ -13,7 +13,7 @@ planners, not a wish list.
   VAL's semantics (#166). Otherwise they refuse the plan
   (`PlanValidationError`, CLI exit `2`) rather than guess; they also refuse
   files with syntax errors, and durative actions with numeric, conditional or quantified parts
-  ([#139]) or timed or expression duration bounds ([#143]).
+  ([#139]) or timed or expression duration bounds.
 
 | Requirement | PDDL | Parse | Solve | Validate plan | Notes |
 |---|---|---|---|---|---|
@@ -48,8 +48,8 @@ atoms, `astar` and `gbfs` fall back to a blind heuristic (0 at a goal, else
 **Declared vs. used.** When a domain declares any `:requirements`, `solve`
 also checks that the features it uses (typing, negation, disjunction,
 equality, quantifiers, conditional effects) are declared, and refuses the
-domain otherwise. Domains with no `:requirements` at all are accepted as they
-are. `validate` does not run this check yet ([#144]).
+domain otherwise, and `validate` reports it as a `requirements` error
+([#144]). Domains with no `:requirements` at all are accepted as they are.
 
 [#158]: https://github.com/hfoffani/pddl-lib/issues/158
 [#138]: https://github.com/hfoffani/pddl-lib/issues/138
