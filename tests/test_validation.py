@@ -223,10 +223,10 @@ def test_refuses_syntax_errors(tmp_path):
 
 
 def test_refuses_unsupported_requirements(tmp_path):
-    dp = _pair(tmp_path, "(define (domain d) (:requirements :strips :duration-inequalities)"
+    dp = _pair(tmp_path, "(define (domain d) (:requirements :strips :semantics)"
                " (:predicates (p)) (:action a :parameters () :effect (p)))",
                "(define (problem p) (:domain d) (:init) (:goal (p)))")
-    with pytest.raises(PlanValidationError, match="duration-inequalities"):
+    with pytest.raises(PlanValidationError, match="semantics"):
         simulate(dp, [])
 
 
@@ -239,9 +239,6 @@ def test_judges_non_conjunctive_goals():
 
 
 @pytest.mark.parametrize("da", [
-    ":duration (<= ?duration 2) :condition (at start (p)) :effect (at end (q))",
-    ":duration (and (>= ?duration 1) (<= ?duration 2)) :condition (at start (p))"
-    " :effect (at end (q))",
     ":duration (at end (= ?duration 2)) :condition (at start (p)) :effect (at end (q))",
     ":duration (= ?duration (f)) :condition (at start (p)) :effect (at end (q))",
     ":duration (= ?duration 2) :condition (at start (> (f) 0)) :effect (at end (q))",

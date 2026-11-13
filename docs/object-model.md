@@ -53,7 +53,7 @@ comparisons; #138), evaluated with `holds(atoms, fluents)`.
 `dp.problem.simple_goal` is `False` when the goal is more than a
 conjunction of positive atoms. A
 `DurativeAction`'s `simple` is `False` when it has parts the model does not
-capture (numeric, conditional, quantified, duration inequalities).
+capture (numeric, conditional, quantified, timed or expression duration bounds).
 
 ### `Atom`
 A predicate applied to terms, e.g. `(on ?x ?y)`. `predicate` is
@@ -101,7 +101,10 @@ evaluates a numeric precondition; `NumericEffect.apply(valuation)` returns the
 ### `DurativeAction` (#23)
 A durative action with time-tagged `condition_pos`/`condition_neg` keyed by
 `'start'`/`'over'`/`'end'`, `effect_pos`/`effect_neg` keyed by
-`'start'`/`'end'`, and a `duration`. Recovered into the model; the reference
+`'start'`/`'end'`, a fixed `duration` (`None` for a range), and
+`duration_range`, the `(lo, hi)` its numeric bounds allow (#143; `hi` may be
+`inf`; `None` for timed or expression bounds). `bounds()` returns
+`duration_range`, falling back to `(duration, duration)`. Recovered into the model; the reference
 planners are non-temporal, but the `temporal` planner (below) schedules them.
 
 ## Planning layer (`pddlpy.planning`)
@@ -124,8 +127,8 @@ The semantic layer on top of `DurativeAction` — validation and `at start`
 applicability, deliberately short of a temporal planner:
 
 - **`validate_durative_action(action, declared_predicates=None)`** — raises
-  `DurativeValidationError` unless the duration is present and strictly
-  positive, every `?variable` in a condition/effect is a declared parameter,
+  `DurativeValidationError` unless the duration bounds are numeric and allow
+  a positive duration, every `?variable` in a condition/effect is a declared parameter,
   and (when `declared_predicates` is passed, e.g. `dp.predicates()`) every
   referenced predicate is declared.
 - **`validate_durative_actions(dp)`** — validates every durative action in a

@@ -976,14 +976,28 @@ def _simple_daeffect(de: Any) -> bool:
     return all(_simple_daeffect(e) for e in de.daEffect())
 
 
+def _duration_range(ctx: Any) -> Optional[Tuple[float, float]]:
+    """The ``(lo, hi)`` durations a durationConstraint allows (#143), or
+    ``None`` unless every constraint is an untimed numeric bound."""
+    lo, hi = 0.0, math.inf
+    sdcs = ctx.simpleDurationConstraint()
+    if not sdcs:
+        return None
+    for s in sdcs:
+        if s.durOp() is None or s.durValue().NUMBER() is None:
+            return None
+        op, n = s.durOp().getText(), float(s.durValue().NUMBER().getText())
+        if op != '<=':
+            lo = max(lo, n)
+        if op != '>=':
+            hi = min(hi, n)
+    return lo, hi
+
+
 def _simple_durative(body: Any) -> bool:
     """True if a daDefBody context is fully captured by ``DurativeAction``:
-    a single (= ?duration NUMBER) and literal conditions / effects."""
-    sdcs = body.durationConstraint().simpleDurationConstraint()
-    if len(sdcs) != 1:
-        return False
-    sdc = sdcs[0]
-    if sdc.durOp() is None or sdc.durOp().getText() != '=' or sdc.durValue().NUMBER() is None:
+    numeric duration bounds and literal conditions / effects."""
+    if _duration_range(body.durationConstraint()) is None:
         return False
     gd, de = body.daGD(), body.daEffect()
     return (gd is None or _simple_dagd(gd)) and (de is None or _simple_daeffect(de))
@@ -1148,10 +1162,11 @@ class DurativeAction():
         effect_pos / effect_neg -- dicts keyed by 'start'/'end', each a set of
                     effect atoms to add / delete at that time point.
         simple -- True when the definition is fully captured by the fields
-                    above: a fixed (= ?duration N) and conjunctions of
+                    above: numeric duration bounds and conjunctions of
                     time-tagged literals. Numeric, conditional, quantified or
-                    preference parts, and duration inequalities, are not
-                    modeled (#139, #143); plan validation refuses such actions.
+                    preference parts, and timed or expression duration
+                    bounds, are not modeled (#139, #143); plan validation
+                    refuses such actions.
     """
     CONDITION_TIMES = ('start', 'over', 'end')
     EFFECT_TIMES = ('start', 'end')
@@ -1160,11 +1175,21 @@ class DurativeAction():
         self.operator_name = name
         self.variable_list: Dict[str, Optional[str]] = {}
         self.duration: Optional[float] = None
+        #: ``(lo, hi)`` the duration constraints allow (#143), ``hi``
+        #: possibly ``inf``; ``None`` when they are not plain numeric bounds
+        self.duration_range: Optional[Tuple[float, float]] = None
         self.condition_pos: Dict[str, set] = {t: set() for t in self.CONDITION_TIMES}
         self.condition_neg: Dict[str, set] = {t: set() for t in self.CONDITION_TIMES}
         self.effect_pos: Dict[str, set] = {t: set() for t in self.EFFECT_TIMES}
         self.effect_neg: Dict[str, set] = {t: set() for t in self.EFFECT_TIMES}
         self.simple = True
+
+    def bounds(self) -> Optional[Tuple[float, float]]:
+        """``(lo, hi)`` durations allowed (#143): ``duration_range``, or
+        ``(duration, duration)`` for an action built with only a duration."""
+        if self.duration_range is None and self.duration is not None:
+            return self.duration, self.duration
+        return self.duration_range
 
     def ground(self, varvals: VarVals) -> "DurativeAction":
         """Return a grounded copy with variables substituted and atoms turned
@@ -1172,6 +1197,7 @@ class DurativeAction():
         g = DurativeAction(self.operator_name)
         g.variable_list = dict(varvals)
         g.duration = self.duration
+        g.duration_range = self.duration_range
         g.simple = self.simple
         for t in self.CONDITION_TIMES:
             g.condition_pos[t] = set(a.ground(varvals) for a in self.condition_pos[t])
@@ -1263,26 +1289,15 @@ class DomainListener(pddlListener):
         action.simple = _simple_durative(ctx.daDefBody())
         self.durative_operators[action.operator_name] = action
 
-    def enterSimpleDurationConstraint(self, ctx):
-        # Capture (= ?duration N) when N is a literal. An inequality bound is
-        # not a duration (#143): the action is then not simple, and temporal
-        # and plan validation refuse it.
-        durval = ctx.durValue()
-        if (durval is not None and durval.NUMBER() is not None
-                and ctx.durOp().getText() == '='):
-            da = self.scopes[-1]
-            if isinstance(da, DurativeAction):
-                da.duration = float(durval.NUMBER().getText())
-
     def exitDurationConstraint(self, ctx):
-        # A duration only when every constraint is an untimed equality:
-        # (and (= ?duration 2) (<= ?duration 0)) or a timed (at start
-        # (= ?duration 2)) is not a fixed duration of 2 (#143).
-        if any(s.durOp() is None or s.durOp().getText() != '='
-               for s in ctx.simpleDurationConstraint()):
-            da = self.scopes[-1]
-            if isinstance(da, DurativeAction):
-                da.duration = None
+        # (= ?duration N) is a fixed duration; >= / <= bounds a range the
+        # temporal planner picks from (#143). A timed (at start (= ?duration
+        # 2)) or an expression bound is not modeled.
+        da = self.scopes[-1]
+        if isinstance(da, DurativeAction):
+            da.duration_range = _duration_range(ctx)
+            lo, hi = da.duration_range or (None, None)
+            da.duration = lo if lo == hi else None
 
     def enterTimedGD(self, ctx):
         # (at start|end goalDesc) or (over all goalDesc): collect the condition

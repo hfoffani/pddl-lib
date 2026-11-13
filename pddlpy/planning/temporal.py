@@ -29,6 +29,7 @@ from __future__ import annotations
 import bisect
 import heapq
 import itertools
+import math
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -38,6 +39,7 @@ from typing import (
     Iterator,
     List,
     Optional,
+    Set,
     Tuple,
 )
 
@@ -69,10 +71,18 @@ SEPARATION = 0.01
 #: never starts or ends this close to a timed initial literal (#142).
 TOLERANCE = 0.001
 
+
+def planned_duration(da: "DurativeAction") -> float:
+    """The duration temporal gives ``da`` (#143): the lower bound once it
+    is more than ``TOLERANCE`` (start and end are then separate
+    happenings), else twice ``TOLERANCE``; never past the upper bound."""
+    lo, hi = da.bounds() or (0.0, 0.0)
+    return min(lo if lo > TOLERANCE else 2 * TOLERANCE, hi)
+
 #: Requirements the temporal planner supports: the STRIPS set plus
 #: :durative-actions and :timed-initial-literals.
 TEMPORAL_CAPABILITIES: FrozenSet[str] = STRIPS_CAPABILITIES | {
-    ":durative-actions", ":timed-initial-literals"}
+    ":durative-actions", ":duration-inequalities", ":timed-initial-literals"}
 
 
 class ScheduledAction:
@@ -228,7 +238,7 @@ class TemporalTask:
         for da in self.durative:
             succ = apply_durative(state, da)
             if succ is not None:
-                yield da, float(da.duration or 0.0), succ
+                yield da, planned_duration(da), succ
 
     def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""
@@ -264,7 +274,8 @@ class TemporalTask:
         until just after the next timed literal; and each durative action
         delayed so it ends just after a later literal, for an ``at end``
         window that opens then (the delay and the action are one successor,
-        so the later node is not taken for the earlier one). A step does not
+        so the later node is not taken for the earlier one), or, with a
+        duration range, stretched from now to end just after one (#143). A step does not
         end within ``TOLERANCE`` of a timed literal either (#142)."""
         if fired < len(self.tils):
             wake = self.clear(self.tils[fired][0] + SEPARATION)
@@ -276,11 +287,23 @@ class TemporalTask:
                 succ, nfired = self.fire(state.apply(op), fired, after)
                 yield op, clock, 0.0, succ, nfired, after
         for da in self.durative:
-            duration = float(da.duration or 0.0)
-            starts = [clock] + sorted({
-                self.clear(t + SEPARATION - duration)
-                for t in self.til_times[fired:] if t + SEPARATION - duration > clock})
-            for start in starts:
+            shortest = planned_duration(da)
+            _, hi = da.bounds() or (0.0, 0.0)
+            candidates: Set[Tuple[float, float]] = set()
+            # the shortest and the longest duration, each started now or
+            # delayed so the action ends just after a later literal, for an
+            # ``at end`` window that opens then
+            for duration in {shortest, hi} - {math.inf}:
+                candidates.add((clock, duration))
+                candidates.update(
+                    (self.clear(t + SEPARATION - duration), duration)
+                    for t in self.til_times[fired:] if t + SEPARATION - duration > clock)
+            # a duration range can also stretch the action from now so it
+            # ends just after a later literal (#143)
+            candidates.update(
+                (clock, self.clear(t + SEPARATION) - clock) for t in self.til_times[fired:]
+                if shortest < self.clear(t + SEPARATION) - clock <= hi)
+            for start, duration in sorted(candidates):
                 end = start + duration
                 if self.near_til(end):
                     continue

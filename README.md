@@ -360,7 +360,7 @@ These are plans, not promises, and there are no dates. Roughly in order:
 5. Requirements by priority: goal-side ADL and `(either ...)`, timed initial
    literals, derived predicates, preferences, concurrent durative actions,
    trajectory constraints.
-6. Duration inequalities, continuous effects, object fluents.
+6. Continuous effects, object fluents.
 7. HDDL / HTN.
 
 ### History and acknowledgments ###

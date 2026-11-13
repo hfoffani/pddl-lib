@@ -155,13 +155,14 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   whole goal is `dp.goal_condition()`. With such goals `astar`/`gbfs` search
   blind, so prefer `bfs`/`ucs`. Derived predicates (`(:derived ...)`) work with the
   classical planners, not `temporal`. Not supported at all: `:constraints`,
-  duration inequalities,
   `:object-fluents`, `:continuous-effects` and the obsolete PDDL 1.2 keys
   (refused by name). `solve` refuses (exit 2) a pair with syntax errors:
   the parser skips what it cannot read, so the answer would be for another
   domain. `validate-plan` / `simulate` refuse (exit 2) what
   the model cannot represent instead of guessing: syntax errors, durative actions with numeric, conditional
-  or quantified parts or duration inequalities. Full status per requirement:
+  or quantified parts, or timed or expression duration bounds. Numeric
+  duration bounds (`(and (>= ?duration 1) (<= ?duration 3))`) are solved
+  with the shortest allowed duration. Full status per requirement:
   [docs/pddl-support.md](https://github.com/hfoffani/pddl-lib/blob/main/docs/pddl-support.md).
 - **Preferences** in `(:goal ...)` are soft: only `ucs` honours them,
   minimizing a metric like `(+ (total-cost) (* 5 (is-violated p)))`; the
