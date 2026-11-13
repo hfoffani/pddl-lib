@@ -686,6 +686,55 @@ def _polarities(cond: Condition, negated: bool = False) -> Iterator[Tuple[str, b
         yield from _polarities(cond.body, negated)
 
 
+def _expr_fluents(e: Expr) -> Iterator[GroundAtom]:
+    """The function heads a numeric expression reads."""
+    if isinstance(e, Fluent):
+        yield e.head
+    elif isinstance(e, BinOp):
+        yield from _expr_fluents(e.left)
+        yield from _expr_fluents(e.right)
+    elif isinstance(e, Neg):
+        yield from _expr_fluents(e.operand)
+
+
+def _holds3(c: Condition, atoms: AbstractSet[GroundAtom], fluents: Valuation) -> Optional[bool]:
+    """Three-valued truth of a grounded condition (#141): ``None`` when it
+    depends on a fluent with no value. ``and`` / ``or`` are settled by a
+    false / true child before an undefined one, as VAL's short-circuit."""
+    if isinstance(c, NumericCond):
+        k = c.constraint
+        if any(f not in fluents for f in itertools.chain(_expr_fluents(k.lhs), _expr_fluents(k.rhs))):
+            return None
+        return c.holds(atoms, fluents)
+    if isinstance(c, Not):
+        v = _holds3(c.child, atoms, fluents)
+        return None if v is None else not v
+    if isinstance(c, (And, Or)):
+        settle = isinstance(c, Or)  # the value that decides it
+        values = [_holds3(k, atoms, fluents) for k in c.children]
+        if settle in values:
+            return settle
+        return None if None in values else not settle
+    return c.holds(atoms, fluents)  # Lit, Equality
+
+
+def _reads(c: Condition) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+    """``(atoms, fluents)`` a grounded condition mentions."""
+    if isinstance(c, Lit):
+        return {tuple(c.atom.predicate)}, set()
+    if isinstance(c, NumericCond):
+        k = c.constraint
+        return set(), set(_expr_fluents(k.lhs)) | set(_expr_fluents(k.rhs))
+    atoms: Set[GroundAtom] = set()
+    fluents: Set[GroundAtom] = set()
+    children = [c.child] if isinstance(c, Not) else c.children if isinstance(c, (And, Or)) else []
+    for child in children:
+        a, f = _reads(child)
+        atoms |= a
+        fluents |= f
+    return atoms, fluents
+
+
 class DerivedRule():
     """A derived predicate rule, ``(:derived (p ?x - t) GD)`` (#141): the
     atom ``(p o)`` holds in a state iff ``GD`` with ``?x = o`` does."""
@@ -1466,6 +1515,7 @@ class DomainProblem():
                   the .binder attribute later, to override grounding.
         """
         self._grounded_strata: Optional[List[List[Tuple[GroundAtom, Condition]]]] = None
+        self._derived_deps: Optional[Dict[GroundAtom, Tuple[Set[GroundAtom], Set[GroundAtom]]]] = None
         # domain
         inp = source_stream(domainfile)
         lexer = pddlLexer(inp)
@@ -1670,23 +1720,56 @@ class DomainProblem():
                         for n in sorted(set(level.values()))]
         return None
 
-    def derive(self, atoms: AbstractSet[GroundAtom], fluents: Valuation) -> FrozenSet[GroundAtom]:
-        """``atoms`` with the derived atoms recomputed (#141): those already
-        there are dropped, then each stratum is evaluated to a fixpoint."""
+    def _grounded_rules(self) -> List[List[Tuple[GroundAtom, Condition]]]:
         if self._grounded_strata is None:
             strata = self.derived_strata()
             assert strata is not None, "rules are not stratifiable"
             self._grounded_strata = [[g for r in s for g in r.ground(self)] for s in strata]
+        return self._grounded_strata
+
+    def derived_reads(self, atoms: AbstractSet[GroundAtom]
+                      ) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+        """``(atoms, fluents)`` that deciding the derived atoms among
+        ``atoms`` reads, through every rule that can derive them,
+        transitively (#141): what a read of a derived atom depends on."""
+        if self._derived_deps is None:
+            deps: Dict[GroundAtom, Tuple[Set[GroundAtom], Set[GroundAtom]]] = {}
+            for stratum in self._grounded_rules():
+                for head, body in stratum:
+                    a, f = _reads(body)
+                    da, df = deps.setdefault(head, (set(), set()))
+                    da |= a
+                    df |= f
+            self._derived_deps = deps
+        out_atoms: Set[GroundAtom] = set()
+        out_fluents: Set[GroundAtom] = set()
+        todo = [a for a in atoms if a in self._derived_deps]
+        seen: Set[GroundAtom] = set()
+        while todo:
+            head = todo.pop()
+            if head in seen:
+                continue
+            seen.add(head)
+            a, f = self._derived_deps[head]
+            out_atoms |= a
+            out_fluents |= f
+            todo.extend(x for x in a if x in self._derived_deps)
+        return out_atoms, out_fluents
+
+    def derive(self, atoms: AbstractSet[GroundAtom], fluents: Valuation) -> FrozenSet[GroundAtom]:
+        """``atoms`` with the derived atoms recomputed (#141): those already
+        there are dropped, then each stratum is evaluated to a fixpoint."""
         names = self.derived_predicates()
         out = {a for a in atoms if a[0] not in names}
-        for stratum in self._grounded_strata:
+        for stratum in self._grounded_rules():
             pending = list(stratum)
             changed = True
             while changed:
                 changed = False
                 rest = []
                 for head, body in pending:
-                    if body.holds(out, fluents):
+                    # a body reading a fluent with no value does not hold
+                    if _holds3(body, out, fluents):
                         out.add(head)
                         changed = True
                     else:

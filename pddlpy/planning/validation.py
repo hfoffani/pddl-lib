@@ -420,11 +420,18 @@ def _literal_unmet(a: DurativeAction, when: str, state: State) -> List[str]:
 _ADDITIVE = {"increase", "decrease"}
 
 
-def _mutex(parts: List[_Part], state: State) -> Optional[Tuple[_Part, _Part, str]]:
+def _mutex(parts: List[_Part], state: State, dp: "DomainProblem"
+           ) -> Optional[Tuple[_Part, _Part, str]]:
     """The first interfering pair of parts in one happening, with the atom
     or fluent they contend for. Simultaneous increases / decreases of a
-    fluent do not interfere; they accumulate."""
-    io = [(p, p.reads(state), p.writes(state)) for p in parts]
+    fluent do not interfere; they accumulate. Reading a derived atom reads
+    what its rules depend on (#141)."""
+    def reads(p: _Part) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+        atoms, fluents = p.reads(state)
+        more, morefl = dp.derived_reads(atoms)
+        return atoms | more, fluents | morefl
+
+    io = [(p, reads(p), p.writes(state)) for p in parts]
     for i, (p, (pr, prf), (pa, pd, pf)) in enumerate(io):
         for q, (qr, qrf), (qa, qd, qf) in io[i + 1:]:
             clash = (pa & qd) | (pd & qa) | ((pa | pd) & qr) | ((qa | qd) & pr)
@@ -560,7 +567,7 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
             if undefined:
                 return fail("undefined-fluent", "reads fluents with no value",
                             p, undefined, state)
-        clash = _mutex(happening, state) if len(happening) > 1 else None
+        clash = _mutex(happening, state, dp) if len(happening) > 1 else None
         if clash:
             p, q, what = clash
             return fail("mutex", "interferes with step %d %s over %s "

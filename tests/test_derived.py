@@ -118,3 +118,48 @@ def test_typed_head_parameters_keep_their_order(tmp_path):
     assert dp.domain.derived[0].params == [("?y", "v"), ("?x", "u")]
     assert ("f", "n", "m") in State.from_problem(dp).atoms
     assert atom_tuple(next(iter(dp.goals()))) == ("f", "n", "m")
+
+
+def test_simultaneous_read_through_a_derived_atom_is_mutex(tmp_path):
+    """Review on #205: use reads (q), derived from (p), which del deletes in
+    the same happening: VAL rejects it; separated, it is valid."""
+    domain = ("(define (domain m) (:requirements :strips :derived-predicates :durative-actions)"
+              " (:predicates (p) (q) (done)) (:derived (q) (p))"
+              " (:action use :parameters () :precondition (q) :effect (done))"
+              " (:action del :parameters () :precondition (and) :effect (not (p))))")
+    d, p = _pair(tmp_path, domain, "(define (problem m) (:domain m) (:init (p)) (:goal (done)))")
+    dp = DomainProblem(d, p)
+    failure = validate_plan(dp, parse_plan("0: (use)\n0: (del)\n")).failure
+    assert failure.kind == "mutex" and failure.unmet == ("(p)",)
+    assert validate_plan(dp, parse_plan("0: (use)\n0.01: (del)\n")).valid
+    assert dp.derived_reads({("q",), ("done",)}) == ({("p",)}, set())
+
+
+def test_derived_reads_are_transitive(tmp_path):
+    domain = ("(define (domain r) (:requirements :adl :derived-predicates :numeric-fluents)"
+              " (:predicates (p) (q) (s) (z) (r)) (:functions (f))"
+              " (:derived (q) (p)) (:derived (s) (q))"
+              " (:derived (r) (and (q) (s) (not (z)) (or (z) (<= (f) 1))))"
+              " (:action noop :parameters () :effect (and)))")
+    d, p = _pair(tmp_path, domain, "(define (problem r) (:domain r) (:init) (:goal (r)))")
+    dp = DomainProblem(d, p)
+    # (q) is reached twice, through (r) and through (s)
+    assert dp.derived_reads({("r",)}) == ({("p",), ("q",), ("s",), ("z",)}, {("f",)})
+
+
+def test_derived_body_reading_an_undefined_fluent_does_not_hold(tmp_path):
+    """Review on #205: (f) has no value, so (q) is not derived until set."""
+    domain = ("(define (domain u) (:requirements :strips :derived-predicates :numeric-fluents)"
+              " (:predicates (q) (z)) (:functions (f))"
+              " (:derived (q) (or (z) (<= (f) 5)))"
+              " (:action set :parameters () :effect (assign (f) 3)))")
+    d, p = _pair(tmp_path, domain, "(define (problem u) (:domain u) (:init) (:goal (q)))")
+    dp = DomainProblem(d, p)
+    assert ("q",) not in State.from_problem(dp).atoms
+    assert not validate_plan(dp, []).valid
+    for planner in ["bfs", "astar", "gbfs", "ucs"]:
+        assert [n for n, _ in get(planner).solve(dp).action_names()] == ["set"]
+    p2 = tmp_path / "p2.pddl"
+    p2.write_text("(define (problem u) (:domain u) (:init (z)) (:goal (q)))")
+    # (z) settles the or: the undefined comparison is not needed
+    assert ("q",) in State.from_problem(DomainProblem(d, str(p2))).atoms

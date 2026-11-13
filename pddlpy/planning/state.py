@@ -21,10 +21,10 @@ from typing import (
     Union,
 )
 
-from pddlpy.pddl import And, BinOp, Condition, Fluent, Neg, Not, NumericCond, Or, ieee_div
+from pddlpy.pddl import And, Condition, Not, NumericCond, Or, _expr_fluents, ieee_div
 
 if TYPE_CHECKING:
-    from pddlpy.pddl import DomainProblem, DurativeAction, Expr, Operator
+    from pddlpy.pddl import DomainProblem, DurativeAction, Operator
 
     #: Any grounded action a plan step can carry — instantaneous or durative
     #: (#84); both expose ``operator_name`` and ``variable_list``.
@@ -239,16 +239,6 @@ class Plan:
 
 
 # -- fluents a condition reads, in VAL's order (#166, #138) -----------------
-
-def _expr_fluents(e: "Expr") -> Iterator[GroundAtom]:
-    if isinstance(e, Fluent):
-        yield e.head
-    elif isinstance(e, BinOp):
-        yield from _expr_fluents(e.left)
-        yield from _expr_fluents(e.right)
-    elif isinstance(e, Neg):
-        yield from _expr_fluents(e.operand)
-
 
 def _rank(c: Condition) -> int:
     """VAL's evaluation cost of a condition (``Proposition::rank``, first
