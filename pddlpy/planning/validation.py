@@ -62,7 +62,14 @@ from pddlpy.pddl import (
 
 from .base import PlannerError, UnsupportedRequirementsError, check_modeled
 from .search import ADL_CAPABILITIES
-from .state import GroundAtom, State, apply_numeric, atom_tuple
+from .state import (
+    GroundAtom,
+    State,
+    _evaluated_fluents,
+    _expr_fluents,
+    apply_numeric,
+    atom_tuple,
+)
 
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem, Expr
@@ -287,16 +294,6 @@ def _unmet(c: Condition, state: State) -> List[str]:
 
 # -- reads and writes, for undefined fluents and mutexes --------------------
 
-def _expr_fluents(e: "Expr") -> Iterator[GroundAtom]:
-    if isinstance(e, Fluent):
-        yield e.head
-    elif isinstance(e, BinOp):
-        yield from _expr_fluents(e.left)
-        yield from _expr_fluents(e.right)
-    elif isinstance(e, Neg):
-        yield from _expr_fluents(e.operand)
-
-
 def _cond_reads(c: Optional[Condition]) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
     """``(atoms, fluents)`` a grounded condition reads."""
     atoms: Set[GroundAtom] = set()
@@ -319,40 +316,6 @@ def _cond_reads(c: Optional[Condition]) -> Tuple[Set[GroundAtom], Set[GroundAtom
     if c is not None:
         walk(c)
     return atoms, fluents
-
-
-def _rank(c: Condition) -> int:
-    """VAL's evaluation cost of a condition (``Proposition::rank``, first
-    component): 1 per numeric comparison, 0 per atom."""
-    if isinstance(c, NumericCond):
-        return 1
-    if isinstance(c, Not):
-        return _rank(c.child)
-    if isinstance(c, (And, Or)):
-        return sum(_rank(k) for k in c.children)
-    return 0
-
-
-def _evaluated_fluents(c: Optional[Condition], state: State) -> Set[GroundAtom]:
-    """The fluents evaluating ``c`` in ``state`` reads, in VAL's order
-    (``ConjGoal`` / ``DisjGoal::evaluate``): ``and`` evaluates its children
-    cheapest first (atoms before comparisons, a stable sort by
-    :func:`_rank`), ``or`` in written order, and both stop once the result
-    is known. A fluent behind a false conjunct or a true disjunct is never
-    read."""
-    if isinstance(c, NumericCond):
-        return set(_expr_fluents(c.constraint.lhs)) | set(_expr_fluents(c.constraint.rhs))
-    if isinstance(c, Not):
-        return _evaluated_fluents(c.child, state)
-    if isinstance(c, (And, Or)):
-        out: Set[GroundAtom] = set()
-        children = sorted(c.children, key=_rank) if isinstance(c, And) else c.children
-        for child in children:
-            out |= _evaluated_fluents(child, state)
-            if child.holds(state.atoms, state.fluents) is not isinstance(c, And):
-                break  # a false conjunct / true disjunct settles it
-        return out
-    return set()  # Lit, Equality, or no condition
 
 
 class _Part:

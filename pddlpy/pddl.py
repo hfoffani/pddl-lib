@@ -1362,7 +1362,8 @@ class ProblemListener(pddlListener):
                     vs.add( (s, None) )
             for a in self.goals:
                 for s in a.predicate[1:]:
-                    vs.add( (s, None) )
+                    if not s.startswith('?'):  # a ?variable is no object (#138)
+                        vs.add( (s, None) )
             self.objects = dict( vs )
 
 

@@ -44,7 +44,7 @@ from .base import Planner, UnsupportedRequirementsError, check_modeled, validate
 from .durative import validate_durative_actions
 from .registry import register
 from .search import STRIPS_CAPABILITIES
-from .state import Plan, State, atom_tuple
+from .state import Plan, State, atom_tuple, goal_holds
 
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem, DurativeAction, Operator
@@ -179,7 +179,7 @@ class TemporalTask:
 
     def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""
-        return self.goal.holds(state.atoms, state.fluents)
+        return goal_holds(self.goal, state)
 
 
 def _schedule(came_from: _CameFrom, state: State) -> TemporalPlan:
