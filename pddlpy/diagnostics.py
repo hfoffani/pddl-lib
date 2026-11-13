@@ -141,7 +141,11 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
     for where, atoms in ((":init", _init_atoms(dp)), (":goal", dp.goals())):
         for atom in atoms:
             for term in atom_tuple(atom)[1:]:
-                if term not in objects:
+                # in a quantified goal (reported as unsupported, #138) a
+                # ?variable is bound, not an object; in a positive goal it
+                # is free, and an error
+                bound = term.startswith("?") and not dp.problem.simple_goal
+                if term not in objects and not bound:
                     unknown.setdefault(term, set()).add(where)
     for term in sorted(unknown):
         issues.append(_issue(
@@ -180,7 +184,7 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
 
     # Parts the model reads but drops (#140): solve refuses them too.
     try:
-        check_modeled(dp)
+        check_modeled(dp, syntax=False)  # syntax errors are reported above
     except UnsupportedRequirementsError as exc:
         issues.append(_issue("error", "unsupported", str(exc)))
 

@@ -65,10 +65,7 @@ ORACLE = os.path.join(os.path.dirname(__file__), "corpus", "oracle")
 # Known disagreements on the committed pairs, by (check, domain directory);
 # strict xfails, so a fix shows up as XPASS. Checks: accept, fd_plan,
 # pddlpy_plan, solvable, verdict, pddlpy_verdict.
-DERIVED = "(:derived ...) does not parse (#141)"
 KNOWN = {
-    ("accept", "psr-middle-derived-predicates-adl"): DERIVED,
-    ("fd_plan", "psr-middle-derived-predicates-adl"): DERIVED,
 }
 
 

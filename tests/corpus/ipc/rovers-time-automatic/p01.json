@@ -1,28 +1,895 @@
 {
  "ground": {},
- "ground_durative": {},
+ "ground_durative": {
+  "calibrate": [
+   {
+    "name": "calibrate",
+    "parameters": {
+     "?i": "camera0",
+     "?r": "rover0",
+     "?t": "objective0",
+     "?w": "waypoint0"
+    }
+   },
+   {
+    "name": "calibrate",
+    "parameters": {
+     "?i": "camera0",
+     "?r": "rover0",
+     "?t": "objective0",
+     "?w": "waypoint1"
+    }
+   },
+   {
+    "name": "calibrate",
+    "parameters": {
+     "?i": "camera0",
+     "?r": "rover0",
+     "?t": "objective0",
+     "?w": "waypoint2"
+    }
+   },
+   {
+    "name": "calibrate",
+    "parameters": {
+     "?i": "camera0",
+     "?r": "rover0",
+     "?t": "objective0",
+     "?w": "waypoint3"
+    }
+   },
+   {
+    "name": "calibrate",
+    "parameters": {
+     "?i": "camera0",
+     "?r": "rover0",
+     "?t": "objective1",
+     "?w": "waypoint0"
+    }
+   },
+   {
+    "name": "calibrate",
+    "parameters": {
+     "?i": "camera0",
+     "?r": "rover0",
+     "?t": "objective1",
+     "?w": "waypoint1"
+    }
+   },
+   {
+    "name": "calibrate",
+    "parameters": {
+     "?i": "camera0",
+     "?r": "rover0",
+     "?t": "objective1",
+     "?w": "waypoint2"
+    }
+   },
+   {
+    "name": "calibrate",
+    "parameters": {
+     "?i": "camera0",
+     "?r": "rover0",
+     "?t": "objective1",
+     "?w": "waypoint3"
+    }
+   }
+  ],
+  "communicate_image_data": {
+   "truncated_at": 50
+  },
+  "communicate_rock_data": {
+   "truncated_at": 50
+  },
+  "communicate_soil_data": {
+   "truncated_at": 50
+  },
+  "drop": [
+   {
+    "name": "drop",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "rover0store"
+    }
+   }
+  ],
+  "navigate": [
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint0",
+     "?z": "waypoint0"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint0",
+     "?z": "waypoint1"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint0",
+     "?z": "waypoint2"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint0",
+     "?z": "waypoint3"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint1",
+     "?z": "waypoint0"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint1",
+     "?z": "waypoint1"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint1",
+     "?z": "waypoint2"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint1",
+     "?z": "waypoint3"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint2",
+     "?z": "waypoint0"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint2",
+     "?z": "waypoint1"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint2",
+     "?z": "waypoint2"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint2",
+     "?z": "waypoint3"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint3",
+     "?z": "waypoint0"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint3",
+     "?z": "waypoint1"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint3",
+     "?z": "waypoint2"
+    }
+   },
+   {
+    "name": "navigate",
+    "parameters": {
+     "?x": "rover0",
+     "?y": "waypoint3",
+     "?z": "waypoint3"
+    }
+   }
+  ],
+  "recharge": [
+   {
+    "name": "recharge",
+    "parameters": {
+     "?w": "waypoint0",
+     "?x": "rover0"
+    }
+   },
+   {
+    "name": "recharge",
+    "parameters": {
+     "?w": "waypoint1",
+     "?x": "rover0"
+    }
+   },
+   {
+    "name": "recharge",
+    "parameters": {
+     "?w": "waypoint2",
+     "?x": "rover0"
+    }
+   },
+   {
+    "name": "recharge",
+    "parameters": {
+     "?w": "waypoint3",
+     "?x": "rover0"
+    }
+   }
+  ],
+  "sample_rock": [
+   {
+    "name": "sample_rock",
+    "parameters": {
+     "?p": "waypoint0",
+     "?s": "rover0store",
+     "?x": "rover0"
+    }
+   },
+   {
+    "name": "sample_rock",
+    "parameters": {
+     "?p": "waypoint1",
+     "?s": "rover0store",
+     "?x": "rover0"
+    }
+   },
+   {
+    "name": "sample_rock",
+    "parameters": {
+     "?p": "waypoint2",
+     "?s": "rover0store",
+     "?x": "rover0"
+    }
+   },
+   {
+    "name": "sample_rock",
+    "parameters": {
+     "?p": "waypoint3",
+     "?s": "rover0store",
+     "?x": "rover0"
+    }
+   }
+  ],
+  "sample_soil": [
+   {
+    "name": "sample_soil",
+    "parameters": {
+     "?p": "waypoint0",
+     "?s": "rover0store",
+     "?x": "rover0"
+    }
+   },
+   {
+    "name": "sample_soil",
+    "parameters": {
+     "?p": "waypoint1",
+     "?s": "rover0store",
+     "?x": "rover0"
+    }
+   },
+   {
+    "name": "sample_soil",
+    "parameters": {
+     "?p": "waypoint2",
+     "?s": "rover0store",
+     "?x": "rover0"
+    }
+   },
+   {
+    "name": "sample_soil",
+    "parameters": {
+     "?p": "waypoint3",
+     "?s": "rover0store",
+     "?x": "rover0"
+    }
+   }
+  ],
+  "take_image": [
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "colour",
+     "?o": "objective0",
+     "?p": "waypoint0",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "colour",
+     "?o": "objective0",
+     "?p": "waypoint1",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "colour",
+     "?o": "objective0",
+     "?p": "waypoint2",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "colour",
+     "?o": "objective0",
+     "?p": "waypoint3",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "colour",
+     "?o": "objective1",
+     "?p": "waypoint0",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "colour",
+     "?o": "objective1",
+     "?p": "waypoint1",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "colour",
+     "?o": "objective1",
+     "?p": "waypoint2",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "colour",
+     "?o": "objective1",
+     "?p": "waypoint3",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "high_res",
+     "?o": "objective0",
+     "?p": "waypoint0",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "high_res",
+     "?o": "objective0",
+     "?p": "waypoint1",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "high_res",
+     "?o": "objective0",
+     "?p": "waypoint2",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "high_res",
+     "?o": "objective0",
+     "?p": "waypoint3",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "high_res",
+     "?o": "objective1",
+     "?p": "waypoint0",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "high_res",
+     "?o": "objective1",
+     "?p": "waypoint1",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "high_res",
+     "?o": "objective1",
+     "?p": "waypoint2",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "high_res",
+     "?o": "objective1",
+     "?p": "waypoint3",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "low_res",
+     "?o": "objective0",
+     "?p": "waypoint0",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "low_res",
+     "?o": "objective0",
+     "?p": "waypoint1",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "low_res",
+     "?o": "objective0",
+     "?p": "waypoint2",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "low_res",
+     "?o": "objective0",
+     "?p": "waypoint3",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "low_res",
+     "?o": "objective1",
+     "?p": "waypoint0",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "low_res",
+     "?o": "objective1",
+     "?p": "waypoint1",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "low_res",
+     "?o": "objective1",
+     "?p": "waypoint2",
+     "?r": "rover0"
+    }
+   },
+   {
+    "name": "take_image",
+    "parameters": {
+     "?i": "camera0",
+     "?m": "low_res",
+     "?o": "objective1",
+     "?p": "waypoint3",
+     "?r": "rover0"
+    }
+   }
+  ]
+ },
  "parse": {
-  "durative_operators": [],
-  "goals": [],
-  "initial_numeric": {},
-  "initial_state": [],
-  "metric": null,
-  "objects": {},
+  "durative_operators": [
+   "calibrate",
+   "communicate_image_data",
+   "communicate_rock_data",
+   "communicate_soil_data",
+   "drop",
+   "navigate",
+   "recharge",
+   "sample_rock",
+   "sample_soil",
+   "take_image"
+  ],
+  "goals": [
+   [
+    "communicated_image_data",
+    "objective1",
+    "high_res"
+   ],
+   [
+    "communicated_rock_data",
+    "waypoint3"
+   ],
+   [
+    "communicated_soil_data",
+    "waypoint2"
+   ]
+  ],
+  "initial_numeric": {
+   "energy rover0": 50.0,
+   "recharge-rate rover0": 11.0
+  },
+  "initial_state": [
+   [
+    "at",
+    "rover0",
+    "waypoint3"
+   ],
+   [
+    "at_lander",
+    "general",
+    "waypoint0"
+   ],
+   [
+    "at_rock_sample",
+    "waypoint1"
+   ],
+   [
+    "at_rock_sample",
+    "waypoint2"
+   ],
+   [
+    "at_rock_sample",
+    "waypoint3"
+   ],
+   [
+    "at_soil_sample",
+    "waypoint0"
+   ],
+   [
+    "at_soil_sample",
+    "waypoint2"
+   ],
+   [
+    "at_soil_sample",
+    "waypoint3"
+   ],
+   [
+    "available",
+    "rover0"
+   ],
+   [
+    "calibration_target",
+    "camera0",
+    "objective1"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint0",
+    "waypoint3"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint1",
+    "waypoint2"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint1",
+    "waypoint3"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint2",
+    "waypoint1"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint3",
+    "waypoint0"
+   ],
+   [
+    "can_traverse",
+    "rover0",
+    "waypoint3",
+    "waypoint1"
+   ],
+   [
+    "channel_free",
+    "general"
+   ],
+   [
+    "empty",
+    "rover0store"
+   ],
+   [
+    "equipped_for_imaging",
+    "rover0"
+   ],
+   [
+    "equipped_for_rock_analysis",
+    "rover0"
+   ],
+   [
+    "equipped_for_soil_analysis",
+    "rover0"
+   ],
+   [
+    "in_sun",
+    "waypoint0"
+   ],
+   [
+    "on_board",
+    "camera0",
+    "rover0"
+   ],
+   [
+    "store_of",
+    "rover0store",
+    "rover0"
+   ],
+   [
+    "supports",
+    "camera0",
+    "colour"
+   ],
+   [
+    "supports",
+    "camera0",
+    "high_res"
+   ],
+   [
+    "visible",
+    "waypoint0",
+    "waypoint1"
+   ],
+   [
+    "visible",
+    "waypoint0",
+    "waypoint2"
+   ],
+   [
+    "visible",
+    "waypoint0",
+    "waypoint3"
+   ],
+   [
+    "visible",
+    "waypoint1",
+    "waypoint0"
+   ],
+   [
+    "visible",
+    "waypoint1",
+    "waypoint2"
+   ],
+   [
+    "visible",
+    "waypoint1",
+    "waypoint3"
+   ],
+   [
+    "visible",
+    "waypoint2",
+    "waypoint0"
+   ],
+   [
+    "visible",
+    "waypoint2",
+    "waypoint1"
+   ],
+   [
+    "visible",
+    "waypoint2",
+    "waypoint3"
+   ],
+   [
+    "visible",
+    "waypoint3",
+    "waypoint0"
+   ],
+   [
+    "visible",
+    "waypoint3",
+    "waypoint1"
+   ],
+   [
+    "visible",
+    "waypoint3",
+    "waypoint2"
+   ],
+   [
+    "visible_from",
+    "objective0",
+    "waypoint0"
+   ],
+   [
+    "visible_from",
+    "objective0",
+    "waypoint1"
+   ],
+   [
+    "visible_from",
+    "objective0",
+    "waypoint2"
+   ],
+   [
+    "visible_from",
+    "objective0",
+    "waypoint3"
+   ],
+   [
+    "visible_from",
+    "objective1",
+    "waypoint0"
+   ],
+   [
+    "visible_from",
+    "objective1",
+    "waypoint1"
+   ],
+   [
+    "visible_from",
+    "objective1",
+    "waypoint2"
+   ],
+   [
+    "visible_from",
+    "objective1",
+    "waypoint3"
+   ]
+  ],
+  "metric": {
+   "expression": "(total-time",
+   "optimization": "minimize"
+  },
+  "objects": {
+   "camera0": "camera",
+   "colour": "mode",
+   "general": "lander",
+   "high_res": "mode",
+   "low_res": "mode",
+   "objective0": "objective",
+   "objective1": "objective",
+   "rover0": "rover",
+   "rover0store": "store",
+   "waypoint0": "waypoint",
+   "waypoint1": "waypoint",
+   "waypoint2": "waypoint",
+   "waypoint3": "waypoint"
+  },
   "operators": [],
-  "predicates": [],
-  "requirements": [],
-  "types": {}
+  "predicates": [
+   "at",
+   "at_lander",
+   "at_rock_sample",
+   "at_soil_sample",
+   "available",
+   "calibrated",
+   "calibration_target",
+   "can_traverse",
+   "channel_free",
+   "communicated_image_data",
+   "communicated_rock_data",
+   "communicated_soil_data",
+   "empty",
+   "equipped_for_imaging",
+   "equipped_for_rock_analysis",
+   "equipped_for_soil_analysis",
+   "full",
+   "have_image",
+   "have_rock_analysis",
+   "have_soil_analysis",
+   "in_sun",
+   "on_board",
+   "store_of",
+   "supports",
+   "visible",
+   "visible_from"
+  ],
+  "requirements": [
+   ":duration-inequalities",
+   ":durative-actions",
+   ":fluents",
+   ":typing"
+  ],
+  "types": {
+   "camera": null,
+   "lander": null,
+   "mode": null,
+   "objective": null,
+   "rover": null,
+   "store": null,
+   "waypoint": null
+  }
  },
  "validate": {
   "issues": [
    {
     "check": "syntax",
-    "message": "domain file: line 2:50 no viable alternative at input '(define(domainrover)(:requirements:typing:durative-actions:fluents:duration'",
-    "severity": "error"
-   },
-   {
-    "check": "syntax",
-    "message": "problem file: line 69:19 no viable alternative at input '(define(problemroverprob1234)(:domainrover)(:objectsgeneral-landercolourhigh_reslow_res-moderover0-roverrover0store-storewaypoint0waypoint1waypoint2waypoint3-waypointcamera0-cameraobjective0objective1-objective)(:init(visiblewaypoint1waypoint0)(visiblewaypoint0waypoint1)(visiblewaypoint2waypoint0)(visiblewaypoint0waypoint2)(visiblewaypoint2waypoint1)(visiblewaypoint1waypoint2)(visiblewaypoint3waypoint0)(visiblewaypoint0waypoint3)(visiblewaypoint3waypoint1)(visiblewaypoint1waypoint3)(visiblewaypoint3waypoint2)(visiblewaypoint2waypoint3)(at_soil_samplewaypoint0)(in_sunwaypoint0)(at_rock_samplewaypoint1)(at_soil_samplewaypoint2)(at_rock_samplewaypoint2)(at_soil_samplewaypoint3)(at_rock_samplewaypoint3)(at_landergeneralwaypoint0)(channel_freegeneral)(=(energyrover0)50)(=(recharge-raterover0)11)(atrover0waypoint3)(availablerover0)(store_ofrover0storerover0)(emptyrover0store)(equipped_for_soil_analysisrover0)(equipped_for_rock_analysisrover0)(equipped_for_imagingrover0)(can_traverserover0waypoint3waypoint0)(can_traverserover0waypoint0waypoint3)(can_traverserover0waypoint3waypoint1)(can_traverserover0waypoint1waypoint3)(can_traverserover0waypoint1waypoint2)(can_traverserover0waypoint2waypoint1)(on_boardcamera0rover0)(calibration_targetcamera0objective1)(supportscamera0colour)(supportscamera0high_res)(visible_fromobjective0waypoint0)(visible_fromobjective0waypoint1)(visible_fromobjective0waypoint2)(visible_fromobjective0waypoint3)(visible_fromobjective1waypoint0)(visible_fromobjective1waypoint1)(visible_fromobjective1waypoint2)(visible_fromobjective1waypoint3))(:goal(and(communicated_soil_datawaypoint2)(communicated_rock_datawaypoint3)(communicated_image_dataobjective1high_res)))(:metricminimize(total-time'",
+    "message": "problem file: line 69:19 no viable alternative at input '(total-time'",
     "severity": "error"
    }
   ],

@@ -1,8 +1,34 @@
 {
  "ground": {},
- "ground_durative": {},
+ "ground_durative": {
+  "pop-end": {
+   "truncated_at": 50
+  },
+  "pop-start": {
+   "truncated_at": 50
+  },
+  "pop-unitarypipe": {
+   "truncated_at": 50
+  },
+  "push-end": {
+   "truncated_at": 50
+  },
+  "push-start": {
+   "truncated_at": 50
+  },
+  "push-unitarypipe": {
+   "truncated_at": 50
+  }
+ },
  "parse": {
-  "durative_operators": [],
+  "durative_operators": [
+   "pop-end",
+   "pop-start",
+   "pop-unitarypipe",
+   "push-end",
+   "push-start",
+   "push-unitarypipe"
+  ],
   "goals": [
    [
     "on",
@@ -262,19 +288,48 @@
    "b5": "batch-atom",
    "b6": "batch-atom",
    "b7": "batch-atom",
+   "gasoleo": "product",
+   "lco": "product",
+   "oc1b": "product",
+   "oca1": "product",
+   "rat-a": "product",
    "s12": "pipe",
    "s13": "pipe"
   },
   "operators": [],
-  "predicates": [],
-  "requirements": [],
-  "types": {}
+  "predicates": [
+   "connect",
+   "first",
+   "follow",
+   "is-product",
+   "last",
+   "may-interface",
+   "normal",
+   "not-unitary",
+   "on",
+   "pop-updating",
+   "push-updating",
+   "unitary"
+  ],
+  "requirements": [
+   ":durative-actions",
+   ":equality",
+   ":fluents",
+   ":strips",
+   ":typing"
+  ],
+  "types": {
+   "area": null,
+   "batch-atom": null,
+   "pipe": null,
+   "product": null
+  }
  },
  "validate": {
   "issues": [
    {
     "check": "syntax",
-    "message": "domain file: line 5:70 no viable alternative at input '(define(domainpipesworld_strips)(:requirements:strips:typing:durative-actions:fluents:equality:constraints'",
+    "message": "domain file: line 5:70 extraneous input ':constraints' expecting {'(', ')', REQUIRE_KEY}",
     "severity": "error"
    }
   ],
