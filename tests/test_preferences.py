@@ -154,6 +154,22 @@ def test_preference_only_metric_ignores_accumulating_cost(tmp_path):
     assert plan is not None and len(plan) == 0
 
 
+@pytest.mark.parametrize("goal", [
+    "(preference pref (>= (total-cost) 1))",
+    "(>= (total-cost) 1) (preference pref (wanted))",
+])
+def test_ignored_cost_read_by_a_condition_is_refused(tmp_path, goal):
+    """Review on #206: projecting (total-cost) away would misjudge these."""
+    with pytest.raises(UnsupportedRequirementsError, match="reads .total-cost."):
+        get("ucs").solve(_free(tmp_path, goal, "(is-violated pref)"))
+
+
+def test_weighted_cost_read_by_a_condition_is_kept(tmp_path):
+    plan = get("ucs").solve(_free(tmp_path, "(>= (total-cost) 1) (preference pref (wanted))",
+                                  "(+ (total-cost) (is-violated pref))"))
+    assert [n for n, _ in plan.action_names()] == ["tick"]
+
+
 @pytest.mark.parametrize("goal, issue", [
     ("(preference pref (typo a))", "undeclared_predicate"),
     ("(preference pref (seen missing))", "unknown_object"),

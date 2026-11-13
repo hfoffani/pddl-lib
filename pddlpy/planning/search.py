@@ -195,10 +195,14 @@ class UniformCostPlanner(_BestFirstPlanner):
         def spent(state: State) -> float:
             return state.fluents.get(TOTAL_COST, 0.0)
 
+        # with c == 0 the accumulated cost is irrelevant: keep it out of the
+        # state, or an action that only adds cost makes the search endless
+        if not c and _reads_total_cost(domainproblem):
+            raise UnsupportedRequirementsError(
+                "a condition reads (total-cost) but the metric ignores it, so "
+                "the search may not end; weigh (total-cost) in the metric (#201)")
+
         def key(state: State) -> State:
-            # with c == 0 the accumulated cost is irrelevant, and no
-            # condition may read it: keep it out of the state, or an action
-            # that only adds cost makes the search endless
             if c:
                 return state
             return State(state.atoms, {f: v for f, v in state.fluents.items() if f != TOTAL_COST})
@@ -237,6 +241,25 @@ class UniformCostPlanner(_BestFirstPlanner):
                     came_from[succ] = (state, action)
                     heapq.heappush(frontier, (npriority, next(counter), succ, False, ng))
         return None
+
+
+def _reads_total_cost(dp: "DomainProblem") -> bool:
+    """True if a precondition, effect expression, the goal or a preference
+    reads ``(total-cost)``; increasing it is a write, not a read."""
+    from pddlpy.pddl import Fluent, NumericEffect
+
+    def reads(node: object) -> bool:
+        if isinstance(node, Fluent):
+            return node.head == TOTAL_COST
+        if isinstance(node, NumericEffect):
+            return reads(node.expr)
+        if isinstance(node, (list, tuple)):
+            return any(reads(n) for n in node)
+        return hasattr(node, "__dict__") and any(reads(v) for v in vars(node).values())
+
+    ops = dp.domain.operators.values()
+    return reads([dp.problem.goal, [p.body for p in dp.problem.preferences],
+                  [(op.precondition_tree, op.effect_tree) for op in ops]])
 
 
 def _preference_metric(dp: "DomainProblem") -> Tuple[float, List[Tuple[float, List[Condition]]]]:
