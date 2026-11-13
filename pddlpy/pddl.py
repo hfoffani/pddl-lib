@@ -669,7 +669,7 @@ def _build_condition(gd: Any) -> Condition:
     if kw == 'imply':
         return Or([Not(_build_condition(subs[0])), _build_condition(subs[1])])
     if kw == '=':
-        terms = gd.term()
+        terms = gd.term() or gd.objectTerm()  # object fluents are refused (#211)
         return Equality(terms[0].getText(), terms[1].getText())
     body = _build_condition(subs[0])
     varlist = _typed_var_list(gd.typedVariableList())
@@ -991,6 +991,8 @@ def _simple_durative(body: Any) -> bool:
 
 def _build_peffect(pe: Any) -> Effect:
     """Build an Effect from a pEffect context (assignment / add / delete)."""
+    if pe.fHead() is not None and pe.assignOp() is None:
+        return EffAnd([])  # (assign (f ?x) ?obj): object fluents are refused (#211)
     if pe.assignOp() is not None:
         return NumEff(NumericEffect(pe.assignOp().getText().lower(),
                                     Fluent(_parse_fhead(pe.fHead())),
@@ -1207,6 +1209,7 @@ class DomainListener(pddlListener):
         self.requirements = set()
         self.predicates = set()  # declared predicate names (#12)
         self.functions = {}
+        self.object_fluents = False  # an object-valued function (#211)
         self._datimes = []      # stack of current 'start'/'over'/'end' tags
 
     def enterRequireDef(self, ctx):
@@ -1222,6 +1225,13 @@ class DomainListener(pddlListener):
 
     def exitFunctionsDef(self, ctx):
         self.scopes.pop()
+
+    def enterFunctionList(self, ctx):
+        if any(t.getText().lower() != 'number' for t in ctx.functionType()):
+            self.object_fluents = True
+
+    def enterFunctionTerm(self, ctx):
+        self.object_fluents = True
 
     def enterAtomicFunctionSkeleton(self, ctx):
         # Capture a :functions declaration: name -> ordered list of param types.
@@ -1451,6 +1461,9 @@ class DomainListener(pddlListener):
             ctx.getChildCount() > 1 and ctx.getChild(1).getText().lower() in ('forall', 'exists')
 
     def enterPEffect(self, ctx):
+        if ctx.fHead() is not None and (
+                ctx.assignOp() is None or _nth_fexp(ctx, 0).getText().lower() == 'undefined'):
+            self.object_fluents = True  # (assign (loc ?t) ?l | undefined) (#211)
         # A numeric assignment effect, e.g. (decrease (fuel ?v) 5).
         if ctx.assignOp() is not None:
             scope = self.scopes[-1]
@@ -1523,6 +1536,7 @@ class ProblemListener(pddlListener):
         # Timed initial literals, (at N lit) in :init, as (time, Atom,
         # positive). Kept out of ``initialstate``: they are not true at 0 (#142).
         self.timed_literals = []
+        self.object_fluents = False  # an object-valued function (#211)
         # (not (p ...)) in :init, untimed: false anyway under the closed-world
         # assumption, so kept out of ``initialstate`` (#186).
         self.negative_init = []
@@ -1551,7 +1565,12 @@ class ProblemListener(pddlListener):
     def exitInit(self, ctx):
         self.initialstate = set( self.scopes.pop().atoms )
 
+    def enterFunctionTerm(self, ctx):
+        self.object_fluents = True
+
     def enterInitEl(self, ctx):
+        if ctx.fHead() is not None and ctx.name() is not None:
+            self.object_fluents = True  # (= (loc t1) l1) (#211)
         # Numeric init assignment: (= (fhead ...) NUMBER).
         if ctx.fHead() is not None and ctx.NUMBER() is not None:
             head = _parse_fhead(ctx.fHead())

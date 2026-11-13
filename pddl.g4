@@ -136,7 +136,8 @@ atomicFunctionSkeleton
 
 functionSymbol : symbol ;
 
-functionType : 'number' ; // Currently in PDDL only numeric functions are allowed
+// an object type needs :object-fluents (PDDL 3.1, #211)
+functionType : 'number' | r_type ;
 
 constantsDef
 	: '(' ':constants' typedNameList ')'
@@ -217,6 +218,7 @@ goalDesc
 	| '(' 'forall' '(' typedVariableList ')' goalDesc ')'
 	| '(' '=' term term ')'
     | fComp
+    | '(' '=' objectTerm objectTerm ')'   // object fluents (#211)
     ;
 
 fComp
@@ -224,10 +226,15 @@ fComp
 	;
 
 atomicTermFormula
-	: '(' predicate term* ')'
+	: '(' predicate objectTerm* ')'
 	;
 
 term : name | VARIABLE ;
+
+// a term, or an object fluent's value (#211)
+objectTerm : term | functionTerm ;
+
+functionTerm : '(' functionSymbol objectTerm* ')' ;
 
 /************* DURATIVE ACTIONS ****************************/
 
@@ -299,6 +306,7 @@ cEffect
 
 pEffect
 	: '(' assignOp fHead fExp ')'
+	| '(' 'assign' fHead objectTerm ')'   // object fluents, also `undefined` (#211)
 	| '(' 'not' atomicTermFormula ')'
 	| atomicTermFormula
 	;
@@ -406,6 +414,7 @@ init
 initEl
 	: nameLiteral
 	| '(' '=' fHead NUMBER ')'         
+	| '(' '=' fHead name ')'   // object fluents (#211)
 	| '(' 'at' NUMBER nameLiteral ')'
 	;
 

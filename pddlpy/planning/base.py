@@ -126,6 +126,10 @@ def check_modeled(domainproblem: "DomainProblem", syntax: bool = True,
     if unmodeled:
         raise UnsupportedRequirementsError(
             "%s: not supported yet (#208)" % ", ".join(unmodeled))
+    if domainproblem.domain.object_fluents or domainproblem.problem.object_fluents:
+        raise UnsupportedRequirementsError(
+            "object fluents, functions whose value is an object, are not "
+            "supported yet (#211)")
     if domainproblem.problem.preferences and not preferences:
         raise UnsupportedRequirementsError(
             "goal preferences, (preference ...), need the ucs planner (#201)")
