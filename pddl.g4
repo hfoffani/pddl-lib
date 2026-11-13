@@ -306,7 +306,7 @@ cEffect
 
 pEffect
 	: '(' assignOp fHead fExp ')'
-	| '(' 'assign' fHead objectTerm ')'   // object fluents, also `undefined` (#211)
+	| '(' 'assign' functionTerm objectTerm ')'   // object fluents, also `undefined` (#211)
 	| '(' 'not' atomicTermFormula ')'
 	| atomicTermFormula
 	;

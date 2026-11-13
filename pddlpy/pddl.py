@@ -991,7 +991,7 @@ def _simple_durative(body: Any) -> bool:
 
 def _build_peffect(pe: Any) -> Effect:
     """Build an Effect from a pEffect context (assignment / add / delete)."""
-    if pe.fHead() is not None and pe.assignOp() is None:
+    if pe.functionTerm() is not None:
         return EffAnd([])  # (assign (f ?x) ?obj): object fluents are refused (#211)
     if pe.assignOp() is not None:
         return NumEff(NumericEffect(pe.assignOp().getText().lower(),
@@ -1461,8 +1461,10 @@ class DomainListener(pddlListener):
             ctx.getChildCount() > 1 and ctx.getChild(1).getText().lower() in ('forall', 'exists')
 
     def enterPEffect(self, ctx):
-        if ctx.fHead() is not None and (
-                ctx.assignOp() is None or _nth_fexp(ctx, 0).getText().lower() == 'undefined'):
+        if ctx.functionTerm() is not None or (
+                ctx.assignOp() is not None and ctx.assignOp().getText().lower() == 'assign'
+                and _nth_fexp(ctx, 0).getText().lower() == 'undefined'
+                and 'undefined' not in self.functions):
             self.object_fluents = True  # (assign (loc ?t) ?l | undefined) (#211)
         # A numeric assignment effect, e.g. (decrease (fuel ?v) 5).
         if ctx.assignOp() is not None:

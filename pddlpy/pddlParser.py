@@ -262,7 +262,7 @@ def serializedATN():
         621,1,0,0,0,619,621,3,94,47,0,620,605,1,0,0,0,620,613,1,0,0,0,620,
         619,1,0,0,0,621,93,1,0,0,0,622,623,5,1,0,0,623,624,3,102,51,0,624,
         625,3,88,44,0,625,626,3,84,42,0,626,627,5,3,0,0,627,641,1,0,0,0,
-        628,629,5,1,0,0,629,630,5,37,0,0,630,631,3,88,44,0,631,632,3,64,
+        628,629,5,1,0,0,629,630,5,37,0,0,630,631,3,66,33,0,631,632,3,64,
         32,0,632,633,5,3,0,0,633,641,1,0,0,0,634,635,5,1,0,0,635,636,5,21,
         0,0,636,637,3,60,30,0,637,638,5,3,0,0,638,641,1,0,0,0,639,641,3,
         60,30,0,640,622,1,0,0,0,640,628,1,0,0,0,640,634,1,0,0,0,640,639,
@@ -3936,6 +3936,10 @@ class pddlParser ( Parser ):
             return self.getTypedRuleContext(pddlParser.FExpContext,0)
 
 
+        def functionTerm(self):
+            return self.getTypedRuleContext(pddlParser.FunctionTermContext,0)
+
+
         def objectTerm(self):
             return self.getTypedRuleContext(pddlParser.ObjectTermContext,0)
 
@@ -3987,7 +3991,7 @@ class pddlParser ( Parser ):
                 self.state = 629
                 self.match(pddlParser.T__36)
                 self.state = 630
-                self.fHead()
+                self.functionTerm()
                 self.state = 631
                 self.objectTerm()
                 self.state = 632

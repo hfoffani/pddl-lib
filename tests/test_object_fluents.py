@@ -24,6 +24,8 @@ CASES = [
     (NUMERIC, "(and)", "(and (p) (assign (loc ?t) ?l))", ""),
     (NUMERIC, "(and)", "(and (p) (assign (loc ?t) undefined))", ""),
     (NUMERIC, "(and)", "(p)", "(= (loc t1) l1)"),
+    # review on #212: a nested function term as the assignment target
+    (NUMERIC, "(and)", "(and (p) (assign (loc (loc ?t)) ?l))", ""),
 ]
 
 
@@ -64,3 +66,13 @@ def test_object_fluent_in_the_goal(tmp_path):
     assert dp.syntax_errors == 0 and dp.problem.object_fluents
     with pytest.raises(PlannerError, match="object fluents"):
         get("bfs").solve(dp)
+
+
+def test_a_numeric_function_named_undefined(tmp_path):
+    """Review on #212: (increase (fuel) undefined) reads a numeric function."""
+    d, p = _pair(tmp_path, "(fuel ?t - truck) (undefined) - number", "(and)",
+                 "(and (p) (increase (fuel ?t) undefined))", "(= (fuel t1) 0) (= (undefined) 5)",
+                 False)
+    dp = DomainProblem(d, p)
+    assert dp.syntax_errors == 0 and not dp.domain.object_fluents
+    assert len(get("bfs").solve(dp)) == 1
