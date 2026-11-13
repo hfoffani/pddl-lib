@@ -229,7 +229,8 @@
    "loaded"
   ],
   "requirements": [
-   ":adl"
+   ":adl",
+   ":domain-axioms"
   ],
   "types": {
    "airplane": "vehicle",
@@ -245,8 +246,8 @@
  "validate": {
   "issues": [
    {
-    "check": "syntax",
-    "message": "domain file: line 2:22 extraneous input ':domain' expecting {'(', ')', REQUIRE_KEY}",
+    "check": "unsupported",
+    "message": ":domain-axioms: obsolete PDDL 1.2 requirement, not supported (#208)",
     "severity": "error"
    }
   ],

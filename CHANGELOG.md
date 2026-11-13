@@ -61,6 +61,12 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **Obsolete and unsupported `:requirements` keys were syntax errors** (#208):
+  `:domain-axioms` was lexed as `:domain` plus junk. The obsolete PDDL 1.2
+  keys (`:domain-axioms`, `:subgoals-through-axioms`, `:safety-constraints`,
+  `:expression-evaluation`, `:open-world`, `:true-negation`, `:ucpop`),
+  `:continuous-effects` and `:object-fluents` now parse, and `solve`,
+  `validate-plan` and `validate` refuse them by name.
 - **Timed initial literals are solved and validated** (#142): `(at 5 (p))`
   in `:init` was refused. `temporal` now plans with them (waiting for a
   literal, applying the ones during an action to its `over all`

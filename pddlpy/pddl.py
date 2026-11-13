@@ -1538,6 +1538,7 @@ class ProblemListener(pddlListener):
         # Timed initial literals, (at N lit) in :init, as (time, Atom,
         # positive). Kept out of ``initialstate``: they are not true at 0 (#142).
         self.timed_literals = []
+        self.requirements: Set[str] = set()  # a problem may declare some too (#208)
         # (not (p ...)) in :init, untimed: false anyway under the closed-world
         # assumption, so kept out of ``initialstate`` (#186).
         self.negative_init = []
@@ -1565,6 +1566,10 @@ class ProblemListener(pddlListener):
 
     def exitInit(self, ctx):
         self.initialstate = set( self.scopes.pop().atoms )
+
+    def enterRequireDef(self, ctx):
+        for rk in ctx.REQUIRE_KEY():
+            self.requirements.add(rk.getText().lower())
 
     def enterInitEl(self, ctx):
         # Numeric init assignment: (= (fhead ...) NUMBER).
@@ -1746,10 +1751,10 @@ class DomainProblem():
 
     def requirements(self) -> set:
         """Returns the set of :requirements keywords declared in the domain
-        (e.g. {':strips', ':typing'}), normalized to lowercase. Empty if the
-        domain declares none.
+        or the problem (e.g. {':strips', ':typing'}), normalized to
+        lowercase. Empty if neither declares any.
         """
-        return set(self.domain.requirements)
+        return set(self.domain.requirements) | self.problem.requirements
 
     def predicates(self) -> Set[str]:
         """Returns the set of predicate names declared in the domain's
