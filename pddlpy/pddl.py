@@ -1254,8 +1254,10 @@ class ProblemListener(pddlListener):
         self.init_numeric = {}
         self.metric = None
         # False when the goal is more than a conjunction of positive atoms:
-        # ``goals`` then misreads it (#138).
+        # ``goals`` then lists only its positive atoms; ``goal`` is the whole
+        # condition tree (#138).
         self.simple_goal = True
+        self.goal: Condition = And([])
         self.constraints = False  # a (:constraints ...) block was read (#140)
         # Timed initial literals, (at N lit) in :init, as (time, Atom,
         # positive). Kept out of ``initialstate``: they are not true at 0 (#142).
@@ -1310,7 +1312,8 @@ class ProblemListener(pddlListener):
 
     def exitGoal(self, ctx):
         self.goals = set( self.scopes.pop().atoms )
-        self.simple_goal = _positive_conjunction( _build_condition( ctx.goalDesc() ) )
+        self.goal = _build_condition( ctx.goalDesc() )
+        self.simple_goal = _positive_conjunction( self.goal )
 
     def enterAtomicNameFormula(self, ctx):
         pred = []
@@ -1624,6 +1627,14 @@ class DomainProblem():
         defined in the problem file.
         """
         return self.problem.goals
+
+    def goal_condition(self) -> Condition:
+        """The whole goal as a grounded condition tree (#138): ``not``,
+        ``or``, ``imply``, ``exists``, ``forall`` and numeric comparisons
+        included, quantifiers expanded over the objects. Evaluate it with
+        ``holds(atoms, fluents)``. ``goals()`` lists only its positive atoms.
+        """
+        return self.problem.goal.ground({}, self)
 
     def worldobjects(self) -> Dict[str, Optional[str]]:
         """Returns a dictionary of key value pairs where the key is the name of

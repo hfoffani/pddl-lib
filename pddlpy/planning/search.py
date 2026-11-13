@@ -115,9 +115,16 @@ class _BestFirstPlanner(Planner):
         task = self.prepare(domainproblem)
         self._start_search()
         goal_atoms = frozenset(atom_tuple(a) for a in task.goals)
+        simple = domainproblem.problem.simple_goal
+
+        def h(state: State) -> int:
+            # goal-count needs a conjunction of atoms; any other goal (#138)
+            # gets the blind heuristic: 0 at a goal, else 1 (admissible).
+            return goal_count(goal_atoms, state) if simple else int(not task.is_goal(state))
+
         start = task.initial
         counter = itertools.count()  # tie-breaker; keeps States out of compares
-        h0 = goal_count(goal_atoms, start)
+        h0 = h(start)
         frontier: List[Tuple[float, float, int, State]] = [
             (self._priority(0, h0), 0, next(counter), start)
         ]
@@ -136,9 +143,8 @@ class _BestFirstPlanner(Planner):
                 if ng < best_g.get(succ, ng + 1):
                     best_g[succ] = ng
                     came_from[succ] = (state, action)
-                    h = goal_count(goal_atoms, succ)
                     heapq.heappush(
-                        frontier, (self._priority(ng, h), ng, next(counter), succ)
+                        frontier, (self._priority(ng, h(succ)), ng, next(counter), succ)
                     )
         return None
 

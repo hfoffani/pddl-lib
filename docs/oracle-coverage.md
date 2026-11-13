@@ -17,7 +17,7 @@ on demand, and on pushes to `main` that touch parsing.
 VAL is the primary plan oracle because it covers temporal plans, which
 INVAL does not. Agreement between VAL and INVAL on the fixtures is the
 cross-check. `validate_plan` (#166) follows VAL's semantics; where the
-object model cannot represent a domain (#138, #139, #143, syntax errors)
+object model cannot represent a domain (#139, #143, syntax errors)
 it refuses the plan instead of judging it, and the check skips.
 
 FD only checks domains whose `:requirements` all fall within its

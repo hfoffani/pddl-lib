@@ -229,11 +229,12 @@ def test_refuses_unsupported_requirements(tmp_path):
         simulate(dp, [])
 
 
-def test_refuses_non_conjunctive_goals():
+def test_judges_non_conjunctive_goals():
+    """#138: elevator's (forall (?p - passenger) (served ?p)) goal is judged."""
     dp = DomainProblem(os.path.join(IPC, "elevator-adl-full-typed", "domain.pddl"),
                        os.path.join(IPC, "elevator-adl-full-typed", "p01.pddl"))
-    with pytest.raises(PlanValidationError, match="#138"):
-        validate_plan(dp, [])
+    failure = validate_plan(dp, []).failure
+    assert failure.kind == "goal" and failure.unmet
 
 
 @pytest.mark.parametrize("da", [

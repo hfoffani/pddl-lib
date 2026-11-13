@@ -95,8 +95,7 @@ def validate_requirements(domainproblem: "DomainProblem") -> None:
 
 def check_modeled(domainproblem: "DomainProblem", syntax: bool = True) -> None:
     """Refuse input the object model reads but drops or misreads, so nothing
-    is solved or judged as if it were absent: goals other than a conjunction
-    of positive atoms (#138), ``(:constraints ...)`` (#140) and timed
+    is solved or judged as if it were absent: ``(:constraints ...)`` (#140) and timed
     initial literals (#142), even when their requirement is not declared.
     With ``syntax``, also input with syntax errors: the parser skips what it
     cannot read, e.g. a ``(:derived ...)`` rule (#141). ``diagnose`` reports
@@ -105,10 +104,6 @@ def check_modeled(domainproblem: "DomainProblem", syntax: bool = True) -> None:
         raise UnsupportedRequirementsError(
             "the domain or problem has syntax errors, so parts of it were "
             "skipped; run `pddlpy validate` (#141)")
-    if not domainproblem.problem.simple_goal:
-        raise UnsupportedRequirementsError(
-            "only goals that are a conjunction of positive atoms are supported "
-            "yet; not, or, imply, exists, forall and numeric goals are not (#138)")
     if domainproblem.problem.timed_literals:
         raise UnsupportedRequirementsError(
             "timed initial literals, (at N ...) in :init, are not supported "

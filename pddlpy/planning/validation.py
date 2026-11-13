@@ -22,8 +22,7 @@ The semantics follow VAL, the reference plan validator:
 * Reading a fluent that has no value fails the step.
 
 What the object model cannot represent is refused with
-:class:`PlanValidationError` rather than judged: syntax errors, goals other
-than a conjunction of atoms (#138), durative actions with numeric,
+:class:`PlanValidationError` rather than judged: syntax errors, durative actions with numeric,
 conditional, quantified or inequality parts (#139, #143), and requirements
 outside :data:`VALIDATION_CAPABILITIES`.
 """
@@ -632,10 +631,17 @@ def validate_plan(dp: "DomainProblem", steps: List[PlanStep]) -> Validation:
     sim = simulate(dp, steps)
     if sim.failure is not None:
         return Validation(False, sim.failure, sim)
-    missing = sorted(_atom_text(atom_tuple(g)) for g in dp.goals()
-                     if atom_tuple(g) not in sim.state.atoms)
+    goal = dp.goal_condition()  # any goal shape (#138)
+    state = sim.state
+    undefined = sorted(_atom_text(f) for f in _evaluated_fluents(goal, state)
+                       if f not in state.fluents)
+    missing = sorted(_unmet(goal, state))
+    if undefined and not missing:  # an undefined fluent read as 0 held
+        missing = [_cond_text(goal)]
     if missing:
-        f = Failure("goal", "goal not satisfied after %d steps" % len(steps),
-                    None, None, None, tuple(missing), sim.state)
+        msg = "goal not satisfied after %d steps" % len(steps)
+        if undefined:
+            msg += "; no value for %s" % ", ".join(undefined)
+        f = Failure("goal", msg, None, None, None, tuple(missing), state)
         return Validation(False, f, sim)
     return Validation(True, None, sim)

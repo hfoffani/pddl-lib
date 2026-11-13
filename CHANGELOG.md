@@ -41,6 +41,13 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **Goals other than a conjunction of positive atoms are solved** (#138):
+  `not`, `or`, `imply`, `exists`, `forall`, `=` and numeric comparisons in
+  `(:goal ...)` were misread (a `(not (p))` goal was read as `(p)`), then
+  refused. The planners and `validate-plan` now evaluate the whole goal;
+  `DomainProblem.goal_condition()` exposes it. `validate-plan` reports the
+  failing conjuncts, and a goal reading a fluent with no value fails, as in
+  VAL. `astar`/`gbfs` use a blind heuristic for such goals.
 - **`validate` reported quantified variables in durative conditions as
   undeclared parameters** (#193): in `(at start (forall (?y - a) (p ?y)))`,
   `?y` was taken for a parameter of the action. Such conditions are still

@@ -1592,7 +1592,7 @@
   "issues": [
    {
     "check": "unsupported",
-    "message": "only goals that are a conjunction of positive atoms are supported yet; not, or, imply, exists, forall and numeric goals are not (#138)",
+    "message": "derived predicates, (:derived ...), are not supported yet (#141)",
     "severity": "error"
    }
   ],

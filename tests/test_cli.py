@@ -301,7 +301,10 @@ def test_non_finite_fluents_stay_strict_json(capsys, tmp_path):
 
 
 def test_validate_plan_refused(capsys, tmp_path):
-    ipc = os.path.join(CORPUS, "ipc", "elevator-adl-full-typed")
-    code, _, err = _run(capsys, "validate-plan", os.path.join(ipc, "domain.pddl"),
-                        os.path.join(ipc, "p01.pddl"), _plan(tmp_path, ""))
-    assert code == 2 and "#138" in err
+    d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
+    d.write_text("(define (domain d) (:requirements :durative-actions :duration-inequalities)"
+                 " (:predicates (p)) (:durative-action a :parameters ()"
+                 " :duration (<= ?duration 2) :condition (at start (p)) :effect (at end (p))))")
+    p.write_text("(define (problem q) (:domain d) (:init (p)) (:goal (p)))")
+    code, _, err = _run(capsys, "validate-plan", str(d), str(p), _plan(tmp_path, ""))
+    assert code == 2 and "duration-inequalities" in err

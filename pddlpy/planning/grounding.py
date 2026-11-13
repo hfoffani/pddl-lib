@@ -20,7 +20,8 @@ class GroundedTask:
 
     Attributes:
         initial -- the initial ``State``.
-        goals   -- the goal atoms (as parsed; checked via ``State.satisfies``).
+        goals   -- the goal's positive atoms (as parsed).
+        goal    -- the grounded goal condition (#138), checked by ``is_goal``.
         actions -- the list of all grounded ``Operator`` instances.
     """
 
@@ -28,6 +29,7 @@ class GroundedTask:
         self.domainproblem = domainproblem
         self.initial: State = State.from_problem(domainproblem)
         self.goals = domainproblem.goals()
+        self.goal = domainproblem.goal_condition()
         self.actions: List["Operator"] = [
             gop
             for name in domainproblem.operators()
@@ -42,4 +44,4 @@ class GroundedTask:
 
     def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""
-        return state.satisfies(self.goals)
+        return self.goal.holds(state.atoms, state.fluents)

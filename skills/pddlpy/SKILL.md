@@ -150,18 +150,15 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
 - **Type hierarchies** are supported: a parameter typed with a supertype
   binds objects of any transitive subtype (`dp.types()` / `dp.subtypes_of(t)`
   expose the hierarchy). `(either ...)` union types parse but bind no objects.
-- **Goals** must be a conjunction of positive atoms. `not`, `or`, `imply`,
-  `exists`, `forall` and numeric comparisons in `(:goal ...)` are refused:
-  `solve` / `validate-plan` exit 2, and `validate` reports an `unsupported`
-  error ([#138](https://github.com/hfoffani/pddl-lib/issues/138)). Rewrite
-  such goals as a positive conjunction, e.g. add a `(done)` predicate set by
-  a final action. Not supported at all: `:derived-predicates`, `:constraints`,
+- **Goals** can use `not`, `or`, `imply`, `exists`, `forall`, `=` and
+  numeric comparisons. `dp.goals()` lists only the positive atoms; the
+  whole goal is `dp.goal_condition()`. With such goals `astar`/`gbfs` search
+  blind, so prefer `bfs`/`ucs`. Not supported at all: `:derived-predicates`, `:constraints`,
   `:preferences` in goals, timed initial literals, duration inequalities,
   `:object-fluents`. `solve` refuses (exit 2) a pair with syntax errors:
   the parser skips what it cannot read, so the answer would be for another
   domain. `validate-plan` / `simulate` refuse (exit 2) what
-  the model cannot represent instead of guessing: syntax errors, goals that
-  are not a conjunction of atoms, durative actions with numeric, conditional
+  the model cannot represent instead of guessing: syntax errors, durative actions with numeric, conditional
   or quantified parts or duration inequalities. Full status per requirement:
   [docs/pddl-support.md](https://github.com/hfoffani/pddl-lib/blob/main/docs/pddl-support.md).
 - **Durative actions** (`:durative-actions`) parse into `DurativeAction`

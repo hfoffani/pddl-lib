@@ -12,8 +12,7 @@ planners, not a wish list.
 * **Validate plan**: `validate-plan` / `simulate` judge plans for it, with
   VAL's semantics (#166). Otherwise they refuse the plan
   (`PlanValidationError`, CLI exit `2`) rather than guess; they also refuse
-  goals other than a conjunction of atoms ([#138]), files with syntax
-  errors, and durative actions with numeric, conditional or quantified parts
+  files with syntax errors, and durative actions with numeric, conditional or quantified parts
   ([#139]) or duration inequalities ([#143]).
 
 | Requirement | PDDL | Parse | Solve | Validate plan | Notes |
@@ -28,7 +27,7 @@ planners, not a wish list.
 | `:quantified-preconditions` | 1.2 | yes | bfs, astar, gbfs, ucs | yes | temporal refuses it. |
 | `:conditional-effects` | 1.2 | yes | bfs, astar, gbfs, ucs | yes | `when` and `forall` effects. temporal refuses it. |
 | `:adl` | 1.2 | yes | bfs, astar, gbfs, ucs | yes | Covers the rows above. temporal refuses it. |
-| `:fluents`, `:numeric-fluents` | 2.1, 3.1 | yes | bfs, astar, gbfs, ucs | yes, except on durative actions | Numeric preconditions and `assign` / `increase` / `decrease` / `scale-up` / `scale-down` effects. Numeric goals are refused ([#138]). temporal applies numeric conditions and effects on instantaneous actions only; it refuses durative actions with numeric parts ([#139]). |
+| `:fluents`, `:numeric-fluents` | 2.1, 3.1 | yes | bfs, astar, gbfs, ucs | yes, except on durative actions | Numeric preconditions and `assign` / `increase` / `decrease` / `scale-up` / `scale-down` effects. Numeric goals are supported ([#138]). temporal applies numeric conditions and effects on instantaneous actions only; it refuses durative actions with numeric parts ([#139]). |
 | `:durative-actions` | 2.1 | yes | temporal | yes, overlapping actions included | Sequential semantics only: actions never overlap, so domains that need concurrency are not solved. The duration must be a number, e.g. `(= ?duration 4)`; `(= ?duration (f))` is rejected. temporal refuses durative actions with numeric, conditional or quantified parts ([#139]). Not combinable with the ADL requirements (temporal refuses those). |
 | `:duration-inequalities` | 2.1 | partly | none | no | Parses, declared or not. An inequality bound is not taken as a duration: `validate` reports the action, and `temporal` and `validate-plan` refuse it ([#143]). |
 | `:continuous-effects` | 2.1 | no | none | no | The key and `#t` are not recognized (syntax error). |
@@ -40,11 +39,11 @@ planners, not a wish list.
 | `:object-fluents` | 3.1 | no | none | no | Not recognized (syntax error). |
 | `:domain-axioms`, `:subgoals-through-axioms`, `:safety-constraints`, `:expression-evaluation`, `:open-world`, `:true-negation`, `:ucpop` | 1.2 | no | none | no | Not recognized (syntax error). |
 
-**Goals.** Only a conjunction of positive atoms is supported. The model
-misreads other goal forms (`not`, `or`, `imply`, `exists`, `forall`, numeric
-comparisons), so `solve` and `validate-plan` refuse them (exit `2`) and
-`validate` reports an `unsupported` error ([#138]). Goal-side ADL is first in the requirements part of the
-[roadmap](../README.md#roadmap).
+**Goals.** Any goal description is supported: `and`, `not`, `or`, `imply`,
+`exists`, `forall`, `=` and numeric comparisons ([#138]), whatever the
+domain declares in `:requirements`. With a goal other than a conjunction of
+atoms, `astar` and `gbfs` fall back to a blind heuristic (0 at a goal, else
+1).
 
 **Declared vs. used.** When a domain declares any `:requirements`, `solve`
 also checks that the features it uses (typing, negation, disjunction,

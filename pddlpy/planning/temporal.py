@@ -155,6 +155,7 @@ class TemporalTask:
         self.domainproblem = domainproblem
         self.initial: State = State.from_problem(domainproblem)
         self.goals = domainproblem.goals()
+        self.goal = domainproblem.goal_condition()
         self.durative: List["DurativeAction"] = [
             g
             for name in domainproblem.durative_operators()
@@ -178,7 +179,7 @@ class TemporalTask:
 
     def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""
-        return state.satisfies(self.goals)
+        return self.goal.holds(state.atoms, state.fluents)
 
 
 def _schedule(came_from: _CameFrom, state: State) -> TemporalPlan:
