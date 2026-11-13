@@ -41,6 +41,10 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **`(either t1 t2)` types bound no objects** (#200): an action with an
+  `(either ...)` parameter grounded to zero instances. It now binds objects
+  of any member type or its subtypes; objects and types declared
+  `- (either ...)` count as each member.
 - **`validate` reported quantified variables in durative conditions as
   undeclared parameters** (#193): in `(at start (forall (?y - a) (p ?y)))`,
   `?y` was taken for a parameter of the action. Such conditions are still
