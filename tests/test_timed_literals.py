@@ -88,6 +88,23 @@ def test_simultaneous_independent_tils_are_not_mutex(tmp_path):
     assert len(get("temporal").solve(DomainProblem(d, p)).steps) == 0
 
 
+@pytest.mark.parametrize("second, contradictory", [
+    ("1", True), ("1.0005", True),  # one happening, within VAL's tolerance
+    ("1.002", False),               # two happenings
+])
+def test_contradictory_tils_within_tolerance(tmp_path, second, contradictory):
+    """Review on #204: the planner and validate group literals as plan
+    validation does."""
+    problem = ("(define (problem p) (:domain t) (:objects a)"
+               " (:init (at 1 (p a)) (at " + second + " (not (p a)))) (:goal %s))")
+    d, p = _pair(tmp_path, "(not (p a))", problem=problem)
+    dp = DomainProblem(d, p)
+    plan = get("temporal").solve(dp)
+    assert (plan is None) == contradictory
+    assert validate_plan(dp, []).valid != contradictory
+    assert diagnose(d, p)["valid"] != contradictory
+
+
 def test_contradictory_tils_are_mutex(tmp_path):
     """Review on #204: VAL rejects every plan when two literals add and
     delete one atom at the same time."""

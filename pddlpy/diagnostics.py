@@ -40,6 +40,7 @@ from pddlpy.planning import (
     validate_requirements,
 )
 from pddlpy.planning.state import _expr_fluents
+from pddlpy.planning.temporal import contradictory_literals
 
 
 class _CollectingErrorListener(ErrorListener):
@@ -189,15 +190,11 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
 
     # Timed initial literals (#142) that add and delete one atom at the same
     # time are mutex (VAL): no plan can be valid.
-    timed: Dict[Tuple[float, Tuple[str, ...]], Set[bool]] = {}
-    for time, atom, positive in dp.problem.timed_literals:
-        timed.setdefault((time, atom_tuple(atom)), set()).add(positive)
-    for (time, atom), signs in sorted(timed.items()):
-        if len(signs) == 2:
-            issues.append(_issue(
-                "error", "timed_literals",
-                "(%s) is both added and deleted by timed literals at time %g"
-                % (" ".join(atom), time)))
+    for time, atom in contradictory_literals(dp.problem.timed_literals):
+        issues.append(_issue(
+            "error", "timed_literals",
+            "(%s) is both added and deleted by timed literals at time %g"
+            % (" ".join(atom), time)))
 
     # (not ...) in :init (#186): false anyway (closed world), so ignored; an
     # error when the same atom is also asserted.

@@ -45,7 +45,7 @@ from .base import Planner, UnsupportedRequirementsError, check_modeled, validate
 from .durative import validate_durative_actions
 from .registry import register
 from .search import STRIPS_CAPABILITIES
-from .state import Plan, State, atom_tuple, goal_holds
+from .state import GroundAtom, Plan, State, atom_tuple, goal_holds
 
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem, DurativeAction, Operator
@@ -163,6 +163,26 @@ def apply_durative(state: State, action: "DurativeAction",
     return _apply_effects(mid, action.effect_pos["end"], action.effect_neg["end"])
 
 
+def contradictory_literals(timed_literals: Iterable[Tuple[float, Any, bool]]
+                           ) -> List[Tuple[float, GroundAtom]]:
+    """``(time, atom)`` for each atom that timed initial literals add and
+    delete in one happening (#142): within ``TOLERANCE`` of the happening's
+    first time, as plan validation groups them. VAL rejects every plan."""
+    ordered = sorted((t, atom_tuple(a), pos) for t, a, pos in timed_literals)
+    out: List[Tuple[float, GroundAtom]] = []
+    i = 0
+    while i < len(ordered):
+        t0 = ordered[i][0]
+        j = i
+        while j < len(ordered) and ordered[j][0] <= t0 + TOLERANCE:
+            j += 1
+        adds = {a for _, a, pos in ordered[i:j] if pos}
+        dels = {a for _, a, pos in ordered[i:j] if not pos}
+        out += [(t0, a) for a in sorted(adds & dels)]
+        i = j
+    return out
+
+
 class TemporalTask:
     """The temporal counterpart of ``GroundedTask``: initial state, goals and
     every grounded action — durative, plus instantaneous ones as zero-duration
@@ -182,7 +202,7 @@ class TemporalTask:
         self.til_times: List[float] = [t for t, _, _ in self.tils]
         # literals that add and delete one atom at the same time are mutex,
         # as in VAL: no plan is valid
-        self.contradictory = any(a & d for _, a, d in self.tils)
+        self.contradictory = bool(contradictory_literals(domainproblem.problem.timed_literals))
         self.initial_clock = self.clear(0.0)
         self.initial: State
         self.initial, self.initial_fired = self.fire(
