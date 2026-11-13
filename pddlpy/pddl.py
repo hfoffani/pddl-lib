@@ -1176,9 +1176,20 @@ class DomainListener(pddlListener):
                 negscope = True
                 break
         self.negativescopes.append(negscope)
+        if self._quantified_condition(ctx):
+            # A quantifier in a durative condition is not modeled (the action
+            # is not simple); its atoms use its own variables, so they land in
+            # a throwaway scope instead of the action's conditions (#193).
+            self.scopes.append(Scope())
 
     def exitGoalDesc(self, ctx):
         self.negativescopes.pop()
+        if self._quantified_condition(ctx):
+            self.scopes.pop()
+
+    def _quantified_condition(self, ctx):
+        return bool(self._datimes) and \
+            ctx.getChildCount() > 1 and ctx.getChild(1).getText().lower() in ('forall', 'exists')
 
     def enterPEffect(self, ctx):
         # A numeric assignment effect, e.g. (decrease (fuel ?v) 5).

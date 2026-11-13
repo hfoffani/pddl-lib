@@ -41,6 +41,10 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **`validate` reported quantified variables in durative conditions as
+  undeclared parameters** (#193): in `(at start (forall (?y - a) (p ?y)))`,
+  `?y` was taken for a parameter of the action. Such conditions are still
+  not modeled (the action is refused by `temporal` and `validate-plan`).
 - **`(:metric minimize (total-time))` was a syntax error** (#158), and the
   parser's recovery dropped the rest of the problem: objects, `:init` and
   goals came out empty for IPC temporal problems. It now parses, and
