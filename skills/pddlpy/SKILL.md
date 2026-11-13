@@ -156,7 +156,8 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   blind, so prefer `bfs`/`ucs`. Derived predicates (`(:derived ...)`) work with the
   classical planners, not `temporal`. Not supported at all: `:constraints`,
   duration inequalities,
-  `:object-fluents`. `solve` refuses (exit 2) a pair with syntax errors:
+  `:object-fluents`, `:continuous-effects` and the obsolete PDDL 1.2 keys
+  (refused by name). `solve` refuses (exit 2) a pair with syntax errors:
   the parser skips what it cannot read, so the answer would be for another
   domain. `validate-plan` / `simulate` refuse (exit 2) what
   the model cannot represent instead of guessing: syntax errors, durative actions with numeric, conditional

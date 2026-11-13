@@ -93,6 +93,15 @@ def validate_requirements(domainproblem: "DomainProblem") -> None:
             )
 
 
+#: PDDL 1.2 requirements later versions dropped (#208).
+OBSOLETE_REQUIREMENTS = frozenset({
+    ":domain-axioms", ":subgoals-through-axioms", ":safety-constraints",
+    ":expression-evaluation", ":open-world", ":true-negation", ":ucpop"})
+
+#: Requirements that parse but nothing models yet (#208).
+UNMODELED_REQUIREMENTS = frozenset({":continuous-effects", ":object-fluents"})
+
+
 def check_modeled(domainproblem: "DomainProblem", syntax: bool = True,
                   timed: bool = False, preferences: bool = False) -> None:
     """Refuse input the object model reads but drops or misreads, so nothing
@@ -109,6 +118,14 @@ def check_modeled(domainproblem: "DomainProblem", syntax: bool = True,
         raise UnsupportedRequirementsError(
             "the domain or problem has syntax errors, so parts of it were "
             "skipped; run `pddlpy validate` (#141)")
+    obsolete = sorted(domainproblem.requirements() & OBSOLETE_REQUIREMENTS)
+    if obsolete:
+        raise UnsupportedRequirementsError(
+            "%s: obsolete PDDL 1.2 requirement, not supported (#208)" % ", ".join(obsolete))
+    unmodeled = sorted(domainproblem.requirements() & UNMODELED_REQUIREMENTS)
+    if unmodeled:
+        raise UnsupportedRequirementsError(
+            "%s: not supported yet (#208)" % ", ".join(unmodeled))
     if domainproblem.problem.preferences and not preferences:
         raise UnsupportedRequirementsError(
             "goal preferences, (preference ...), need the ucs planner (#201)")

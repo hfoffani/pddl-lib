@@ -508,6 +508,16 @@ REQUIRE_KEY
     | ':preferences'
     | ':constraints'
     | ':semantics'
+    // recognized so they can be refused by name (#208)
+    | ':continuous-effects'
+    | ':object-fluents'
+    | ':domain-axioms'
+    | ':subgoals-through-axioms'
+    | ':safety-constraints'
+    | ':expression-evaluation'
+    | ':open-world'
+    | ':true-negation'
+    | ':ucpop'
     ;
 
 /*
