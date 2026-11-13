@@ -557,6 +557,15 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#fExpT.
+    def enterFExpT(self, ctx:pddlParser.FExpTContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#fExpT.
+    def exitFExpT(self, ctx:pddlParser.FExpTContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#problem.
     def enterProblem(self, ctx:pddlParser.ProblemContext):
         pass

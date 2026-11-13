@@ -1167,6 +1167,9 @@ class DurativeAction():
                     preference parts, and timed or expression duration
                     bounds, are not modeled (#139, #143); plan validation
                     refuses such actions.
+        continuous -- True when an effect is continuous, an untimed
+                    (increase|decrease <f-head> <f-exp-t>), e.g. with #t
+                    (#213). Not modeled: solve and validation refuse it.
     """
     CONDITION_TIMES = ('start', 'over', 'end')
     EFFECT_TIMES = ('start', 'end')
@@ -1183,6 +1186,7 @@ class DurativeAction():
         self.effect_pos: Dict[str, set] = {t: set() for t in self.EFFECT_TIMES}
         self.effect_neg: Dict[str, set] = {t: set() for t in self.EFFECT_TIMES}
         self.simple = True
+        self.continuous = False
 
     def bounds(self) -> Optional[Tuple[float, float]]:
         """``(lo, hi)`` durations allowed (#143): ``duration_range``, or
@@ -1199,6 +1203,7 @@ class DurativeAction():
         g.duration = self.duration
         g.duration_range = self.duration_range
         g.simple = self.simple
+        g.continuous = self.continuous
         for t in self.CONDITION_TIMES:
             g.condition_pos[t] = set(a.ground(varvals) for a in self.condition_pos[t])
             g.condition_neg[t] = set(a.ground(varvals) for a in self.condition_neg[t])
@@ -1316,11 +1321,17 @@ class DomainListener(pddlListener):
         da.condition_neg[time] |= set(scope.negatoms)
 
     def enterTimedEffect(self, ctx):
+        if ctx.assignOpT() is not None:
+            # (increase (f) (* #t 2)): a continuous effect, not modeled (#213)
+            next(s for s in reversed(self.scopes) if isinstance(s, DurativeAction)).continuous = True
+            return
         # (at start|end cEffect): collect the effect atoms into a fresh Scope.
         self._datimes.append(ctx.timeSpecifier().getText().lower())
         self.scopes.append(Scope())
 
     def exitTimedEffect(self, ctx):
+        if ctx.assignOpT() is not None:
+            return
         scope = self.scopes.pop()
         time = self._datimes.pop()
         da = self.scopes[-1]

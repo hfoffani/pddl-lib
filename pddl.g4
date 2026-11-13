@@ -354,7 +354,7 @@ daEffect
 timedEffect
 	: '(' 'at' timeSpecifier cEffect ')'
 	| '(' 'at' timeSpecifier fAssignDA ')'
-	| '(' assignOpT fHead fExp ')' /* fExpT in BNF but not making sense */
+	| '(' assignOpT fHead fExpT ')'   // a continuous effect (#213)
 	;
 
 fAssignDA
@@ -369,16 +369,13 @@ fExpDA
 
 assignOpT : 'increase' | 'decrease' ;
 
-/*
- * We should have fExpT according to:
- * http://www.plg.inf.uc3m.es/ipc2011-deterministic/attachments/OtherContributions/kovacs-pddl-3.1-2011.pdf
-
+// PDDL 2.1's f-exp-t, plus a plain fExp (#213)
 fExpT
-	: '(*' fExp #t ')'
-	| '(*' #t fExp ')'
-	| #t
+	: '(' '*' fExp '#t' ')'
+	| '(' '*' '#t' fExp ')'
+	| '#t'
+	| fExp
 	;
- */
 
 /************* PROBLEMS ****************************/
 

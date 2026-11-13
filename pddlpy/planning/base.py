@@ -130,6 +130,12 @@ def check_modeled(domainproblem: "DomainProblem", syntax: bool = True,
         raise UnsupportedRequirementsError(
             "object fluents, functions whose value is an object, are not "
             "supported yet (#211)")
+    continuous = sorted(name for name, a in domainproblem.domain.durative_operators.items()
+                        if a.continuous)
+    if continuous:
+        raise UnsupportedRequirementsError(
+            "continuous effects, (increase|decrease ... #t), are not supported "
+            "yet: %s (#213)" % ", ".join(continuous))
     if domainproblem.problem.preferences and not preferences:
         raise UnsupportedRequirementsError(
             "goal preferences, (preference ...), need the ucs planner (#201)")
