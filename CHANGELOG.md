@@ -6,6 +6,12 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 ## [Unreleased]
 
 ### Added
+- **Object fluents parse** (#211): object-valued functions,
+  `(:functions (loc ?t) - location)`, function terms as arguments,
+  `(assign (loc ?t) ?l)` and `(= (loc t1) l1)` in `:init` no longer cause
+  syntax errors. They are not modeled yet, so `solve`, `validate-plan` and
+  `validate` refuse them (`dp.domain.object_fluents`,
+  `dp.problem.object_fluents`).
 - **Goal preferences** (#201): `(preference name GD)` in `(:goal ...)`,
   also under `and` / `forall`, and `(is-violated name)` in `:metric`, parse.
   The hard goal and the preferences are kept apart
