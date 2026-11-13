@@ -58,6 +58,7 @@ from pddlpy.pddl import (
     NumericCond,
     Operator,
     Or,
+    undefined_marker,
 )
 
 from .base import PlannerError, UnsupportedRequirementsError, check_modeled
@@ -395,7 +396,7 @@ class _Part:
         the right-hand sides of its fired effects."""
         a = self.action
         if isinstance(a, DurativeAction):
-            return []
+            return _literal_undefined(a, self.event, state)
         fluents = _evaluated_fluents(a.precondition, state)
         for ce in a.conditional_effects:
             fluents |= _evaluated_fluents(ce.condition, state)
@@ -445,6 +446,13 @@ def _literal_unmet(a: DurativeAction, when: str, state: State) -> List[str]:
     present = ["(not %s)" % _atom_text(atom_tuple(x)) for x in a.condition_neg[when]
                if atom_tuple(x) in state.atoms]
     return sorted(missing) + sorted(present)
+
+
+def _literal_undefined(a: DurativeAction, when: str, state: State) -> List[str]:
+    """The derived atoms the literal conditions read that are undefined (#141)."""
+    return sorted(_atom_text(atom_tuple(x))
+                  for x in a.condition_pos[when] | a.condition_neg[when]
+                  if undefined_marker(atom_tuple(x)) in state.atoms)
 
 
 _ADDITIVE = {"increase", "decrease"}
@@ -625,6 +633,10 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
             unmet = _literal_unmet(p.action, "over", state)  # type: ignore[arg-type]
             if unmet:
                 return fail("invariant", "over all conditions broken", p, unmet, state)
+            undefined = _literal_undefined(p.action, "over", state)  # type: ignore[arg-type]
+            if undefined:
+                return fail("undefined-fluent", "over all conditions read fluents with no value",
+                            p, undefined, state)
         trace.extend(TracePoint(p.time, p.event, p.step, p.text, state) for p in happening)
     return Simulation(tuple(trace), None, state)
 
