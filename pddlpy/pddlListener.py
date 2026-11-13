@@ -620,6 +620,15 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#preGD.
+    def enterPreGD(self, ctx:pddlParser.PreGDContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#preGD.
+    def exitPreGD(self, ctx:pddlParser.PreGDContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#probConstraints.
     def enterProbConstraints(self, ctx:pddlParser.ProbConstraintsContext):
         pass

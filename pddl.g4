@@ -423,8 +423,18 @@ atomicNameFormula
 // This means 'preference' preconditions cannot be used
 //goal : '(' ':goal' preGD ')'  
 goal
-    : '(' ':goal' goalDesc ')' 
+    : '(' ':goal' preGD ')'
     ;
+
+// A goal with PDDL 3.0 preferences (#201). 'and' / 'forall' come first, so
+// a plain goal is read through them (ANTLR picks the first alternative of
+// an ambiguity); the listener rebuilds the hard goal and the preferences.
+preGD
+	: '(' 'and' preGD* ')'
+	| '(' 'forall' '(' typedVariableList ')' preGD ')'
+	| '(' 'preference' name? goalDesc ')'
+	| goalDesc
+	;
 
 probConstraints
 	: '(' ':constraints'  prefConGD ')'
@@ -445,7 +455,7 @@ optimization : 'minimize' | 'maximize' ;
 
 metricFExp
 	: '(' binaryOp metricFExp metricFExp ')'
-	| '(' ('*'|'/') metricFExp metricFExp+ ')'
+	| '(' ('+'|'*'|'/') metricFExp metricFExp+ ')'
 	| '(' '-' metricFExp ')'
 	| NUMBER
 	| '(' functionSymbol name* ')'

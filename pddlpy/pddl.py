@@ -660,6 +660,106 @@ def _build_condition(gd: Any) -> Condition:
     return Exists(varlist, body) if kw == 'exists' else Forall(varlist, body)
 
 
+class Preference():
+    """A goal preference, ``(preference name GD)`` (#201), possibly under
+    ``(forall (vars) ...)``: one instance per binding of ``params``, each
+    violated when its condition does not hold at the end of the plan."""
+
+    def __init__(self, name: Optional[str], params: Dict[str, Optional[str]],
+                 body: Condition) -> None:
+        self.name = name
+        self.params = dict(params)
+        self.body = body
+
+    def ground(self, dp: "DomainProblem") -> List[Condition]:
+        """The grounded condition of every instance."""
+        names = list(self.params)
+        domains = [dp.candidate_objects(self.params[v]) for v in names]
+        return [self.body.ground(dict(zip(names, combo)), dp)
+                for combo in itertools.product(*domains)]
+
+    def __repr__(self) -> str:
+        return "(preference %s %r)" % (self.name, self.body)
+
+
+def _build_pregd(ctx: Any, params: Dict[str, Optional[str]]
+                 ) -> Tuple[List[Condition], List[Preference]]:
+    """The hard conditions and the preferences of a preGD (#201)."""
+    first = ctx.getChild(1).getText().lower() if ctx.getChildCount() > 1 else None
+    if ctx.goalDesc() is None and first == 'and':
+        hard: List[Condition] = []
+        prefs: List[Preference] = []
+        for sub in ctx.preGD():
+            h, p = _build_pregd(sub, params)
+            hard += h
+            prefs += p
+        return hard, prefs
+    if ctx.goalDesc() is None:  # (forall (vars) preGD)
+        varlist = _typed_var_list(ctx.typedVariableList())
+        h, p = _build_pregd(ctx.preGD(0), {**params, **varlist})
+        return ([Forall(varlist, And(h))] if h else []), p
+    if first == 'preference':
+        name = ctx.name().getText().lower() if ctx.name() is not None else None
+        return [], [Preference(name, params, _build_condition(ctx.goalDesc()))]
+    return [_build_condition(ctx.goalDesc())], []
+
+
+#: A metric as a linear form (#201): coefficient per term, the terms being
+#: ``""`` (the constant), ``"total-cost"`` and ``"is-violated NAME"``.
+LinearMetric = Dict[str, float]
+
+
+def _scale(form: LinearMetric, k: float) -> LinearMetric:
+    return {t: k * c for t, c in form.items()}
+
+
+def _add(a: LinearMetric, b: LinearMetric) -> LinearMetric:
+    out = dict(a)
+    for t, c in b.items():
+        out[t] = out.get(t, 0.0) + c
+    return out
+
+
+def _linear_metric(m: Any) -> Optional[LinearMetric]:
+    """A metricFExp as a linear form over ``total-cost`` and preference
+    violations (#201), or ``None`` for any other expression."""
+    if m.NUMBER() is not None:
+        return {"": float(m.NUMBER().getText())}
+    first = m.getChild(1).getText().lower() if m.getChildCount() > 1 else m.getText().lower()
+    if first == 'is-violated':
+        return {"is-violated " + m.name(0).getText().lower(): 1.0}
+    if m.functionSymbol() is not None:
+        if first == 'total-cost' and not m.name():
+            return {"total-cost": 1.0}
+        return None  # another fluent, or total-time
+    subs = [_linear_metric(s) for s in m.metricFExp()]
+    if not subs or any(s is None for s in subs):
+        return None
+    forms = cast(List[LinearMetric], subs)
+    if len(forms) == 1:  # (- e)
+        return _scale(forms[0], -1.0)
+    if first == '+':
+        out: LinearMetric = {}
+        for f in forms:
+            out = _add(out, f)
+        return out
+    if first == '-':
+        return _add(forms[0], _scale(forms[1], -1.0))
+    if first == '/':
+        if len(forms) != 2 or set(forms[1]) != {""} or not forms[1][""]:
+            return None
+        return _scale(forms[0], 1.0 / forms[1][""])
+    # '*': every factor but one must be a constant
+    variable = [f for f in forms if set(f) - {""}]
+    if len(variable) > 1:
+        return None
+    k = 1.0
+    for f in forms:
+        if not variable or f is not variable[0]:
+            k *= f.get("", 0.0)
+    return _scale(variable[0], k) if variable else {"": k}
+
+
 def _is_simple_conjunction(cond: Condition) -> bool:
     """True if ``cond`` is a plain conjunction of literals / negated literals /
     numeric constraints — the shape the static-pruning binder can join safely.
@@ -1258,6 +1358,8 @@ class ProblemListener(pddlListener):
         # condition tree (#138).
         self.simple_goal = True
         self.goal: Condition = And([])
+        self.preferences: List[Preference] = []  # goal preferences (#201)
+        self.metric_form: Optional[LinearMetric] = None
         self.constraints = False  # a (:constraints ...) block was read (#140)
         # Timed initial literals, (at N lit) in :init, as (time, Atom,
         # positive). Kept out of ``initialstate``: they are not true at 0 (#142).
@@ -1275,9 +1377,14 @@ class ProblemListener(pddlListener):
         self.scopes.pop()
 
     def enterMetricSpec(self, ctx):
-        # Capture the optimization metric, e.g. ('minimize', '(total-cost)').
+        # Capture the optimization metric, e.g. ('minimize', '(total-cost)'),
+        # as written (whitespace collapsed), and as a linear form (#201).
+        m = ctx.metricFExp()
+        text = m.start.getInputStream().getText(m.start.start, m.stop.stop)
         self.metric = (ctx.optimization().getText().lower(),
-                       ctx.metricFExp().getText())
+                       " ".join(text.replace("(", "( ").replace(")", " )").split())
+                       .replace("( ", "(").replace(" )", ")"))
+        self.metric_form = _linear_metric(m)
 
     def enterInit(self, ctx):
         self.scopes.append(Scope())
@@ -1310,9 +1417,19 @@ class ProblemListener(pddlListener):
     def enterGoal(self, ctx):
         self.scopes.append(Scope())
 
+    def enterPreGD(self, ctx):
+        if ctx.getChildCount() > 1 and ctx.getChild(1).getText().lower() == 'preference':
+            # a preference's atoms are no hard goal (#201)
+            self.scopes.append(Scope())
+
+    def exitPreGD(self, ctx):
+        if ctx.getChildCount() > 1 and ctx.getChild(1).getText().lower() == 'preference':
+            self.scopes.pop()
+
     def exitGoal(self, ctx):
         self.goals = set( self.scopes.pop().atoms )
-        self.goal = _build_condition( ctx.goalDesc() )
+        hard, self.preferences = _build_pregd( ctx.preGD(), {} )
+        self.goal = hard[0] if len(hard) == 1 else And(hard)
         self.simple_goal = _positive_conjunction( self.goal )
 
     def enterAtomicNameFormula(self, ctx):

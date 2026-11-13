@@ -154,13 +154,16 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   numeric comparisons. `dp.goals()` lists only the positive atoms; the
   whole goal is `dp.goal_condition()`. With such goals `astar`/`gbfs` search
   blind, so prefer `bfs`/`ucs`. Not supported at all: `:derived-predicates`, `:constraints`,
-  `:preferences` in goals, timed initial literals, duration inequalities,
+  timed initial literals, duration inequalities,
   `:object-fluents`. `solve` refuses (exit 2) a pair with syntax errors:
   the parser skips what it cannot read, so the answer would be for another
   domain. `validate-plan` / `simulate` refuse (exit 2) what
   the model cannot represent instead of guessing: syntax errors, durative actions with numeric, conditional
   or quantified parts or duration inequalities. Full status per requirement:
   [docs/pddl-support.md](https://github.com/hfoffani/pddl-lib/blob/main/docs/pddl-support.md).
+- **Preferences** in `(:goal ...)` are soft: only `ucs` honours them,
+  minimizing a metric like `(+ (total-cost) (* 5 (is-violated p)))`; the
+  other planners refuse them, and `validate-plan` ignores them.
 - **Durative actions** (`:durative-actions`) parse into `DurativeAction`
   (`dp.durative_operators()`) and are solved only by `temporal`, under
   sequential semantics: domains that require overlapping actions are not solved.

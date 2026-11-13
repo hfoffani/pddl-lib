@@ -3,13 +3,7 @@
  "ground_durative": {},
  "parse": {
   "durative_operators": [],
-  "goals": [
-   [
-    "stored",
-    "?g",
-    "level1"
-   ]
-  ],
+  "goals": [],
   "initial_numeric": {},
   "initial_state": [
    [
@@ -130,7 +124,10 @@
     "level0"
    ]
   ],
-  "metric": null,
+  "metric": {
+   "expression": "(+ (* 1 (is-violated p0a)) (* 2 (is-violated p1a)) (* 4 (is-violated p2a)) (* 8 (is-violated p3a)) (* 16 (is-violated p4a)) (* 1 (is-violated p-drive)))",
+   "optimization": "minimize"
+  },
   "objects": {
    "depot1": "depot",
    "goods1": "goods",
@@ -173,16 +170,6 @@
    {
     "check": "syntax",
     "message": "domain file: line 18:1 no viable alternative at input '(:constants'",
-    "severity": "error"
-   },
-   {
-    "check": "syntax",
-    "message": "problem file: line 34:23 no viable alternative at input '(preference'",
-    "severity": "error"
-   },
-   {
-    "check": "syntax",
-    "message": "problem file: line 35:2 no viable alternative at input '(forall'",
     "severity": "error"
    }
   ],

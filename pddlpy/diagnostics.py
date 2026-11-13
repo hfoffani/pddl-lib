@@ -218,7 +218,7 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
 
     # Parts the model reads but drops (#140): solve refuses them too.
     try:
-        check_modeled(dp, syntax=False)  # syntax errors are reported above
+        check_modeled(dp, syntax=False, preferences=True)  # syntax errors are reported above
     except UnsupportedRequirementsError as exc:
         issues.append(_issue("error", "unsupported", str(exc)))
 

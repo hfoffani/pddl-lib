@@ -6,6 +6,14 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 ## [Unreleased]
 
 ### Added
+- **Goal preferences** (#201): `(preference name GD)` in `(:goal ...)`,
+  also under `and` / `forall`, and `(is-violated name)` in `:metric`, parse.
+  The hard goal and the preferences are kept apart
+  (`dp.problem.preferences`). `ucs` minimizes a metric linear in
+  `(total-cost)` and `(is-violated ...)`, the soft goals compiled to costs
+  as in Keyder & Geffner (2009); the other planners refuse preferences.
+  `+` in a metric takes any number of arguments. `metric()` keeps the
+  expression's spacing.
 - **Plan validation and simulation** (#166): `pddlpy validate-plan` and
   `pddlpy simulate` (MCP: `validate_plan`, `simulate`; Python:
   `pddlpy.planning.validate_plan` / `simulate`). Plans in the IPC format or

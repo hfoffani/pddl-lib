@@ -81,7 +81,7 @@ if TYPE_CHECKING:
 TOLERANCE = 0.01
 
 #: Requirements whose semantics the validator implements.
-VALIDATION_CAPABILITIES: FrozenSet[str] = ADL_CAPABILITIES | {":durative-actions"}
+VALIDATION_CAPABILITIES: FrozenSet[str] = ADL_CAPABILITIES | {":durative-actions", ":preferences"}
 
 
 class PlanValidationError(PlannerError):
@@ -447,7 +447,7 @@ def check_supported(dp: "DomainProblem") -> None:
         raise PlanValidationError(
             "plan validation does not support %s" % sorted(unsupported))
     try:
-        check_modeled(dp)
+        check_modeled(dp, preferences=True)
     except UnsupportedRequirementsError as exc:
         raise PlanValidationError("plan validation: %s" % exc)
 

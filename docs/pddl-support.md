@@ -33,7 +33,7 @@ planners, not a wish list.
 | `:continuous-effects` | 2.1 | no | none | no | The key and `#t` are not recognized (syntax error). |
 | `:derived-predicates` | 2.2 | partly | none | no | `(:derived (p ?x) GD)` parses (heads in `dp.domain.derived`) but is not modeled: `validate` reports an `unsupported` error, and `solve` and `validate-plan` refuse it, declared or not ([#141]). |
 | `:timed-initial-literals` | 2.2 | yes | none | no | `(at 5 (p))` in `:init` is kept out of `initialstate()` and stored with its time in `dp.problem.timed_literals`. `solve` and `validate-plan` refuse it, and `validate` reports an `unsupported` error, even when the key is not declared ([#142]). |
-| `:preferences` | 3.0 | no | none | no | The key is recognized; `preference` in goals or `:action` preconditions does not parse (it does parse inside durative-action conditions, and is ignored there). Planners refuse the key. |
+| `:preferences` | 3.0 | partly | ucs | yes (they never make a plan invalid) | Goal preferences, `(preference name GD)` also under `and` / `forall`, are kept apart from the hard goal (`dp.problem.preferences`; `goals()` lists hard atoms only), and `(is-violated name)` parses in `:metric` ([#201]). `ucs` minimizes a metric linear in `(total-cost)` and `(is-violated ...)` with non-negative weights (`maximize` negates it); a quantified preference counts each violated instance. Other metric shapes are refused, and so are preferences by the other planners. Preferences in `:action` preconditions do not parse (in durative-action conditions they parse and are ignored). |
 | `:constraints` | 3.0 | partly | none | no | Declaring the key is a syntax error ([#140]). A `(:constraints ...)` block in the domain or problem loads but is not modeled: `solve` and `validate-plan` refuse it, and `validate` reports an `unsupported` error. |
 | `:action-costs` | 3.1 | yes | ucs (cost-optimal); bfs, astar, gbfs, temporal | yes | `(increase (total-cost) ...)` and `(:metric minimize (total-cost))`. Every planner reports `Plan.cost`, but only ucs minimizes it. temporal minimizes makespan, and `(:metric minimize (total-time))` parses ([#158]). |
 | `:object-fluents` | 3.1 | no | none | no | Not recognized (syntax error). |
@@ -56,6 +56,7 @@ are. `validate` does not run this check yet ([#144]).
 [#139]: https://github.com/hfoffani/pddl-lib/issues/139
 [#140]: https://github.com/hfoffani/pddl-lib/issues/140
 [#141]: https://github.com/hfoffani/pddl-lib/issues/141
+[#201]: https://github.com/hfoffani/pddl-lib/issues/201
 [#142]: https://github.com/hfoffani/pddl-lib/issues/142
 [#143]: https://github.com/hfoffani/pddl-lib/issues/143
 [#144]: https://github.com/hfoffani/pddl-lib/issues/144

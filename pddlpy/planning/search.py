@@ -17,13 +17,13 @@ import itertools
 from collections import deque
 from typing import TYPE_CHECKING, Dict, FrozenSet, List, Optional, Tuple
 
-from .base import Planner
+from .base import Planner, UnsupportedRequirementsError
 from .costs import action_cost, plan_cost
 from .registry import register
-from .state import Plan, State, atom_tuple
+from .state import Plan, State, atom_tuple, goal_holds
 
 if TYPE_CHECKING:
-    from pddlpy.pddl import DomainProblem, Operator
+    from pddlpy.pddl import Condition, DomainProblem, Operator
 
     from .state import GroundAtom
 
@@ -166,13 +166,89 @@ class GBFSPlanner(_BestFirstPlanner):
 class UniformCostPlanner(_BestFirstPlanner):
     """Dijkstra over action costs (f = g, h ignored). Cost-optimal for
     action-cost domains (#3); falls back to unit cost when a domain declares
-    none."""
+    none. With goal preferences (#201) it minimizes the metric instead."""
+
+    capabilities = ADL_CAPABILITIES | {":preferences"}
+    preferences = True
 
     def _priority(self, g: float, h: float) -> float:
         return g
 
     def _step_cost(self, action: "Operator", state: State) -> float:
         return action_cost(action, state)
+
+    def solve(self, domainproblem: "DomainProblem") -> Optional[Plan]:
+        if not domainproblem.problem.preferences:
+            return super().solve(domainproblem)
+        return self._solve_preferences(domainproblem)
+
+    def _solve_preferences(self, domainproblem: "DomainProblem") -> Optional[Plan]:
+        """Minimize ``c * total-cost + sum(w * violated)`` (#201): the soft
+        goals compiled to action costs (Keyder & Geffner 2009). Each state
+        that reaches the hard goal gets a terminal node priced with the
+        violations it leaves, the price of the forgo actions; the first
+        terminal popped is optimal."""
+        task = self.prepare(domainproblem)
+        c, weighted = _preference_metric(domainproblem)
+        self._start_search()
+
+        def penalty(state: State) -> float:
+            return sum(w * sum(not goal_holds(g, state) for g in instances)
+                       for w, instances in weighted)
+
+        start = task.initial
+        counter = itertools.count()
+        # (priority, tiebreak, state, terminal, g)
+        frontier: List[Tuple[float, int, State, bool, float]] = [
+            (0.0, next(counter), start, False, 0.0)]
+        best: Dict[State, float] = {start: 0.0}
+        came_from: _CameFrom = {}
+        while frontier:
+            priority, _, state, terminal, g = heapq.heappop(frontier)
+            if terminal:
+                actions = _reconstruct(came_from, state)
+                return Plan(actions, cost=plan_cost(state, actions))
+            if priority > best.get(state, priority):
+                continue  # pragma: no cover - stale heap entry (lazy deletion)
+            if task.is_goal(state):
+                heapq.heappush(frontier, (priority + penalty(state), next(counter),
+                                          state, True, g))
+            self._expand()
+            for action, succ in task.successors(state):
+                ng = g + self._step_cost(action, state)
+                npriority = c * ng
+                if npriority < best.get(succ, npriority + 1):
+                    best[succ] = npriority
+                    came_from[succ] = (state, action)
+                    heapq.heappush(frontier, (npriority, next(counter), succ, False, ng))
+        return None
+
+
+def _preference_metric(dp: "DomainProblem") -> Tuple[float, List[Tuple[float, List[Condition]]]]:
+    """``(c, [(w, instances)])`` of a metric ``c * total-cost + sum(w *
+    (is-violated p))`` to minimize (#201), each preference's grounded
+    instances with its weight. Raises :class:`UnsupportedRequirementsError`
+    for a metric of another shape or with negative coefficients."""
+    form = dp.problem.metric_form
+    metric = dp.metric()
+    optimization = metric[0] if metric else "minimize"
+    if form is None:
+        form = {}  # no metric: every preference weighs nothing
+        if metric:
+            raise UnsupportedRequirementsError(
+                "the metric must be linear in (total-cost) and (is-violated ...) "
+                "for preferences (#201)")
+    sign = 1.0 if optimization == "minimize" else -1.0
+    c = sign * form.get("total-cost", 0.0)
+    weighted = []
+    for pref in dp.problem.preferences:
+        w = sign * form.get("is-violated %s" % pref.name, 0.0)
+        if w:
+            weighted.append((w, pref.ground(dp)))
+    if c < 0 or any(w < 0 for w, _ in weighted):
+        raise UnsupportedRequirementsError(
+            "the metric must not reward cost or violated preferences (#201)")
+    return c, weighted
 
 
 register("bfs", BFSPlanner)
