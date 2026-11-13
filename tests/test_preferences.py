@@ -164,6 +164,36 @@ def test_ignored_cost_read_by_a_condition_is_refused(tmp_path, goal):
         get("ucs").solve(_free(tmp_path, goal, "(is-violated pref)"))
 
 
+def test_cost_read_through_a_derived_rule_is_refused(tmp_path):
+    """Review on #206: (ready) reads (total-cost) through its rule."""
+    domain = FREE.replace("(:requirements :strips", "(:requirements :strips :derived-predicates")
+    domain = domain.replace(" (:action paid", " (:derived (ready) (>= (total-cost) 2)) (:action paid")
+    domain = domain.replace("(wanted)", "(wanted) (ready)", 1)
+    d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
+    d.write_text(domain)
+    p.write_text("(define (problem f) (:domain f) (:objects s m1 m2 g)"
+                 " (:init (at s) (= (total-cost) 0))"
+                 " (:goal (preference pref (ready))) (:metric minimize (is-violated pref)))")
+    with pytest.raises(UnsupportedRequirementsError, match="reads .total-cost."):
+        get("ucs").solve(DomainProblem(str(d), str(p)))
+
+
+def test_undefined_preferences_fail(tmp_path):
+    """Review on #206: VAL fails a plan whose preference reads an unset fluent."""
+    d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
+    d.write_text("(define (domain u) (:requirements :strips :preferences :derived-predicates"
+                 " :numeric-fluents) (:predicates (ready)) (:functions (f))"
+                 " (:derived (ready) (<= (f) 5))"
+                 " (:action set :parameters () :effect (assign (f) 10)))")
+    p.write_text("(define (problem u) (:domain u) (:init)"
+                 " (:goal (preference pref (ready))) (:metric minimize (is-violated pref)))")
+    dp = DomainProblem(str(d), str(p))
+    failure = validate_plan(dp, []).failure
+    assert failure.kind == "goal" and failure.unmet == ("(ready)",)
+    assert validate_plan(dp, parse_plan("(set)\n")).valid
+    assert [n for n, _ in get("ucs").solve(dp).action_names()] == ["set"]
+
+
 def test_weighted_cost_read_by_a_condition_is_kept(tmp_path):
     plan = get("ucs").solve(_free(tmp_path, "(>= (total-cost) 1) (preference pref (wanted))",
                                   "(+ (total-cost) (is-violated pref))"))

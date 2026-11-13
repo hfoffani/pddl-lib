@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING, Dict, FrozenSet, List, Optional, Tuple
 from .base import Planner, UnsupportedRequirementsError
 from .costs import TOTAL_COST, action_cost, plan_cost
 from .registry import register
-from .state import Plan, State, atom_tuple, goal_holds
+from .state import Plan, State, _evaluated_fluents, atom_tuple, goal_holds
 
 if TYPE_CHECKING:
     from pddlpy.pddl import Condition, DomainProblem, Operator
@@ -208,6 +208,12 @@ class UniformCostPlanner(_BestFirstPlanner):
                 return state
             return State(state.atoms, {f: v for f, v in state.fluents.items() if f != TOTAL_COST})
 
+        soft = [g for pref in domainproblem.problem.preferences for g in pref.ground(domainproblem)]
+
+        def defined(state: State) -> bool:
+            # VAL fails a plan whose preferences read a fluent with no value
+            return all(f in state.fluents for g in soft for f in _evaluated_fluents(g, state))
+
         def penalty(state: State) -> float:
             return sum(w * sum(not goal_holds(g, state) for g in instances)
                        for w, instances in weighted)
@@ -227,7 +233,7 @@ class UniformCostPlanner(_BestFirstPlanner):
                             else len(actions))
             if priority > best.get(state, priority):
                 continue  # pragma: no cover - stale heap entry (lazy deletion)
-            if task.is_goal(state):
+            if task.is_goal(state) and defined(state):
                 heapq.heappush(frontier, (priority + penalty(state), next(counter),
                                           state, True, g))
             self._expand()
@@ -260,6 +266,7 @@ def _reads_total_cost(dp: "DomainProblem") -> bool:
 
     ops = dp.domain.operators.values()
     return reads([dp.problem.goal, [p.body for p in dp.problem.preferences],
+                  [r.body for r in dp.domain.derived],
                   [(op.precondition_tree, op.effect_tree) for op in ops]])
 
 

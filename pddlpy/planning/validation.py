@@ -661,4 +661,13 @@ def validate_plan(dp: "DomainProblem", steps: List[PlanStep]) -> Validation:
             msg += "; no value for %s" % ", ".join(undefined)
         f = Failure("goal", msg, None, None, None, tuple(missing), state)
         return Validation(False, f, sim)
+    # VAL evaluates every preference at the end: one that reads a fluent with
+    # no value fails the plan, while a false one only costs its penalty
+    undefined = sorted({_atom_text(f) for pref in dp.problem.preferences
+                        for g in pref.ground(dp)
+                        for f in _evaluated_fluents(g, state) if f not in state.fluents})
+    if undefined:
+        f = Failure("goal", "preferences read fluents with no value: %s" % ", ".join(undefined),
+                    None, None, None, tuple(undefined), state)
+        return Validation(False, f, sim)
     return Validation(True, None, sim)
