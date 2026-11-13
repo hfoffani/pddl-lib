@@ -80,19 +80,49 @@ def test_step_simultaneous_with_a_til_is_mutex(tmp_path):
         ("til", "(at 7.5 (not (q a)))")]
 
 
-def test_simultaneous_tils_are_not_mutex(tmp_path):
+def test_simultaneous_independent_tils_are_not_mutex(tmp_path):
     problem = ("(define (problem p) (:domain t) (:objects a)"
                " (:init (at 1 (p a)) (at 1 (not (q a)))) (:goal %s))")
     d, p = _pair(tmp_path, "(p a)", problem=problem)
     assert validate_plan(DomainProblem(d, p), []).valid
-    assert get("temporal").solve(DomainProblem(d, p)).steps == ()
+    assert len(get("temporal").solve(DomainProblem(d, p)).steps) == 0
+
+
+def test_contradictory_tils_are_mutex(tmp_path):
+    """Review on #204: VAL rejects every plan when two literals add and
+    delete one atom at the same time."""
+    problem = ("(define (problem p) (:domain t) (:objects a)"
+               " (:init (at 1 (p a)) (at 1 (not (p a)))) (:goal %s))")
+    d, p = _pair(tmp_path, "(p a)", problem=problem)
+    dp = DomainProblem(d, p)
+    failure = validate_plan(dp, []).failure
+    assert failure.kind == "mutex" and failure.unmet == ("(p a)",)
+    assert get("temporal").solve(dp) is None
+    issues = diagnose(d, p)["issues"]
+    assert [(i["severity"], i["check"]) for i in issues] == [("error", "timed_literals")]
+
+
+def test_start_delayed_into_an_end_window(tmp_path):
+    """Review on #204: (p) holds from 5 to 6 and go [2] needs it at its end:
+    only a start between 3 and 4 works, neither 0 nor just after 5."""
+    d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
+    d.write_text("(define (domain w) (:requirements :strips :durative-actions)"
+                 " (:predicates (p) (q)) (:durative-action go :parameters ()"
+                 " :duration (= ?duration 2) :condition (at end (p)) :effect (at end (q))))")
+    p.write_text("(define (problem w) (:domain w) (:init (at 5 (p)) (at 6 (not (p))))"
+                 " (:goal (q)))")
+    dp = DomainProblem(str(d), str(p))
+    plan = get("temporal").solve(dp)
+    (step,) = plan.steps
+    assert step.start == pytest.approx(3.01)
+    assert validate_plan(dp, parse_plan("3.01: (go) [2]\n")).valid
 
 
 @pytest.mark.parametrize("tils, starts", [
-    # go [0, 2] would end at a timed literal: it starts after it instead
-    ("(at 2 (r a))", [2.01]),
-    # just after the literal at 2 sits the one at 2.01: start after both
-    ("(at 2 (r a)) (at 2.01 (r a))", [2.02]),
+    # go [0, 2] would end at the literal at 2: it starts at 0.01 instead
+    ("(at 2 (r a))", [0.01]),
+    # ending at 2.01 would hit the next literal: start at 0.02
+    ("(at 2 (r a)) (at 2.01 (r a))", [0.02]),
     # a literal at 0: the first step starts after it
     ("(at 0 (r a))", [0.01]),
 ])

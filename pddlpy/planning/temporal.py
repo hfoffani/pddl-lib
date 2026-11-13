@@ -180,6 +180,9 @@ class TemporalTask:
         self.tils: List[Tuple[float, set, set]] = [
             (t, a, d) for t, (a, d) in sorted(groups.items())]
         self.til_times: List[float] = [t for t, _, _ in self.tils]
+        # literals that add and delete one atom at the same time are mutex,
+        # as in VAL: no plan is valid
+        self.contradictory = any(a & d for _, a, d in self.tils)
         self.initial_clock = self.clear(0.0)
         self.initial: State
         self.initial, self.initial_fired = self.fire(
@@ -233,32 +236,43 @@ class TemporalTask:
         return time
 
     def timed_successors(self, state: State, fired: int, clock: float
-                         ) -> Iterator[Tuple[Optional["PlanAction"], float, State, int, float]]:
-        """Yield ``(step, duration, successor, fired, next_clock)`` from a
-        node at ``clock`` (never within ``TOLERANCE`` of a timed literal):
-        every step that can start then, and a wait (step ``None``) until
-        just after the next timed literal. A step does not end within
-        ``TOLERANCE`` of a timed literal either (#142)."""
+                         ) -> Iterator[Tuple[Optional["PlanAction"], float, float,
+                                             State, int, float]]:
+        """Yield ``(step, start, duration, successor, fired, next_clock)``
+        from a node at ``clock`` (never within ``TOLERANCE`` of a timed
+        literal): every step that can start then; a wait (step ``None``)
+        until just after the next timed literal; and each durative action
+        delayed so it ends just after a later literal, for an ``at end``
+        window that opens then (the delay and the action are one successor,
+        so the later node is not taken for the earlier one). A step does not
+        end within ``TOLERANCE`` of a timed literal either (#142)."""
         if fired < len(self.tils):
             wake = self.clear(self.tils[fired][0] + SEPARATION)
             succ, nfired = self.fire(state, fired, wake)
-            yield None, wake - clock, succ, nfired, wake
+            yield None, clock, wake - clock, succ, nfired, wake
         for op in self.instantaneous:
             if state.applicable(op):
                 after = self.clear(clock + SEPARATION)
                 succ, nfired = self.fire(state.apply(op), fired, after)
-                yield op, 0.0, succ, nfired, after
+                yield op, clock, 0.0, succ, nfired, after
         for da in self.durative:
             duration = float(da.duration or 0.0)
-            if self.near_til(clock + duration):
-                continue
-            # the timed literals strictly inside [clock, clock + duration]
-            inside = bisect.bisect_left(self.til_times, clock + duration, lo=fired)
-            ran = apply_durative(state, da, [(a, d) for _, a, d in self.tils[fired:inside]])
-            if ran is not None:
-                after = self.clear(clock + duration + SEPARATION)
-                succ, nfired = self.fire(ran, inside, after)
-                yield da, duration, succ, nfired, after
+            starts = [clock] + sorted({
+                self.clear(t + SEPARATION - duration)
+                for t in self.til_times[fired:] if t + SEPARATION - duration > clock})
+            for start in starts:
+                end = start + duration
+                if self.near_til(end):
+                    continue
+                before, nfired = self.fire(state, fired, start)
+                # the timed literals strictly inside [start, end]
+                inside = bisect.bisect_left(self.til_times, end, lo=nfired)
+                ran = apply_durative(before, da,
+                                     [(a, d) for _, a, d in self.tils[nfired:inside]])
+                if ran is not None:
+                    after = self.clear(end + SEPARATION)
+                    succ, nfired_after = self.fire(ran, inside, after)
+                    yield da, start, duration, succ, nfired_after, after
 
 
 def _schedule(came_from: _CameFrom, node: _Node) -> TemporalPlan:
@@ -301,6 +315,8 @@ class TemporalPlanner(Planner):
         validate_durative_actions(domainproblem)
         _refuse_unmodeled(domainproblem)
         task = TemporalTask(domainproblem)
+        if task.contradictory:
+            return None
         self._start_search()
         start: _Node = (task.initial, task.initial_fired)
         counter = itertools.count()  # tie-breaker; keeps States out of compares
@@ -318,14 +334,14 @@ class TemporalPlanner(Planner):
             if g > best_g.get(node, g):
                 continue  # pragma: no cover - stale heap entry (lazy deletion)
             self._expand()
-            for action, duration, succ, nfired, ng in task.timed_successors(state, fired, g):
+            for action, at, duration, succ, nfired, ng in task.timed_successors(state, fired, g):
                 # g is the clock: each step costs its duration plus the gap
                 # after it, so g of a path is its makespan + SEPARATION, and
                 # ordering by g orders by makespan (#165)
                 key = (succ, nfired)
                 if ng < best_g.get(key, ng + 1.0):
                     best_g[key] = ng
-                    came_from[key] = (node, action, g, duration)
+                    came_from[key] = (node, action, at, duration)
                     heapq.heappush(frontier, (ng, next(counter), key))
         return None
 

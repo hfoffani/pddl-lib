@@ -457,8 +457,6 @@ def _mutex(parts: List[_Part], state: State) -> Optional[Tuple[_Part, _Part, str
     io = [(p, p.reads(state), p.writes(state)) for p in parts]
     for i, (p, (pr, prf), (pa, pd, pf)) in enumerate(io):
         for q, (qr, qrf), (qa, qd, qf) in io[i + 1:]:
-            if isinstance(p, _TilPart) and isinstance(q, _TilPart):
-                continue  # the problem's own literals; not the plan's doing
             clash = (pa & qd) | (pd & qa) | ((pa | pd) & qr) | ((qa | qd) & pr)
             if clash:
                 return p, q, _atom_text(min(clash))
