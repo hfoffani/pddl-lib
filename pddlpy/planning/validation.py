@@ -70,6 +70,7 @@ from .state import (
     _expr_fluents,
     apply_numeric,
     atom_tuple,
+    preference_undefined,
 )
 
 if TYPE_CHECKING:
@@ -665,7 +666,7 @@ def validate_plan(dp: "DomainProblem", steps: List[PlanStep]) -> Validation:
     # no value fails the plan, while a false one only costs its penalty
     undefined = sorted({_atom_text(f) for pref in dp.problem.preferences
                         for g in pref.ground(dp)
-                        for f in _evaluated_fluents(g, state) if f not in state.fluents})
+                        for f in preference_undefined(g, state)})
     if undefined:
         f = Failure("goal", "preferences read fluents with no value: %s" % ", ".join(undefined),
                     None, None, None, tuple(undefined), state)

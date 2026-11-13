@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING, Dict, FrozenSet, List, Optional, Tuple
 from .base import Planner, UnsupportedRequirementsError
 from .costs import TOTAL_COST, action_cost, plan_cost
 from .registry import register
-from .state import Plan, State, _evaluated_fluents, atom_tuple, goal_holds
+from .state import Plan, State, atom_tuple, goal_holds, preference_undefined
 
 if TYPE_CHECKING:
     from pddlpy.pddl import Condition, DomainProblem, Operator
@@ -212,7 +212,7 @@ class UniformCostPlanner(_BestFirstPlanner):
 
         def defined(state: State) -> bool:
             # VAL fails a plan whose preferences read a fluent with no value
-            return all(f in state.fluents for g in soft for f in _evaluated_fluents(g, state))
+            return not any(preference_undefined(g, state) for g in soft)
 
         def penalty(state: State) -> float:
             return sum(w * sum(not goal_holds(g, state) for g in instances)

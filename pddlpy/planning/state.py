@@ -30,6 +30,7 @@ from pddlpy.pddl import (
     Or,
     _expr_fluents,
     _rank,
+    _reads,
     holds3,
     ieee_div,
     undefined_marker,
@@ -283,3 +284,16 @@ def goal_holds(goal: Condition, state: State) -> bool:
     without a value nor an undefined derived atom: VAL fails such a read
     instead of reading 0 or false (#141)."""
     return holds3(goal, state.atoms, state.fluents) is True
+
+
+def preference_undefined(pref: Condition, state: State) -> Set[GroundAtom]:
+    """The fluents with no value and the undefined derived atoms that judging
+    a preference instance at the end of a plan reads (#201). A satisfied one
+    reads what :func:`goal_holds` does; for a violated one VAL also collects
+    advice (``getAdviceProp``), which evaluates every part, so every read
+    counts."""
+    if goal_holds(pref, state):
+        return set()
+    atoms, fluents = _reads(pref)
+    return ({f for f in fluents if f not in state.fluents}
+            | {a for a in atoms if undefined_marker(a) in state.atoms})

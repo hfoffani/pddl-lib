@@ -178,20 +178,35 @@ def test_cost_read_through_a_derived_rule_is_refused(tmp_path):
         get("ucs").solve(DomainProblem(str(d), str(p)))
 
 
-def test_undefined_preferences_fail(tmp_path):
-    """Review on #206: VAL fails a plan whose preference reads an unset fluent."""
+def _undefined(tmp_path, pref, init=""):
     d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
-    d.write_text("(define (domain u) (:requirements :strips :preferences :derived-predicates"
-                 " :numeric-fluents) (:predicates (ready)) (:functions (f))"
+    d.write_text("(define (domain u) (:requirements :adl :preferences :derived-predicates"
+                 " :numeric-fluents) (:predicates (ready) (missing) (ok)) (:functions (f))"
                  " (:derived (ready) (<= (f) 5))"
                  " (:action set :parameters () :effect (assign (f) 10)))")
-    p.write_text("(define (problem u) (:domain u) (:init)"
-                 " (:goal (preference pref (ready))) (:metric minimize (is-violated pref)))")
-    dp = DomainProblem(str(d), str(p))
+    p.write_text("(define (problem u) (:domain u) (:init %s)"
+                 " (:goal (preference pref %s)) (:metric minimize (is-violated pref)))" % (init, pref))
+    return DomainProblem(str(d), str(p))
+
+
+@pytest.mark.parametrize("pref, unmet", [
+    ("(ready)", "(ready)"),
+    # review on #206: VAL collects advice on every conjunct of a violated one
+    ("(and (missing) (ready))", "(ready)"),
+    ("(and (missing) (<= (f) 5))", "(f)"),
+])
+def test_undefined_preferences_fail(tmp_path, pref, unmet):
+    """Review on #206: VAL fails a plan whose preference reads an unset fluent."""
+    dp = _undefined(tmp_path, pref)
     failure = validate_plan(dp, []).failure
-    assert failure.kind == "goal" and failure.unmet == ("(ready)",)
+    assert failure.kind == "goal" and failure.unmet == (unmet,)
     assert validate_plan(dp, parse_plan("(set)\n")).valid
     assert [n for n, _ in get("ucs").solve(dp).action_names()] == ["set"]
+
+
+def test_a_true_disjunct_settles_a_preference(tmp_path):
+    dp = _undefined(tmp_path, "(or (ok) (ready))", init="(ok)")
+    assert validate_plan(dp, []).valid and len(get("ucs").solve(dp)) == 0
 
 
 def test_weighted_cost_read_by_a_condition_is_kept(tmp_path):
