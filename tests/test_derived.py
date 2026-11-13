@@ -4,7 +4,7 @@ import pytest
 
 from pddlpy import DomainProblem
 from pddlpy.diagnostics import diagnose
-from pddlpy.planning import State, UnsupportedRequirementsError, atom_tuple, get
+from pddlpy.planning import PlannerError, State, UnsupportedRequirementsError, atom_tuple, get
 from pddlpy.planning.validation import parse_plan, simulate, validate_plan
 
 DOMAIN = ("(define (domain t) (:requirements :strips :derived-predicates :negative-preconditions)"
@@ -235,6 +235,26 @@ def test_a_true_body_before_an_undefined_one_settles_it(tmp_path, rules):
     d, p = _pair(tmp_path, domain, "(define (problem u) (:domain u) (:init (p)) (:goal (r)))")
     dp = DomainProblem(d, p)
     assert validate_plan(dp, []).valid and len(get("bfs").solve(dp)) == 0
+
+
+@pytest.mark.parametrize("rules, refused", [
+    # review on #205: VAL's answer depends on where the recursion starts
+    ("(:derived (q) (or (r) (p))) (:derived (r) (or (q) (<= (f) 5)))", "q, r"),
+    ("(:derived (s) (<= (f) 5)) (:derived (q) (or (q) (s)))", "q"),
+    ("(:derived (q) (or (r) (p))) (:derived (r) (q)) (:derived (s) (<= (f) 5))", None),
+])
+def test_recursion_through_numeric_reads_is_refused(tmp_path, rules, refused):
+    domain = ("(define (domain u) (:requirements :adl :derived-predicates :numeric-fluents)"
+              " (:predicates (p) (q) (r) (s)) (:functions (f)) %s"
+              " (:action set :parameters () :effect (assign (f) 10)))" % rules)
+    d, p = _pair(tmp_path, domain, "(define (problem u) (:domain u) (:init (p)) (:goal (q)))")
+    dp = DomainProblem(d, p)
+    if refused is None:
+        assert len(get("bfs").solve(dp)) == 0
+        return
+    for check in (lambda: get("bfs").solve(dp), lambda: validate_plan(dp, [])):
+        with pytest.raises(PlannerError, match="compare numeric fluents are not supported: %s" % refused):
+            check()
 
 
 def test_undefined_markers_are_not_serialized(tmp_path):

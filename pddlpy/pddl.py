@@ -686,6 +686,19 @@ def _polarities(cond: Condition, negated: bool = False) -> Iterator[Tuple[str, b
         yield from _polarities(cond.body, negated)
 
 
+def _compares(cond: Condition) -> bool:
+    """True if an ungrounded condition has a numeric comparison."""
+    if isinstance(cond, NumericCond):
+        return True
+    if isinstance(cond, Not):
+        return _compares(cond.child)
+    if isinstance(cond, (And, Or)):
+        return any(_compares(c) for c in cond.children)
+    if isinstance(cond, _Quantifier):
+        return _compares(cond.body)
+    return False
+
+
 def _expr_fluents(e: Expr) -> Iterator[GroundAtom]:
     """The function heads a numeric expression reads."""
     if isinstance(e, Fluent):
@@ -1749,6 +1762,32 @@ class DomainProblem():
                 return [[r for r in rules if level[r.predicate] == n]
                         for n in sorted(set(level.values()))]
         return None
+
+    def recursive_numeric_derived(self) -> List[str]:
+        """The recursive derived predicates whose rules read a numeric fluent,
+        directly or through other derived predicates (#141). VAL decides
+        such an atom on demand, and whether it reads a fluent with no value
+        depends on where the recursion started, so they are refused."""
+        names = self.derived_predicates()
+        deps: Dict[str, Set[str]] = {n: set() for n in names}
+        compares = set()
+        for r in self.domain.derived:
+            deps[r.predicate] |= {q for q, _ in _polarities(r.body) if q in names}
+            if _compares(r.body):
+                compares.add(r.predicate)
+
+        def reach(p: str) -> Set[str]:
+            seen: Set[str] = set()
+            todo = list(deps[p])
+            while todo:
+                q = todo.pop()
+                if q not in seen:
+                    seen.add(q)
+                    todo += deps[q]
+            return seen
+
+        return sorted(p for p in names
+                      if p in reach(p) and (reach(p) | {p}) & compares)
 
     def _grounded_rules(self) -> List[List[Tuple[GroundAtom, Condition]]]:
         if self._grounded_strata is None:

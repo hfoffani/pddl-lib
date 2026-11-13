@@ -112,6 +112,11 @@ def check_modeled(domainproblem: "DomainProblem", syntax: bool = True) -> None:
         raise UnsupportedRequirementsError(
             "the (:derived ...) rules are not stratifiable: a derived predicate "
             "depends on its own negation (#141)")
+    recursive = domainproblem.domain.derived and domainproblem.recursive_numeric_derived()
+    if recursive:
+        raise UnsupportedRequirementsError(
+            "recursive (:derived ...) rules that compare numeric fluents are "
+            "not supported: %s (#141)" % ", ".join(recursive))
     if domainproblem.domain.constraints or domainproblem.problem.constraints:
         raise UnsupportedRequirementsError(
             "(:constraints ...) is not supported yet (#140)")
