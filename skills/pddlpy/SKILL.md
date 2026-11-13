@@ -149,7 +149,7 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   `from pddlpy.planning import atom_tuple` (or compare `repr`s / use `State`).
 - **Type hierarchies** are supported: a parameter typed with a supertype
   binds objects of any transitive subtype (`dp.types()` / `dp.subtypes_of(t)`
-  expose the hierarchy). `(either ...)` union types parse but bind no objects.
+  expose the hierarchy). `(either t1 t2)` binds objects of any member type.
 - **Goals** must be a conjunction of positive atoms. `not`, `or`, `imply`,
   `exists`, `forall` and numeric comparisons in `(:goal ...)` are refused:
   `solve` / `validate-plan` exit 2, and `validate` reports an `unsupported`

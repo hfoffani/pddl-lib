@@ -624,13 +624,28 @@ def _atom_from_formula(ctx: Any) -> Atom:
     return Atom(pred)
 
 
+
+def _type_name(ctx) -> str:
+    """The type of a typed list: a name, or ``(either t1 t2 ...)`` (#200)."""
+    prims = [p.getText() for p in ctx.primType()]
+    if ctx.getChild(0).getText() == '(':
+        return '(either %s)' % ' '.join(prims)
+    return prims[0]
+
+
+def _either_members(t: Optional[str]) -> Optional[List[str]]:
+    """The member types of an ``(either ...)`` type, else ``None``."""
+    if t is not None and t.startswith('(either '):
+        return t[len('(either '):-1].split()
+    return None
+
 def _typed_var_list(ctx: Any) -> Dict[str, Optional[str]]:
     """Read a typedVariableList context into an ordered {var: type} dict."""
     varlist: Dict[str, Optional[str]] = {}
     for v in ctx.VARIABLE():
         varlist[v.getText()] = None
     for vs in ctx.singleTypeVarList():
-        t = vs.r_type().getText()
+        t = _type_name(vs.r_type())
         for v in vs.VARIABLE():
             varlist[v.getText()] = t
     return varlist
@@ -975,7 +990,7 @@ class DomainListener(pddlListener):
         for v in tvl.VARIABLE():
             params.append((v.getText(), None))
         for vs in tvl.singleTypeVarList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.VARIABLE():
                 params.append((v.getText(), t))
         self.functions[name] = params
@@ -1078,7 +1093,7 @@ class DomainListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeVarList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.VARIABLE():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1216,7 +1231,7 @@ class DomainListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeNameList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.name():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1338,7 +1353,7 @@ class ProblemListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeNameList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.name():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1549,8 +1564,14 @@ class DomainProblem():
         # the implicit None root and match an untyped parameter.
         if t is None:
             return ot is None
+        members = _either_members(t)
+        if members is not None:
+            return any(self._is_subtype(ot, m) for m in members)
         seen = set()
         while ot is not None and ot not in seen:
+            members = _either_members(ot)
+            if members is not None:
+                return any(self._is_subtype(m, t) for m in members)
             if ot == t:
                 return True
             seen.add(ot)

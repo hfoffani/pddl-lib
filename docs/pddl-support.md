@@ -19,7 +19,7 @@ planners, not a wish list.
 | Requirement | PDDL | Parse | Solve | Validate plan | Notes |
 |---|---|---|---|---|---|
 | `:strips` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | yes | |
-| `:typing` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | yes | Multi-level hierarchies; a supertype parameter binds every transitive subtype. `(either ...)` parses but binds no objects (`validate` reports zero groundings). |
+| `:typing` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | yes | Multi-level hierarchies; a supertype parameter binds every transitive subtype. `(either t1 t2)` binds objects of any member type (#200). |
 | `:negative-preconditions` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | yes | Preconditions only, see goals below. |
 | `:disjunctive-preconditions` | 1.2 | yes | bfs, astar, gbfs, ucs | yes | Preconditions only. temporal refuses it. |
 | `:equality` | 1.2 | yes | bfs, astar, gbfs, ucs, temporal | yes | |
