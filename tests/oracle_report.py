@@ -23,11 +23,6 @@ MAX_LISTED = 50  # failures listed per check; the rest are counted
 # checked against the failing files (oracle runs on #156). Remove an entry
 # once its cause is fixed; a failure matching no entry is reported as NEW.
 KNOWN_CAUSES: List[Tuple[str, str, str]] = [
-    (r"fd_plan|solvability|pddlpy_plan",
-     r"elevator-adl-full|elevators-00-full|miconic-fulladl|petri-net-alignment|snake-opt18"
-     r"|termes-opt18"
-     r"|psr-middle-compiled-adl|tpp-metric",
-     "#138 goal other than a positive conjunction (forall, not, numeric)"),
     (r"accept", r"classical/fridge/|classical/tyreworld/|pathways-propositional",
      "FD rejects the input, pddlpy accepts it (not yet diagnosed)"),
 ]
