@@ -76,3 +76,41 @@ def test_timed_duration_constraints_refused(tmp_path, constraint):
         get("temporal").solve(dp)
     with pytest.raises(PlannerError):
         validate_plan(dp, parse_plan("0: (go a) [2]\n"))
+
+
+def _solve(tmp_path, domain, problem):
+    d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
+    d.write_text(domain)
+    p.write_text(problem)
+    dp = DomainProblem(str(d), str(p))
+    plan = get("temporal").solve(dp)
+    text = "".join("%g: (%s) [%g]\n" % (s.start, s.action.operator_name, s.duration)
+                   for s in plan.steps)
+    assert validate_plan(dp, parse_plan(text)).valid
+    return plan
+
+
+def test_duration_stretched_to_a_later_timed_literal(tmp_path):
+    """Review on #210: p holds until 1 and q from 2, so go must last ~2."""
+    plan = _solve(tmp_path,
+                  "(define (domain t) (:requirements :strips :durative-actions"
+                  " :duration-inequalities :timed-initial-literals) (:predicates (p) (q) (done))"
+                  " (:durative-action go :parameters ()"
+                  "  :duration (and (>= ?duration 1) (<= ?duration 3))"
+                  "  :condition (and (at start (p)) (at end (q))) :effect (at end (done))))",
+                  "(define (problem x) (:domain t) (:init (p) (at 1 (not (p))) (at 2 (q)))"
+                  " (:goal (done)))")
+    assert [(s.start, round(s.duration, 3)) for s in plan.steps] == [(0.0, 2.01)]
+
+
+def test_duration_kept_apart_from_the_start(tmp_path):
+    """Review on #210: a 0.0005 lower bound would merge start and end."""
+    plan = _solve(tmp_path,
+                  "(define (domain t) (:requirements :strips :durative-actions"
+                  " :duration-inequalities) (:predicates (p) (q) (done))"
+                  " (:durative-action go :parameters ()"
+                  "  :duration (and (>= ?duration 0.0005) (<= ?duration 1))"
+                  "  :condition (and (at start (p)) (at end (q)))"
+                  "  :effect (and (at start (q)) (at end (done)))))",
+                  "(define (problem x) (:domain t) (:init (p)) (:goal (done)))")
+    assert [s.duration for s in plan.steps] == [0.01]

@@ -72,9 +72,10 @@ TOLERANCE = 0.001
 
 def planned_duration(da: "DurativeAction") -> float:
     """The duration temporal gives ``da`` (#143): the shortest its bounds
-    allow, ``SEPARATION`` when only an upper bound limits it."""
+    allow, but at least ``SEPARATION`` when they allow that, so its start
+    and end are separate happenings."""
     lo, hi = da.bounds() or (0.0, 0.0)
-    return lo if lo > 0 else min(hi, SEPARATION)
+    return min(max(lo, SEPARATION), hi)
 
 #: Requirements the temporal planner supports: the STRIPS set plus
 #: :durative-actions and :timed-initial-literals.
@@ -271,7 +272,8 @@ class TemporalTask:
         until just after the next timed literal; and each durative action
         delayed so it ends just after a later literal, for an ``at end``
         window that opens then (the delay and the action are one successor,
-        so the later node is not taken for the earlier one). A step does not
+        so the later node is not taken for the earlier one), or, with a
+        duration range, stretched from now to end just after one (#143). A step does not
         end within ``TOLERANCE`` of a timed literal either (#142)."""
         if fired < len(self.tils):
             wake = self.clear(self.tils[fired][0] + SEPARATION)
@@ -284,10 +286,17 @@ class TemporalTask:
                 yield op, clock, 0.0, succ, nfired, after
         for da in self.durative:
             duration = planned_duration(da)
+            _, hi = da.bounds() or (0.0, 0.0)
             starts = [clock] + sorted({
                 self.clear(t + SEPARATION - duration)
                 for t in self.til_times[fired:] if t + SEPARATION - duration > clock})
-            for start in starts:
+            # a duration range can also stretch the action from now so it
+            # ends just after a later literal (#143)
+            stretched = sorted({
+                self.clear(t + SEPARATION) - clock for t in self.til_times[fired:]
+                if duration < self.clear(t + SEPARATION) - clock <= hi})
+            for start, duration in ([(s, duration) for s in starts]
+                                    + [(clock, d) for d in stretched]):
                 end = start + duration
                 if self.near_til(end):
                     continue
