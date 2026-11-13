@@ -41,6 +41,10 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **`(:metric minimize (total-time))` was a syntax error** (#158), and the
+  parser's recovery dropped the rest of the problem: objects, `:init` and
+  goals came out empty for IPC temporal problems. It now parses, and
+  `metric()` returns `("minimize", "(total-time)")`.
 - **`(:derived (p ?x) GD)` was a syntax error** (#141): the grammar expected
   a variable list where PDDL 2.2 has an atom. It now parses; the rule is
   not modeled yet, so `validate` reports it as `unsupported` and `solve` /

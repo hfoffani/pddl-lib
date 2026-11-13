@@ -822,7 +822,7 @@
    ]
   ],
   "metric": {
-   "expression": "(total-time",
+   "expression": "(total-time)",
    "optimization": "minimize"
   },
   "objects": {
@@ -888,8 +888,8 @@
  "validate": {
   "issues": [
    {
-    "check": "syntax",
-    "message": "problem file: line 69:19 no viable alternative at input '(total-time'",
+    "check": "durative",
+    "message": "durative action 'recharge' has no simple numeric duration",
     "severity": "error"
    }
   ],

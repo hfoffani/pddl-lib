@@ -650,7 +650,7 @@
    ]
   ],
   "metric": {
-   "expression": "(total-time",
+   "expression": "(total-time)",
    "optimization": "minimize"
   },
   "objects": {
@@ -693,8 +693,13 @@
  "validate": {
   "issues": [
    {
-    "check": "syntax",
-    "message": "problem file: line 46:19 no viable alternative at input '(total-time'",
+    "check": "unsupported",
+    "message": "timed initial literals, (at N ...) in :init, are not supported yet (#142)",
+    "severity": "error"
+   },
+   {
+    "check": "durative",
+    "message": "durative action 'load' references undeclared parameter '?a2'",
     "severity": "error"
    }
   ],

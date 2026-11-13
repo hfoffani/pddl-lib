@@ -553,7 +553,7 @@
    ]
   ],
   "metric": {
-   "expression": "(total-time",
+   "expression": "(total-time)",
    "optimization": "minimize"
   },
   "objects": {
@@ -595,11 +595,6 @@
    {
     "check": "syntax",
     "message": "domain file: line 5:55 extraneous input ':constraints' expecting {'(', ')', REQUIRE_KEY}",
-    "severity": "error"
-   },
-   {
-    "check": "syntax",
-    "message": "problem file: line 42:19 no viable alternative at input '(total-time'",
     "severity": "error"
    }
   ],

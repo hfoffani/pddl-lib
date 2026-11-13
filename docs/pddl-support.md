@@ -36,7 +36,7 @@ planners, not a wish list.
 | `:timed-initial-literals` | 2.2 | yes | none | no | `(at 5 (p))` in `:init` is kept out of `initialstate()` and stored with its time in `dp.problem.timed_literals`. `solve` and `validate-plan` refuse it, and `validate` reports an `unsupported` error, even when the key is not declared ([#142]). |
 | `:preferences` | 3.0 | no | none | no | The key is recognized; `preference` in goals or `:action` preconditions does not parse (it does parse inside durative-action conditions, and is ignored there). Planners refuse the key. |
 | `:constraints` | 3.0 | partly | none | no | Declaring the key is a syntax error ([#140]). A `(:constraints ...)` block in the domain or problem loads but is not modeled: `solve` and `validate-plan` refuse it, and `validate` reports an `unsupported` error. |
-| `:action-costs` | 3.1 | yes | ucs (cost-optimal); bfs, astar, gbfs, temporal | yes | `(increase (total-cost) ...)` and `(:metric minimize (total-cost))`. Every planner reports `Plan.cost`, but only ucs minimizes it. temporal minimizes makespan. |
+| `:action-costs` | 3.1 | yes | ucs (cost-optimal); bfs, astar, gbfs, temporal | yes | `(increase (total-cost) ...)` and `(:metric minimize (total-cost))`. Every planner reports `Plan.cost`, but only ucs minimizes it. temporal minimizes makespan, and `(:metric minimize (total-time))` parses ([#158]). |
 | `:object-fluents` | 3.1 | no | none | no | Not recognized (syntax error). |
 | `:domain-axioms`, `:subgoals-through-axioms`, `:safety-constraints`, `:expression-evaluation`, `:open-world`, `:true-negation`, `:ucpop` | 1.2 | no | none | no | Not recognized (syntax error). |
 
@@ -52,6 +52,7 @@ equality, quantifiers, conditional effects) are declared, and refuses the
 domain otherwise. Domains with no `:requirements` at all are accepted as they
 are. `validate` does not run this check yet ([#144]).
 
+[#158]: https://github.com/hfoffani/pddl-lib/issues/158
 [#138]: https://github.com/hfoffani/pddl-lib/issues/138
 [#139]: https://github.com/hfoffani/pddl-lib/issues/139
 [#140]: https://github.com/hfoffani/pddl-lib/issues/140

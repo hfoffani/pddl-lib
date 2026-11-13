@@ -450,7 +450,8 @@ metricFExp
 	| NUMBER
 	| '(' functionSymbol name* ')'
 	| functionSymbol
-    | 'total-time'
+	| 'total-time'
+	| '(' 'total-time' ')'
 	| '(' 'is-violated' name ')'
 	;
 

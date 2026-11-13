@@ -316,7 +316,7 @@
    ]
   ],
   "metric": {
-   "expression": "(total-time",
+   "expression": "(total-time)",
    "optimization": "minimize"
   },
   "objects": {
@@ -350,13 +350,7 @@
   }
  },
  "validate": {
-  "issues": [
-   {
-    "check": "syntax",
-    "message": "problem file: line 25:20 no viable alternative at input '(total-time'",
-    "severity": "error"
-   }
-  ],
-  "valid": false
+  "issues": [],
+  "valid": true
  }
 }
