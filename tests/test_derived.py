@@ -267,6 +267,22 @@ def test_either_typed_rule_parameters(tmp_path):
     assert get("bfs").solve(DomainProblem(d, p)) is not None
 
 
+@pytest.mark.parametrize("when", ["at start", "at end", "over all"])
+def test_durative_conditions_reading_an_undefined_derived_atom(tmp_path, when):
+    """Review on #205: VAL reports the unset (f) behind (q)."""
+    domain = ("(define (domain u) (:requirements :strips :durative-actions"
+              " :derived-predicates :numeric-fluents)"
+              " (:predicates (q) (done)) (:functions (f)) (:derived (q) (<= (f) 5))"
+              " (:durative-action use :parameters () :duration (= ?duration 1)"
+              "  :condition (%s (not (q))) :effect (at end (done)))"
+              " (:action set :parameters () :effect (assign (f) 10)))" % when)
+    d, p = _pair(tmp_path, domain, "(define (problem u) (:domain u) (:init) (:goal (done)))")
+    dp = DomainProblem(d, p)
+    failure = validate_plan(dp, parse_plan("0: (use) [1]\n")).failure
+    assert failure.kind == "undefined-fluent" and failure.unmet == ("(q)",)
+    assert validate_plan(dp, parse_plan("0: (set)\n0.01: (use) [1]\n")).valid
+
+
 def test_undefined_markers_are_not_serialized(tmp_path):
     from pddlpy.serialize import state_dict
     domain = ("(define (domain u) (:requirements :strips :derived-predicates :numeric-fluents)"
