@@ -36,7 +36,7 @@ planners, not a wish list.
 | `:preferences` | 3.0 | partly | ucs | yes (they never make a plan invalid) | Goal preferences, `(preference name GD)` also under `and` / `forall`, are kept apart from the hard goal (`dp.problem.preferences`; `goals()` lists hard atoms only), and `(is-violated name)` parses in `:metric` ([#201]). `ucs` minimizes a metric linear in `(total-cost)` and `(is-violated ...)` with non-negative weights (`maximize` negates it); a quantified preference counts each violated instance. Other metric shapes are refused, and so is a metric without `(total-cost)` when a condition reads it (the search could not end). The other planners refuse preferences. Preferences in `:action` preconditions do not parse (in durative-action conditions they parse and are ignored). |
 | `:constraints` | 3.0 | partly | none | no | Declaring the key is a syntax error ([#140]). A `(:constraints ...)` block in the domain or problem loads but is not modeled: `solve` and `validate-plan` refuse it, and `validate` reports an `unsupported` error. |
 | `:action-costs` | 3.1 | yes | ucs (cost-optimal); bfs, astar, gbfs, temporal | yes | `(increase (total-cost) ...)` and `(:metric minimize (total-cost))`. Every planner reports `Plan.cost`, but only ucs minimizes it. temporal minimizes makespan, and `(:metric minimize (total-time))` parses ([#158]). |
-| `:object-fluents` | 3.1 | no | none | no | The key is recognized, and `solve`, `validate-plan` and `validate` refuse it as not supported yet ([#208]). Object-valued functions do not parse. |
+| `:object-fluents` | 3.1 | yes | none | no | Object-valued functions parse: `(:functions (loc ?t) - location)`, function terms as arguments (`(at ?t (loc ?t))`, `(= (loc ?t) ?l)`), `(assign (loc ?t) ?l)` or `undefined`, and `(= (loc t1) l1)` in `:init` ([#211]). They are not modeled: `solve`, `validate-plan` and `validate` refuse them, declared or not (`dp.domain.object_fluents` / `dp.problem.object_fluents`), and refuse the key itself ([#208]). |
 | `:domain-axioms`, `:subgoals-through-axioms`, `:safety-constraints`, `:expression-evaluation`, `:open-world`, `:true-negation`, `:ucpop` | 1.2 | key only | none | no | Obsolete. The keys are recognized, and `solve`, `validate-plan` and `validate` refuse them by name ([#208]). |
 
 **Goals.** Any goal description is supported: `and`, `not`, `or`, `imply`,
@@ -61,3 +61,4 @@ are. `validate` does not run this check yet ([#144]).
 [#143]: https://github.com/hfoffani/pddl-lib/issues/143
 [#144]: https://github.com/hfoffani/pddl-lib/issues/144
 [#208]: https://github.com/hfoffani/pddl-lib/issues/208
+[#211]: https://github.com/hfoffani/pddl-lib/issues/211

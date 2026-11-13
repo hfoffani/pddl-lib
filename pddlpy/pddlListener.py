@@ -296,6 +296,24 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#objectTerm.
+    def enterObjectTerm(self, ctx:pddlParser.ObjectTermContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#objectTerm.
+    def exitObjectTerm(self, ctx:pddlParser.ObjectTermContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#functionTerm.
+    def enterFunctionTerm(self, ctx:pddlParser.FunctionTermContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#functionTerm.
+    def exitFunctionTerm(self, ctx:pddlParser.FunctionTermContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#durativeActionDef.
     def enterDurativeActionDef(self, ctx:pddlParser.DurativeActionDefContext):
         pass
