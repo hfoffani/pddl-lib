@@ -42,12 +42,13 @@ STRIPS_CAPABILITIES: FrozenSet[str] = frozenset(
 #: ADL (#10) adds full boolean/quantified/equality preconditions and
 #: conditional/universal effects. State.applicable evaluates the grounded
 #: precondition tree and State.apply fires conditional effects, so the
-#: reference planners can now solve ADL domains. Durative actions
-#: (:durative-actions) and derived predicates remain out of scope.
+#: reference planners can now solve ADL domains, and derived predicates
+#: (#141) are recomputed in every state. Durative actions
+#: (:durative-actions) remain out of scope.
 ADL_CAPABILITIES: FrozenSet[str] = STRIPS_CAPABILITIES | frozenset(
     {":adl", ":disjunctive-preconditions", ":conditional-effects",
      ":universal-preconditions", ":existential-preconditions",
-     ":quantified-preconditions"}
+     ":quantified-preconditions", ":derived-predicates"}
 )
 
 

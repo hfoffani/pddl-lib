@@ -204,6 +204,10 @@ def _refuse_unmodeled(domainproblem: "DomainProblem") -> None:
     """Refuse durative actions with parts the model drops (numeric,
     conditional, quantified): searching without them returns wrong plans
     (#139)."""
+    if domainproblem.domain.derived:
+        raise UnsupportedRequirementsError(
+            "temporal planner does not support derived predicates, (:derived "
+            "...); the classical planners do (#141)")
     for name, action in sorted(domainproblem.domain.durative_operators.items()):
         if not action.simple:
             raise UnsupportedRequirementsError(

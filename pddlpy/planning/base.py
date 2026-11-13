@@ -108,9 +108,10 @@ def check_modeled(domainproblem: "DomainProblem", syntax: bool = True) -> None:
         raise UnsupportedRequirementsError(
             "timed initial literals, (at N ...) in :init, are not supported "
             "yet (#142)")
-    if domainproblem.domain.derived:
+    if domainproblem.domain.derived and domainproblem.derived_strata() is None:
         raise UnsupportedRequirementsError(
-            "derived predicates, (:derived ...), are not supported yet (#141)")
+            "the (:derived ...) rules are not stratifiable: a derived predicate "
+            "depends on its own negation (#141)")
     if domainproblem.domain.constraints or domainproblem.problem.constraints:
         raise UnsupportedRequirementsError(
             "(:constraints ...) is not supported yet (#140)")

@@ -113,8 +113,16 @@ class State:
     @classmethod
     def from_problem(cls, domainproblem: "DomainProblem") -> "State":
         """Build the initial state (atoms + numeric fluents) from a parsed
-        ``DomainProblem``."""
-        return cls(domainproblem.initialstate(), domainproblem.initial_numeric())
+        ``DomainProblem``, derived atoms included (#141)."""
+        state = cls(domainproblem.initialstate(), domainproblem.initial_numeric())
+        return state.derived(domainproblem)
+
+    def derived(self, domainproblem: "DomainProblem") -> "State":
+        """This state with its derived atoms recomputed (#141); itself if the
+        domain has no ``(:derived ...)`` rules."""
+        if not domainproblem.domain.derived:
+            return self
+        return State(domainproblem.derive(self._atoms, self._fluents), self._fluents)
 
     # -- planning operations (resolve #21) -------------------------------
     def applicable(self, operator: "Operator") -> bool:

@@ -573,7 +573,8 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
             adds |= a
             dels |= d
             updates.extend(u)
-        state = State((state.atoms - dels) | adds, apply_numeric(state.fluents, updates))
+        state = State((state.atoms - dels) | adds,
+                      apply_numeric(state.fluents, updates)).derived(dp)
         for p in happening:
             if p.event == "start":
                 active[p.step] = p

@@ -35,6 +35,7 @@ from typing import (
     AbstractSet,
     Any,
     Dict,
+    FrozenSet,
     Iterator,
     List,
     Optional,
@@ -660,6 +661,56 @@ def _build_condition(gd: Any) -> Condition:
     return Exists(varlist, body) if kw == 'exists' else Forall(varlist, body)
 
 
+def _ordered_params(tvl: Any) -> List[Tuple[str, Optional[str]]]:
+    """A typedVariableList's ``(variable, type)`` pairs in written order."""
+    params: List[Tuple[str, Optional[str]]] = []
+    for child in tvl.getChildren():
+        if isinstance(child, pddlParser.SingleTypeVarListContext):
+            t = child.r_type().getText()
+            params.extend((v.getText(), t) for v in child.VARIABLE())
+        else:
+            params.append((child.getText(), None))
+    return params
+
+
+def _polarities(cond: Condition, negated: bool = False) -> Iterator[Tuple[str, bool]]:
+    """``(predicate, negated)`` for each literal of an ungrounded condition."""
+    if isinstance(cond, Lit):
+        yield cond.atom.predicate[0], negated
+    elif isinstance(cond, Not):
+        yield from _polarities(cond.child, not negated)
+    elif isinstance(cond, (And, Or)):
+        for c in cond.children:
+            yield from _polarities(c, negated)
+    elif isinstance(cond, _Quantifier):
+        yield from _polarities(cond.body, negated)
+
+
+class DerivedRule():
+    """A derived predicate rule, ``(:derived (p ?x - t) GD)`` (#141): the
+    atom ``(p o)`` holds in a state iff ``GD`` with ``?x = o`` does."""
+
+    def __init__(self, predicate: str, params: List[Tuple[str, Optional[str]]],
+                 body: Condition) -> None:
+        self.predicate = predicate
+        self.params = params
+        self.body = body
+
+    def ground(self, dp: "DomainProblem") -> List[Tuple[GroundAtom, Condition]]:
+        """``(head, grounded body)`` for every binding of the head."""
+        names = [v for v, _ in self.params]
+        domains = [dp.candidate_objects(t) for _, t in self.params]
+        out = []
+        for combo in itertools.product(*domains):
+            varvals = dict(zip(names, combo))
+            out.append(((self.predicate,) + tuple(combo), self.body.ground(varvals, dp)))
+        return out
+
+    def __repr__(self) -> str:
+        return "(:derived (%s %s) %r)" % (
+            self.predicate, " ".join(v for v, _ in self.params), self.body)
+
+
 def _is_simple_conjunction(cond: Condition) -> bool:
     """True if ``cond`` is a plain conjunction of literals / negated literals /
     numeric constraints — the shape the static-pruning binder can join safely.
@@ -947,7 +998,7 @@ class DomainListener(pddlListener):
         self.scopes = []
         self.negativescopes = []
         self.constraints = False  # a (:constraints ...) block was read (#140)
-        self.derived: List[str] = []  # heads of (:derived ...) rules (#141)
+        self.derived: List[DerivedRule] = []  # (:derived ...) rules (#141)
         self.requirements = set()
         self.predicates = set()  # declared predicate names (#12)
         self.functions = {}
@@ -1110,9 +1161,12 @@ class DomainListener(pddlListener):
         self.scopes.pop()
 
     def enterDerivedDef(self, ctx):
-        # (:derived (p ?x) GD) is not modeled yet; record its head and walk
-        # it in a throwaway scope so its atoms land nowhere (#141).
-        self.derived.append(ctx.atomicFormulaSkeleton().predicate().getText())
+        # (:derived (p ?x) GD) (#141): build the rule from the tree, and walk
+        # it in a throwaway scope so its atoms land nowhere else.
+        skel = ctx.atomicFormulaSkeleton()
+        self.derived.append(DerivedRule(skel.predicate().getText(),
+                                        _ordered_params(skel.typedVariableList()),
+                                        _build_condition(ctx.goalDesc())))
         self.scopes.append(Scope())
         self.negativescopes.append(False)
 
@@ -1411,6 +1465,7 @@ class DomainProblem():
                   to StaticPrunedBinder. Pass a custom VariableBinder, or set
                   the .binder attribute later, to override grounding.
         """
+        self._grounded_strata: Optional[List[List[Tuple[GroundAtom, Condition]]]] = None
         # domain
         inp = source_stream(domainfile)
         lexer = pddlLexer(inp)
@@ -1587,7 +1642,57 @@ class DomainProblem():
             for time in da.EFFECT_TIMES:
                 for a in da.effect_pos[time] | da.effect_neg[time]:
                     modified.add(a.predicate[0])
+        # a derived predicate's truth changes with the state (#141)
+        modified |= self.derived_predicates()
         return set(self.domain.predicates) - modified
+
+    def derived_predicates(self) -> Set[str]:
+        """The names of the derived predicates (#141)."""
+        return {r.predicate for r in self.domain.derived}
+
+    def derived_strata(self) -> Optional[List[List[DerivedRule]]]:
+        """The ``(:derived ...)`` rules in evaluation order (#141): a rule
+        comes in a stratum after every derived predicate it reads, strictly
+        after those it reads negated. ``None`` if the rules are not
+        stratifiable (a derived predicate depends negatively on itself)."""
+        rules = self.domain.derived
+        names = self.derived_predicates()
+        level = dict.fromkeys(names, 0)
+        for _ in range(len(names) + 1):
+            changed = False
+            for r in rules:
+                for q, negated in _polarities(r.body):
+                    if q in names and level[r.predicate] < level[q] + negated:
+                        level[r.predicate] = level[q] + negated
+                        changed = True
+            if not changed:
+                return [[r for r in rules if level[r.predicate] == n]
+                        for n in sorted(set(level.values()))]
+        return None
+
+    def derive(self, atoms: AbstractSet[GroundAtom], fluents: Valuation) -> FrozenSet[GroundAtom]:
+        """``atoms`` with the derived atoms recomputed (#141): those already
+        there are dropped, then each stratum is evaluated to a fixpoint."""
+        if self._grounded_strata is None:
+            strata = self.derived_strata()
+            assert strata is not None, "rules are not stratifiable"
+            self._grounded_strata = [[g for r in s for g in r.ground(self)] for s in strata]
+        names = self.derived_predicates()
+        out = {a for a in atoms if a[0] not in names}
+        for stratum in self._grounded_strata:
+            pending = list(stratum)
+            changed = True
+            while changed:
+                changed = False
+                rest = []
+                for head, body in pending:
+                    if body.holds(out, fluents):
+                        out.add(head)
+                        changed = True
+                    else:
+                        rest.append((head, body))
+                pending = rest
+        return frozenset(out)
 
     def types(self) -> Dict[str, Optional[str]]:
         """Returns the declared type hierarchy as a dict mapping each subtype to

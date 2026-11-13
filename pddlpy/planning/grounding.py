@@ -40,7 +40,7 @@ class GroundedTask:
         """Yield ``(action, successor_state)`` for every applicable action."""
         for action in self.actions:
             if state.applicable(action):
-                yield action, state.apply(action)
+                yield action, state.apply(action).derived(self.domainproblem)
 
     def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""
