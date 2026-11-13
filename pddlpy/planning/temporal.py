@@ -29,6 +29,7 @@ from __future__ import annotations
 import bisect
 import heapq
 import itertools
+import math
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -38,6 +39,7 @@ from typing import (
     Iterator,
     List,
     Optional,
+    Set,
     Tuple,
 )
 
@@ -72,10 +74,10 @@ TOLERANCE = 0.001
 
 def planned_duration(da: "DurativeAction") -> float:
     """The duration temporal gives ``da`` (#143): the shortest its bounds
-    allow, but at least ``SEPARATION`` when they allow that, so its start
-    and end are separate happenings."""
+    allow, once that is more than ``TOLERANCE`` (its start and end are then
+    separate happenings); else ``SEPARATION``, capped by the upper bound."""
     lo, hi = da.bounds() or (0.0, 0.0)
-    return min(max(lo, SEPARATION), hi)
+    return lo if lo > TOLERANCE else min(SEPARATION, hi)
 
 #: Requirements the temporal planner supports: the STRIPS set plus
 #: :durative-actions and :timed-initial-literals.
@@ -285,18 +287,23 @@ class TemporalTask:
                 succ, nfired = self.fire(state.apply(op), fired, after)
                 yield op, clock, 0.0, succ, nfired, after
         for da in self.durative:
-            duration = planned_duration(da)
+            shortest = planned_duration(da)
             _, hi = da.bounds() or (0.0, 0.0)
-            starts = [clock] + sorted({
-                self.clear(t + SEPARATION - duration)
-                for t in self.til_times[fired:] if t + SEPARATION - duration > clock})
+            candidates: Set[Tuple[float, float]] = set()
+            # the shortest and the longest duration, each started now or
+            # delayed so the action ends just after a later literal, for an
+            # ``at end`` window that opens then
+            for duration in {shortest, hi} - {math.inf}:
+                candidates.add((clock, duration))
+                candidates.update(
+                    (self.clear(t + SEPARATION - duration), duration)
+                    for t in self.til_times[fired:] if t + SEPARATION - duration > clock)
             # a duration range can also stretch the action from now so it
             # ends just after a later literal (#143)
-            stretched = sorted({
-                self.clear(t + SEPARATION) - clock for t in self.til_times[fired:]
-                if duration < self.clear(t + SEPARATION) - clock <= hi})
-            for start, duration in ([(s, duration) for s in starts]
-                                    + [(clock, d) for d in stretched]):
+            candidates.update(
+                (clock, self.clear(t + SEPARATION) - clock) for t in self.til_times[fired:]
+                if shortest < self.clear(t + SEPARATION) - clock <= hi)
+            for start, duration in sorted(candidates):
                 end = start + duration
                 if self.near_til(end):
                     continue

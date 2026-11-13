@@ -114,3 +114,31 @@ def test_duration_kept_apart_from_the_start(tmp_path):
                   "  :effect (and (at start (q)) (at end (done)))))",
                   "(define (problem x) (:domain t) (:init (p)) (:goal (done)))")
     assert [s.duration for s in plan.steps] == [0.01]
+
+
+def test_delayed_start_with_a_longer_duration(tmp_path):
+    """Review on #210: [1, 1.5] must start late and last 1.5 to bridge."""
+    plan = _solve(tmp_path,
+                  "(define (domain t) (:requirements :strips :durative-actions"
+                  " :duration-inequalities :timed-initial-literals) (:predicates (p) (q) (done))"
+                  " (:durative-action go :parameters ()"
+                  "  :duration (and (>= ?duration 1) (<= ?duration 1.5))"
+                  "  :condition (and (at start (p)) (at end (q))) :effect (at end (done))))",
+                  "(define (problem x) (:domain t) (:init (p) (at 1 (not (p))) (at 2 (q)))"
+                  " (:goal (done)))")
+    assert [(round(s.start, 3), s.duration) for s in plan.steps] == [(0.51, 1.5)]
+
+
+def test_short_duration_before_a_timed_literal(tmp_path):
+    """Review on #210: 0.002 already separates start and end; 0.01 would
+    cross the literal that breaks the invariant at 0.007."""
+    plan = _solve(tmp_path,
+                  "(define (domain t) (:requirements :strips :durative-actions"
+                  " :duration-inequalities :timed-initial-literals) (:predicates (p) (q) (done))"
+                  " (:durative-action go :parameters ()"
+                  "  :duration (and (>= ?duration 0.002) (<= ?duration 0.02))"
+                  "  :condition (and (at start (p)) (over all (p)) (at end (q)))"
+                  "  :effect (and (at start (q)) (at end (done)))))",
+                  "(define (problem x) (:domain t) (:init (p) (at 0.007 (not (p))))"
+                  " (:goal (done)))")
+    assert [s.duration for s in plan.steps] == [0.002]
