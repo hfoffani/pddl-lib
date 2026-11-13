@@ -35,3 +35,15 @@ def test_either_parameter_binds_member_types(tmp_path):
 def test_either_domain_solves(tmp_path):
     plan = get("bfs").solve(_dp(tmp_path))
     assert plan is not None and len(plan) == 4
+
+
+def test_type_cycle_through_either_terminates(tmp_path):
+    """A cycle through an (either ...) supertype must not recurse forever."""
+    d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
+    d.write_text("(define (domain c) (:requirements :typing)"
+                 " (:types a - (either b c) b - a c - object) (:predicates (p ?x - c)))")
+    p.write_text("(define (problem p) (:domain c) (:objects x - a) (:init) (:goal (and)))")
+    dp = DomainProblem(str(d), str(p))
+    assert dp.candidate_objects("c") == ["x"]
+    assert dp.candidate_objects("object") == ["x"]
+    assert dp.candidate_objects("zzz") == []

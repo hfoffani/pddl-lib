@@ -1567,15 +1567,22 @@ class DomainProblem():
         members = _either_members(t)
         if members is not None:
             return any(self._is_subtype(ot, m) for m in members)
+        # Climb the hierarchy; an (either ...) type branches to its members.
+        # One seen set covers every branch, so a cycle ends the walk.
         seen = set()
-        while ot is not None and ot not in seen:
+        stack = [ot]
+        while stack:
+            ot = stack.pop()
+            if ot is None or ot in seen:
+                continue
+            seen.add(ot)
             members = _either_members(ot)
             if members is not None:
-                return any(self._is_subtype(m, t) for m in members)
-            if ot == t:
+                stack.extend(members)
+            elif ot == t:
                 return True
-            seen.add(ot)
-            ot = self.domain.types.get(ot)
+            else:
+                stack.append(self.domain.types.get(ot))
         return False
 
     def candidate_objects(self, t) -> List[str]:
