@@ -18,7 +18,7 @@ from collections import deque
 from typing import TYPE_CHECKING, Dict, FrozenSet, List, Optional, Tuple
 
 from .base import Planner, UnsupportedRequirementsError
-from .costs import action_cost, plan_cost
+from .costs import TOTAL_COST, action_cost, plan_cost
 from .registry import register
 from .state import Plan, State, atom_tuple, goal_holds
 
@@ -192,13 +192,24 @@ class UniformCostPlanner(_BestFirstPlanner):
         c, weighted = _preference_metric(domainproblem)
         self._start_search()
 
+        def spent(state: State) -> float:
+            return state.fluents.get(TOTAL_COST, 0.0)
+
+        def key(state: State) -> State:
+            # with c == 0 the accumulated cost is irrelevant, and no
+            # condition may read it: keep it out of the state, or an action
+            # that only adds cost makes the search endless
+            if c:
+                return state
+            return State(state.atoms, {f: v for f, v in state.fluents.items() if f != TOTAL_COST})
+
         def penalty(state: State) -> float:
             return sum(w * sum(not goal_holds(g, state) for g in instances)
                        for w, instances in weighted)
 
-        start = task.initial
+        start = key(task.initial)
         counter = itertools.count()
-        # (priority, tiebreak, state, terminal, g)
+        # (priority, tiebreak, state, terminal, g: the total-cost spent)
         frontier: List[Tuple[float, int, State, bool, float]] = [
             (0.0, next(counter), start, False, 0.0)]
         best: Dict[State, float] = {start: 0.0}
@@ -207,7 +218,8 @@ class UniformCostPlanner(_BestFirstPlanner):
             priority, _, state, terminal, g = heapq.heappop(frontier)
             if terminal:
                 actions = _reconstruct(came_from, state)
-                return Plan(actions, cost=plan_cost(state, actions))
+                return Plan(actions, cost=g if TOTAL_COST in task.initial.fluents
+                            else len(actions))
             if priority > best.get(state, priority):
                 continue  # pragma: no cover - stale heap entry (lazy deletion)
             if task.is_goal(state):
@@ -215,7 +227,10 @@ class UniformCostPlanner(_BestFirstPlanner):
                                           state, True, g))
             self._expand()
             for action, succ in task.successors(state):
-                ng = g + self._step_cost(action, state)
+                # the metric counts the total-cost actually spent: an action
+                # with no cost effect is free here, not the unit fallback
+                ng = g + spent(succ) - spent(state)
+                succ = key(succ)
                 npriority = c * ng
                 if npriority < best.get(succ, npriority + 1):
                     best[succ] = npriority

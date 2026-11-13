@@ -77,12 +77,19 @@ def _init_atoms(dp: DomainProblem) -> Iterator[Any]:
         yield atom
 
 
+def _goal_atoms(dp: DomainProblem) -> Iterator[Any]:
+    """The hard goal's atoms and every preference body's (#201)."""
+    yield from dp.goals()
+    for pref in dp.problem.preferences:
+        yield from pref.body.atoms()
+
+
 def _condition_atoms(dp: DomainProblem) -> Iterator[Tuple[str, Any]]:
     """Yield ``(where, atom)`` for every atom referenced by the model:
     init, goal, and each (durative) action's conditions and effects."""
     for atom in _init_atoms(dp):
         yield ":init", atom
-    for atom in dp.goals():
+    for atom in _goal_atoms(dp):
         yield ":goal", atom
     for name, op in dp.domain.operators.items():
         # Walk the ADL precondition/effect trees so atoms nested inside
@@ -173,13 +180,16 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
     # Ground atoms (init/goal) naming objects that were never declared.
     objects = set(dp.worldobjects())
     unknown: Dict[str, Set[str]] = {}
-    for where, atoms in ((":init", _init_atoms(dp)), (":goal", dp.goals())):
+    for where, atoms in ((":init", _init_atoms(dp)), (":goal", _goal_atoms(dp))):
         for atom in atoms:
             for term in atom_tuple(atom)[1:]:
                 # ?variables: only the free ones are errors, below
                 if term not in objects and not term.startswith("?"):
                     unknown.setdefault(term, set()).add(where)
-    for var in _free_variables(dp.problem.goal):
+    free = list(_free_variables(dp.problem.goal))
+    for pref in dp.problem.preferences:
+        free += _free_variables(pref.body, frozenset(pref.params))
+    for var in free:
         unknown.setdefault(var, set()).add(":goal")
     for term in sorted(unknown):
         issues.append(_issue(

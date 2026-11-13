@@ -117,3 +117,54 @@ def test_unreachable_hard_goal_has_no_plan(tmp_path):
     dp, _, _ = _dp(tmp_path, "(link c a) (preference pc (seen c))",
                    "(+ (total-cost) (is-violated pc))")
     assert get("ucs").solve(dp) is None
+
+
+FREE = ("(define (domain f) (:requirements :strips :preferences :action-costs)"
+        " (:predicates (at ?x) (wanted) (pref-ok)) (:functions (total-cost))"
+        " (:action paid :parameters () :precondition (at s)"
+        "  :effect (and (not (at s)) (at g) (increase (total-cost) 2)))"
+        " (:action hop1 :parameters () :precondition (at s) :effect (and (not (at s)) (at m1)))"
+        " (:action hop2 :parameters () :precondition (at m1) :effect (and (not (at m1)) (at m2)))"
+        " (:action hop3 :parameters () :precondition (at m2) :effect (and (not (at m2)) (at g)))"
+        " (:action tick :parameters () :precondition (and) :effect (increase (total-cost) 1)))")
+
+
+def _free(tmp_path, goal, metric):
+    d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
+    d.write_text(FREE)
+    p.write_text("(define (problem f) (:domain f) (:objects s m1 m2 g)"
+                 " (:init (at s) (pref-ok) (= (total-cost) 0))"
+                 " (:goal (and %s)) (:metric minimize %s))" % (goal, metric))
+    return DomainProblem(str(d), str(p))
+
+
+def test_actions_without_a_cost_effect_are_free(tmp_path):
+    """Review on #206: the three hops spend no total-cost, the paid route 2."""
+    dp = _free(tmp_path, "(at g) (preference pref (pref-ok))",
+               "(+ (total-cost) (is-violated pref))")
+    plan = get("ucs").solve(dp)
+    assert [n for n, _ in plan.action_names()] == ["hop1", "hop2", "hop3"]
+    assert plan.cost == 0
+
+
+def test_preference_only_metric_ignores_accumulating_cost(tmp_path):
+    """Review on #206: tick adds cost forever; the metric does not count it."""
+    dp = _free(tmp_path, "(preference pref (wanted))", "(is-violated pref)")
+    plan = get("ucs", max_expansions=100).solve(dp)
+    assert plan is not None and len(plan) == 0
+
+
+@pytest.mark.parametrize("goal, issue", [
+    ("(preference pref (typo a))", "undeclared_predicate"),
+    ("(preference pref (seen missing))", "unknown_object"),
+    ("(preference pref (seen ?x))", "unknown_object"),
+])
+def test_preference_bodies_are_diagnosed(tmp_path, goal, issue):
+    """Review on #206: malformed soft goals are reported, not penalties."""
+    _, d, p = _dp(tmp_path, goal, "(is-violated pref)")
+    assert issue in {i["check"] for i in diagnose(d, p)["issues"]}
+
+
+def test_quantified_preference_variables_are_bound(tmp_path):
+    _, d, p = _dp(tmp_path, "(forall (?x) (preference pref (seen ?x)))", "(is-violated pref)")
+    assert diagnose(d, p)["valid"]
