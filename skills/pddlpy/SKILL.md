@@ -153,7 +153,8 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
 - **Goals** can use `not`, `or`, `imply`, `exists`, `forall`, `=` and
   numeric comparisons. `dp.goals()` lists only the positive atoms; the
   whole goal is `dp.goal_condition()`. With such goals `astar`/`gbfs` search
-  blind, so prefer `bfs`/`ucs`. Not supported at all: `:derived-predicates`, `:constraints`,
+  blind, so prefer `bfs`/`ucs`. Derived predicates (`(:derived ...)`) work with the
+  classical planners, not `temporal`. Not supported at all: `:constraints`,
   `:preferences` in goals, timed initial literals, duration inequalities,
   `:object-fluents`. `solve` refuses (exit 2) a pair with syntax errors:
   the parser skips what it cannot read, so the answer would be for another

@@ -6,6 +6,12 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 ## [Unreleased]
 
 ### Added
+- **Derived predicates** (#141): `(:derived (p ?x) GD)` rules are solved by
+  `bfs`/`astar`/`gbfs`/`ucs` and judged by `validate-plan`. Derived atoms
+  are recomputed in every state (recursion to a fixpoint, negation by
+  strata); rules that are not stratifiable are refused. `temporal` refuses
+  them. `DomainProblem.derived_predicates()`, `derived_strata()` and
+  `derive()`; `State.derived(dp)`.
 - **Plan validation and simulation** (#166): `pddlpy validate-plan` and
   `pddlpy simulate` (MCP: `validate_plan`, `simulate`; Python:
   `pddlpy.planning.validate_plan` / `simulate`). Plans in the IPC format or
