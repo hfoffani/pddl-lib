@@ -155,7 +155,7 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   whole goal is `dp.goal_condition()`. With such goals `astar`/`gbfs` search
   blind, so prefer `bfs`/`ucs`. Derived predicates (`(:derived ...)`) work with the
   classical planners, not `temporal`. Not supported at all: `:constraints`,
-  `:object-fluents`, `:continuous-effects` and the obsolete PDDL 1.2 keys
+  `:object-fluents`, `:continuous-effects` (`#t` effects) and the obsolete PDDL 1.2 keys
   (refused by name). `solve` refuses (exit 2) a pair with syntax errors:
   the parser skips what it cannot read, so the answer would be for another
   domain. `validate-plan` / `simulate` refuse (exit 2) what

@@ -6,6 +6,12 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 ## [Unreleased]
 
 ### Added
+- **Continuous effects parse** (#213): `#t`, `(* <f-exp> #t)` and
+  `(* #t <f-exp>)` in untimed `increase` / `decrease` effects of durative
+  actions no longer cause syntax errors. They are not modeled yet, so
+  `solve`, `validate-plan` and `validate` refuse them, declared or not
+  (`DurativeAction.continuous`). An untimed `(increase (f) 2)` in a durative
+  effect no longer crashes the parser.
 - **Duration inequalities** (#143): numeric bounds such as
   `(and (>= ?duration 1) (<= ?duration 3))` give a duration range
   (`DurativeAction.duration_range`, `bounds()`). `temporal` schedules the
