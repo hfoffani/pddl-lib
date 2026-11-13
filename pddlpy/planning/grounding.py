@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Iterator, List, Tuple
 
+from pddlpy.pddl import holds3
+
 from .state import State, goal_holds
 
 if TYPE_CHECKING:
@@ -39,8 +41,14 @@ class GroundedTask:
     def successors(self, state: State) -> Iterator[Tuple["Operator", State]]:
         """Yield ``(action, successor_state)`` for every applicable action."""
         for action in self.actions:
-            if state.applicable(action):
+            if state.applicable(action) and self._defined(action, state):
                 yield action, state.apply(action).derived(self.domainproblem)
+
+    def _defined(self, action: "Operator", state: State) -> bool:
+        """False if the precondition reads an undefined derived atom (#141)."""
+        if not self.domainproblem.domain.derived or action.precondition is None:
+            return True
+        return holds3(action.precondition, state.atoms, state.fluents) is not None
 
     def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""

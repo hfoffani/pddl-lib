@@ -163,3 +163,47 @@ def test_derived_body_reading_an_undefined_fluent_does_not_hold(tmp_path):
     p2.write_text("(define (problem u) (:domain u) (:init (z)) (:goal (q)))")
     # (z) settles the or: the undefined comparison is not needed
     assert ("q",) in State.from_problem(DomainProblem(d, str(p2))).atoms
+
+
+@pytest.mark.parametrize("rules, goal", [
+    # review on #205: an undefined derived atom stays undefined under not
+    ("(:derived (q) (<= (f) 5))", "(not (q))"),
+    ("(:derived (q) (<= (f) 5)) (:derived (r) (not (q)))", "(r)"),
+    # or in written order: the undefined comparison comes before (p)
+    ("(:derived (q) (or (<= (f) 5) (p)))", "(q)"),
+])
+def test_undefined_derived_atoms_propagate(tmp_path, rules, goal):
+    domain = ("(define (domain u) (:requirements :adl :derived-predicates :numeric-fluents)"
+              " (:predicates (p) (q) (r)) (:functions (f)) " + rules +
+              " (:action set :parameters () :effect (assign (f) 10))"
+              " (:action set3 :parameters () :effect (assign (f) 3)))")
+    d, p = _pair(tmp_path, domain, "(define (problem u) (:domain u) (:init (p)) (:goal %s))" % goal)
+    dp = DomainProblem(d, p)
+    failure = validate_plan(dp, []).failure
+    assert failure.kind == "goal" and "no value for" in failure.message
+    plan = get("bfs").solve(dp)
+    assert len(plan) == 1
+    assert validate_plan(dp, parse_plan("(%s)\n" % plan.action_names()[0][0])).valid
+
+
+def test_precondition_reading_an_undefined_derived_atom(tmp_path):
+    domain = ("(define (domain u) (:requirements :adl :derived-predicates :numeric-fluents)"
+              " (:predicates (q) (done)) (:functions (f)) (:derived (q) (<= (f) 5))"
+              " (:action use :parameters () :precondition (not (q)) :effect (done))"
+              " (:action set :parameters () :effect (assign (f) 10)))")
+    d, p = _pair(tmp_path, domain, "(define (problem u) (:domain u) (:init) (:goal (done)))")
+    dp = DomainProblem(d, p)
+    failure = validate_plan(dp, parse_plan("(use)\n")).failure
+    assert failure.kind == "undefined-fluent" and failure.unmet == ("(q)",)
+    assert [n for n, _ in get("bfs").solve(dp).action_names()] == ["set", "use"]
+
+
+def test_undefined_markers_are_not_serialized(tmp_path):
+    from pddlpy.serialize import state_dict
+    domain = ("(define (domain u) (:requirements :strips :derived-predicates :numeric-fluents)"
+              " (:predicates (p) (q)) (:functions (f)) (:derived (q) (<= (f) 5))"
+              " (:action noop :parameters () :effect (and)))")
+    d, p = _pair(tmp_path, domain, "(define (problem u) (:domain u) (:init (p)) (:goal (p)))")
+    state = State.from_problem(DomainProblem(d, p))
+    assert ("#undefined", "q") in state.atoms
+    assert state_dict(state)["atoms"] == [["p"]]

@@ -697,25 +697,55 @@ def _expr_fluents(e: Expr) -> Iterator[GroundAtom]:
         yield from _expr_fluents(e.operand)
 
 
-def _holds3(c: Condition, atoms: AbstractSet[GroundAtom], fluents: Valuation) -> Optional[bool]:
-    """Three-valued truth of a grounded condition (#141): ``None`` when it
-    depends on a fluent with no value. ``and`` / ``or`` are settled by a
-    false / true child before an undefined one, as VAL's short-circuit."""
+#: Marks a derived atom whose rule read a fluent with no value (#141): the
+#: state holds ``(UNDEFINED, pred, args...)`` instead of the atom, and any
+#: condition that reads the atom is undefined too.
+UNDEFINED = "#undefined"
+
+
+def undefined_marker(atom: GroundAtom) -> GroundAtom:
+    return (UNDEFINED,) + tuple(atom)
+
+
+def _rank(c: Condition) -> int:
+    """VAL's evaluation cost of a condition (``Proposition::rank``, first
+    component): 1 per numeric comparison, 0 per atom."""
+    if isinstance(c, NumericCond):
+        return 1
+    if isinstance(c, Not):
+        return _rank(c.child)
+    if isinstance(c, (And, Or)):
+        return sum(_rank(k) for k in c.children)
+    return 0
+
+
+def holds3(c: Condition, atoms: AbstractSet[GroundAtom], fluents: Valuation) -> Optional[bool]:
+    """Three-valued truth of a grounded condition, in VAL's evaluation order
+    (``ConjGoal`` / ``DisjGoal::evaluate``): ``None`` when it reads a fluent
+    with no value or an undefined derived atom (#141). ``and`` evaluates its
+    children cheapest first (atoms before comparisons, a stable sort by
+    rank), ``or`` in written order; both stop at the first child that
+    settles the result or is undefined."""
+    if isinstance(c, Lit):
+        atom = tuple(c.atom.predicate)
+        return None if undefined_marker(atom) in atoms else atom in atoms
     if isinstance(c, NumericCond):
         k = c.constraint
         if any(f not in fluents for f in itertools.chain(_expr_fluents(k.lhs), _expr_fluents(k.rhs))):
             return None
         return c.holds(atoms, fluents)
     if isinstance(c, Not):
-        v = _holds3(c.child, atoms, fluents)
+        v = holds3(c.child, atoms, fluents)
         return None if v is None else not v
     if isinstance(c, (And, Or)):
         settle = isinstance(c, Or)  # the value that decides it
-        values = [_holds3(k, atoms, fluents) for k in c.children]
-        if settle in values:
-            return settle
-        return None if None in values else not settle
-    return c.holds(atoms, fluents)  # Lit, Equality
+        children = sorted(c.children, key=_rank) if isinstance(c, And) else c.children
+        for child in children:
+            v = holds3(child, atoms, fluents)
+            if v is None or v == settle:
+                return v
+        return not settle
+    return c.holds(atoms, fluents)  # Equality
 
 
 def _reads(c: Condition) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
@@ -1760,7 +1790,7 @@ class DomainProblem():
         """``atoms`` with the derived atoms recomputed (#141): those already
         there are dropped, then each stratum is evaluated to a fixpoint."""
         names = self.derived_predicates()
-        out = {a for a in atoms if a[0] not in names}
+        out = {a for a in atoms if a[0] not in names and a[0] != UNDEFINED}
         for stratum in self._grounded_rules():
             pending = list(stratum)
             changed = True
@@ -1768,13 +1798,17 @@ class DomainProblem():
                 changed = False
                 rest = []
                 for head, body in pending:
-                    # a body reading a fluent with no value does not hold
-                    if _holds3(body, out, fluents):
+                    if holds3(body, out, fluents):
                         out.add(head)
                         changed = True
                     else:
                         rest.append((head, body))
                 pending = rest
+            # what is left is false, or undefined: a body that reads a fluent
+            # with no value marks its head, so readers are undefined too
+            for head, body in pending:
+                if head not in out and holds3(body, out, fluents) is None:
+                    out.add(undefined_marker(head))
         return frozenset(out)
 
     def types(self) -> Dict[str, Optional[str]]:
