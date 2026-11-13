@@ -45,6 +45,34 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   parser's recovery dropped the rest of the problem: objects, `:init` and
   goals came out empty for IPC temporal problems. It now parses, and
   `metric()` returns `("minimize", "(total-time)")`.
+- **`(:derived (p ?x) GD)` was a syntax error** (#141): the grammar expected
+  a variable list where PDDL 2.2 has an atom. It now parses; the rule is
+  not modeled yet, so `validate` reports it as `unsupported` and `solve` /
+  `validate-plan` refuse it. `validate` no longer reports a quantified
+  goal's `?variable` as an unknown object.
+- **Duration inequalities became a fixed duration** (#143):
+  `:duration-inequalities` was a syntax error, and without it
+  `(and (>= ?duration 1) (<= ?duration 3))` set the duration to the last
+  bound (3). The key now parses, only `(= ?duration N)` sets a duration,
+  and inequality durations are reported by `validate` and refused by
+  `temporal` and `validate-plan`.
+- **Names spelled like keywords were syntax errors** (#163): an object,
+  constant, type or argument named `or`, `and`, `start`, `domain`, ... (in
+  any case) broke the parse and dropped the rest of `:objects`, e.g. the
+  object `OR` in the large IPC blocksworld problems. They are names now.
+  Predicate, function and action names still can't be keywords.
+- **Parsing is ~2.7x faster, and a syntax error no longer empties the
+  file**: the grammar's `domain` and `problem` rules had two alternatives
+  identical up to the end of the file, so ANTLR read every token before
+  choosing one, and recovery from a syntax error dropped the whole file.
+  The largest corpus problem (nomystery p09, 1.4 MB) parses in 4.6 s instead
+  of 12.4 s; IPC pairs with one unsupported construct now load the rest
+  (the pair still reports the syntax error and is refused by `solve`).
+- **`solve` answered for input it had skipped** (#141): the parser recovers
+  from a syntax error by dropping what it cannot read, such as a standard
+  `(:derived (r ?x) ...)` rule, and `solve` then reported "no plan exists"
+  for the rest. `solve` now refuses any pair with syntax errors (exit `2`),
+  as `validate-plan` already did. Parsing `:derived` is on the roadmap.
 - **Identifiers were case-sensitive** (#157): `(CLEAR C)` in `:init` did not
   match `(clear ?x)`, nor `Hoist` the type `hoist`, so IPC pairs such as
   blocks-strips-typed and depots were reported unsolvable or ungroundable.

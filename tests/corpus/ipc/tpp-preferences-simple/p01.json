@@ -3,26 +3,186 @@
  "ground_durative": {},
  "parse": {
   "durative_operators": [],
-  "goals": [],
+  "goals": [
+   [
+    "stored",
+    "?g",
+    "level1"
+   ]
+  ],
   "initial_numeric": {},
-  "initial_state": [],
+  "initial_state": [
+   [
+    "at",
+    "truck1",
+    "depot1"
+   ],
+   [
+    "connected",
+    "depot1",
+    "market1"
+   ],
+   [
+    "connected",
+    "market1",
+    "depot1"
+   ],
+   [
+    "loaded",
+    "goods1",
+    "truck1",
+    "level0"
+   ],
+   [
+    "loaded",
+    "goods2",
+    "truck1",
+    "level0"
+   ],
+   [
+    "loaded",
+    "goods3",
+    "truck1",
+    "level0"
+   ],
+   [
+    "next",
+    "level1",
+    "level0"
+   ],
+   [
+    "next",
+    "level2",
+    "level1"
+   ],
+   [
+    "next",
+    "level3",
+    "level2"
+   ],
+   [
+    "on-sale",
+    "goods1",
+    "market1",
+    "level1"
+   ],
+   [
+    "on-sale",
+    "goods2",
+    "market1",
+    "level3"
+   ],
+   [
+    "on-sale",
+    "goods3",
+    "market1",
+    "level2"
+   ],
+   [
+    "ready-to-load",
+    "goods1",
+    "depot1",
+    "level0"
+   ],
+   [
+    "ready-to-load",
+    "goods1",
+    "market1",
+    "level0"
+   ],
+   [
+    "ready-to-load",
+    "goods2",
+    "depot1",
+    "level0"
+   ],
+   [
+    "ready-to-load",
+    "goods2",
+    "market1",
+    "level0"
+   ],
+   [
+    "ready-to-load",
+    "goods3",
+    "depot1",
+    "level0"
+   ],
+   [
+    "ready-to-load",
+    "goods3",
+    "market1",
+    "level0"
+   ],
+   [
+    "stored",
+    "goods1",
+    "level0"
+   ],
+   [
+    "stored",
+    "goods2",
+    "level0"
+   ],
+   [
+    "stored",
+    "goods3",
+    "level0"
+   ]
+  ],
   "metric": null,
-  "objects": {},
+  "objects": {
+   "depot1": "depot",
+   "goods1": "goods",
+   "goods2": "goods",
+   "goods3": "goods",
+   "level1": "level",
+   "level2": "level",
+   "level3": "level",
+   "market1": "market",
+   "truck1": "truck"
+  },
   "operators": [],
-  "predicates": [],
-  "requirements": [],
-  "types": {}
+  "predicates": [
+   "at",
+   "connected",
+   "loaded",
+   "next",
+   "on-sale",
+   "ready-to-load",
+   "stored"
+  ],
+  "requirements": [
+   ":adl",
+   ":preferences",
+   ":strips",
+   ":typing"
+  ],
+  "types": {
+   "depot": "place",
+   "goods": "locatable",
+   "level": "object",
+   "locatable": "object",
+   "market": "place",
+   "place": "object",
+   "truck": "locatable"
+  }
  },
  "validate": {
   "issues": [
    {
     "check": "syntax",
-    "message": "domain file: line 18:1 no viable alternative at input '(define(domaintpp-propositionalsimplepreferences)(:requirements:strips:typing:adl:preferences)(:typesplacelocatablelevel-objectdepotmarket-placetruckgoods-locatable)(:predicates(loaded?g-goods?t-truck?l-level)(ready-to-load?g-goods?m-place?l-level)(stored?g-goods?l-level)(on-sale?g-goods?m-market?l-level)(next?l1?l2-level)(at?t-truck?p-place)(connected?p1?p2-place))(:constants'",
+    "message": "domain file: line 18:1 no viable alternative at input '(:constants'",
     "severity": "error"
    },
    {
     "check": "syntax",
-    "message": "problem file: line 34:23 no viable alternative at input '(define(problemtpp)(:domaintpp-propositionalsimplepreferences)(:objectsgoods1goods2goods3-goodstruck1-truckmarket1-marketdepot1-depotlevel1level2level3-level)(:init(nextlevel1level0)(nextlevel2level1)(nextlevel3level2)(ready-to-loadgoods1market1level0)(ready-to-loadgoods1depot1level0)(ready-to-loadgoods2market1level0)(ready-to-loadgoods2depot1level0)(ready-to-loadgoods3market1level0)(ready-to-loadgoods3depot1level0)(storedgoods1level0)(storedgoods2level0)(storedgoods3level0)(loadedgoods1truck1level0)(loadedgoods2truck1level0)(loadedgoods3truck1level0)(connecteddepot1market1)(connectedmarket1depot1)(on-salegoods1market1level1)(on-salegoods2market1level3)(on-salegoods3market1level2)(attruck1depot1))(:goal(and(forall(?g-goods)(preference'",
+    "message": "problem file: line 34:23 no viable alternative at input '(preference'",
+    "severity": "error"
+   },
+   {
+    "check": "syntax",
+    "message": "problem file: line 35:2 no viable alternative at input '(forall'",
     "severity": "error"
    }
   ],

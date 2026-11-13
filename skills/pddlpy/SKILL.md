@@ -157,7 +157,9 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   such goals as a positive conjunction, e.g. add a `(done)` predicate set by
   a final action. Not supported at all: `:derived-predicates`, `:constraints`,
   `:preferences` in goals, timed initial literals, duration inequalities,
-  `:object-fluents`. `validate-plan` / `simulate` refuse (exit 2) what
+  `:object-fluents`. `solve` refuses (exit 2) a pair with syntax errors:
+  the parser skips what it cannot read, so the answer would be for another
+  domain. `validate-plan` / `simulate` refuse (exit 2) what
   the model cannot represent instead of guessing: syntax errors, goals that
   are not a conjunction of atoms, durative actions with numeric, conditional
   or quantified parts or duration inequalities. Full status per requirement:

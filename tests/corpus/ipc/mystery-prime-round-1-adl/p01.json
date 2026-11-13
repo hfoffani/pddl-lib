@@ -1,5 +1,56 @@
 {
- "ground": {},
+ "ground": {
+  "overcome": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "overcome",
+    "parameters": {
+     "?c": "abrasion",
+     "?v": "rest"
+    },
+    "precondition": null,
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "overcome",
+    "parameters": {
+     "?c": "depression",
+     "?v": "rest"
+    },
+    "precondition": null,
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "overcome",
+    "parameters": {
+     "?c": "hangover",
+     "?v": "rest"
+    },
+    "precondition": null,
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": []
+   }
+  ]
+ },
  "ground_durative": {},
  "parse": {
   "durative_operators": [],
@@ -202,10 +253,31 @@
    "uranus": "planet",
    "venus": "planet"
   },
-  "operators": [],
-  "predicates": [],
-  "requirements": [],
-  "types": {}
+  "operators": [
+   "overcome"
+  ],
+  "predicates": [
+   "attacks",
+   "craves",
+   "eats",
+   "fears",
+   "harmony",
+   "locale",
+   "orbits"
+  ],
+  "requirements": [
+   ":conditional-effects",
+   ":quantified-preconditions",
+   ":typing"
+  ],
+  "types": {
+   "emotion": "object",
+   "food": "object",
+   "pain": "emotion",
+   "planet": "object",
+   "pleasure": "emotion",
+   "province": "object"
+  }
  },
  "validate": {
   "issues": [
@@ -216,22 +288,7 @@
    },
    {
     "check": "syntax",
-    "message": "domain file: line 27:7 token recognition error at: ':v'",
-    "severity": "error"
-   },
-   {
-    "check": "syntax",
-    "message": "domain file: line 38:7 token recognition error at: ':v'",
-    "severity": "error"
-   },
-   {
-    "check": "syntax",
-    "message": "domain file: line 49:6 token recognition error at: ':v'",
-    "severity": "error"
-   },
-   {
-    "check": "syntax",
-    "message": "domain file: line 16:9 no viable alternative at input '(define(domainmystery-prime-typed)(:requirements:typing:quantified-preconditions:conditional-effects)(:typesprovinceplanetfoodemotion-objectpleasurepain-emotion)(:predicates(eats?n1?n2-food)(craves?v-emotion?n-food)(fears?c-pain?v-pleasure)(locale?n-food?a-province)(harmony?v-emotion?s-planet)(attacks?i?j-province)(orbits?i?j-planet))(:actionovercome:parameters(?c-pain?v-pleasure)ars'",
+    "message": "domain file: line 16:9 mismatched input 'ars' expecting ')'",
     "severity": "error"
    }
   ],

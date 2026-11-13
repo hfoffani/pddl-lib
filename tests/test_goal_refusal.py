@@ -40,6 +40,8 @@ def test_non_conjunctive_goal_refused(tmp_path, goal, planner):
     if planner == "bfs":
         issues = diagnose(d, p)["issues"]
         assert ("error", "unsupported") in {(i["severity"], i["check"]) for i in issues}
+        # quantified variables are not reported as unknown objects
+        assert "unknown_object" not in {i["check"] for i in issues}
 
 
 @pytest.mark.parametrize("goal", ["(q a)", "(and (q a))", "(and)"])
@@ -47,3 +49,10 @@ def test_positive_conjunction_still_solved(tmp_path, goal):
     d, p = _pair(tmp_path, goal)
     assert get("bfs").solve(DomainProblem(d, p)) is not None
     assert diagnose(d, p)["valid"]
+
+
+def test_free_goal_variable_is_an_unknown_object(tmp_path):
+    """Review on #197: only quantified goals bind ?variables."""
+    d, p = _pair(tmp_path, "(q ?x)")
+    issues = diagnose(d, p)["issues"]
+    assert ("error", "unknown_object") in {(i["severity"], i["check"]) for i in issues}

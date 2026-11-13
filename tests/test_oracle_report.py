@@ -47,7 +47,7 @@ def test_known_causes_mark_failures(tmp_path):
     junit.write_text("""<testsuite>
 <testcase name="test_solvability_agrees_with_fd[classical/classical/psr-middle-derived-predicates-adl/p01.pddl]"><failure message="assert False"/></testcase>
 <testcase name="test_solvability_agrees_with_fd[classical/classical/termes-opt18/p01.pddl]"><failure message="assert False"/></testcase>
-<testcase name="test_accept_reject_agrees_with_fd[classical/classical/psr-middle-derived-predicates-adl/p01.pddl]"><failure message="exit 0"/></testcase>
+<testcase name="test_accept_reject_agrees_with_fd[classical/classical/tyreworld/pfile1.pddl]"><failure message="exit 0"/></testcase>
 </testsuite>""")
     text = oracle_report.report([str(junit)], "T")
     assert "**3 failures: 1 new, 2 with a known cause.**" in text
@@ -57,7 +57,8 @@ def test_known_causes_mark_failures(tmp_path):
     assert new < termes
     # termes-opt18's goal ends with (not (has-block)), misread as (has-block)
     assert "known: #138" in lines[termes]
-    # #141 covers acceptance and FD plan replay, not solvability
+    # the cause depends on the check: tyreworld is known for acceptance only
+    assert "known: FD rejects" in next(ln for ln in lines if "tyreworld" in ln)
     assert "- **NEW** `classical/classical/psr-middle-derived-predicates-adl" in text
     assert oracle_report.known_cause("test_accept_reject_agrees_with_fd",
                                      "classical/classical/tyreworld/pfile1.pddl").startswith("FD rejects")

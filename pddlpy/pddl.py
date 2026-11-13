@@ -947,6 +947,7 @@ class DomainListener(pddlListener):
         self.scopes = []
         self.negativescopes = []
         self.constraints = False  # a (:constraints ...) block was read (#140)
+        self.derived: List[str] = []  # heads of (:derived ...) rules (#141)
         self.requirements = set()
         self.predicates = set()  # declared predicate names (#12)
         self.functions = {}
@@ -997,12 +998,25 @@ class DomainListener(pddlListener):
         self.durative_operators[action.operator_name] = action
 
     def enterSimpleDurationConstraint(self, ctx):
-        # Capture (= ?duration N) / (<= ?duration N) etc. when N is a literal.
+        # Capture (= ?duration N) when N is a literal. An inequality bound is
+        # not a duration (#143): the action is then not simple, and temporal
+        # and plan validation refuse it.
         durval = ctx.durValue()
-        if durval is not None and durval.NUMBER() is not None:
+        if (durval is not None and durval.NUMBER() is not None
+                and ctx.durOp().getText() == '='):
             da = self.scopes[-1]
             if isinstance(da, DurativeAction):
                 da.duration = float(durval.NUMBER().getText())
+
+    def exitDurationConstraint(self, ctx):
+        # A duration only when every constraint is an untimed equality:
+        # (and (= ?duration 2) (<= ?duration 0)) or a timed (at start
+        # (= ?duration 2)) is not a fixed duration of 2 (#143).
+        if any(s.durOp() is None or s.durOp().getText() != '='
+               for s in ctx.simpleDurationConstraint()):
+            da = self.scopes[-1]
+            if isinstance(da, DurativeAction):
+                da.duration = None
 
     def enterTimedGD(self, ctx):
         # (at start|end goalDesc) or (over all goalDesc): collect the condition
@@ -1092,6 +1106,17 @@ class DomainListener(pddlListener):
         self.negativescopes.append(False)
 
     def exitConstraints(self, ctx):
+        self.negativescopes.pop()
+        self.scopes.pop()
+
+    def enterDerivedDef(self, ctx):
+        # (:derived (p ?x) GD) is not modeled yet; record its head and walk
+        # it in a throwaway scope so its atoms land nowhere (#141).
+        self.derived.append(ctx.atomicFormulaSkeleton().predicate().getText())
+        self.scopes.append(Scope())
+        self.negativescopes.append(False)
+
+    def exitDerivedDef(self, ctx):
         self.negativescopes.pop()
         self.scopes.pop()
 
@@ -1337,6 +1362,19 @@ class _ErrorCounter(ErrorListener):
         self.count += 1
 
 
+def _walk(listener: Any, tree: Any, errors: "_ErrorCounter") -> None:
+    """Walk ``tree`` into ``listener``. A tree ANTLR recovered from syntax
+    errors can lack the children the listener expects; the walk then stops
+    and the model stays partial, which is safe: ``syntax_errors`` makes
+    solve and plan validation refuse it, and ``validate`` reports the
+    errors. Without syntax errors, an exception is a bug and propagates."""
+    try:
+        ParseTreeWalker().walk(listener, tree)
+    except Exception:
+        if not errors.count:
+            raise
+
+
 def source_stream(path: str) -> InputStream:
     """The lexer input for the PDDL file ``path``: read as UTF-8 (#103) and
     lowercased, since PDDL identifiers are case-insensitive (#157). Names
@@ -1370,8 +1408,7 @@ class DomainProblem():
         parser.addErrorListener(errors)
         tree = parser.domain()
         self.domain = DomainListener()
-        walker = ParseTreeWalker()
-        walker.walk(self.domain, tree)
+        _walk(self.domain, tree, errors)
         # problem
         inp = source_stream(problemfile)
         lexer = pddlLexer(inp)
@@ -1382,8 +1419,7 @@ class DomainProblem():
         tree = parser.problem()
         self.syntax_errors: int = errors.count
         self.problem = ProblemListener()
-        walker = ParseTreeWalker()
-        walker.walk(self.problem, tree)
+        _walk(self.problem, tree, errors)
         # Variable binding strategy used by ground_operator (#12).
         self.binder: VariableBinder = binder if binder is not None else StaticPrunedBinder()
 

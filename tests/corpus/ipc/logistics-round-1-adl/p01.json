@@ -1,5 +1,18 @@
 {
- "ground": {},
+ "ground": {
+  "drive-truck": {
+   "truncated_at": 50
+  },
+  "fly-airplane": {
+   "truncated_at": 50
+  },
+  "load": {
+   "truncated_at": 50
+  },
+  "unload": {
+   "truncated_at": 50
+  }
+ },
  "ground_durative": {},
  "parse": {
   "durative_operators": [],
@@ -203,16 +216,37 @@
    "truck5": "truck",
    "truck6": "truck"
   },
-  "operators": [],
-  "predicates": [],
-  "requirements": [],
-  "types": {}
+  "operators": [
+   "drive-truck",
+   "fly-airplane",
+   "load",
+   "unload"
+  ],
+  "predicates": [
+   "at",
+   "in",
+   "in-city",
+   "loaded"
+  ],
+  "requirements": [
+   ":adl"
+  ],
+  "types": {
+   "airplane": "vehicle",
+   "airport": "location",
+   "city": "object",
+   "location": "object",
+   "obj": "physobj",
+   "physobj": "object",
+   "truck": "vehicle",
+   "vehicle": "physobj"
+  }
  },
  "validate": {
   "issues": [
    {
     "check": "syntax",
-    "message": "domain file: line 2:22 no viable alternative at input '(define(domainlogistics-adl)(:requirements:adl:domain'",
+    "message": "domain file: line 2:22 extraneous input ':domain' expecting {'(', ')', REQUIRE_KEY}",
     "severity": "error"
    }
   ],

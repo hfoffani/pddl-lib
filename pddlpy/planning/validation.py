@@ -480,9 +480,6 @@ def _mutex(parts: List[_Part], state: State) -> Optional[Tuple[_Part, _Part, str
 def check_supported(dp: "DomainProblem") -> None:
     """Raise :class:`PlanValidationError` if a plan on ``dp`` cannot be
     judged faithfully (see the module docstring)."""
-    if getattr(dp, "syntax_errors", 0):
-        raise PlanValidationError(
-            "the domain or problem has syntax errors; run `pddlpy validate`")
     unsupported = dp.requirements() - VALIDATION_CAPABILITIES
     if unsupported:
         raise PlanValidationError(

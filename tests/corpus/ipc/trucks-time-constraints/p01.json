@@ -1,8 +1,481 @@
 {
  "ground": {},
- "ground_durative": {},
+ "ground_durative": {
+  "deliver": [
+   {
+    "name": "deliver",
+    "parameters": {
+     "?l": "l1",
+     "?p": "package1"
+    }
+   },
+   {
+    "name": "deliver",
+    "parameters": {
+     "?l": "l1",
+     "?p": "package2"
+    }
+   },
+   {
+    "name": "deliver",
+    "parameters": {
+     "?l": "l1",
+     "?p": "package3"
+    }
+   },
+   {
+    "name": "deliver",
+    "parameters": {
+     "?l": "l2",
+     "?p": "package1"
+    }
+   },
+   {
+    "name": "deliver",
+    "parameters": {
+     "?l": "l2",
+     "?p": "package2"
+    }
+   },
+   {
+    "name": "deliver",
+    "parameters": {
+     "?l": "l2",
+     "?p": "package3"
+    }
+   },
+   {
+    "name": "deliver",
+    "parameters": {
+     "?l": "l3",
+     "?p": "package1"
+    }
+   },
+   {
+    "name": "deliver",
+    "parameters": {
+     "?l": "l3",
+     "?p": "package2"
+    }
+   },
+   {
+    "name": "deliver",
+    "parameters": {
+     "?l": "l3",
+     "?p": "package3"
+    }
+   }
+  ],
+  "drive": [
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l1",
+     "?t": "truck1",
+     "?to": "l1"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l1",
+     "?t": "truck1",
+     "?to": "l2"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l1",
+     "?t": "truck1",
+     "?to": "l3"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l2",
+     "?t": "truck1",
+     "?to": "l1"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l2",
+     "?t": "truck1",
+     "?to": "l2"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l2",
+     "?t": "truck1",
+     "?to": "l3"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l3",
+     "?t": "truck1",
+     "?to": "l1"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l3",
+     "?t": "truck1",
+     "?to": "l2"
+    }
+   },
+   {
+    "name": "drive",
+    "parameters": {
+     "?from": "l3",
+     "?t": "truck1",
+     "?to": "l3"
+    }
+   }
+  ],
+  "load": [
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "load",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   }
+  ],
+  "unload": [
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l1",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l2",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a1",
+     "?l": "l3",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l1",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l2",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package1",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package2",
+     "?t": "truck1"
+    }
+   },
+   {
+    "name": "unload",
+    "parameters": {
+     "?a1": "a2",
+     "?l": "l3",
+     "?p": "package3",
+     "?t": "truck1"
+    }
+   }
+  ]
+ },
  "parse": {
-  "durative_operators": [],
+  "durative_operators": [
+   "deliver",
+   "drive",
+   "load",
+   "unload"
+  ],
   "goals": [],
   "initial_numeric": {
    "drive-time l1 l2": 406.3,
@@ -95,15 +568,33 @@
    "truck1": "truck"
   },
   "operators": [],
-  "predicates": [],
-  "requirements": [],
-  "types": {}
+  "predicates": [
+   "at",
+   "closer",
+   "connected",
+   "delivered",
+   "free",
+   "in"
+  ],
+  "requirements": [
+   ":adl",
+   ":durative-actions",
+   ":fluents",
+   ":typing"
+  ],
+  "types": {
+   "locatable": "object",
+   "location": "object",
+   "package": "locatable",
+   "truck": "locatable",
+   "truckarea": "object"
+  }
  },
  "validate": {
   "issues": [
    {
     "check": "syntax",
-    "message": "domain file: line 5:55 no viable alternative at input '(define(domaintrucks-constraints)(:requirements:typing:adl:durative-actions:fluents:constraints'",
+    "message": "domain file: line 5:55 extraneous input ':constraints' expecting {'(', ')', REQUIRE_KEY}",
     "severity": "error"
    }
   ],

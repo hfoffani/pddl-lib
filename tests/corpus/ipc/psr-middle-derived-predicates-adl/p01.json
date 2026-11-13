@@ -1,5 +1,1011 @@
 {
- "ground": {},
+ "ground": {
+  "close": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "cb1"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "cb1"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= cb1 earth)) (not (closed cb1)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "cb1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "cb2"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "cb2"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= cb2 earth)) (not (closed cb2)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "cb2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "earth"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "earth"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= earth earth)) (not (closed earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "earth"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "sd1"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "sd1"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= sd1 earth)) (not (closed sd1)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "sd1"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "sd10"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "sd10"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= sd10 earth)) (not (closed sd10)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "sd10"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "sd11"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "sd11"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= sd11 earth)) (not (closed sd11)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "sd11"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "sd2"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "sd2"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= sd2 earth)) (not (closed sd2)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "sd2"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "sd3"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "sd3"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= sd3 earth)) (not (closed sd3)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "sd3"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "sd4"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "sd4"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= sd4 earth)) (not (closed sd4)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "sd4"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "sd5"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "sd5"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= sd5 earth)) (not (closed sd5)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "sd5"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "sd6"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "sd6"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= sd6 earth)) (not (closed sd6)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "sd6"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "sd7"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "sd7"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= sd7 earth)) (not (closed sd7)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "sd7"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "sd8"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "sd8"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= sd8 earth)) (not (closed sd8)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "sd8"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [
+     [
+      "closed",
+      "sd9"
+     ]
+    ],
+    "name": "close",
+    "parameters": {
+     "?x": "sd9"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (not (= sd9 earth)) (not (closed sd9)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ],
+     [
+      "closed",
+      "sd9"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": []
+   }
+  ],
+  "open": [
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "cb1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "cb1"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed cb1) (not (= cb1 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "cb1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "cb2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "cb2"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed cb2) (not (= cb2 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "cb2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "earth"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "earth"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed earth) (not (= earth earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "earth"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "sd1"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "sd1"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed sd1) (not (= sd1 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "sd1"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "sd10"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "sd10"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed sd10) (not (= sd10 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "sd10"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "sd11"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "sd11"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed sd11) (not (= sd11 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "sd11"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "sd2"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "sd2"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed sd2) (not (= sd2 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "sd2"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "sd3"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "sd3"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed sd3) (not (= sd3 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "sd3"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "sd4"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "sd4"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed sd4) (not (= sd4 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "sd4"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "sd5"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "sd5"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed sd5) (not (= sd5 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "sd5"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "sd6"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "sd6"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed sd6) (not (= sd6 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "sd6"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "sd7"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "sd7"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed sd7) (not (= sd7 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "sd7"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "sd8"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "sd8"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed sd8) (not (= sd8 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "sd8"
+     ]
+    ]
+   },
+   {
+    "conditional_effects": [],
+    "effect_neg": [
+     [
+      "closed",
+      "sd9"
+     ]
+    ],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "open",
+    "parameters": {
+     "?x": "sd9"
+    },
+    "precondition": "(and (and (not (affected cb1)) (not (affected cb2)) (not (affected earth)) (not (affected sd1)) (not (affected sd10)) (not (affected sd11)) (not (affected sd2)) (not (affected sd3)) (not (affected sd4)) (not (affected sd5)) (not (affected sd6)) (not (affected sd7)) (not (affected sd8)) (not (affected sd9))) (closed sd9) (not (= sd9 earth)))",
+    "precondition_connective": "and",
+    "precondition_neg": [
+     [
+      "affected",
+      "?b"
+     ]
+    ],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "closed",
+      "sd9"
+     ]
+    ]
+   }
+  ],
+  "wait": [
+   {
+    "conditional_effects": [
+     {
+      "add": [],
+      "condition": "(affected cb1)",
+      "del": [
+       [
+        "closed",
+        "cb1"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected cb2)",
+      "del": [
+       [
+        "closed",
+        "cb2"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected earth)",
+      "del": [
+       [
+        "closed",
+        "earth"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected sd1)",
+      "del": [
+       [
+        "closed",
+        "sd1"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected sd10)",
+      "del": [
+       [
+        "closed",
+        "sd10"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected sd11)",
+      "del": [
+       [
+        "closed",
+        "sd11"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected sd2)",
+      "del": [
+       [
+        "closed",
+        "sd2"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected sd3)",
+      "del": [
+       [
+        "closed",
+        "sd3"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected sd4)",
+      "del": [
+       [
+        "closed",
+        "sd4"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected sd5)",
+      "del": [
+       [
+        "closed",
+        "sd5"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected sd6)",
+      "del": [
+       [
+        "closed",
+        "sd6"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected sd7)",
+      "del": [
+       [
+        "closed",
+        "sd7"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected sd8)",
+      "del": [
+       [
+        "closed",
+        "sd8"
+       ]
+      ],
+      "num": []
+     },
+     {
+      "add": [],
+      "condition": "(affected sd9)",
+      "del": [
+       [
+        "closed",
+        "sd9"
+       ]
+      ],
+      "num": []
+     }
+    ],
+    "effect_neg": [],
+    "effect_num": [],
+    "effect_pos": [],
+    "name": "wait",
+    "parameters": {},
+    "precondition": "(or (affected cb1) (affected cb2) (affected earth) (affected sd1) (affected sd10) (affected sd11) (affected sd2) (affected sd3) (affected sd4) (affected sd5) (affected sd6) (affected sd7) (affected sd8) (affected sd9))",
+    "precondition_connective": "and",
+    "precondition_neg": [],
+    "precondition_num": [],
+    "precondition_pos": [
+     [
+      "affected",
+      "?b"
+     ]
+    ]
+   }
+  ]
+ },
  "ground_durative": {},
  "parse": {
   "durative_operators": [],
@@ -530,6 +1536,7 @@
   "objects": {
    "cb1": "device",
    "cb2": "device",
+   "earth": "device",
    "l1": "line",
    "l10": "line",
    "l11": "line",
@@ -551,18 +1558,41 @@
    "sd6": "device",
    "sd7": "device",
    "sd8": "device",
-   "sd9": "device"
+   "sd9": "device",
+   "side1": "side",
+   "side2": "side"
   },
-  "operators": [],
-  "predicates": [],
-  "requirements": [],
-  "types": {}
+  "operators": [
+   "close",
+   "open",
+   "wait"
+  ],
+  "predicates": [
+   "affected",
+   "breaker",
+   "closed",
+   "con",
+   "ext",
+   "faulty",
+   "fed",
+   "unsafe",
+   "upstream"
+  ],
+  "requirements": [
+   ":adl",
+   ":derived-predicates"
+  ],
+  "types": {
+   "device": null,
+   "line": null,
+   "side": null
+  }
  },
  "validate": {
   "issues": [
    {
-    "check": "syntax",
-    "message": "domain file: line 16:25 no viable alternative at input '(define(domainpsr)(:requirements:adl:derived-predicates)(:typesdevicesideline)(:constantsside1side2-sideearth-device)(:predicates(ext?l-line?x-device?s-side)(breaker?x-device)(closed?x-device)(faulty?l-line)(con?x-device?sx-side?y-device?sy-side)(upstream?x-device?sx-side?y-device?sy-side)(unsafe?x-device?sx-side)(affected?x-device)(fed?l-line))(:derived(upstream?x-'",
+    "check": "unsupported",
+    "message": "only goals that are a conjunction of positive atoms are supported yet; not, or, imply, exists, forall and numeric goals are not (#138)",
     "severity": "error"
    }
   ],
