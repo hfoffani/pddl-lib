@@ -154,7 +154,7 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   numeric comparisons. `dp.goals()` lists only the positive atoms; the
   whole goal is `dp.goal_condition()`. With such goals `astar`/`gbfs` search
   blind, so prefer `bfs`/`ucs`. Not supported at all: `:derived-predicates`, `:constraints`,
-  `:preferences` in goals, timed initial literals, duration inequalities,
+  `:preferences` in goals, duration inequalities,
   `:object-fluents`. `solve` refuses (exit 2) a pair with syntax errors:
   the parser skips what it cannot read, so the answer would be for another
   domain. `validate-plan` / `simulate` refuse (exit 2) what
@@ -164,6 +164,8 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
 - **Durative actions** (`:durative-actions`) parse into `DurativeAction`
   (`dp.durative_operators()`) and are solved only by `temporal`, under
   sequential semantics: domains that require overlapping actions are not solved.
+  Timed initial literals (`(at 5 (p))` in `:init`) need `temporal` too; the
+  goal must still hold after the last one.
 - Case does not matter: keywords and names are case-insensitive, and names
   come out lowercase (`(CLEAR A)` is reported as `(clear a)`), as in Fast
   Downward and VAL.

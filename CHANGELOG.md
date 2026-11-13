@@ -41,6 +41,13 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **Timed initial literals are solved and validated** (#142): `(at 5 (p))`
+  in `:init` was refused. `temporal` now plans with them (waiting for a
+  literal, applying the ones during an action to its `over all`
+  conditions), and `validate-plan` / `simulate` apply them as happenings
+  (`til` events in the trace), mutex with a step touching the same atom
+  then. The goal is judged after the last literal, as in VAL. The
+  classical planners still refuse them.
 - **Goals other than a conjunction of positive atoms are solved** (#138):
   `not`, `or`, `imply`, `exists`, `forall`, `=` and numeric comparisons in
   `(:goal ...)` were misread (a `(not (p))` goal was read as `(p)`), then

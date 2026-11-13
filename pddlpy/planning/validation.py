@@ -74,7 +74,8 @@ if TYPE_CHECKING:
 TOLERANCE = 0.01
 
 #: Requirements whose semantics the validator implements.
-VALIDATION_CAPABILITIES: FrozenSet[str] = ADL_CAPABILITIES | {":durative-actions"}
+VALIDATION_CAPABILITIES: FrozenSet[str] = ADL_CAPABILITIES | {
+    ":durative-actions", ":timed-initial-literals"}
 
 
 class PlanValidationError(PlannerError):
@@ -215,7 +216,8 @@ class Failure(NamedTuple):
 
 class TracePoint(NamedTuple):
     """The state after one happening part: ``event`` is ``action`` for an
-    instantaneous step, ``start`` / ``end`` for a durative one."""
+    instantaneous step, ``start`` / ``end`` for a durative one, ``til`` for
+    a timed initial literal (step 0, ``action`` its PDDL text)."""
 
     time: float
     event: str
@@ -446,6 +448,34 @@ class _Part:
         return adds, dels, [(e.head.head, e.op, e.expr.value(state.fluents)) for e in nums]
 
 
+class _TilPart(_Part):
+    """A timed initial literal (#142): a happening part with no conditions
+    whose effect adds or deletes one atom. It joins the happening at its
+    time, so it is mutex with a step that touches its atom then."""
+
+    def __init__(self, time: float, atom: GroundAtom, positive: bool) -> None:
+        text = _atom_text(atom) if positive else "(not %s)" % _atom_text(atom)
+        super().__init__(time, "til", 0, "(at %g %s)" % (time, text), None)  # type: ignore[arg-type]
+        self.adds = {atom} if positive else set()
+        self.dels = set() if positive else {atom}
+
+    def unmet(self, state: State) -> List[str]:
+        return []
+
+    def undefined(self, state: State) -> List[str]:
+        return []
+
+    def reads(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+        return set(), set()
+
+    def writes(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom], Dict[GroundAtom, str]]:
+        return self.adds, self.dels, {}
+
+    def effects(self, state: State) -> Tuple[Set[GroundAtom], Set[GroundAtom],
+                                             List[Tuple[GroundAtom, str, float]]]:
+        return self.adds, self.dels, []
+
+
 def _literal_unmet(a: DurativeAction, when: str, state: State) -> List[str]:
     missing = [_atom_text(atom_tuple(x)) for x in a.condition_pos[when]
                if atom_tuple(x) not in state.atoms]
@@ -464,6 +494,8 @@ def _mutex(parts: List[_Part], state: State) -> Optional[Tuple[_Part, _Part, str
     io = [(p, p.reads(state), p.writes(state)) for p in parts]
     for i, (p, (pr, prf), (pa, pd, pf)) in enumerate(io):
         for q, (qr, qrf), (qa, qd, qf) in io[i + 1:]:
+            if isinstance(p, _TilPart) and isinstance(q, _TilPart):
+                continue  # the problem's own literals; not the plan's doing
             clash = (pa & qd) | (pd & qa) | ((pa | pd) & qr) | ((qa | qd) & pr)
             if clash:
                 return p, q, _atom_text(min(clash))
@@ -484,7 +516,7 @@ def check_supported(dp: "DomainProblem") -> None:
         raise PlanValidationError(
             "plan validation does not support %s" % sorted(unsupported))
     try:
-        check_modeled(dp)
+        check_modeled(dp, timed=True)
     except UnsupportedRequirementsError as exc:
         raise PlanValidationError("plan validation: %s" % exc)
 
@@ -575,6 +607,8 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
     parts, failure = _resolve(dp, steps)
     if failure is not None:
         return Simulation((), failure, state)
+    # timed literals first, so a tie with a step keeps plan order after them
+    parts = [_TilPart(t, atom_tuple(a), pos) for t, a, pos in dp.problem.timed_literals] + parts
     trace: List[TracePoint] = []
     active: Dict[int, _Part] = {}  # step -> its start part, while running
 
@@ -600,6 +634,8 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
         clash = _mutex(happening, state) if len(happening) > 1 else None
         if clash:
             p, q, what = clash
+            if isinstance(p, _TilPart):  # blame the plan's step
+                p, q = q, p
             return fail("mutex", "interferes with step %d %s over %s "
                         "(separate them in time)" % (q.step, q.text, what), p, [what], state)
         adds: Set[GroundAtom] = set()
