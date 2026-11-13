@@ -204,8 +204,14 @@ def test_undefined_preferences_fail(tmp_path, pref, unmet):
     assert [n for n, _ in get("ucs").solve(dp).action_names()] == ["set"]
 
 
-def test_a_true_disjunct_settles_a_preference(tmp_path):
-    dp = _undefined(tmp_path, "(or (ok) (ready))", init="(ok)")
+@pytest.mark.parametrize("pref", [
+    "(or (ok) (ready))",
+    # review on #206: VAL asks a true nested or for no advice
+    "(and (missing) (or (ok) (ready)))",
+    "(and (missing) (or (ok) (<= (f) 5)))",
+])
+def test_a_true_disjunct_settles_a_preference(tmp_path, pref):
+    dp = _undefined(tmp_path, pref, init="(ok)")
     assert validate_plan(dp, []).valid and len(get("ucs").solve(dp)) == 0
 
 

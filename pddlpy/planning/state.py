@@ -30,7 +30,6 @@ from pddlpy.pddl import (
     Or,
     _expr_fluents,
     _rank,
-    _reads,
     holds3,
     ieee_div,
     undefined_marker,
@@ -288,12 +287,21 @@ def goal_holds(goal: Condition, state: State) -> bool:
 
 def preference_undefined(pref: Condition, state: State) -> Set[GroundAtom]:
     """The fluents with no value and the undefined derived atoms that judging
-    a preference instance at the end of a plan reads (#201). A satisfied one
-    reads what :func:`goal_holds` does; for a violated one VAL also collects
-    advice (``getAdviceProp``), which evaluates every part, so every read
-    counts."""
-    if goal_holds(pref, state):
-        return set()
-    atoms, fluents = _reads(pref)
-    return ({f for f in fluents if f not in state.fluents}
-            | {a for a in atoms if undefined_marker(a) in state.atoms})
+    a preference instance at the end of a plan reads (#201), as VAL's
+    ``PreferenceGoal::evaluate``: the evaluation reads, and for a violated
+    instance the advice reads (``getAdviceProp``): an ``and`` / ``or``
+    evaluates each child and asks only the ones that fail for advice."""
+    def evaluated(c: Condition) -> Set[GroundAtom]:
+        return {f for f in _evaluated_fluents(c, state) if f not in state.fluents}
+
+    def advice(c: Condition) -> Set[GroundAtom]:
+        if not isinstance(c, (And, Or)):
+            return evaluated(c)
+        out: Set[GroundAtom] = set()
+        for child in c.children:
+            out |= evaluated(child)
+            if not goal_holds(child, state):
+                out |= advice(child)
+        return out
+
+    return evaluated(pref) | (set() if goal_holds(pref, state) else advice(pref))
