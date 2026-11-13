@@ -17,13 +17,13 @@ The semantics follow VAL, the reference plan validator:
   one may not delete an atom another adds, nor change an atom or fluent
   another reads (a mutex violation).
 * A durative step needs a ``[duration]`` within ``TOLERANCE`` of the
-  declared one. ``over all`` conditions must hold after every happening
+  declared one, or of the range its bounds allow (#143). ``over all`` conditions must hold after every happening
   from its start up to, but not including, its end.
 * Reading a fluent that has no value fails the step.
 
 What the object model cannot represent is refused with
 :class:`PlanValidationError` rather than judged: syntax errors, durative actions with numeric,
-conditional, quantified or inequality parts (#139, #143), and requirements
+conditional, quantified parts or timed or expression duration bounds (#139, #143), and requirements
 outside :data:`VALIDATION_CAPABILITIES`.
 """
 from __future__ import annotations
@@ -84,7 +84,8 @@ TOLERANCE = 0.01
 
 #: Requirements whose semantics the validator implements.
 VALIDATION_CAPABILITIES: FrozenSet[str] = ADL_CAPABILITIES | {
-    ":durative-actions", ":timed-initial-literals", ":preferences"}
+    ":durative-actions", ":duration-inequalities", ":timed-initial-literals",
+    ":preferences"}
 
 
 class PlanValidationError(PlannerError):
@@ -522,9 +523,9 @@ def _resolve(dp: "DomainProblem", steps: List[PlanStep]) -> Tuple[List[_Part], O
         lifted = (dp.domain.durative_operators if is_durative else dp.domain.operators)[name]
         if is_durative and not lifted.simple:
             raise PlanValidationError(
-                "plan validation supports only durative actions with a fixed "
-                "duration and literal conditions and effects; %s has more "
-                "(#139, #143)" % name)
+                "plan validation supports only durative actions with numeric "
+                "duration bounds and literal conditions and effects; %s has "
+                "more (#139, #143)" % name)
         params = list(lifted.variable_list.items())
         if len(s.args) != len(params):
             return fail("arity", "%s takes %d arguments, got %d"
@@ -551,12 +552,14 @@ def _resolve(dp: "DomainProblem", steps: List[PlanStep]) -> Tuple[List[_Part], O
         if not is_durative:
             parts.append(_Part(time, "action", i, text, action))
             continue
+        lo, hi = lifted.bounds()
+        takes = "%g" % lo if lo == hi else "from %g to %g" % (lo, hi)
         if s.duration is None:
-            return fail("duration", "durative action %s needs a [duration] (%g)"
-                        % (name, lifted.duration), i, s)
-        if not abs(s.duration - lifted.duration) < TOLERANCE:
-            return fail("duration", "duration %g, but %s takes %g"
-                        % (s.duration, name, lifted.duration), i, s)
+            return fail("duration", "durative action %s needs a [duration] (%s)"
+                        % (name, takes), i, s)
+        if not lo - TOLERANCE < s.duration < hi + TOLERANCE:
+            return fail("duration", "duration %g, but %s takes %s"
+                        % (s.duration, name, takes), i, s)
         parts.append(_Part(time, "start", i, text, action))
         parts.append(_Part(time + s.duration, "end", i, text, action))
     return parts, None

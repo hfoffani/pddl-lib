@@ -69,10 +69,17 @@ SEPARATION = 0.01
 #: never starts or ends this close to a timed initial literal (#142).
 TOLERANCE = 0.001
 
+
+def planned_duration(da: "DurativeAction") -> float:
+    """The duration temporal gives ``da`` (#143): the shortest its bounds
+    allow, ``SEPARATION`` when only an upper bound limits it."""
+    lo, hi = da.bounds() or (0.0, 0.0)
+    return lo if lo > 0 else min(hi, SEPARATION)
+
 #: Requirements the temporal planner supports: the STRIPS set plus
 #: :durative-actions and :timed-initial-literals.
 TEMPORAL_CAPABILITIES: FrozenSet[str] = STRIPS_CAPABILITIES | {
-    ":durative-actions", ":timed-initial-literals"}
+    ":durative-actions", ":duration-inequalities", ":timed-initial-literals"}
 
 
 class ScheduledAction:
@@ -228,7 +235,7 @@ class TemporalTask:
         for da in self.durative:
             succ = apply_durative(state, da)
             if succ is not None:
-                yield da, float(da.duration or 0.0), succ
+                yield da, planned_duration(da), succ
 
     def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""
@@ -276,7 +283,7 @@ class TemporalTask:
                 succ, nfired = self.fire(state.apply(op), fired, after)
                 yield op, clock, 0.0, succ, nfired, after
         for da in self.durative:
-            duration = float(da.duration or 0.0)
+            duration = planned_duration(da)
             starts = [clock] + sorted({
                 self.clear(t + SEPARATION - duration)
                 for t in self.til_times[fired:] if t + SEPARATION - duration > clock})

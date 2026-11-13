@@ -304,7 +304,8 @@ def test_validate_plan_refused(capsys, tmp_path):
     d, p = tmp_path / "d.pddl", tmp_path / "p.pddl"
     d.write_text("(define (domain d) (:requirements :durative-actions :duration-inequalities)"
                  " (:predicates (p)) (:durative-action a :parameters ()"
-                 " :duration (<= ?duration 2) :condition (at start (p)) :effect (at end (p))))")
+                 " :duration (at start (<= ?duration 2)) :condition (at start (p))"
+                 " :effect (at end (p))))")
     p.write_text("(define (problem q) (:domain d) (:init (p)) (:goal (p)))")
-    code, _, err = _run(capsys, "validate-plan", str(d), str(p), _plan(tmp_path, ""))
-    assert code == 2 and "duration-inequalities" in err
+    code, _, err = _run(capsys, "validate-plan", str(d), str(p), _plan(tmp_path, "0: (a) [1]"))
+    assert code == 2 and "#143" in err
