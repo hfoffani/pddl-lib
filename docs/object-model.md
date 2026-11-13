@@ -255,9 +255,6 @@ into `PlanStep`s for `validate_plan`.
 
 ## Known limitations
 
-- **Union types:** the `:types` hierarchy is supported (#22) — a parameter
-  typed with a supertype binds objects of any transitive subtype — but
-  `(either ...)` union types are not handled.
 - **ADL (#10):** conditional/universal effects, quantified and full-boolean
   preconditions and `=` equality are parsed, grounded and **solved** by the
   reference planners. One gap remains: ADL structure on the **goal** side of a
