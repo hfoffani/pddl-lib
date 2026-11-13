@@ -214,9 +214,10 @@ def _pair(tmp_path, domain, problem):
     return DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
 
 
-def test_refuses_syntax_errors():
-    dp = DomainProblem(os.path.join(IPC, "logistics-round-1-adl", "domain.pddl"),
-                       os.path.join(IPC, "logistics-round-1-adl", "p01.pddl"))
+def test_refuses_syntax_errors(tmp_path):
+    dp = _pair(tmp_path, "(define (domain d) (:requirements :strips :no-such-requirement)"
+               " (:predicates (p)) (:action a :parameters () :effect (p)))",
+               "(define (problem p) (:domain d) (:init) (:goal (p)))")
     with pytest.raises(PlanValidationError, match="syntax errors"):
         validate_plan(dp, [])
 

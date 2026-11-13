@@ -11,7 +11,7 @@ from pddlpy.cli import main
 from pddlpy.diagnostics import diagnose
 from pddlpy.planning import UnsupportedRequirementsError, get
 
-DOMAIN = ("(define (domain t) (:requirements :strips :object-fluents)"
+DOMAIN = ("(define (domain t) (:requirements :strips :no-such-requirement)"
           " (:predicates (p ?x) (q ?x))"
           " (:action go :parameters (?x) :precondition (p ?x) :effect (q ?x)))")
 PROBLEM = "(define (problem p) (:domain t) (:objects a) (:init (p a)) (:goal (q a)))"
