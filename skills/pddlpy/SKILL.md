@@ -149,7 +149,7 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   `from pddlpy.planning import atom_tuple` (or compare `repr`s / use `State`).
 - **Type hierarchies** are supported: a parameter typed with a supertype
   binds objects of any transitive subtype (`dp.types()` / `dp.subtypes_of(t)`
-  expose the hierarchy). `(either ...)` union types parse but bind no objects.
+  expose the hierarchy). `(either t1 t2)` binds objects of any member type.
 - **Goals** can use `not`, `or`, `imply`, `exists`, `forall`, `=` and
   numeric comparisons. `dp.goals()` lists only the positive atoms; the
   whole goal is `dp.goal_condition()`. With such goals `astar`/`gbfs` search

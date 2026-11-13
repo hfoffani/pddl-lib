@@ -108,7 +108,7 @@ plan = get("astar").solve(dp)        # or bfs/gbfs/ucs/temporal; None if unsolva
 
 ## Known Issue
 None outstanding. Type hierarchies (#22) supported (supertype binds transitive
-subtypes); `(either ...)` union types remain unhandled. Durative actions are
+subtypes); `(either ...)` union types bind any member type (#200). Durative actions are
 solved by the `temporal` planner under sequential semantics only (no required
 concurrency).
 
