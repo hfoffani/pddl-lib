@@ -203,14 +203,18 @@ def test_precondition_reading_an_undefined_derived_atom(tmp_path):
     ("(:derived (r) (q)) (:derived (q) (<= (f) 5))", "(done)", "(and (done) (not (r)))"),
     # a conditional-effect guard reads an undefined derived atom
     ("(:derived (r) (q)) (:derived (q) (<= (f) 5))", "(when (not (q)) (done))", "(done)"),
+    # a head already true through a later disjunct or a later rule
+    ("(:derived (q) (<= (f) 5)) (:derived (r) (or (q) (p)))", "(done)", "(and (done) (r))"),
+    ("(:derived (r) (or (q) (p))) (:derived (q) (<= (f) 5))", "(done)", "(and (done) (r))"),
+    ("(:derived (q) (<= (f) 5)) (:derived (q) (p)) (:derived (r) (q))", "(done)", "(and (done) (r))"),
 ])
 def test_undefined_reads_need_the_fluent_set(tmp_path, rules, effect, goal):
     domain = ("(define (domain u) (:requirements :adl :derived-predicates :numeric-fluents)"
-              " (:predicates (q) (r) (done)) (:functions (f)) %s"
+              " (:predicates (p) (q) (r) (done)) (:functions (f)) %s"
               " (:action use :parameters () :precondition (and) :effect %s)"
               " (:action set :parameters () :effect (assign (f) 10)))" % (rules, effect))
     d, p = _pair(tmp_path, domain,
-                 "(define (problem u) (:domain u) (:init) (:goal %s))" % goal)
+                 "(define (problem u) (:domain u) (:init (p)) (:goal %s))" % goal)
     dp = DomainProblem(d, p)
     assert ("#undefined", "r") in State.from_problem(dp).atoms
     assert not validate_plan(dp, parse_plan("(use)\n")).valid
@@ -218,6 +222,19 @@ def test_undefined_reads_need_the_fluent_set(tmp_path, rules, effect, goal):
         plan = get(name).solve(dp)
         text = "".join("(%s)\n" % n for n, _ in plan.action_names())
         assert len(plan) == 2 and validate_plan(dp, parse_plan(text)).valid
+
+
+@pytest.mark.parametrize("rules", [
+    "(:derived (q) (<= (f) 5)) (:derived (r) (or (p) (q)))",
+    "(:derived (q) (<= (f) 5)) (:derived (r) (p)) (:derived (r) (q))",
+])
+def test_a_true_body_before_an_undefined_one_settles_it(tmp_path, rules):
+    """Review on #205, the VAL controls: the empty plan is valid."""
+    domain = ("(define (domain u) (:requirements :adl :derived-predicates :numeric-fluents)"
+              " (:predicates (p) (q) (r)) (:functions (f)) %s)" % rules)
+    d, p = _pair(tmp_path, domain, "(define (problem u) (:domain u) (:init (p)) (:goal (r)))")
+    dp = DomainProblem(d, p)
+    assert validate_plan(dp, []).valid and len(get("bfs").solve(dp)) == 0
 
 
 def test_undefined_markers_are_not_serialized(tmp_path):

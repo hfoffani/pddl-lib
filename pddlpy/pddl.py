@@ -1804,16 +1804,19 @@ class DomainProblem():
                     else:
                         rest.append((head, body))
                 pending = rest
-            # what is left is false, or undefined: a body that reads a fluent
-            # with no value marks its head, so readers are undefined too, in
-            # any rule order and through recursion
+            # VAL decides a derived atom on demand, trying its rules in
+            # written order: undefined if that reads a fluent with no value
+            # or an undefined atom before a true body, even when a later
+            # body holds. Marks only grow, so repeat until stable.
+            bodies: Dict[GroundAtom, List[Condition]] = {}
+            for head, body in stratum:
+                bodies.setdefault(head, []).append(body)
             changed = True
             while changed:
                 changed = False
-                for head, body in pending:
+                for head, alternatives in bodies.items():
                     mark = undefined_marker(head)
-                    if mark not in out and head not in out \
-                            and holds3(body, out, fluents) is None:
+                    if mark not in out and holds3(Or(alternatives), out, fluents) is None:
                         out.add(mark)
                         changed = True
         return frozenset(out)
