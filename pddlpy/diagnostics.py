@@ -17,7 +17,18 @@ from typing import Any, Dict, Iterator, List, Set, Tuple
 
 from pddlpy._vendor.antlr4 import CommonTokenStream
 from pddlpy._vendor.antlr4.error.ErrorListener import ErrorListener
-from pddlpy.pddl import DomainProblem, source_stream
+from pddlpy.pddl import (
+    And,
+    Condition,
+    DomainProblem,
+    Equality,
+    Lit,
+    Not,
+    NumericCond,
+    Or,
+    _Quantifier,
+    source_stream,
+)
 from pddlpy.pddlLexer import pddlLexer
 from pddlpy.pddlParser import pddlParser
 from pddlpy.planning import (
@@ -28,6 +39,7 @@ from pddlpy.planning import (
     validate_durative_actions,
     validate_requirements,
 )
+from pddlpy.planning.state import _expr_fluents
 
 
 class _CollectingErrorListener(ErrorListener):
@@ -101,6 +113,29 @@ def _issue(severity: str, check: str, message: str) -> Dict[str, str]:
     return {"severity": severity, "check": check, "message": message}
 
 
+def _free_variables(c: Condition, bound: frozenset = frozenset()) -> Iterator[str]:
+    """The ``?variables`` of a goal tree no quantifier binds (#138)."""
+    if isinstance(c, Lit):
+        terms: List[str] = list(c.atom.predicate[1:])
+    elif isinstance(c, Equality):
+        terms = [c.left, c.right]
+    elif isinstance(c, NumericCond):
+        terms = [t for f in _expr_fluents(c.constraint.lhs) for t in f[1:]]
+        terms += [t for f in _expr_fluents(c.constraint.rhs) for t in f[1:]]
+    elif isinstance(c, Not):
+        yield from _free_variables(c.child, bound)
+        return
+    elif isinstance(c, (And, Or)):
+        for child in c.children:
+            yield from _free_variables(child, bound)
+        return
+    else:
+        assert isinstance(c, _Quantifier)
+        yield from _free_variables(c.body, bound | frozenset(c.varlist))
+        return
+    yield from (t for t in terms if t.startswith("?") and t not in bound)
+
+
 def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
     """Validate a domain/problem pair; returns ``{"valid": bool, "issues": [...]}``.
 
@@ -141,11 +176,11 @@ def diagnose(domainfile: str, problemfile: str) -> Dict[str, Any]:
     for where, atoms in ((":init", _init_atoms(dp)), (":goal", dp.goals())):
         for atom in atoms:
             for term in atom_tuple(atom)[1:]:
-                # in a quantified goal (#138) a ?variable is bound, not an
-                # object; in a positive conjunction it is free, and an error
-                bound = term.startswith("?") and not dp.problem.simple_goal
-                if term not in objects and not bound:
+                # ?variables: only the free ones are errors, below
+                if term not in objects and not term.startswith("?"):
                     unknown.setdefault(term, set()).add(where)
+    for var in _free_variables(dp.problem.goal):
+        unknown.setdefault(var, set()).add(":goal")
     for term in sorted(unknown):
         issues.append(_issue(
             "error", "unknown_object",

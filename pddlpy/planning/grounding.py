@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Iterator, List, Tuple
 
-from .state import State
+from .state import State, goal_holds
 
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem, Operator
@@ -44,4 +44,4 @@ class GroundedTask:
 
     def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""
-        return self.goal.holds(state.atoms, state.fluents)
+        return goal_holds(self.goal, state)
