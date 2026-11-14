@@ -36,6 +36,7 @@ htmlcov/
 # AI
 .claude/
 e2e/llm/transcripts/*.md
+e2e/llm/results/
 
 
 # local secrets

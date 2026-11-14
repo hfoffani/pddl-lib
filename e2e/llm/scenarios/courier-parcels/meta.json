@@ -1,0 +1,2 @@
+{"optimal_cost": 27, "planner": "ucs",
+ "source": "Courier (#99) scaled up: 12 places, 28 one-way roads, 3 pickup-and-delivery parcels, return to depot. ucs = 27; astar (unit-cost h) returns 30."}

@@ -1,0 +1,2 @@
+{"optimal_cost": 2, "planner": "ucs",
+ "source": "After IPC-2014 Maintenance (aircraft maintenance scheduling; set cover). Greedy trap built in. ucs = 2; astar (goal count, not admissible here) returns 3."}

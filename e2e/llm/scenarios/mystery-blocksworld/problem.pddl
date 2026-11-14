@@ -1,0 +1,11 @@
+;; The 7-block instance (blocks: e<-b<-g<-a, f<-c, d  ->  one tower a..g)
+;; under the mystery vocabulary.
+(define (problem mystery-7)
+  (:domain mystery)
+  (:objects a b c d e f g - object)
+  (:init (harmony)
+    (planet e) (craves b e) (craves g b) (craves a g) (province a)
+    (planet f) (craves c f) (province c)
+    (planet d) (province d))
+  (:goal (and (craves b a) (craves c b) (craves d c)
+              (craves e d) (craves f e) (craves g f))))

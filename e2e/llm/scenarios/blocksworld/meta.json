@@ -1,0 +1,2 @@
+{"optimal_cost": 18, "planner": "astar",
+ "source": "IPC Blocksworld (4-op), 8 blocks. PlanBench (Valmeekam et al. 2023) family. astar (goal count, admissible here) = ucs = 18."}
