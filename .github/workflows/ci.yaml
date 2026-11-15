@@ -28,15 +28,19 @@ jobs:
       - name: Coverage gate (100%)
         run: uv run pytest -q --cov=pddlpy --cov-fail-under=100 --cov-report=term --cov-report=xml
       # One upload per run: the newest Python. The gate above is the check;
-      # Codecov is the report, so its outages never fail CI.
+      # Codecov is the report, so its outages never fail CI
+      # (continue-on-error). It also runs when the gate fails, so the drop
+      # reaches Codecov. fail_ci_if_error makes the wrapper stop before it
+      # runs a CLI that fails verification.
       - name: Upload coverage to Codecov
-        if: matrix.python-version == '3.14'
+        if: always() && matrix.python-version == '3.14' && hashFiles('coverage.xml') != ''
+        continue-on-error: true
         # third-party action that receives a secret: pinned to a commit
         uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
-          fail_ci_if_error: false
+          fail_ci_if_error: true
       - name: Lint
         run: make lint
       - name: Typecheck
