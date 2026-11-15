@@ -23,14 +23,19 @@ TOTAL_COST = ("total-cost",)
 def action_cost(operator: "Operator", state: "State") -> float:
     """The cost of applying ``operator`` in ``state``.
 
-    Sums the ``(increase (total-cost) expr)`` effects (each ``expr`` evaluated
-    in the current state). An action with no ``total-cost`` effect costs 0.0
+    Sums the ``(increase (total-cost) expr)`` effects, conditional ones whose
+    guard holds included (each ``expr`` evaluated in the current state). An action with no ``total-cost`` effect costs 0.0
     when the state tracks ``total-cost``, as ``plan_cost`` counts it (#218),
     and 1.0 otherwise, so cost-aware search degrades to unit cost.
     """
     total = 0.0
     found = False
-    for eff in operator.effect_num:
+    effects = list(operator.effect_num)
+    # conditional effects whose guard holds, as State.apply fires them
+    for ce in getattr(operator, "conditional_effects", ()):
+        if ce.condition.holds(state.atoms, state.fluents):
+            effects.extend(ce.num)
+    for eff in effects:
         if eff.head.head == TOTAL_COST and eff.op == "increase":
             total += eff.expr.value(state.fluents)
             found = True
