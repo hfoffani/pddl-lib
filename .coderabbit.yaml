@@ -36,6 +36,11 @@ reviews:
         pddlpy._vendor.antlr4, never antlr4. Python 3.11+. Public API
         (DomainProblem and its object model) is stable through 1.x; JSON output
         changes must be additive.
+    - path: "pyproject.toml"
+      instructions: >-
+        The runtime `dependencies` array in [project] must stay empty (the
+        ANTLR runtime is vendored). The optional `mcp` extra and the `dev`
+        dependency group may change.
     - path: "tests/**"
       instructions: >-
         The CI gate requires 100% coverage. Prefer pytest-style tests;
