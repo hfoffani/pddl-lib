@@ -1,5 +1,8 @@
 ## pddl-lib ##
 
+[![codecov](https://codecov.io/gh/hfoffani/pddl-lib/graph/badge.svg?branch=main)](https://codecov.io/gh/hfoffani/pddl-lib)
+[![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/hfoffani/pddl-lib?label=CodeRabbit%20Reviews&labelColor=171717&color=FF570A)](https://coderabbit.ai)
+
 pddl-py (`pip install pddlpy`) is a PDDL toolkit for Python. It parses PDDL
 domain and problem files with an ANTLR 4 grammar, builds an object model,
 checks the files for common mistakes, and solves them with small reference
