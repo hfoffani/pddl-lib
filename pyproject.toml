@@ -81,6 +81,7 @@ dev = [
     "ruff>=0.6.0",
     "mypy>=1.11.0",
     "mcp>=2.3,<3",
+    "mutmut>=3.8",
 ]
 
 [tool.pytest.ini_options]
@@ -89,6 +90,15 @@ python_files = ["test.py", "test_*.py"]
 # Oracle checks need external tools (#153): run them with `make oracle`.
 addopts = "-m 'not oracle'"
 markers = ["oracle: compares pddlpy with Fast Downward / VAL / INVAL"]
+
+# Mutation testing (`make mutmut`): the plan validator and solve verdicts
+# first; each surviving mutant is a behavior no test pins down.
+[tool.mutmut]
+source_paths = ["pddlpy/"]
+only_mutate = ["pddlpy/planning/validation.py", "pddlpy/planning/solving.py"]
+# tests that spawn a Python subprocess cannot run in mutmut's forked workers
+pytest_add_cli_args_test_selection = ["tests/", "-k", "not stdio and not python2_builtin"]
+also_copy = ["tests/", "examples/", "examples-pddl/", "skills/", "docs/", "README.md", "pyproject.toml"]
 
 [tool.coverage.run]
 source = ["pddlpy"]
