@@ -6,6 +6,9 @@ reviews:
   poem: false
   review_status: true
   collapse_walkthrough: true
+  # Approve when no blocking findings remain; request changes otherwise.
+  auto_approvals:
+    enabled: true
   auto_review:
     enabled: true
     drafts: false
