@@ -399,10 +399,15 @@ def test_solvability_agrees_with_fd(domain, problem):
 
 
 def _optimal(domain, problem, planner):
-    """``(plan, tracks total-cost)`` from ``planner``, or the refusal."""
+    """``(plan, ucs and FD minimize different things)`` from ``planner``, or
+    the refusal. FD uses action costs only under a total-cost metric; ucs
+    whenever the problem tracks total-cost."""
     dp = DomainProblem(domain, problem)
+    tracks = TOTAL_COST in State.from_problem(dp).fluents
+    metric = dp.metric()
+    by_cost = bool(metric) and metric[0] == "minimize" and "total-cost" in metric[1]
     try:
-        return get(planner).solve(dp), TOTAL_COST in State.from_problem(dp).fluents
+        return get(planner).solve(dp), tracks and not by_cost
     except PlannerError as exc:
         return exc, False
 
@@ -429,14 +434,18 @@ def test_optimal_cost_agrees_with_fd(domain, problem, planner):
     reason, result = _optimal_outcome(domain, problem, planner)
     if reason:
         pytest.skip(reason)
-    plan, tracks_cost = result
+    plan, objectives_differ = result
     if isinstance(plan, PlannerError):
         pytest.skip("pddlpy refuses: %s" % plan)
-    if planner == "ucs" and unit and tracks_cost:
-        pytest.skip("FD ignored total-cost (no cost metric); ucs minimizes it")
+    if planner == "ucs" and objectives_differ:
+        pytest.skip("FD ignores total-cost without a cost metric; ucs minimizes it")
     assert plan is not None, "FD found a plan of cost %s, %s none" % (optimum, planner)
-    mine = plan.cost if planner == "ucs" else len(plan)
-    assert mine == pytest.approx(optimum), "%s %s, FD optimum %s" % (planner, mine, optimum)
+    if planner == "ucs":
+        # ucs sums float costs; no relative tolerance, so a dearer plan fails
+        assert plan.cost == pytest.approx(optimum, rel=0, abs=1e-6), \
+            "ucs %s, FD optimum %s" % (plan.cost, optimum)
+    else:
+        assert len(plan) == optimum, "%s %s, FD optimum %s" % (planner, len(plan), optimum)
 
 
 @pytest.mark.parametrize("plan", fixtures(), ids=lambda p: os.path.relpath(p, IPC))
