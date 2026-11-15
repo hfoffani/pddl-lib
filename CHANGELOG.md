@@ -78,6 +78,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   by the most goal atoms one action adds (conditional adds included; every
   goal atom with derived predicates), so it finds a plan with the fewest
   actions, like `bfs`. `gbfs` keeps plain goal-count.
+- **`ucs` minimized a different cost than it reported** (#218): an action
+  with no `(increase (total-cost) ...)` effect cost 1 in the search but 0 in
+  `Plan.cost`, so under `(:metric minimize (total-cost))` it could return a
+  dearer plan. It now costs 0 whenever the problem tracks `total-cost`; unit
+  cost stays the fallback without it.
 - **Obsolete and unsupported `:requirements` keys were syntax errors** (#208):
   `:domain-axioms` was lexed as `:domain` plus junk. The obsolete PDDL 1.2
   keys (`:domain-axioms`, `:subgoals-through-axioms`, `:safety-constraints`,

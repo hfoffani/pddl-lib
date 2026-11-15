@@ -63,6 +63,26 @@ def test_action_cost_defaults_to_one_without_total_cost():
     assert action_cost(op, state) == 1.0
 
 
+def test_ucs_charges_nothing_for_actions_without_cost_effect(tmp_path):
+    # #218: f1, f2 add no total-cost, so they cost 0 under the metric; the
+    # search used to charge 1 each and prefer `paid` (1.5).
+    (tmp_path / "d.pddl").write_text(
+        "(define (domain zc) (:requirements :strips :action-costs)\n"
+        " (:predicates (mid) (g)) (:functions (total-cost))\n"
+        " (:action f1 :parameters () :precondition () :effect (mid))\n"
+        " (:action f2 :parameters () :precondition (mid) :effect (g))\n"
+        " (:action paid :parameters () :precondition ()"
+        " :effect (and (g) (increase (total-cost) 1.5))))")
+    (tmp_path / "p.pddl").write_text(
+        "(define (problem p) (:domain zc) (:init (= (total-cost) 0)) (:goal (g))"
+        " (:metric minimize (total-cost)))")
+    dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
+    plan = UniformCostPlanner().solve(dp)
+    assert [op.operator_name for op in plan] == ["f1", "f2"]
+    assert plan.cost == 0
+    assert action_cost(next(dp.ground_operator("f1")), State.from_problem(dp)) == 0.0
+
+
 def test_plan_cost_helper():
     goal_with_cost = State([("at", "c")], {TOTAL_COST: 7.0})
     assert plan_cost(goal_with_cost, [1, 2]) == 7.0

@@ -24,8 +24,9 @@ def action_cost(operator: "Operator", state: "State") -> float:
     """The cost of applying ``operator`` in ``state``.
 
     Sums the ``(increase (total-cost) expr)`` effects (each ``expr`` evaluated
-    in the current state). Actions with no ``total-cost`` effect cost 1.0, so
-    cost-aware search degrades gracefully to unit cost.
+    in the current state). An action with no ``total-cost`` effect costs 0.0
+    when the state tracks ``total-cost``, as ``plan_cost`` counts it (#218),
+    and 1.0 otherwise, so cost-aware search degrades to unit cost.
     """
     total = 0.0
     found = False
@@ -33,7 +34,9 @@ def action_cost(operator: "Operator", state: "State") -> float:
         if eff.head.head == TOTAL_COST and eff.op == "increase":
             total += eff.expr.value(state.fluents)
             found = True
-    return total if found else 1.0
+    if found:
+        return total
+    return 0.0 if TOTAL_COST in state.fluents else 1.0
 
 
 def plan_cost(goal_state: "State", actions: Sequence["Operator"]) -> float:
