@@ -5,6 +5,15 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 
 ## [Unreleased]
 
+### Quality
+- **Mutation testing**: `make mutmut` mutates the plan validator and the
+  solve verdicts (`validation.py`, `solving.py`) and fails if any mutant
+  survives; CI runs it on every pull request. Getting there added tests for
+  every failure report (now a golden file, `tests/corpus/validation/reports.json`)
+  and for happening semantics: merged deletes, mutex reads of guards,
+  comparisons and effect expressions, timed literals, undefined fluents in
+  goals and preferences.
+
 ## [1.3.0] - 2026-11-15
 
 Plan validation and simulation, solve verdicts, zero runtime dependencies,

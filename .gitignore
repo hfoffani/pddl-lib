@@ -46,3 +46,5 @@ e2e/llm/transcripts/*.md
 .corpora/
 # oracle builds, by scripts/build-oracles.sh (#153)
 .oracles/
+mutants/
+mutmut.log

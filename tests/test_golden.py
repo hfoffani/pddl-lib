@@ -8,7 +8,7 @@ import json
 import os
 
 import pytest
-from golden import IPC, dumps, golden_path, pairs, snapshot
+from golden import IPC, REPORTS, dumps, golden_path, pairs, snapshot, validation_reports
 
 from pddlpy import DomainProblem
 
@@ -51,3 +51,10 @@ def test_golden(domain, problem):
     # Round-trip through JSON so tuples and lists compare alike.
     actual = json.loads(dumps(snapshot(domain, problem)))
     assert actual == expected, "golden mismatch; if intended, run `make golden`"
+
+
+def test_validation_reports_match_golden():
+    with open(REPORTS, encoding="utf-8") as f:
+        expected = f.read()
+    assert dumps(validation_reports()) == expected, (
+        "validate_plan reports changed; if intended, run `make golden` and review the diff")

@@ -5,6 +5,7 @@ The verdicts in tests/validation_cases.py are VAL's (tests/test_oracle.py).
 """
 import json
 import os
+import re
 
 import pytest
 from validation_cases import ADL, CASES, TEMPORAL
@@ -50,10 +51,18 @@ def test_parse_plan_formats():
     assert str(PlanStep("go", ("x", "y"), 1.0)) == "(go x y)"
 
 
-@pytest.mark.parametrize("text", ["move a b\n", "()\n", "1.2.3: (a)\n", "(a) (b)\n"])
-def test_parse_plan_rejects(text):
-    with pytest.raises(PlanValidationError, match="plan line 1"):
+@pytest.mark.parametrize("text,why", [
+    ("move a b\n", "is not a step"), ("()\n", "is not a step"),
+    ("1.2.3: (a)\n", "has a bad number"), ("(a) (b)\n", "is not a step"),
+])
+def test_parse_plan_rejects(text, why):
+    with pytest.raises(PlanValidationError,
+                       match=r"^plan line 1 %s: %s$" % (why, re.escape(repr(text.strip())))):
         parse_plan(text)
+
+
+def test_parse_plan_keeps_text_before_the_first_semicolon():
+    assert parse_plan("(a) ; one ; two\n") == [PlanStep("a", ())]
 
 
 def test_plan_from_json_forms():
@@ -67,12 +76,12 @@ def test_plan_from_json_forms():
 
 
 @pytest.mark.parametrize("data,match", [
-    ({"plan": []}, "list of steps"),
-    ("x", "list of steps"),
-    ([{"args": []}], "step 0 has no 'action'"),
-    (["a"], "step 0 has no 'action'"),
-    ([{"action": "a", "args": "x"}], "'args' is not"),
-    ([{"action": "a", "start": "soon"}], "bad number"),
+    ({"plan": []}, "^a JSON plan is a list of steps or an object with 'steps'$"),
+    ("x", "^a JSON plan is a list of steps or an object with 'steps'$"),
+    ([{"args": []}], "^JSON plan step 0 has no 'action' name$"),
+    (["a"], "^JSON plan step 0 has no 'action' name$"),
+    ([{"action": "a", "args": "x"}], "^JSON plan step 0: 'args' is not a list or object$"),
+    ([{"action": "a", "start": "soon"}], "^JSON plan step 0 has a bad number$"),
 ])
 def test_plan_from_json_rejects(data, match):
     with pytest.raises(PlanValidationError, match=match):
@@ -82,7 +91,7 @@ def test_plan_from_json_rejects(data, match):
 def test_load_plan_detects_the_form():
     assert load_plan('  [{"action": "a"}]') == [PlanStep("a", ())]
     assert load_plan("(a)") == [PlanStep("a", ())]
-    with pytest.raises(PlanValidationError, match="not valid JSON"):
+    with pytest.raises(PlanValidationError, match="^plan is not valid JSON: Expecting"):
         load_plan("{oops")
 
 
@@ -218,7 +227,7 @@ def test_refuses_syntax_errors(tmp_path):
     dp = _pair(tmp_path, "(define (domain d) (:requirements :strips :no-such-requirement)"
                " (:predicates (p)) (:action a :parameters () :effect (p)))",
                "(define (problem p) (:domain d) (:init) (:goal (p)))")
-    with pytest.raises(PlanValidationError, match="syntax errors"):
+    with pytest.raises(PlanValidationError, match=r"^plan validation: .*syntax errors"):
         validate_plan(dp, [])
 
 
@@ -226,7 +235,8 @@ def test_refuses_unsupported_requirements(tmp_path):
     dp = _pair(tmp_path, "(define (domain d) (:requirements :strips :semantics)"
                " (:predicates (p)) (:action a :parameters () :effect (p)))",
                "(define (problem p) (:domain d) (:init) (:goal (p)))")
-    with pytest.raises(PlanValidationError, match="semantics"):
+    with pytest.raises(PlanValidationError,
+                       match=r"^plan validation does not support \[':semantics'\]$"):
         simulate(dp, [])
 
 
@@ -257,7 +267,9 @@ def test_refuses_durative_actions_the_model_does_not_capture(tmp_path, da):
                " %s))" % da,
                "(define (problem p) (:domain d) (:init (p)) (:goal (q)))")
     assert not dp.domain.durative_operators["a"].simple
-    with pytest.raises(PlanValidationError, match="#139"):
+    with pytest.raises(PlanValidationError, match=(
+            r"^plan validation supports only durative actions with numeric duration "
+            r"bounds and literal conditions and effects; a has more \(#139, #143\)$")):
         validate_plan(dp, parse_plan("0: (a) [2]\n"))
 
 

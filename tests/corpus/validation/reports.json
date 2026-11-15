@@ -1,0 +1,3642 @@
+{
+ "active-branch-mutex": {
+  "failure": {
+   "action": "(maybe a)",
+   "kind": "mutex",
+   "message": "step 2 (maybe a) at time 1: interferes with step 3 (unlit a) over (lit a) (separate them in time)",
+   "state": {
+    "atoms": [
+     [
+      "lamp"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 2,
+   "time": 1.0,
+   "unmet": [
+    "(lit a)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(maybe a)",
+    "kind": "mutex",
+    "message": "step 2 (maybe a) at time 1: interferes with step 3 (unlit a) over (lit a) (separate them in time)",
+    "state": {
+     "atoms": [
+      [
+       "lamp"
+      ],
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 2,
+    "time": 1.0,
+    "unmet": [
+     "(lit a)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "lamp"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(lampon)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "lamp"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 0.0
+    }
+   ]
+  },
+  "valid": false
+ },
+ "additive-concurrent": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 3.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(h1 a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 3.0
+      }
+     },
+     "step": 1,
+     "time": 0.0
+    },
+    {
+     "action": "(h2 a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 3.0
+      }
+     },
+     "step": 2,
+     "time": 0.0
+    },
+    {
+     "action": "(need3 a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 3.0
+      }
+     },
+     "step": 3,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "additive-one-action": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 3.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(h12 a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 3.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    },
+    {
+     "action": "(need3 a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 3.0
+      }
+     },
+     "step": 2,
+     "time": 2.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "additive-sequential": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 3.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(h1 a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 1.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    },
+    {
+     "action": "(h2 a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 3.0
+      }
+     },
+     "step": 2,
+     "time": 2.0
+    },
+    {
+     "action": "(need3 a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 3.0
+      }
+     },
+     "step": 3,
+     "time": 3.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "and-guard-evaluated": {
+  "failure": {
+   "action": "(lguard a)",
+   "kind": "undefined-fluent",
+   "message": "step 1 (lguard a) at time 1: reads fluents with no value",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 1,
+   "time": 1.0,
+   "unmet": [
+    "(g)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(lguard a)",
+    "kind": "undefined-fluent",
+    "message": "step 1 (lguard a) at time 1: reads fluents with no value",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 1,
+    "time": 1.0,
+    "unmet": [
+     "(g)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "and-guard-numeric-first": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(nguard a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "and-guard-short-circuit": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(sguard a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "conditional-effect": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ],
+     [
+      "p",
+      "c"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "g": 1.0,
+     "h": 1.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(light a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "lit",
+        "a"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    },
+    {
+     "action": "(pick a c)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "p",
+        "a"
+       ],
+       [
+        "p",
+        "c"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 1.0
+      }
+     },
+     "step": 2,
+     "time": 2.0
+    },
+    {
+     "action": "(inc c)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ],
+       [
+        "p",
+        "c"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "g": 1.0,
+       "h": 1.0
+      }
+     },
+     "step": 3,
+     "time": 3.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "division-by-zero": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(divpre a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "division-skipped": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(divskip a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "duration-close": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ],
+     [
+      "q"
+     ],
+     [
+      "r"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": [
+    {
+     "action": "(a)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 0.0
+    },
+    {
+     "action": "(a)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 2.0099
+    },
+    {
+     "action": "(b)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 3.0
+    },
+    {
+     "action": "(b)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ],
+       [
+        "r"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 6.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "duration-off": {
+  "failure": {
+   "action": "(a)",
+   "kind": "duration",
+   "message": "step 1 (a): duration 2.02, but a takes 2",
+   "state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "step": 1,
+   "time": 0.0,
+   "unmet": []
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(a)",
+    "kind": "duration",
+    "message": "step 1 (a): duration 2.02, but a takes 2",
+    "state": {
+     "atoms": [
+      [
+       "p"
+      ]
+     ],
+     "fluents": {}
+    },
+    "step": 1,
+    "time": 0.0,
+    "unmet": []
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "duration-short": {
+  "failure": {
+   "action": "(a)",
+   "kind": "duration",
+   "message": "step 1 (a): duration 1.99, but a takes 2",
+   "state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "step": 1,
+   "time": 0.0,
+   "unmet": []
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(a)",
+    "kind": "duration",
+    "message": "step 1 (a): duration 1.99, but a takes 2",
+    "state": {
+     "atoms": [
+      [
+       "p"
+      ]
+     ],
+     "fluents": {}
+    },
+    "step": 1,
+    "time": 0.0,
+    "unmet": []
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "empty": {
+  "failure": {
+   "action": null,
+   "kind": "goal",
+   "message": "goal not satisfied after 0 steps",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": null,
+   "time": null,
+   "unmet": [
+    "(done)"
+   ]
+  },
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "end-condition": {
+  "failure": {
+   "action": "(b)",
+   "kind": "end-condition",
+   "message": "step 2 (b) at time 5.5: at end conditions not satisfied",
+   "state": {
+    "atoms": [
+     [
+      "p"
+     ],
+     [
+      "q"
+     ],
+     [
+      "s"
+     ]
+    ],
+    "fluents": {}
+   },
+   "step": 2,
+   "time": 5.5,
+   "unmet": [
+    "(not (s))"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(b)",
+    "kind": "end-condition",
+    "message": "step 2 (b) at time 5.5: at end conditions not satisfied",
+    "state": {
+     "atoms": [
+      [
+       "p"
+      ],
+      [
+       "q"
+      ],
+      [
+       "s"
+      ]
+     ],
+     "fluents": {}
+    },
+    "step": 2,
+    "time": 5.5,
+    "unmet": [
+     "(not (s))"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ],
+     [
+      "q"
+     ],
+     [
+      "s"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": [
+    {
+     "action": "(a)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 0.0
+    },
+    {
+     "action": "(a)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 2.0
+    },
+    {
+     "action": "(b)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 2.5
+    },
+    {
+     "action": "(c)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ],
+       [
+        "s"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 3,
+     "time": 3.0
+    },
+    {
+     "action": "(c)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ],
+       [
+        "s"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 3,
+     "time": 4.0
+    }
+   ]
+  },
+  "valid": false
+ },
+ "false-guard-vs-write": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "lamp"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "g": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(maybe a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "lamp"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 0.0
+    },
+    {
+     "action": "(lampon)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "lamp"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 2,
+     "time": 0.0
+    },
+    {
+     "action": "(asg a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "lamp"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "g": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 3,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "inactive-branch-no-mutex": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "g": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(maybe a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 0.0
+    },
+    {
+     "action": "(unlit a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 2,
+     "time": 0.0
+    },
+    {
+     "action": "(asg a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "g": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 3,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "inactive-branch-undefined": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(wasg a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "increase-undefined": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "g": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(inc a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "g": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "instant-in-temporal": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ],
+     [
+      "q"
+     ],
+     [
+      "r"
+     ],
+     [
+      "s"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": [
+    {
+     "action": "(a)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 0.0
+    },
+    {
+     "action": "(a)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 2.0
+    },
+    {
+     "action": "(b)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 2.5
+    },
+    {
+     "action": "(b)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ],
+       [
+        "r"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 5.5
+    },
+    {
+     "action": "(tick)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ],
+       [
+        "r"
+       ],
+       [
+        "s"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 3,
+     "time": 6.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "invariant": {
+  "failure": {
+   "action": "(b)",
+   "kind": "invariant",
+   "message": "step 2 (b) at time 2.5: over all conditions broken",
+   "state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "step": 2,
+   "time": 2.5,
+   "unmet": [
+    "(q)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(b)",
+    "kind": "invariant",
+    "message": "step 2 (b) at time 2.5: over all conditions broken",
+    "state": {
+     "atoms": [
+      [
+       "p"
+      ]
+     ],
+     "fluents": {}
+    },
+    "step": 2,
+    "time": 2.5,
+    "unmet": [
+     "(q)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": [
+    {
+     "action": "(a)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 0.0
+    },
+    {
+     "action": "(a)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 2.0
+    },
+    {
+     "action": "(b)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 2.5
+    },
+    {
+     "action": "(k)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 3,
+     "time": 3.0
+    }
+   ]
+  },
+  "valid": false
+ },
+ "invariant-at-end": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ],
+     [
+      "r"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": [
+    {
+     "action": "(a)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 0.0
+    },
+    {
+     "action": "(a)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 2.0
+    },
+    {
+     "action": "(b)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 2.5
+    },
+    {
+     "action": "(k)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 3,
+     "time": 4.5
+    },
+    {
+     "action": "(b)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "r"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 5.5
+    },
+    {
+     "action": "(k)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "r"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 3,
+     "time": 5.5
+    }
+   ]
+  },
+  "valid": true
+ },
+ "mutex-add-delete": {
+  "failure": {
+   "action": "(a)",
+   "kind": "mutex",
+   "message": "step 1 (a) at time 2: interferes with step 2 (k) over (q) (separate them in time)",
+   "state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "step": 1,
+   "time": 2.0,
+   "unmet": [
+    "(q)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(a)",
+    "kind": "mutex",
+    "message": "step 1 (a) at time 2: interferes with step 2 (k) over (q) (separate them in time)",
+    "state": {
+     "atoms": [
+      [
+       "p"
+      ]
+     ],
+     "fluents": {}
+    },
+    "step": 1,
+    "time": 2.0,
+    "unmet": [
+     "(q)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": [
+    {
+     "action": "(a)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 0.0
+    },
+    {
+     "action": "(k)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": false
+ },
+ "mutex-atom": {
+  "failure": {
+   "action": "(light a)",
+   "kind": "mutex",
+   "message": "step 2 (light a) at time 2: interferes with step 3 (pick a c) over (lit a) (separate them in time)",
+   "state": {
+    "atoms": [
+     [
+      "lit",
+      "a"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 2,
+   "time": 2.0,
+   "unmet": [
+    "(lit a)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(light a)",
+    "kind": "mutex",
+    "message": "step 2 (light a) at time 2: interferes with step 3 (pick a c) over (lit a) (separate them in time)",
+    "state": {
+     "atoms": [
+      [
+       "lit",
+       "a"
+      ],
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 2,
+    "time": 2.0,
+    "unmet": [
+     "(lit a)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "lit",
+      "a"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(light a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "lit",
+        "a"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": false
+ },
+ "mutex-fluent": {
+  "failure": {
+   "action": "(asg a)",
+   "kind": "mutex",
+   "message": "step 1 (asg a) at time 0: interferes with step 2 (inc a) over (g) (separate them in time)",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 1,
+   "time": 0.0,
+   "unmet": [
+    "(g)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(asg a)",
+    "kind": "mutex",
+    "message": "step 1 (asg a) at time 0: interferes with step 2 (inc a) over (g) (separate them in time)",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 1,
+    "time": 0.0,
+    "unmet": [
+     "(g)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "nested-or-in-and": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(nnest a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "no-duration": {
+  "failure": {
+   "action": "(a)",
+   "kind": "duration",
+   "message": "step 1 (a): durative action a needs a [duration] (2)",
+   "state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "step": 1,
+   "time": 0.0,
+   "unmet": []
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(a)",
+    "kind": "duration",
+    "message": "step 1 (a): durative action a needs a [duration] (2)",
+    "state": {
+     "atoms": [
+      [
+       "p"
+      ]
+     ],
+     "fluents": {}
+    },
+    "step": 1,
+    "time": 0.0,
+    "unmet": []
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "not-and-numeric-first": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(nnot a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "numeric-precondition": {
+  "failure": {
+   "action": "(rd a)",
+   "kind": "precondition",
+   "message": "step 2 (rd a) at time 2: preconditions not satisfied",
+   "state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "g": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 2,
+   "time": 2.0,
+   "unmet": [
+    "(> (g) (- (* 2 (f)) (- 1)))"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(rd a)",
+    "kind": "precondition",
+    "message": "step 2 (rd a) at time 2: preconditions not satisfied",
+    "state": {
+     "atoms": [
+      [
+       "done"
+      ],
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "g": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 2,
+    "time": 2.0,
+    "unmet": [
+     "(> (g) (- (* 2 (f)) (- 1)))"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "g": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(asg a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "g": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": false
+ },
+ "numeric-read-vs-write": {
+  "failure": {
+   "action": "(need3 a)",
+   "kind": "mutex",
+   "message": "step 2 (need3 a) at time 2: interferes with step 3 (h1 a) over (h) (separate them in time)",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 3.0
+    }
+   },
+   "step": 2,
+   "time": 2.0,
+   "unmet": [
+    "(h)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(need3 a)",
+    "kind": "mutex",
+    "message": "step 2 (need3 a) at time 2: interferes with step 3 (h1 a) over (h) (separate them in time)",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 3.0
+     }
+    },
+    "step": 2,
+    "time": 2.0,
+    "unmet": [
+     "(h)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 3.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(h12 a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 3.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": false
+ },
+ "or-guard-numeric-first": {
+  "failure": {
+   "action": "(oorder a)",
+   "kind": "undefined-fluent",
+   "message": "step 1 (oorder a) at time 1: reads fluents with no value",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 1,
+   "time": 1.0,
+   "unmet": [
+    "(g)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(oorder a)",
+    "kind": "undefined-fluent",
+    "message": "step 1 (oorder a) at time 1: reads fluents with no value",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 1,
+    "time": 1.0,
+    "unmet": [
+     "(g)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "or-guard-short-circuit": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "lit",
+      "a"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(oguard a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "lit",
+        "a"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "or-precondition-short-circuit": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(opre a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "out-of-order": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ],
+     [
+      "q"
+     ],
+     [
+      "r"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": [
+    {
+     "action": "(a)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 0.0
+    },
+    {
+     "action": "(a)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 2.0
+    },
+    {
+     "action": "(b)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 2.01
+    },
+    {
+     "action": "(b)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ],
+       [
+        "r"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 5.01
+    }
+   ]
+  },
+  "valid": true
+ },
+ "past-epsilon": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ],
+     [
+      "q"
+     ],
+     [
+      "r"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": [
+    {
+     "action": "(a)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 0.0
+    },
+    {
+     "action": "(a)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 2.0
+    },
+    {
+     "action": "(b)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 2.0011
+    },
+    {
+     "action": "(b)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ],
+       [
+        "r"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 5.0011
+    }
+   ]
+  },
+  "valid": true
+ },
+ "same-time": {
+  "failure": {
+   "action": "(b)",
+   "kind": "precondition",
+   "message": "step 2 (b) at time 2: preconditions not satisfied",
+   "state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "step": 2,
+   "time": 2.0,
+   "unmet": [
+    "(q)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(b)",
+    "kind": "precondition",
+    "message": "step 2 (b) at time 2: preconditions not satisfied",
+    "state": {
+     "atoms": [
+      [
+       "p"
+      ]
+     ],
+     "fluents": {}
+    },
+    "step": 2,
+    "time": 2.0,
+    "unmet": [
+     "(q)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": [
+    {
+     "action": "(a)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 0.0
+    }
+   ]
+  },
+  "valid": false
+ },
+ "separated": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ],
+     [
+      "q"
+     ],
+     [
+      "r"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": [
+    {
+     "action": "(a)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 0.0
+    },
+    {
+     "action": "(a)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 2.0
+    },
+    {
+     "action": "(b)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 2.01
+    },
+    {
+     "action": "(b)",
+     "event": "end",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ],
+       [
+        "q"
+       ],
+       [
+        "r"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 2,
+     "time": 5.01
+    }
+   ]
+  },
+  "valid": true
+ },
+ "simultaneous": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "lit",
+      "c"
+     ],
+     [
+      "p",
+      "a"
+     ],
+     [
+      "p",
+      "c"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "g": 1.0,
+     "h": 1.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(light a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "lit",
+        "a"
+       ],
+       [
+        "lit",
+        "c"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    },
+    {
+     "action": "(light c)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "lit",
+        "a"
+       ],
+       [
+        "lit",
+        "c"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 2,
+     "time": 1.0
+    },
+    {
+     "action": "(pick a c)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "lit",
+        "c"
+       ],
+       [
+        "p",
+        "a"
+       ],
+       [
+        "p",
+        "c"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 1.0
+      }
+     },
+     "step": 3,
+     "time": 2.0
+    },
+    {
+     "action": "(inc c)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "lit",
+        "c"
+       ],
+       [
+        "p",
+        "a"
+       ],
+       [
+        "p",
+        "c"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "g": 1.0,
+       "h": 1.0
+      }
+     },
+     "step": 4,
+     "time": 3.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "true-guard-vs-write": {
+  "failure": {
+   "action": "(maybe a)",
+   "kind": "mutex",
+   "message": "step 2 (maybe a) at time 1: interferes with step 3 (lampoff) over (lamp) (separate them in time)",
+   "state": {
+    "atoms": [
+     [
+      "lamp"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 2,
+   "time": 1.0,
+   "unmet": [
+    "(lamp)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(maybe a)",
+    "kind": "mutex",
+    "message": "step 2 (maybe a) at time 1: interferes with step 3 (lampoff) over (lamp) (separate them in time)",
+    "state": {
+     "atoms": [
+      [
+       "lamp"
+      ],
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 2,
+    "time": 1.0,
+    "unmet": [
+     "(lamp)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "lamp"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(lampon)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "lamp"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 0.0
+    }
+   ]
+  },
+  "valid": false
+ },
+ "undefined-fluent": {
+  "failure": {
+   "action": "(low a)",
+   "kind": "undefined-fluent",
+   "message": "step 1 (low a) at time 1: reads fluents with no value",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 1,
+   "time": 1.0,
+   "unmet": [
+    "(g)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(low a)",
+    "kind": "undefined-fluent",
+    "message": "step 1 (low a) at time 1: reads fluents with no value",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 1,
+    "time": 1.0,
+    "unmet": [
+     "(g)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "undefined-guard": {
+  "failure": {
+   "action": "(gguard a)",
+   "kind": "undefined-fluent",
+   "message": "step 1 (gguard a) at time 1: reads fluents with no value",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 1,
+   "time": 1.0,
+   "unmet": [
+    "(g)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(gguard a)",
+    "kind": "undefined-fluent",
+    "message": "step 1 (gguard a) at time 1: reads fluents with no value",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 1,
+    "time": 1.0,
+    "unmet": [
+     "(g)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "undefined-in-unmet": {
+  "failure": {
+   "action": "(rd a)",
+   "kind": "precondition",
+   "message": "step 1 (rd a) at time 1: preconditions not satisfied; no value for (g)",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 1,
+   "time": 1.0,
+   "unmet": [
+    "(> (g) (- (* 2 (f)) (- 1)))"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(rd a)",
+    "kind": "precondition",
+    "message": "step 1 (rd a) at time 1: preconditions not satisfied; no value for (g)",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 1,
+    "time": 1.0,
+    "unmet": [
+     "(> (g) (- (* 2 (f)) (- 1)))"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "undefined-simultaneous": {
+  "failure": {
+   "action": "(low a)",
+   "kind": "undefined-fluent",
+   "message": "step 2 (low a) at time 0: reads fluents with no value",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 2,
+   "time": 0.0,
+   "unmet": [
+    "(g)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(low a)",
+    "kind": "undefined-fluent",
+    "message": "step 2 (low a) at time 0: reads fluents with no value",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 2,
+    "time": 0.0,
+    "unmet": [
+     "(g)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "unknown-action": {
+  "failure": {
+   "action": "(nope a)",
+   "kind": "unknown-action",
+   "message": "step 1 (nope a): the domain has no action 'nope'",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 1,
+   "time": null,
+   "unmet": []
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(nope a)",
+    "kind": "unknown-action",
+    "message": "step 1 (nope a): the domain has no action 'nope'",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 1,
+    "time": null,
+    "unmet": []
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "unknown-object": {
+  "failure": {
+   "action": "(asg zz)",
+   "kind": "unknown-object",
+   "message": "step 1 (asg zz): the problem has no object 'zz'",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 1,
+   "time": null,
+   "unmet": []
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(asg zz)",
+    "kind": "unknown-object",
+    "message": "step 1 (asg zz): the problem has no object 'zz'",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 1,
+    "time": null,
+    "unmet": []
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "unmet-disjunction": {
+  "failure": {
+   "action": "(pick a a)",
+   "kind": "precondition",
+   "message": "step 1 (pick a a) at time 1: preconditions not satisfied",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 1,
+   "time": 1.0,
+   "unmet": [
+    "(or (lit a) (lamp))",
+    "(not (= a a))"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(pick a a)",
+    "kind": "precondition",
+    "message": "step 1 (pick a a) at time 1: preconditions not satisfied",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 1,
+    "time": 1.0,
+    "unmet": [
+     "(or (lit a) (lamp))",
+     "(not (= a a))"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "untimed": {
+  "failure": {
+   "action": "(a)",
+   "kind": "duration",
+   "message": "step 1 (a): durative action a needs a [duration] (2)",
+   "state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "step": 1,
+   "time": null,
+   "unmet": []
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(a)",
+    "kind": "duration",
+    "message": "step 1 (a): durative action a needs a [duration] (2)",
+    "state": {
+     "atoms": [
+      [
+       "p"
+      ]
+     ],
+     "fluents": {}
+    },
+    "step": 1,
+    "time": null,
+    "unmet": []
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": []
+  },
+  "valid": false
+ },
+ "upper-case": {
+  "failure": null,
+  "simulation": {
+   "executed": true,
+   "failure": null,
+   "final_state": {
+    "atoms": [
+     [
+      "done"
+     ],
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "g": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": [
+    {
+     "action": "(asg a)",
+     "event": "action",
+     "state": {
+      "atoms": [
+       [
+        "done"
+       ],
+       [
+        "p",
+        "a"
+       ]
+      ],
+      "fluents": {
+       "f": 1.0,
+       "g": 1.0,
+       "h": 0.0
+      }
+     },
+     "step": 1,
+     "time": 1.0
+    }
+   ]
+  },
+  "valid": true
+ },
+ "within-epsilon": {
+  "failure": {
+   "action": "(b)",
+   "kind": "precondition",
+   "message": "step 2 (b) at time 2.001: preconditions not satisfied",
+   "state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "step": 2,
+   "time": 2.001,
+   "unmet": [
+    "(q)"
+   ]
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(b)",
+    "kind": "precondition",
+    "message": "step 2 (b) at time 2.001: preconditions not satisfied",
+    "state": {
+     "atoms": [
+      [
+       "p"
+      ]
+     ],
+     "fluents": {}
+    },
+    "step": 2,
+    "time": 2.001,
+    "unmet": [
+     "(q)"
+    ]
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p"
+     ]
+    ],
+    "fluents": {}
+   },
+   "trace": [
+    {
+     "action": "(a)",
+     "event": "start",
+     "state": {
+      "atoms": [
+       [
+        "p"
+       ]
+      ],
+      "fluents": {}
+     },
+     "step": 1,
+     "time": 0.0
+    }
+   ]
+  },
+  "valid": false
+ },
+ "wrong-type": {
+  "failure": {
+   "action": "(asg b)",
+   "kind": "type",
+   "message": "step 1 (asg b): b is not of type ta (parameter ?x)",
+   "state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "step": 1,
+   "time": null,
+   "unmet": []
+  },
+  "simulation": {
+   "executed": false,
+   "failure": {
+    "action": "(asg b)",
+    "kind": "type",
+    "message": "step 1 (asg b): b is not of type ta (parameter ?x)",
+    "state": {
+     "atoms": [
+      [
+       "p",
+       "a"
+      ]
+     ],
+     "fluents": {
+      "f": 1.0,
+      "h": 0.0
+     }
+    },
+    "step": 1,
+    "time": null,
+    "unmet": []
+   },
+   "final_state": {
+    "atoms": [
+     [
+      "p",
+      "a"
+     ]
+    ],
+    "fluents": {
+     "f": 1.0,
+     "h": 0.0
+    }
+   },
+   "trace": []
+  },
+  "valid": false
+ }
+}

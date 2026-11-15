@@ -95,7 +95,7 @@ def test_temporal_needs_concurrency_is_limit(tmp_path):
 def test_max_expansions(planner):
     dp = _dp("temporal-charge" if planner == "temporal" else "gripper")
     result = solve(dp, planner, max_expansions=1)
-    assert (result.status, result.plan) == (LIMIT, None)
+    assert (result.status, result.plan, result.validated) == (LIMIT, None, False)
     assert "stopped after 1 expansions" in result.message
     with pytest.raises(SearchLimitError):
         get(planner, max_expansions=1).solve(dp)
@@ -118,6 +118,7 @@ def test_unvalidated_when_the_validator_refuses(monkeypatch):
     monkeypatch.setattr(solving, "validate_plan", refuse)
     result = solve(_dp("gripper"), "bfs")
     assert result.status == SOLVED
+    assert result.plan is not None
     assert result.validated is False
     assert result.message == "plan not validated: cannot judge this"
 
@@ -133,5 +134,13 @@ class _Liar(Planner):
 
 def test_invalid_plan_is_an_error():
     register("liar", _Liar)
-    with pytest.raises(PlannerError, match="liar returned a plan that fails validation"):
+    with pytest.raises(PlannerError, match="^liar returned a plan that fails validation: "):
         solve(_dp("gripper"), "liar")
+
+
+def test_default_planner_is_astar(monkeypatch):
+    used = []
+    real_get = solving.get
+    monkeypatch.setattr(solving, "get", lambda name, **kw: used.append(name) or real_get(name, **kw))
+    solve(_dp("gripper"))
+    assert used == ["astar"]
