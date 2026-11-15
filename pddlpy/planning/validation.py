@@ -121,7 +121,7 @@ def parse_plan(text: str) -> List[PlanStep]:
     line."""
     steps = []
     for n, raw in enumerate(text.splitlines(), 1):
-        line = raw.split(";", 1)[0]
+        line = raw.split(";", 1)[0]  # pragma: no mutate (maxsplit: [0] is the same)
         if not line.strip():
             continue
         m = _LINE.match(line)
@@ -185,7 +185,7 @@ def _number(value: Any) -> Optional[float]:
         return None
     number = float(value)
     if not math.isfinite(number):
-        raise ValueError("not a finite number: %r" % value)
+        raise ValueError("not a finite number: %r" % value)  # pragma: no mutate (callers replace it)
     return number
 
 
@@ -270,7 +270,7 @@ def _expr_text(e: "Expr") -> str:
         return "(%s %s %s)" % (e.op, _expr_text(e.left), _expr_text(e.right))
     if isinstance(e, Neg):
         return "(- %s)" % _expr_text(e.operand)
-    return "%g" % e.value({})  # Num
+    return "%g" % e.value({})  # Num  # pragma: no mutate (%G: same for plain numbers)
 
 
 def _cond_text(c: Condition) -> str:
@@ -316,7 +316,7 @@ def _cond_reads(c: Optional[Condition]) -> Tuple[Set[GroundAtom], Set[GroundAtom
             fluents.update(_expr_fluents(k.constraint.lhs))
             fluents.update(_expr_fluents(k.constraint.rhs))
         elif isinstance(k, (Exists, Forall)):  # pragma: no cover - grounded away
-            raise AssertionError("ungrounded quantifier")
+            raise AssertionError("ungrounded quantifier")  # pragma: no mutate
 
     if c is not None:
         walk(c)
@@ -377,7 +377,9 @@ class _Part:
                      | a.condition_neg[self.event]}, set())
         atoms, fluents = _cond_reads(a.precondition)
         if a.precondition is None:
+            # pragma: no mutate start (atoms is empty here: |= and = agree)
             atoms |= {atom_tuple(x) for x in a.precondition_pos | a.precondition_neg}
+            # pragma: no mutate end
         for ce in a.conditional_effects:
             if ce.condition.holds(state.atoms, state.fluents):
                 more, morefl = _cond_reads(ce.condition)
@@ -553,7 +555,9 @@ def _resolve(dp: "DomainProblem", steps: List[PlanStep]) -> Tuple[List[_Part], O
             parts.append(_Part(time, "action", i, text, action))
             continue
         lo, hi = lifted.bounds()
+        # pragma: no mutate start (%G: same text for plain numbers)
         takes = "%g" % lo if lo == hi else "from %g to %g" % (lo, hi)
+        # pragma: no mutate end
         if s.duration is None:
             return fail("duration", "durative action %s needs a [duration] (%s)"
                         % (name, takes), i, s)
@@ -611,7 +615,9 @@ def simulate(dp: "DomainProblem", steps: List[PlanStep]) -> Simulation:
             if undefined:
                 return fail("undefined-fluent", "reads fluents with no value",
                             p, undefined, state)
+        # pragma: no mutate start (one part has nothing to interfere with)
         clash = _mutex(happening, state, dp) if len(happening) > 1 else None
+        # pragma: no mutate end
         if clash:
             p, q, what = clash
             if isinstance(p, _TilPart):  # blame the plan's step

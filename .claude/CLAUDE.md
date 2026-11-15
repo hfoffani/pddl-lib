@@ -13,6 +13,7 @@ make pyparser     # Regenerate parser from pddl.g4 (needs Java; commit the outpu
 make lint         # ruff
 make typecheck    # mypy
 make coverage     # tests with coverage report
+make mutmut       # mutation testing of validation.py + solving.py; fails on any survivor (CI-gated)
 make build        # Build wheel/sdist
 make examples     # Run the example showcase
 make golden       # Regenerate IPC subset golden files; review the diff (#153)
@@ -115,3 +116,5 @@ concurrency).
 ## Style
 - Follow YAGNI principle.
 - 100% of coverage in unit test (CI-enforced).
+- No surviving mutant in `[tool.mutmut] only_mutate` (CI-enforced, `make mutmut`).
+  An equivalent mutant gets `# pragma: no mutate` with the reason.

@@ -100,6 +100,16 @@ coverage:
 	@echo "Running tests with coverage..."
 	$(PYTHON) -m pytest --cov=pddlpy --cov-report=term-missing
 
+# Mutation testing of the files in [tool.mutmut] only_mutate (pyproject.toml).
+# Fails if a mutant survives: a behavior no test pins down. A timeout counts
+# as caught. Fresh each run: mutmut's cache does not see test changes.
+mutmut:
+	rm -rf mutants
+	@uv run mutmut run > mutmut.log 2>&1 || { tail -c 3000 mutmut.log; exit 1; }
+	@tail -c 300 mutmut.log | tr '\r' '\n' | grep -a 'killed\|🎉' | tail -1
+	@uv run mutmut results | grep -v ': timeout$$' | grep . && \
+		{ echo "surviving mutants: inspect with 'uv run mutmut show <name>'"; exit 1; } || true
+
 # Lint with ruff (generated ANTLR files are excluded via pyproject)
 lint:
 	@echo "Linting with ruff..."
@@ -167,6 +177,7 @@ help:
 	@echo "  oracles      - Build Fast Downward, VAL, INVAL into ORACLES_DIR (default .oracles)"
 	@echo "  oracle       - Compare pddlpy with the oracles (ORACLE_CORPORA=1 for full corpora)"
 	@echo "  coverage     - Run tests with coverage report"
+	@echo "  mutmut       - Mutation testing (validation.py, solving.py); fails on survivors"
 	@echo "  lint         - Lint with ruff"
 	@echo "  typecheck    - Type-check with mypy"
 	@echo "  build        - Build distribution packages"
@@ -176,4 +187,4 @@ help:
 	@echo "  testpublish  - Test package installation from TestPyPI (Docker)"
 	@echo "  e2e-llm      - Manual LLM+solver end-to-end (MODEL=..., needs OPENROUTER_API_KEY)"
 
-.PHONY: all init testgrammar pyparser test golden corpora corpora-test oracles oracle coverage lint typecheck build clean demo testpublish e2e-llm help
+.PHONY: all init testgrammar pyparser test golden corpora corpora-test oracles oracle coverage mutmut lint typecheck build clean demo testpublish e2e-llm help

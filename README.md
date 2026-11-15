@@ -421,6 +421,8 @@ on the library itself. Installing and using the package needs none of it.
 * `make pyparser` - Generate the Python parser from `pddl.g4` (needs Java)
 * `make test` - Run Python tests only
 * `make coverage` - Run tests with a coverage report
+* `make mutmut` - Mutation testing of the plan validator and solve verdicts;
+  fails if a mutant survives
 * `make lint` - Lint with ruff
 * `make typecheck` - Type-check with mypy
 * `make build` - Build distribution packages (wheel and source dist)
@@ -433,7 +435,8 @@ Publishing to PyPI happens only in GitHub Actions when a `v*` tag is pushed
 (TestPyPI first, then PyPI, via [Trusted
 Publishing](https://docs.pypi.org/trusted-publishers/)). See
 [`.github/workflows/publish.yaml`](.github/workflows/publish.yaml). CI (tests,
-100% coverage gate, lint, typecheck) runs on every pull request.
+100% coverage gate, mutation testing, lint, typecheck) runs on every pull
+request.
 
 ### Contribution guidelines ###
 

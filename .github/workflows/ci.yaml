@@ -48,6 +48,20 @@ jobs:
       - name: Typecheck
         run: make typecheck
 
+  # Mutation testing of the plan validator and solve verdicts: every mutant
+  # must be caught (make mutmut). mutmut needs fork, so Linux only.
+  mutation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.14"
+      - name: Install dependencies
+        run: uv sync --all-extras
+      - name: Mutation testing
+        run: make mutmut
+
   # Java job: compile and exercise the grammar, then regenerate the Python
   # parser from pddl.g4 and fail if it differs from the committed files.
   grammar:
