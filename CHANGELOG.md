@@ -6,6 +6,7 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 ## [Unreleased]
 
 ### Added
+- **Python 3.14**: tested in CI and declared in the classifiers.
 - **Continuous effects parse** (#213): `#t`, `(* <f-exp> #t)` and
   `(* #t <f-exp>)` in untimed `increase` / `decrease` effects of durative
   actions no longer cause syntax errors. They are not modeled yet, so
