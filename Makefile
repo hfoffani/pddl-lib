@@ -107,8 +107,10 @@ mutmut:
 	rm -rf mutants
 	@uv run mutmut run > mutmut.log 2>&1 || { tail -c 3000 mutmut.log; exit 1; }
 	@tail -c 300 mutmut.log | tr '\r' '\n' | grep -a 'killed\|🎉' | tail -1
-	@uv run mutmut results | grep -v ': timeout$$' | grep . && \
-		{ echo "surviving mutants: inspect with 'uv run mutmut show <name>'"; exit 1; } || true
+	@out=$$(uv run mutmut results) || { echo "mutmut results failed"; exit 1; }; \
+	left=$$(printf '%s\n' "$$out" | grep -v ': timeout$$'); \
+	if [ -n "$$left" ]; then printf '%s\n' "$$left"; \
+		echo "surviving mutants: inspect with 'uv run mutmut show <name>'"; exit 1; fi
 
 # Lint with ruff (generated ANTLR files are excluded via pyproject)
 lint:
