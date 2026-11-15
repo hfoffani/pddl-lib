@@ -355,6 +355,10 @@ class TemporalPlanner(Planner):
 
     capabilities = TEMPORAL_CAPABILITIES
 
+    #: Only sequential schedules are searched: ``None`` does not rule out a
+    #: plan with overlapping actions (#219).
+    complete = False
+
     def solve(self, domainproblem: "DomainProblem") -> Optional[TemporalPlan]:
         validate_requirements(domainproblem)
         check_modeled(domainproblem, timed=True)

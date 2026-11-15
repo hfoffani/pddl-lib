@@ -75,8 +75,9 @@ def solve(domain_file: str, problem_file: str, planner: str = "astar",
     and the result a ``makespan``). ``max_expansions`` /
     ``timeout`` (seconds) bound the search. Returns the plan
     (solved/cost/length/steps) and ``status``: solved, unsolvable (search
-    space exhausted: no plan exists) or limit (stopped at a bound: try a
-    larger one or another planner). ``validated`` says whether the plan was
+    space exhausted: no plan exists) or limit (stopped at a bound, or temporal
+    found no sequential plan: nothing proven; try a larger bound or another
+    planner). ``validated`` says whether the plan was
     checked with validate_plan. Fails if the domain declares :requirements
     the chosen planner does not support."""
     if planner not in registry.names():

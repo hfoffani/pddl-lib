@@ -250,7 +250,8 @@ if not result.valid:
 registered planner and returns a `SolveResult`: `status` is `SOLVED`,
 `UNSOLVABLE` (the search space was exhausted) or `LIMIT` (the planner
 raised `SearchLimitError` at `max_expansions` expanded states or `timeout`
-seconds); `plan`; `validated` (the plan passed `validate_plan`; `False` when
+seconds, or a planner with `complete = False`, such as `temporal`,
+exhausted its search); `plan`; `validated` (the plan passed `validate_plan`; `False` when
 the validator refuses the domain); `message`. A plan that fails validation
 raises `PlannerError`. The CLI and MCP `solve` use it. Every `Planner`
 takes the two limits as constructor keywords (`get("bfs", timeout=10)`);
