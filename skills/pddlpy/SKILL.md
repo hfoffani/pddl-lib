@@ -110,8 +110,9 @@ if plan is not None:
 ```
 
 Planner choice: `bfs` (fewest actions), `astar` (fewest actions, usually
-faster than `bfs`), `gbfs` (greedy, fast), `ucs` (cost-optimal for `:action-costs`
-domains), `temporal` (durative actions; returns a schedule with start times and
+faster than `bfs`), `gbfs` (greedy, fast, no optimality), `ucs` (cost-optimal for `:action-costs`
+domains; `bfs` and `astar` ignore action costs, so use `ucs` whenever the
+problem minimizes `total-cost` through nonnegative `increase` effects), `temporal` (durative actions; returns a schedule with start times and
 a `makespan`). A planner raises `UnsupportedRequirementsError` if a domain declares
 `:requirements` it does not support.
 

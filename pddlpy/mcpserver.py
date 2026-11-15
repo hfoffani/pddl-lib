@@ -69,10 +69,11 @@ def solve(domain_file: str, problem_file: str, planner: str = "astar",
           max_expansions: Optional[int] = None,
           timeout: Optional[float] = None) -> Dict[str, Any]:
     """Search for a plan on a PDDL domain/problem pair. ``planner`` is one of
-    the registered planners: bfs and astar (default), both fewest actions;
-    gbfs (greedy, not optimal); ucs (cost-optimal for :action-costs); or
-    temporal (required for :durative-actions; steps carry start/duration/end
-    and the result a ``makespan``). ``max_expansions`` /
+    the registered planners: bfs and astar (default), both fewest actions,
+    action costs ignored; gbfs (greedy, not optimal); ucs (cost-optimal: use
+    it when the problem minimizes total-cost through nonnegative increase
+    effects); or temporal (required for :durative-actions; steps carry
+    start/duration/end and the result a ``makespan``). ``max_expansions`` /
     ``timeout`` (seconds) bound the search. Returns the plan
     (solved/cost/length/steps) and ``status``: solved, unsolvable (search
     space exhausted: no plan exists) or limit (stopped at a bound, or temporal
