@@ -5,12 +5,17 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   # No Java here on purpose (#148): the generated parser is committed and
   # the ANTLR runtime is vendored, so the tests must run without it.
   test:
     runs-on: ubuntu-latest
     strategy:
+      # every version runs to the end: the 3.14 job uploads coverage
+      fail-fast: false
       matrix:
         python-version: ["3.11", "3.12", "3.13", "3.14"]
     steps:
@@ -23,7 +28,21 @@ jobs:
       - name: Tests
         run: make test
       - name: Coverage gate (100%)
-        run: uv run pytest -q --cov=pddlpy --cov-fail-under=100
+        run: uv run pytest -q --cov=pddlpy --cov-fail-under=100 --cov-report=term --cov-report=xml
+      # One upload per run: the newest Python. The gate above is the check;
+      # Codecov is the report, so its outages never fail CI
+      # (continue-on-error). It also runs when the gate fails, so the drop
+      # reaches Codecov. fail_ci_if_error makes the wrapper stop before it
+      # runs a CLI that fails verification.
+      - name: Upload coverage to Codecov
+        if: always() && matrix.python-version == '3.14' && hashFiles('coverage.xml') != ''
+        continue-on-error: true
+        # third-party action that receives a secret: pinned to a commit
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: true
       - name: Lint
         run: make lint
       - name: Typecheck

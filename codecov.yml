@@ -1,0 +1,12 @@
+# Codecov is a report; the 100% gate in CI (.github/workflows/ci.yaml) is the check.
+coverage:
+  status:
+    project:
+      default:
+        target: 100%
+    patch:
+      default:
+        target: 100%
+comment:
+  layout: "condensed_header, condensed_files"
+  require_changes: true
