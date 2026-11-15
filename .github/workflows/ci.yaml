@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   # No Java here on purpose (#148): the generated parser is committed and
   # the ANTLR runtime is vendored, so the tests must run without it.
@@ -28,7 +31,8 @@ jobs:
       # Codecov is the report, so its outages never fail CI.
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.14'
-        uses: codecov/codecov-action@v7
+        # third-party action that receives a secret: pinned to a commit
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
