@@ -86,9 +86,15 @@ def test_fd_translate_and_solve(tmp_path, monkeypatch):
     monkeypatch.setenv("FAKE_CODE", "0")
     monkeypatch.setenv("FAKE_PLAN", "(move rooma roomb)\n; cost = 1 (unit cost)\n")
     assert oracles.fd_solve(fd, DOMAIN, PROBLEM, 10) == (0, [("move", ("rooma", "roomb"))])
+    assert oracles.fd_solve_cost(fd, DOMAIN, PROBLEM, 10)[2] == (1.0, True)
+    monkeypatch.setenv("FAKE_PLAN", "(move rooma roomb)\n; cost = 2.5 (general cost)\n")
+    assert oracles.fd_solve_cost(fd, DOMAIN, PROBLEM, 10)[2] == (2.5, False)
+    monkeypatch.setenv("FAKE_PLAN", "(move rooma roomb)\n")
+    assert oracles.fd_solve_cost(fd, DOMAIN, PROBLEM, 10)[2] is None
     monkeypatch.delenv("FAKE_PLAN")
     monkeypatch.setenv("FAKE_CODE", "11")
     assert oracles.fd_solve(fd, DOMAIN, PROBLEM, 10) == (11, None)
+    assert oracles.fd_solve_cost(fd, DOMAIN, PROBLEM, 10) == (11, None, None)
     monkeypatch.setenv("FAKE_SLEEP", "1")
     monkeypatch.setattr(oracles, "FD_GRACE", 0)
     assert oracles.fd_translate(fd, DOMAIN, PROBLEM, 0.5) is None
