@@ -172,6 +172,11 @@ class Planner(ABC):
     #: True if the planner minimizes the metric over goal preferences (#201)
     preferences: bool = False
 
+    #: True if an exhausted search proves that no plan exists. A planner that
+    #: searches only part of the plan space sets it False, and ``solve``
+    #: reports ``limit`` instead of ``unsolvable`` (#219).
+    complete: bool = True
+
     def __init__(self, max_expansions: Optional[int] = None,
                  timeout: Optional[float] = None) -> None:
         """``max_expansions`` caps the states a search expands and

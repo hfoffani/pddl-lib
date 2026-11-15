@@ -60,8 +60,8 @@ happenings (within 0.001) must not touch the same atoms, and a durative
 step needs its `[duration]`.
 
 `solve` reports `status`: `solved`, `unsolvable` (no plan exists — tell
-the user, or fix the PDDL) or `limit` (stopped at a bound: nothing proven;
-retry with a larger bound or another planner). It validates its own plan
+the user, or fix the PDDL) or `limit` (stopped at a bound, or `temporal` found no
+sequential plan: nothing proven; retry with a larger bound or another planner). It validates its own plan
 (`validated: true`).
 
 Exit codes: `0` success, `1` search proved there is no plan / validate found

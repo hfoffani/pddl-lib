@@ -83,6 +83,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   `Plan.cost`, so under `(:metric minimize (total-cost))` it could return a
   dearer plan. It now costs 0 whenever the problem tracks `total-cost`; unit
   cost stays the fallback without it.
+- **`temporal` claimed "no plan exists" for problems that need concurrency**
+  (#219): it searches sequential schedules only, so an exhausted search now
+  gives `status: limit` with a message saying no sequential plan was found, not
+  `unsolvable`. The CLI exits 3 instead of 1 in that case. `Planner.complete`
+  (default `True`) marks planners whose exhausted search proves unsolvability.
 - **Obsolete and unsupported `:requirements` keys were syntax errors** (#208):
   `:domain-axioms` was lexed as `:domain` plus junk. The obsolete PDDL 1.2
   keys (`:domain-axioms`, `:subgoals-through-axioms`, `:safety-constraints`,

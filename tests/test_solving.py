@@ -20,7 +20,7 @@ from pddlpy.planning import (
     solve,
     solving,
 )
-from pddlpy.planning.validation import PlanValidationError
+from pddlpy.planning.validation import PlanValidationError, validate_plan
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
 
@@ -54,9 +54,41 @@ def test_plan_steps_in_parameter_order():
         assert step.args == tuple(action.variable_list[v] for v in lifted)
 
 
-def test_unsolvable():
-    result = solve(_dp("temporal-weld", "temporal-weld-notorch"), "temporal")
+def test_unsolvable(tmp_path):
+    (tmp_path / "d.pddl").write_text(
+        "(define (domain d) (:requirements :strips) (:predicates (p) (q))\n"
+        " (:action a :parameters () :precondition (p) :effect (not (p))))")
+    (tmp_path / "p.pddl").write_text("(define (problem p) (:domain d) (:init (p)) (:goal (q)))")
+    dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
+    result = solve(dp, "bfs")
     assert (result.status, result.plan, result.validated) == (UNSOLVABLE, None, False)
+
+
+def test_temporal_exhausted_is_limit():
+    # temporal searches sequential schedules only: exhausting them proves
+    # nothing about plans with overlapping actions (#219)
+    result = solve(_dp("temporal-weld", "temporal-weld-notorch"), "temporal")
+    assert (result.status, result.plan, result.validated) == (LIMIT, None, False)
+    assert "sequential" in result.message
+
+
+def test_temporal_needs_concurrency_is_limit(tmp_path):
+    # #219 repro: only an overlapping plan exists, and validate_plan accepts it
+    (tmp_path / "d.pddl").write_text(
+        "(define (domain mc) (:requirements :strips :durative-actions)\n"
+        " (:predicates (light) (fixed) (unused))\n"
+        " (:durative-action light_match :parameters () :duration (= ?duration 5)\n"
+        "   :condition (and (at start (unused)))\n"
+        "   :effect (and (at start (not (unused))) (at start (light)) (at end (not (light)))))\n"
+        " (:durative-action mend_fuse :parameters () :duration (= ?duration 2)\n"
+        "   :condition (and (over all (light)))\n"
+        "   :effect (and (at end (fixed)))))")
+    (tmp_path / "p.pddl").write_text(
+        "(define (problem p) (:domain mc) (:init (unused)) (:goal (and (fixed))))")
+    dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
+    assert solve(dp, "temporal").status == LIMIT
+    overlapping = [PlanStep("light_match", (), 0.0, 5.0), PlanStep("mend_fuse", (), 1.0, 2.0)]
+    assert validate_plan(dp, overlapping).valid
 
 
 @pytest.mark.parametrize("planner", ["bfs", "astar", "temporal"])

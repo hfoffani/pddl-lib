@@ -13,7 +13,8 @@ PLAN is a plan file in the IPC format or JSON (``solve`` output works), or
 ``-`` for stdin.
 
 ``solve`` reports ``status``: ``solved``, ``unsolvable`` (search space
-exhausted) or ``limit`` (stopped at --max-expansions / --timeout), and
+exhausted) or ``limit`` (stopped at --max-expansions / --timeout, or
+``temporal`` found no sequential plan), and
 validates the plan it found (``validated``).
 
 Exit codes: 0 success; 1 solve proved there is no plan / validate found

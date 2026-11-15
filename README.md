@@ -65,7 +65,8 @@ pddlpy simulate      domain.pddl problem.pddl plan.txt   # state after each step
 `astar`, `gbfs`, `ucs` or `temporal`. `--max-expansions N` and `--timeout
 SECONDS` bound the search. The result's `status` is `solved`, `unsolvable`
 (the search space was exhausted, so no plan exists) or `limit` (a bound was
-hit first, which proves nothing), and `validated` says whether the plan was
+hit first, or `temporal`, which builds sequential schedules only, found
+none; either way nothing is proven), and `validated` says whether the plan was
 checked with `validate-plan` before being returned.
 
 ```bash
