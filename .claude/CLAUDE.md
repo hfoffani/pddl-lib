@@ -24,6 +24,8 @@ make corpora-test # pddlpy over every fetched pair; report in $CORPORA_DIR/resul
 make oracles      # Build Fast Downward / VAL / INVAL (pinned) into $ORACLES_DIR (default .oracles)
 make oracle       # pytest -m oracle: pddlpy vs FD/VAL/INVAL; missing tools skip; ORACLE_CORPORA=1 for full corpora
                   # (CORPORA_PER_DOMAIN=N samples N problems per domain variant, also for corpora-test)
+make baseline     # solve baseline: bfs/ucs/astar/temporal vs FD on the corpora (M2), resumable;
+                  # CSV + summary.md in $CORPORA_DIR/results/baseline-t<s>-n<N>; findings in docs/baseline.md
 uv run pddlpy parse|ground|solve|validate DOMAIN PROBLEM   # the CLI
 uv run pddlpy validate-plan|simulate DOMAIN PROBLEM PLAN  # plan checks (#166)
 uv run pddlpy-mcp # MCP server on stdio
