@@ -257,7 +257,7 @@ It provides:
   them.
 * `registry`: register and look up planners by name.
 * Five reference planners: `BFSPlanner` (`"bfs"`, fewest actions),
-  `AStarPlanner` (`"astar"`, goal-count heuristic), `GBFSPlanner` (`"gbfs"`,
+  `AStarPlanner` (`"astar"`, fewest actions, admissible heuristic), `GBFSPlanner` (`"gbfs"`,
   greedy), `UniformCostPlanner` (`"ucs"`, cost-optimal) and `TemporalPlanner`
   (`"temporal"`, durative actions).
 

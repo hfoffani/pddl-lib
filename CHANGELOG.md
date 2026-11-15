@@ -73,6 +73,11 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   in the PDDL files.
 
 ### Fixed
+- **`astar` returned plans with more actions than needed** (#217): goal-count
+  overestimated when one action adds several goal atoms. A* now divides it
+  by the most goal atoms one action adds (conditional adds included; every
+  goal atom with derived predicates), so it finds a plan with the fewest
+  actions, like `bfs`. `gbfs` keeps plain goal-count.
 - **Obsolete and unsupported `:requirements` keys were syntax errors** (#208):
   `:domain-axioms` was lexed as `:domain` plus junk. The obsolete PDDL 1.2
   keys (`:domain-axioms`, `:subgoals-through-axioms`, `:safety-constraints`,
