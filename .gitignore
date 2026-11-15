@@ -29,6 +29,7 @@ antlr-*-complete.jar
 
 # test / coverage artifacts
 .coverage
+coverage.xml
 .coverage.*
 htmlcov/
 .pytest_cache/

@@ -23,7 +23,16 @@ jobs:
       - name: Tests
         run: make test
       - name: Coverage gate (100%)
-        run: uv run pytest -q --cov=pddlpy --cov-fail-under=100
+        run: uv run pytest -q --cov=pddlpy --cov-fail-under=100 --cov-report=term --cov-report=xml
+      # One upload per run: the newest Python. The gate above is the check;
+      # Codecov is the report, so its outages never fail CI.
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.14'
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          fail_ci_if_error: false
       - name: Lint
         run: make lint
       - name: Typecheck
