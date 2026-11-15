@@ -5,6 +5,12 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-15
+
+Plan validation and simulation, solve verdicts, zero runtime dependencies,
+more of PDDL 2.1-3.1 parsed or solved, and fixes for planners that claimed
+more than they proved (#217, #218, #219).
+
 ### Added
 - **Python 3.14**: tested in CI and declared in the classifiers.
 - **Codecov**: CI uploads the coverage report; the 100% gate stays in CI.
@@ -395,6 +401,8 @@ public API (`Development Status :: 5 - Production/Stable`).
 - 150 tests, 100% line coverage; layering between grammar / model / planner enforced
   by a test. Python 3.11+.
 
+[Unreleased]: https://github.com/hfoffani/pddl-lib/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.3.0
 [1.2.2]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.2
 [1.2.1]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.1
 [1.2.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.0
