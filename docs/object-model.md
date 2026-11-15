@@ -118,7 +118,8 @@ planners are non-temporal, but the `temporal` planner (below) schedules them.
 - **`Planner`** ABC — `solve(domainproblem) -> Plan | None`, with a
   `capabilities` set and fail-fast capability/`:requirements` checks (#9).
 - **`registry`** — register/get planners by name.
-- **Reference planners** — `bfs`, `astar` (goal-count heuristic), `gbfs`,
+- **Reference planners** — `bfs`, `astar` (fewest actions, admissible
+  heuristic), `gbfs`,
   `ucs` (cost-optimal, #3).
 
 ### Durative surface (#23)

@@ -109,8 +109,8 @@ if plan is not None:
     print(plan.action_names())  # [(name, bindings), ...]
 ```
 
-Planner choice: `bfs` (fewest actions), `astar` (goal-count heuristic; not
-guaranteed optimal, use `bfs` for fewest actions), `gbfs` (greedy, fast), `ucs` (cost-optimal for `:action-costs`
+Planner choice: `bfs` (fewest actions), `astar` (fewest actions, usually
+faster than `bfs`), `gbfs` (greedy, fast), `ucs` (cost-optimal for `:action-costs`
 domains), `temporal` (durative actions; returns a schedule with start times and
 a `makespan`). A planner raises `UnsupportedRequirementsError` if a domain declares
 `:requirements` it does not support.

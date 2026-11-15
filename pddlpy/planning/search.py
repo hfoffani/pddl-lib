@@ -4,8 +4,8 @@ These prove the ``Planner`` contract; they are not performance entrants
 (PRD §4). All reuse the shared ``GroundedTask`` successor function.
 
 * ``BFSPlanner``        — breadth-first; optimal for unit-cost STRIPS.
-* ``AStarPlanner``      — A* with the goal-count heuristic; optimal &
-  admissible for unit costs.
+* ``AStarPlanner``      — A* with goal-count divided by the most goal atoms
+  one action adds (admissible); fewest actions (#217).
 * ``GBFSPlanner``       — greedy best-first; fast but not optimal.
 * ``UniformCostPlanner`` — Dijkstra over action costs; cost-optimal for
   action-cost domains (#3).
@@ -25,6 +25,7 @@ from .state import Plan, State, atom_tuple, goal_holds, preference_undefined
 if TYPE_CHECKING:
     from pddlpy.pddl import Condition, DomainProblem, Operator
 
+    from .grounding import GroundedTask
     from .state import GroundAtom
 
 #: Parent-pointer map used to reconstruct a plan.
@@ -33,7 +34,8 @@ _CameFrom = Dict[State, Tuple[State, "Operator"]]
 #: Requirements the reference planners can handle. Numeric fluents (#11) and
 #: action costs (#3) are supported because State evaluates numeric
 #: preconditions/effects during successor generation; the goal-count heuristic
-#: ignores them (still admissible for the symbolic goal).
+#: ignores them. bfs and astar still minimize the number of actions, not the
+#: cost; only ucs minimizes the cost.
 STRIPS_CAPABILITIES: FrozenSet[str] = frozenset(
     {":strips", ":typing", ":negative-preconditions", ":equality",
      ":fluents", ":numeric-fluents", ":action-costs"}
@@ -64,9 +66,25 @@ def _reconstruct(came_from: _CameFrom, state: State) -> List["Operator"]:
 
 
 def goal_count(goal_atoms: "FrozenSet[GroundAtom]", state: State) -> int:
-    """Heuristic: number of goal atoms not yet satisfied (admissible for
-    unit costs)."""
+    """Heuristic: number of goal atoms not yet satisfied. Not admissible:
+    one action can add several goal atoms (#217)."""
     return len(goal_atoms - state.atoms)
+
+
+def max_goal_adds(task: "GroundedTask", goal_atoms: "FrozenSet[GroundAtom]") -> int:
+    """The most goal atoms a single action can make true, counting its
+    conditional adds; at least 1. With derived predicates (#141) one action
+    can make any number of goal atoms true, so it is every goal atom.
+    ``ceil(goal_count / max_goal_adds)`` is then admissible for unit costs."""
+    if task.domainproblem.domain.derived:
+        return max(len(goal_atoms), 1)
+    best = 1
+    for action in task.actions:
+        adds = {atom_tuple(a) for a in action.effect_pos}
+        for ce in action.conditional_effects:
+            adds |= {atom_tuple(a) for a in ce.add}
+        best = max(best, len(goal_atoms & adds))
+    return best
 
 
 class BFSPlanner(Planner):
@@ -104,6 +122,10 @@ class _BestFirstPlanner(Planner):
 
     capabilities = ADL_CAPABILITIES
 
+    #: True if ``h`` must never overestimate (A*): goal-count is then divided
+    #: by ``max_goal_adds`` (#217).
+    admissible = False
+
     def _priority(self, g: float, h: float) -> float:
         raise NotImplementedError  # pragma: no cover - abstract
 
@@ -117,11 +139,14 @@ class _BestFirstPlanner(Planner):
         self._start_search()
         goal_atoms = frozenset(atom_tuple(a) for a in task.goals)
         simple = domainproblem.problem.simple_goal
+        k = max_goal_adds(task, goal_atoms) if self.admissible and simple else 1
 
         def h(state: State) -> int:
             # goal-count needs a conjunction of atoms; any other goal (#138)
             # gets the blind heuristic: 0 at a goal, else 1 (admissible).
-            return goal_count(goal_atoms, state) if simple else int(not task.is_goal(state))
+            if not simple:
+                return int(not task.is_goal(state))
+            return -(-goal_count(goal_atoms, state) // k)  # ceil
 
         start = task.initial
         counter = itertools.count()  # tie-breaker; keeps States out of compares
@@ -151,7 +176,11 @@ class _BestFirstPlanner(Planner):
 
 
 class AStarPlanner(_BestFirstPlanner):
-    """A* with the goal-count heuristic (f = g + h), unit step cost."""
+    """A* (f = g + h), unit step cost: a plan with the fewest actions. h is
+    goal-count divided by the most goal atoms one action adds, rounded up,
+    which never overestimates (#217)."""
+
+    admissible = True
 
     def _priority(self, g: float, h: float) -> float:
         return g + h
