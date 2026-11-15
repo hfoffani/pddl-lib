@@ -25,7 +25,7 @@ SOLVED, UNSOLVABLE, LIMIT = "solved", "unsolvable", "limit"
 
 #: ``limit`` message when an incomplete planner exhausts its search (#219).
 INCOMPLETE_MESSAGE = ("%s exhausted its search, but it builds sequential schedules "
-                      "only: no sequential plan exists; a plan with overlapping "
+                      "only: no sequential plan was found; a plan with overlapping "
                       "actions was not searched for")
 
 

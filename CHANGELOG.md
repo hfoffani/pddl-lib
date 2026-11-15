@@ -85,7 +85,7 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   cost stays the fallback without it.
 - **`temporal` claimed "no plan exists" for problems that need concurrency**
   (#219): it searches sequential schedules only, so an exhausted search now
-  gives `status: limit` with a message saying no sequential plan exists, not
+  gives `status: limit` with a message saying no sequential plan was found, not
   `unsolvable`. The CLI exits 3 instead of 1 in that case. `Planner.complete`
   (default `True`) marks planners whose exhausted search proves unsolvability.
 - **Obsolete and unsupported `:requirements` keys were syntax errors** (#208):
