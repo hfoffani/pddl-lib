@@ -13,7 +13,8 @@ deliberately model-agnostic. Frontier models keep getting better at planning,
 and this library does not compete with them — it doesn't have to. Whether you
 drive it from a top-of-the-line model or a small open-source one running
 locally, the solver contributes the same thing the LLM cannot: a **provably
-optimal** answer. The weaker the model, the more the solver adds; the
+optimal** answer, from a planner whose search guarantees it (`ucs` for
+cost, `bfs` and `astar` for the number of actions). The weaker the model, the more the solver adds; the
 stronger the model, the cheaper it is to let the solver settle what would
 otherwise need a long, unverifiable chain of reasoning.
 
