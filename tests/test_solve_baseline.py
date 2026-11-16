@@ -193,6 +193,15 @@ def test_run_limited_kills_the_group(tmp_path):
     assert (code, out, reason) == (0, "1\n", None)
 
 
+def test_run_limited_tolerates_a_group_already_gone(monkeypatch):
+    def eperm(pid, sig):
+        raise PermissionError(1, "Operation not permitted")
+    monkeypatch.setattr(sb.os, "killpg", eperm)
+    sleep = [sys.executable, "-c", "import time; time.sleep(1)"]
+    code, _, reason, _ = sb.run_limited(sleep, 0.2, 2**40)
+    assert (code, reason) == (None, "timeout")
+
+
 def test_killed_child_keeps_its_phase(monkeypatch):
     monkeypatch.setattr(sb, "run_limited", lambda *a: (
         None, '{"phase": "parse"}\n{"parse_s": 1.5}\n{"phase": "ground"}\nnoise\n',

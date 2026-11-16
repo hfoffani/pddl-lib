@@ -110,7 +110,7 @@ if plan is not None:
 ```
 
 Planner choice: `bfs` (fewest actions), `astar` (fewest actions, usually
-faster than `bfs`), `gbfs` (greedy, fast, no optimality), `ucs` (cost-optimal for `:action-costs`
+faster than `bfs`), `gbfs` (greedy on the hFF heuristic: try it first on large problems; plans are not optimal), `ucs` (cost-optimal for `:action-costs`
 domains; `bfs` and `astar` ignore action costs, so use `ucs` whenever the
 problem minimizes `total-cost` through nonnegative `increase` effects), `temporal` (durative actions; returns a schedule with start times and
 a `makespan`). A planner raises `UnsupportedRequirementsError` if a domain declares
@@ -153,8 +153,8 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   expose the hierarchy). `(either t1 t2)` binds objects of any member type.
 - **Goals** can use `not`, `or`, `imply`, `exists`, `forall`, `=` and
   numeric comparisons. `dp.goals()` lists only the positive atoms; the
-  whole goal is `dp.goal_condition()`. With such goals `astar`/`gbfs` search
-  blind, so prefer `bfs`/`ucs`. Derived predicates (`(:derived ...)`) work with the
+  whole goal is `dp.goal_condition()`. With such goals `astar` searches
+  blind, so prefer `bfs`/`ucs`/`gbfs`. Derived predicates (`(:derived ...)`) work with the
   classical planners, not `temporal`. Not supported at all: `:constraints`,
   `:object-fluents`, `:continuous-effects` (`#t` effects) and the obsolete PDDL 1.2 keys
   (refused by name). `solve` refuses (exit 2) a pair with syntax errors:

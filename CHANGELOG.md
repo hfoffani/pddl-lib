@@ -5,6 +5,15 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 
 ## [Unreleased]
 
+### Changed
+- **`gbfs` searches on hFF** (Hoffmann & Nebel 2001) instead of goal-count:
+  the size of a relaxed plan, from a delete-relaxed exploration of the
+  grounded task (`pddlpy/planning/relaxed.py`). States from which the
+  relaxation cannot reach a goal atom are pruned, and a problem whose goal
+  is relaxed-unreachable is reported unsolvable without a search. Plans
+  are still not optimal. The solve baseline (`make baseline`) runs `gbfs`
+  too.
+
 ### Quality
 - **Mutation testing**: `make mutmut` mutates the plan validator and the
   solve verdicts (`validation.py`, `solving.py`) and fails if any mutant

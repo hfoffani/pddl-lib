@@ -152,9 +152,17 @@ def _accepts(domain, problem):
     return not any(i["check"] == "syntax" for i in diagnose(domain, problem)["issues"])
 
 
-def _solve(domain, problem):
+def _solve(domain, problem, classical=None):
+    """``(planner, plan or PlannerError)``. Without ``classical``: ``temporal``
+    on durative pairs, ``astar`` on the rest. With it: that planner, and
+    durative pairs are not solved (``("temporal", None)``)."""
     dp = DomainProblem(domain, problem)
-    planner = "temporal" if dp.durative_operators() else "astar"
+    if dp.durative_operators():
+        if classical:
+            return "temporal", None
+        planner = "temporal"
+    else:
+        planner = classical or "astar"
     try:
         return planner, get(planner).solve(dp)
     except PlannerError as exc:
@@ -169,8 +177,8 @@ def _accepts_outcome(domain, problem):
 
 
 @functools.lru_cache(maxsize=None)
-def _solve_outcome(domain, problem):
-    return bounded(_solve, domain, problem)
+def _solve_outcome(domain, problem, classical=None):
+    return bounded(_solve, domain, problem, classical)
 
 
 def pddlpy_accepts(domain, problem):
@@ -182,12 +190,14 @@ def pddlpy_accepts(domain, problem):
     return accepted
 
 
-def pddlpy_plan(domain, problem):
-    """``(planner, plan)``; plan ``None`` if unsolvable. Skips when pddlpy
-    cannot load the pair, refuses it, or runs out of time or memory."""
+def pddlpy_plan(domain, problem, classical=None):
+    """``(planner, plan)``; plan ``None`` if unsolvable. ``classical`` solves
+    the pairs without durative actions and leaves durative ones unsolved
+    (see ``_solve``). Skips when pddlpy cannot load the
+    pair, refuses it, or runs out of time or memory."""
     if not pddlpy_accepts(domain, problem):
         pytest.skip("pddlpy rejects the pair")
-    reason, result = _solve_outcome(domain, problem)
+    reason, result = _solve_outcome(domain, problem, classical)
     if reason:
         pytest.skip(reason)
     planner, plan = result
@@ -382,6 +392,37 @@ def test_pddlpy_plan_passes_val(domain, problem, tmp_path):
     plan_file = str(tmp_path / "plan")
     write_pddlpy_plan(domain, problem, planner, plan, plan_file)
     assert_val_valid(validate, domain, problem, plan_file)
+
+
+def gbfs_plan(domain, problem):
+    """``pddlpy_plan`` with ``gbfs``; skips durative pairs without solving them."""
+    planner, plan = pddlpy_plan(domain, problem, "gbfs")
+    if planner != "gbfs":
+        pytest.skip("durative pair: temporal, not gbfs")
+    return plan
+
+
+@pytest.mark.parametrize("domain,problem", params("gbfs_plan"))
+def test_gbfs_plan_passes_val(domain, problem, tmp_path):
+    """hFF dead-end pruning and the greedy search return only valid plans."""
+    validate = need(validate_bin(), "VAL")
+    plan = gbfs_plan(domain, problem)
+    if plan is None:
+        pytest.skip("gbfs found no plan")
+    plan_file = str(tmp_path / "plan")
+    write_pddlpy_plan(domain, problem, "gbfs", plan, plan_file)
+    assert_val_valid(validate, domain, problem, plan_file)
+
+
+@pytest.mark.parametrize("domain,problem", params("gbfs_solvable"))
+def test_gbfs_solvability_agrees_with_fd(domain, problem):
+    """gbfs prunes relaxed dead ends: it must never call unsolvable a pair
+    FD solves."""
+    fd_only(domain)
+    code, _ = fd_result(domain, problem)
+    if code not in (FD_SUCCESS, FD_TRANSLATE_UNSOLVABLE, FD_SEARCH_UNSOLVABLE):
+        pytest.skip("FD gave no verdict (exit %s)" % code)
+    assert (gbfs_plan(domain, problem) is not None) == (code == FD_SUCCESS)
 
 
 @pytest.mark.parametrize("domain,problem", params("solvable"))

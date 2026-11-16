@@ -17,7 +17,7 @@ size, and ``settings.json`` there records the limits: a resume with other
 limits is refused, so runs with other settings do not mix.
 
 Runners:
-  bfs, ucs, astar  pddlpy's planners (every pair)
+  bfs, ucs, astar, gbfs  pddlpy's planners (every pair)
   temporal         pddlpy's sequential temporal planner (durative pairs)
   validate         ``validate_plan`` on an empty plan: does the plan
                    validator accept the domain at all? (durative pairs)
@@ -61,7 +61,7 @@ START = time.monotonic()
 from corpora_run import Pair, _variant, discover, per_domain  # noqa: E402
 from oracles import _command, fast_downward_bin, read_plan_cost  # noqa: E402
 
-PDDLPY = ("bfs", "ucs", "astar")
+PDDLPY = ("bfs", "ucs", "astar", "gbfs")
 DURATIVE_ONLY = ("temporal", "validate")
 FD_CONFIGS = {
     "fd-opt": ([], ["--search", "astar(lmcut())"]),
@@ -114,7 +114,9 @@ def run_limited(cmd: Sequence[str], timeout: float, memory: int,
             elif group_rss(proc.pid) > memory:
                 reason = "memout"
             if reason:
-                with contextlib.suppress(ProcessLookupError):
+                # EPERM: on macOS the group holds only zombies, the child
+                # exited as the limit fired
+                with contextlib.suppress(ProcessLookupError, PermissionError):
                     os.killpg(proc.pid, signal.SIGKILL)
                 out, _ = proc.communicate()
                 break

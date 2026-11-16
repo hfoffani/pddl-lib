@@ -70,7 +70,8 @@ def solve(domain_file: str, problem_file: str, planner: str = "astar",
           timeout: Optional[float] = None) -> Dict[str, Any]:
     """Search for a plan on a PDDL domain/problem pair. ``planner`` is one of
     the registered planners: bfs and astar (default), both fewest actions,
-    action costs ignored; gbfs (greedy, not optimal); ucs (cost-optimal: use
+    action costs ignored; gbfs (greedy on the hFF heuristic: reaches
+    furthest of the built-in planners, plans not optimal); ucs (cost-optimal: use
     it when the problem minimizes total-cost through nonnegative increase
     effects); or temporal (required for :durative-actions; steps carry
     start/duration/end and the result a ``makespan``). ``max_expansions`` /
