@@ -6,7 +6,8 @@ These prove the ``Planner`` contract; they are not performance entrants
 * ``BFSPlanner``        — breadth-first; optimal for unit-cost STRIPS.
 * ``AStarPlanner``      — A* with goal-count divided by the most goal atoms
   one action adds (admissible); fewest actions (#217).
-* ``GBFSPlanner``       — greedy best-first; fast but not optimal.
+* ``GBFSPlanner``       — greedy best-first with hFF; reaches furthest, not
+  optimal.
 * ``UniformCostPlanner`` — Dijkstra over action costs; cost-optimal for
   action-cost domains (#3).
 """
@@ -20,6 +21,7 @@ from typing import TYPE_CHECKING, Dict, FrozenSet, List, Optional, Tuple
 from .base import Planner, UnsupportedRequirementsError
 from .costs import TOTAL_COST, action_cost, plan_cost
 from .registry import register
+from .relaxed import RelaxedTask
 from .state import Plan, State, atom_tuple, goal_holds, preference_undefined
 
 if TYPE_CHECKING:
@@ -186,11 +188,45 @@ class AStarPlanner(_BestFirstPlanner):
         return g + h
 
 
-class GBFSPlanner(_BestFirstPlanner):
-    """Greedy best-first search (f = h)."""
+class GBFSPlanner(Planner):
+    """Greedy best-first search on the hFF heuristic (``RelaxedTask.ff``):
+    the state with the smallest relaxed plan first, ties in the order
+    generated. Not optimal, in actions or in cost. A state from which the
+    relaxation cannot reach a goal atom is a dead end and is pruned; the
+    relaxation over-approximates, so the pruning is safe and an exhausted
+    search still proves that no plan exists."""
 
-    def _priority(self, g: float, h: float) -> float:
-        return h
+    capabilities = ADL_CAPABILITIES
+
+    def solve(self, domainproblem: "DomainProblem") -> Optional[Plan]:
+        task = self.prepare(domainproblem)
+        self._start_search()
+        relaxed = RelaxedTask(task)
+        start = task.initial
+        if task.is_goal(start):
+            return Plan([])
+        h0 = relaxed.ff(start.atoms)
+        if h0 is None:
+            return None
+        counter = itertools.count()
+        frontier: List[Tuple[int, int, State]] = [(h0, next(counter), start)]
+        seen = {start}
+        came_from: _CameFrom = {}
+        while frontier:
+            _, _, state = heapq.heappop(frontier)
+            self._expand()
+            for action, succ in task.successors(state):
+                if succ in seen:
+                    continue
+                seen.add(succ)
+                came_from[succ] = (state, action)
+                if task.is_goal(succ):
+                    actions = _reconstruct(came_from, succ)
+                    return Plan(actions, cost=plan_cost(succ, actions))
+                h = relaxed.ff(succ.atoms)
+                if h is not None:
+                    heapq.heappush(frontier, (h, next(counter), succ))
+        return None
 
 
 class UniformCostPlanner(_BestFirstPlanner):

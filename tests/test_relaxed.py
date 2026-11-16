@@ -109,3 +109,42 @@ def test_blocksworld_reaches_the_goal():
                                       os.path.join(CORPUS, "blocksworld-problem.pddl")))
     ex = RelaxedTask(task).explore()
     assert ex.solvable and len(ex.actions) == len(task.actions)
+
+
+def test_ff_counts_a_relaxed_plan(tmp_path):
+    relaxed = chain(tmp_path, "(and (at c) (visited b))")
+    # alt b, which needs nothing, is the first to reach (visited b); then
+    # go a b and go b c reach (at c)
+    assert relaxed.ff(relaxed.task.initial.atoms) == 3
+    assert relaxed.ff([("at", "b"), ("link", "b", "c")]) == 2  # go b c + alt b
+    assert relaxed.ff([("at", "c"), ("visited", "b")]) == 0
+    assert relaxed.ff([("at", "c")]) == 1  # alt b, which needs nothing
+    assert relaxed.ff([("visited", "b")]) is None  # (at c) unreachable
+
+
+def test_ff_dead_end(tmp_path):
+    relaxed = chain(tmp_path, "(lock)")
+    assert relaxed.ff(relaxed.task.initial.atoms) is None
+
+
+def test_gbfs_solves_and_proves(tmp_path):
+    from pddlpy.planning import get
+    plan = get("gbfs").solve(chain(tmp_path, "(at c)").task.domainproblem)
+    assert [a.operator_name for a in plan] == ["go", "go"]
+    # the relaxation proves it unsolvable before any search
+    assert get("gbfs").solve(chain(tmp_path, "(lock)").task.domainproblem) is None
+    # the goal holds at the start
+    assert len(get("gbfs").solve(chain(tmp_path, "(at a)").task.domainproblem)) == 0
+
+
+def test_gbfs_exhausts_what_the_relaxation_misses(tmp_path):
+    # (not (visited b)) blocks go a b; the relaxation ignores negative
+    # conditions, so only the search proves there is no plan
+    (tmp_path / "d.pddl").write_text(CHAIN)
+    (tmp_path / "p.pddl").write_text(
+        "(define (problem p) (:domain chain) (:objects a b)"
+        " (:init (at a) (link a b) (visited b)) (:goal (at b)))")
+    from pddlpy.planning import get
+    dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
+    assert RelaxedTask(GroundedTask(dp)).explore().solvable
+    assert get("gbfs").solve(dp) is None
