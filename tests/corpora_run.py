@@ -61,7 +61,7 @@ def classical_pairs(root: str) -> List[Pair]:
         for d in domains:
             for dom, prob in d["problems"]:
                 pairs.append(("classical", os.path.join(base, dom), os.path.join(base, prob)))
-    return pairs
+    return list(dict.fromkeys(pairs))  # satellite lists its pairs under two IPCs
 
 
 def _natural(path: str) -> List[Any]:
