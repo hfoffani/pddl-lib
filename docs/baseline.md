@@ -3,7 +3,9 @@
 How far pddl-py's built-in planners get on the IPC corpora, next to Fast
 Downward, and what stops them first. Reproduce with `make baseline` (see
 `tests/solve_baseline.py`); the per-run CSV and a longer summary, including
-coverage per domain variant, land in `$CORPORA_DIR/results/baseline-t10-n1/`.
+coverage per domain variant, land in `$CORPORA_DIR/results/baseline-t10-n1/`
+(first pass) and `baseline-t60-n3/` (the longer pass at the end, the reference
+later milestones are measured against).
 
 ## Setup
 
@@ -98,3 +100,51 @@ expands a median of 140 states per second there. The plan validator refuses
 Expression durations, `(= ?duration (f ...))`, appear in 52 of the 66 refused
 pairs. They are the first T2 item to take on. Equality literals in durative
 conditions are not modeled; that is a gap not yet on the T2 list.
+
+## Longer pass: 60 s, 3 per domain variant
+
+Same runners and limits as above, with 60 s per run and the first three
+problems of each domain variant (`CORPORA_PER_DOMAIN=3 BASELINE_TIMEOUT=60`):
+1,430 pairs, 300 of them durative, about 6 h. Date: 2026-11-15.
+
+| runner | solved | unsolvable | limit | timeout | memout | refused | total |
+|---|---|---|---|---|---|---|---|
+| bfs | 344 | 12 | 446 | 26 | 145 | 457 | 1430 |
+| ucs | 339 | 12 | 379 | 24 | 237 | 439 | 1430 |
+| astar | 364 | 12 | 395 | 24 | 178 | 457 | 1430 |
+| temporal | 26 | | 64 | | 12 | 198 | 300 |
+| fd-opt | 499 | | | 306 | 1 | 624 | 1430 |
+| fd-sat | 908 | | | 52 | 1 | 469 | 1430 |
+
+- `bfs`, `ucs` or `astar` solves 383 pairs, 409 with `temporal`. Any FD
+  configuration solves 908. FD only: 556 pairs.
+- 1,076 plans returned by pddl-py, all accepted by its validator.
+
+The first pass holds up:
+
+1. **More time barely helps.** On the 477 pairs of the first pass, six times
+   the budget takes `astar` from 132 to 145 solved and any pddl-py planner
+   from 152 to 167. fd-sat goes from 305 to 308: what it solves, it solves
+   fast (36 of its 908 plans took over 10 s).
+2. **The heuristic is still the first bottleneck.** `astar` hit the search
+   limit on 352 pairs that FD solved. On 281 of them lama-first needed fewer
+   states than `astar` expanded, and lmcut did on 111. Median: 446 states for
+   lama-first, 21,000 for `astar` before it stopped.
+3. **Memory is the next wall.** The 10 s pass had almost no memouts. At 60 s,
+   `astar` runs out of its 2.5 GB in the search on 137 pairs, after a median
+   of 30 s; `ucs` on 200. On the 556 FD-only pairs, `astar` ends at the search
+   limit on 343 and out of memory in the search on 111. Smaller states (the
+   bitmask representation) and a lighter search node matter for memory, not
+   just speed.
+4. **Expansion speed** has the same shape: the median falls from 2,900 to
+   1,800 expansions/s because the second and third problems of each variant
+   are larger, and it drops by two orders of magnitude from the cheapest to
+   the most expensive grounding quartile.
+5. **Grounding** kills runs on the same domains as before (tetris, snake,
+   caldera, organic-synthesis, mystery-prime/mprime, hand-coded depots).
+
+On the durative pairs, `temporal` solves 26 of 300 and the plan validator
+refuses 198 (66 %, as in the first pass). Expression durations appear in 156
+of the 198, equality conditions in 30, syntax errors (#141) in 27. Order of
+work unchanged: hFF with greedy best-first search (M6) first, then states that
+are cheaper to build and smaller to store.
