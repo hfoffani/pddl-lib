@@ -114,7 +114,9 @@ def run_limited(cmd: Sequence[str], timeout: float, memory: int,
             elif group_rss(proc.pid) > memory:
                 reason = "memout"
             if reason:
-                with contextlib.suppress(ProcessLookupError):
+                # EPERM: on macOS the group holds only zombies, the child
+                # exited as the limit fired
+                with contextlib.suppress(ProcessLookupError, PermissionError):
                     os.killpg(proc.pid, signal.SIGKILL)
                 out, _ = proc.communicate()
                 break
