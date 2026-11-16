@@ -119,7 +119,8 @@ planners are non-temporal, but the `temporal` planner (below) schedules them.
   `capabilities` set and fail-fast capability/`:requirements` checks (#9).
 - **`registry`** — register/get planners by name.
 - **Reference planners** — `bfs`, `astar` (fewest actions, admissible
-  heuristic), `gbfs`,
+  heuristic), `gbfs` (greedy on hFF, from the relaxed exploration in
+  `pddlpy/planning/relaxed.py`),
   `ucs` (cost-optimal, #3).
 
 ### Durative surface (#23)

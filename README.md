@@ -262,7 +262,7 @@ It provides:
 * `registry`: register and look up planners by name.
 * Five reference planners: `BFSPlanner` (`"bfs"`, fewest actions),
   `AStarPlanner` (`"astar"`, fewest actions, admissible heuristic), `GBFSPlanner` (`"gbfs"`,
-  greedy), `UniformCostPlanner` (`"ucs"`, cost-optimal) and `TemporalPlanner`
+  greedy on hFF, reaches furthest of the built-in planners, not optimal), `UniformCostPlanner` (`"ucs"`, cost-optimal) and `TemporalPlanner`
   (`"temporal"`, durative actions).
 
 ```python
