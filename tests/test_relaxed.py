@@ -139,11 +139,12 @@ def test_gbfs_solves_and_proves(tmp_path):
 
 def test_gbfs_exhausts_what_the_relaxation_misses(tmp_path):
     # (not (visited b)) blocks go a b; the relaxation ignores negative
-    # conditions, so only the search proves there is no plan
+    # conditions, so only the search proves there is no plan. go a d leads
+    # to a dead end, pruned
     (tmp_path / "d.pddl").write_text(CHAIN)
     (tmp_path / "p.pddl").write_text(
-        "(define (problem p) (:domain chain) (:objects a b)"
-        " (:init (at a) (link a b) (visited b)) (:goal (at b)))")
+        "(define (problem p) (:domain chain) (:objects a b d)"
+        " (:init (at a) (link a b) (link a d) (visited b)) (:goal (at b)))")
     from pddlpy.planning import get
     dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
     assert RelaxedTask(GroundedTask(dp)).explore().solvable

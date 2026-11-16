@@ -191,7 +191,9 @@ class AStarPlanner(_BestFirstPlanner):
 class GBFSPlanner(Planner):
     """Greedy best-first search on the hFF heuristic (``RelaxedTask.ff``):
     the state with the smallest relaxed plan first, ties in the order
-    generated. Not optimal, in actions or in cost. A state from which the
+    generated. Not optimal, in actions or in cost. Evaluation is eager: lazy
+    evaluation alone solved no more pairs (docs/baseline.md). A state from
+    which the
     relaxation cannot reach a goal atom is a dead end and is pruned; the
     relaxation over-approximates, so the pruning is safe and an exhausted
     search still proves that no plan exists."""
