@@ -13,6 +13,10 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   and for happening semantics: merged deletes, mutex reads of guards,
   comparisons and effect expressions, timed literals, undefined fluents in
   goals and preferences.
+- **Solve baseline**: `make baseline` runs `bfs`, `ucs`, `astar` (and
+  `temporal` on durative pairs) next to Fast Downward over the sampled IPC
+  corpora, with time and memory caps. The first numbers and the first
+  bottleneck (the heuristic) are in `docs/baseline.md`.
 
 ## [1.3.0] - 2026-11-15
 

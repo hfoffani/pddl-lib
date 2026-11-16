@@ -60,6 +60,17 @@ def test_discover_both_layouts(tmp_path):
     assert len(corpora_run.discover(str(tmp_path), "pipes")) == 1
 
 
+def test_classical_pair_listed_twice(tmp_path):
+    """Upstream satellite/api.py lists its pairs under two IPC entries; each
+    pair is discovered once."""
+    fake_corpora(tmp_path)
+    (tmp_path / "classical" / "classical" / "bw" / "api.py").write_text(
+        "domains = [\n{'problems': [('bw/domain.pddl', 'bw/p2.pddl')]},\n"
+        " {'problems': [('bw/domain.pddl', 'bw/p2.pddl')]}]\n"
+    )
+    assert len(corpora_run.classical_pairs(str(tmp_path / "classical"))) == 1
+
+
 def test_per_domain_sampling(tmp_path, monkeypatch):
     """CORPORA_PER_DOMAIN keeps the first N problems per variant, in natural
     order (instance-2 before instance-10)."""
