@@ -152,9 +152,17 @@ def _accepts(domain, problem):
     return not any(i["check"] == "syntax" for i in diagnose(domain, problem)["issues"])
 
 
-def _solve(domain, problem, classical="astar"):
+def _solve(domain, problem, classical=None):
+    """``(planner, plan or PlannerError)``. Without ``classical``: ``temporal``
+    on durative pairs, ``astar`` on the rest. With it: that planner, and
+    durative pairs are not solved (``("temporal", None)``)."""
     dp = DomainProblem(domain, problem)
-    planner = "temporal" if dp.durative_operators() else classical
+    if dp.durative_operators():
+        if classical:
+            return "temporal", None
+        planner = "temporal"
+    else:
+        planner = classical or "astar"
     try:
         return planner, get(planner).solve(dp)
     except PlannerError as exc:
@@ -169,7 +177,7 @@ def _accepts_outcome(domain, problem):
 
 
 @functools.lru_cache(maxsize=None)
-def _solve_outcome(domain, problem, classical="astar"):
+def _solve_outcome(domain, problem, classical=None):
     return bounded(_solve, domain, problem, classical)
 
 
@@ -182,9 +190,10 @@ def pddlpy_accepts(domain, problem):
     return accepted
 
 
-def pddlpy_plan(domain, problem, classical="astar"):
+def pddlpy_plan(domain, problem, classical=None):
     """``(planner, plan)``; plan ``None`` if unsolvable. ``classical`` solves
-    the pairs without durative actions. Skips when pddlpy cannot load the
+    the pairs without durative actions and leaves durative ones unsolved
+    (see ``_solve``). Skips when pddlpy cannot load the
     pair, refuses it, or runs out of time or memory."""
     if not pddlpy_accepts(domain, problem):
         pytest.skip("pddlpy rejects the pair")
@@ -386,7 +395,7 @@ def test_pddlpy_plan_passes_val(domain, problem, tmp_path):
 
 
 def gbfs_plan(domain, problem):
-    """``pddlpy_plan`` with ``gbfs``; skips durative pairs (``temporal``)."""
+    """``pddlpy_plan`` with ``gbfs``; skips durative pairs without solving them."""
     planner, plan = pddlpy_plan(domain, problem, "gbfs")
     if planner != "gbfs":
         pytest.skip("durative pair: temporal, not gbfs")

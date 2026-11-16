@@ -43,8 +43,9 @@ planners, not a wish list.
 `exists`, `forall`, `=` and numeric comparisons ([#138]), whatever the
 domain declares in `:requirements`. With a goal other than a conjunction of
 atoms, `astar` falls back to a blind heuristic (0 at a goal, else 1);
-`gbfs`'s hFF counts the atoms the goal needs in every case, the positive
-literals of its top-level conjunction.
+`gbfs`'s hFF builds its relaxed plan for the atoms the goal needs in every
+case, the positive literals of its top-level conjunction, and counts the
+plan's actions.
 
 **Declared vs. used.** When a domain declares any `:requirements`, `solve`
 also checks that the features it uses (typing, negation, disjunction,

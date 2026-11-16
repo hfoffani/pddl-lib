@@ -99,7 +99,7 @@ class BFSPlanner(Planner):
         self._start_search()
         start = task.initial
         if task.is_goal(start):
-            return Plan([])
+            return Plan([], cost=plan_cost(start, []))
         frontier: "deque[State]" = deque([start])
         visited = {start}
         came_from: _CameFrom = {}
@@ -204,7 +204,7 @@ class GBFSPlanner(Planner):
         relaxed = RelaxedTask(task)
         start = task.initial
         if task.is_goal(start):
-            return Plan([])
+            return Plan([], cost=plan_cost(start, []))
         h0 = relaxed.ff(start.atoms)
         if h0 is None:
             return None

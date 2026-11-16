@@ -148,3 +148,17 @@ def test_gbfs_exhausts_what_the_relaxation_misses(tmp_path):
     dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
     assert RelaxedTask(GroundedTask(dp)).explore().solvable
     assert get("gbfs").solve(dp) is None
+
+
+def test_goal_at_start_keeps_the_accumulated_cost(tmp_path):
+    (tmp_path / "d.pddl").write_text("""(define (domain c)
+ (:requirements :strips :action-costs)
+ (:predicates (p)) (:functions (total-cost) - number)
+ (:action a :parameters () :precondition (and) :effect (p)))""")
+    (tmp_path / "p.pddl").write_text(
+        "(define (problem p) (:domain c) (:init (p) (= (total-cost) 7)) (:goal (p))"
+        " (:metric minimize (total-cost)))")
+    from pddlpy.planning import get
+    dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
+    assert get("gbfs").solve(dp).cost == 7
+    assert get("bfs").solve(dp).cost == 7
