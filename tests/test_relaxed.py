@@ -163,3 +163,39 @@ def test_goal_at_start_keeps_the_accumulated_cost(tmp_path):
     dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
     assert get("gbfs").solve(dp).cost == 7
     assert get("bfs").solve(dp).cost == 7
+
+
+def test_static_atoms_take_their_initial_value(tmp_path):
+    # (p b) is never added: usep b can never apply, though p is not a static
+    # predicate; (q a) never changes and holds initially, so it is dropped
+    (tmp_path / "d.pddl").write_text("""(define (domain s)
+ (:requirements :strips)
+ (:predicates (p ?x) (q ?x) (done ?x))
+ (:action setp :parameters (?x) :precondition (q ?x) :effect (p ?x))
+ (:action usep :parameters (?x) :precondition (p ?x) :effect (done ?x)))""")
+    (tmp_path / "p.pddl").write_text(
+        "(define (problem p) (:domain s) (:objects a b) (:init (q a))"
+        " (:goal (done a)))")
+    task = GroundedTask(DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl")))
+    relaxed = RelaxedTask(task)
+    assert relaxed.ff(task.initial.atoms) == 2
+    assert relaxed.ff([]) == 2  # (q a) holds in every reachable state
+    names = [(a.operator_name, a.variable_list["?x"]) for a in task.actions]
+    assert relaxed._npre[names.index(("usep", "b"))] == -1
+
+
+def test_gbfs_is_the_same_under_any_hash_seed():
+    """Grounding order and hFF's supporters must not follow set iteration
+    order, or the search differs between runs (gripper's raw grounding
+    order does)."""
+    import subprocess
+    import sys
+    code = ("import os; from pddlpy import DomainProblem; from pddlpy.planning import get; "
+            "c = %r; dp = DomainProblem(os.path.join(c, 'domain.pddl'), "
+            "os.path.join(c, 'p01.pddl')); p = get('gbfs').solve(dp); "
+            "print([(a.operator_name, sorted(a.variable_list.items())) for a in p])"
+            % os.path.join(CORPUS, "ipc", "gripper-round-1-strips"))
+    out = {subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
+                          env={**os.environ, "PYTHONHASHSEED": seed}, check=True).stdout
+           for seed in ("1", "2", "3")}
+    assert len(out) == 1 and next(iter(out)).startswith("[(")

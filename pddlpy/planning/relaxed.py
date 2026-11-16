@@ -91,20 +91,34 @@ class RelaxedTask:
             for atom in pre:
                 self.needed_by.setdefault(atom, []).append(i)
         self.goal: FrozenSet["GroundAtom"] = frozenset(needed_atoms(task.goal, derived))
-        # the same, over integer atom ids, for ``ff``
-        self._id: Dict["GroundAtom", int] = {}
-        for atoms in (*self.pre, *self.add, self.goal):
-            for atom in atoms:
-                self._id.setdefault(atom, len(self._id))
-        self._pre = [tuple(self._id[a] for a in p) for p in self.pre]
-        self._add = [tuple(self._id[a] for a in a_) for a_ in self.add]
+        # the same, over integer atom ids, for ``ff``. A static atom, one no
+        # action adds or deletes, has its initial truth value in every
+        # reachable state: dropped from the preconditions when it holds
+        # initially; the action never applies when it does not.
+        changed = set().union(*self.add, *map(_deletes, task.actions))
+        initial = task.initial.atoms
+        # Ids follow the sorted atoms and every id tuple is sorted, so the
+        # supporters ``ff`` picks do not depend on set iteration order (the
+        # string hash seed): the same task gives the same h in every run.
+        dynamic = [frozenset(a for a in p if a in changed) for p in self.pre]
+        self._id: Dict["GroundAtom", int] = {
+            atom: i for i, atom in enumerate(sorted(set().union(*dynamic, *self.add, self.goal)))}
+        self._pre = [tuple(sorted(self._id[a] for a in p)) for p in dynamic]
+        self._add = [tuple(sorted(self._id[a] for a in a_)) for a_ in self.add]
         self._needed_by: List[List[int]] = [[] for _ in self._id]
-        for i, pre_ids in enumerate(self._pre):
+        self._npre: List[int] = []
+        for i, (pre, pre_ids) in enumerate(zip(self.pre, self._pre)):
+            if not (pre - changed) <= initial:
+                self._npre.append(-1)  # never ready: no edges count it down
+                continue
+            self._npre.append(len(pre_ids))
             for a in pre_ids:
                 self._needed_by[a].append(i)
-        self._npre = [len(p) for p in self._pre]
         self._free = [i for i, n in enumerate(self._npre) if n == 0]
-        self._goal = tuple(self._id[a] for a in self.goal)
+        self._goal = tuple(sorted(self._id[a] for a in self.goal))
+        self._is_goal = bytearray(len(self._id))
+        for a in self._goal:
+            self._is_goal[a] = 1
 
     def explore(self, atoms: Iterable["GroundAtom"] | None = None) -> Exploration:
         """Reach a fixpoint from ``atoms`` (default: the initial state)."""
@@ -130,57 +144,56 @@ class RelaxedTask:
 
     def ff(self, atoms: Iterable["GroundAtom"]) -> Optional[int]:
         """hFF from the state with these ``atoms``: the size of a relaxed
-        plan, or ``None`` if a goal atom is unreachable (a dead end).
+        plan, or ``None`` if a goal atom is unreachable (a dead end). The
+        state must be reachable from the initial state: static atoms keep
+        their initial value, whatever ``atoms`` holds.
 
         Layer by layer, each newly reached atom records the action that
         first reached it; the relaxed plan collects those supporters
         backwards from the goal atoms. 0 means the goal's needed atoms hold,
         not that the state is a goal."""
         ids = self._id
-        level: Dict[int, int] = {}
-        for atom in atoms:
-            a = ids.get(atom)
-            if a is not None:
-                level[a] = 0
-        supporter: Dict[int, int] = {}
+        reached = bytearray(len(ids))
+        layer = sorted(a for a in map(ids.get, atoms) if a is not None)
+        for a in layer:
+            reached[a] = 1
         goal = self._goal
-        missing = sum(1 for g in goal if g not in level)
+        missing = len(goal) - sum(reached[g] for g in goal)
+        is_goal = self._is_goal
+        supporter: Dict[int, int] = {}
         waiting = self._npre[:]
         needed_by, add = self._needed_by, self._add
-        layer = list(level)
         ready = list(self._free)
-        depth = 0
         while missing:
             for a in layer:
                 for i in needed_by[a]:
                     waiting[i] -= 1
-                    if waiting[i] == 0:
+                    if not waiting[i]:
                         ready.append(i)
             if not ready:
                 return None
-            depth += 1
             layer = []
             for i in ready:
                 for a in add[i]:
-                    if a not in level:
-                        level[a] = depth
+                    if not reached[a]:
+                        reached[a] = 1
                         supporter[a] = i
                         layer.append(a)
+                        missing -= is_goal[a]
             ready = []
-            missing = sum(1 for g in goal if g not in level)
         plan: Set[int] = set()
         stack = list(goal)
         seen: Set[int] = set()
         pre = self._pre
         while stack:
             a = stack.pop()
-            if a in seen or level[a] == 0:
+            if a in seen:
                 continue
             seen.add(a)
-            i = supporter[a]
-            if i not in plan:
-                plan.add(i)
-                stack.extend(pre[i])
+            act = supporter.get(a)  # None: the atom holds in the state
+            if act is not None and act not in plan:
+                plan.add(act)
+                stack.extend(pre[act])
         return len(plan)
 
 
@@ -189,6 +202,13 @@ def _precondition(action: "Operator", derived: AbstractSet[str]) -> Set["GroundA
     if precondition is not None:
         return needed_atoms(precondition, derived)
     return {a for a in map(atom_tuple, action.precondition_pos) if a[0] not in derived}
+
+
+def _deletes(action: "Operator") -> Set["GroundAtom"]:
+    deletes = {atom_tuple(a) for a in action.effect_neg}
+    for ce in action.conditional_effects:
+        deletes |= {atom_tuple(a) for a in ce.dele}
+    return deletes
 
 
 def _adds(action: "Operator") -> Set["GroundAtom"]:

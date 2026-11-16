@@ -32,10 +32,14 @@ class GroundedTask:
         self.initial: State = State.from_problem(domainproblem)
         self.goals = domainproblem.goals()
         self.goal = domainproblem.goal_condition()
+        # Sorted by operator, then arguments: grounding enumerates sets, so
+        # its order follows the string hash seed, and the search (successor
+        # order, hFF supporters) would differ from run to run.
         self.actions: List["Operator"] = [
             gop
             for name in domainproblem.operators()
-            for gop in domainproblem.ground_operator(name)
+            for gop in sorted(domainproblem.ground_operator(name),
+                              key=lambda op: [str(v) for v in op.variable_list.values()])
         ]
 
     def successors(self, state: State) -> Iterator[Tuple["Operator", State]]:
