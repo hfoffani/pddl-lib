@@ -1,10 +1,13 @@
 """The solve baseline runner (tests/solve_baseline.py, M2) on a fake corpora
 tree and a stub Fast Downward: rows, resume, limits, refusal causes and the
 summary."""
+import contextlib
 import csv
 import os
+import signal
 import sys
 import textwrap
+import time
 
 import pytest
 import solve_baseline as sb
@@ -69,6 +72,27 @@ def test_pddlpy_rows_summary_and_resume(tmp_path, monkeypatch, capsys):
                BASELINE_RUNNERS="bfs,astar,fd-opt") == 0
     assert "3 runs left" not in capsys.readouterr().out
     assert len(rows(tmp_path)) == 3
+
+
+def test_missing_fd_rows_rerun_once_installed(tmp_path, monkeypatch):
+    fake_corpora(tmp_path)
+    no_fd(monkeypatch, tmp_path)
+    assert run(monkeypatch, tmp_path, DOMAIN="ipc-2000", BASELINE_RUNNERS="bfs,fd-opt") == 0
+    stub = tmp_path / "fd.py"
+    stub.write_text(STUB_FD)
+    monkeypatch.setenv("FAST_DOWNWARD", str(stub))
+    assert run(monkeypatch, tmp_path, DOMAIN="ipc-2000", BASELINE_RUNNERS="bfs,fd-opt") == 0
+    assert sorted((r["runner"], r["status"]) for r in rows(tmp_path)) == [
+        ("bfs", "solved"), ("fd-opt", "solved")]
+
+
+def test_resume_with_other_limits_is_refused(tmp_path, monkeypatch, capsys):
+    fake_corpora(tmp_path)
+    assert run(monkeypatch, tmp_path, DOMAIN="ipc-2000", BASELINE_RUNNERS="bfs") == 0
+    assert run(monkeypatch, tmp_path, DOMAIN="ipc-2000", BASELINE_RUNNERS="bfs",
+               BASELINE_MEMORY_GB="1") == 2
+    assert "set BASELINE_OUT to a new directory" in capsys.readouterr().out
+    assert len(rows(tmp_path)) == 1
 
 
 def test_unknown_runner_and_empty_corpora(tmp_path, monkeypatch, capsys):
@@ -137,10 +161,32 @@ def test_fd_rows_from_a_stub(tmp_path, monkeypatch):
     assert (by["fd-sat"]["status"], by["fd-sat"]["message"]) == ("refused", "exit 34")
 
 
+def gone(pid):
+    """True once ``pid`` no longer exists (an orphan is reaped by init)."""
+    for _ in range(50):
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return True
+        time.sleep(0.1)
+    return False
+
+
 def test_run_limited_kills_the_group(tmp_path):
     sleep = [sys.executable, "-c", "import time; time.sleep(30)"]
     code, _, reason, seconds = sb.run_limited(sleep, 0.6, 2**40)
     assert (code, reason) == (None, "timeout") and seconds < 10
+    # A descendant (FD's driver starts the search as one) dies with the group.
+    spawn = [sys.executable, "-c", "import subprocess, sys, time; "
+             "p = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(30)']); "
+             "print(p.pid, flush=True); time.sleep(30)"]
+    code, out, reason, _ = sb.run_limited(spawn, 1.5, 2**40)
+    pid = int(out)
+    try:
+        assert reason == "timeout" and gone(pid)
+    finally:
+        with contextlib.suppress(ProcessLookupError):
+            os.kill(pid, signal.SIGKILL)
     code, _, reason, _ = sb.run_limited(sleep, 30, 1)
     assert (code, reason) == (None, "memout")
     code, out, reason, _ = sb.run_limited([sys.executable, "-c", "print(1)"], 30, 2**40)

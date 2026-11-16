@@ -2,7 +2,15 @@
 
 How far pddl-py's built-in planners get on the IPC corpora, next to Fast
 Downward, and what stops them first. Reproduce with `make baseline` (see
-`tests/solve_baseline.py`); the per-run CSV and a longer summary, including
+`tests/solve_baseline.py`), with the limits below:
+
+```bash
+BASELINE_MEMORY_GB=2.5 BASELINE_JOBS=6 make baseline                    # first pass
+CORPORA_PER_DOMAIN=3 BASELINE_TIMEOUT=60 BASELINE_MEMORY_GB=2.5 BASELINE_JOBS=6 make baseline
+```
+
+A rerun resumes the CSV in the output directory and refuses to mix in other
+limits. The per-run CSV and a longer summary, including
 coverage per domain variant, land in `$CORPORA_DIR/results/baseline-t10-n1/`
 (first pass) and `baseline-t60-n3/` (the longer pass at the end, the reference
 later milestones are measured against).
@@ -34,9 +42,10 @@ later milestones are measured against).
 FD's refusals are exit 31 (input it does not support: numeric fluents,
 durative actions, 157) and, for lmcut, exit 34 (conditional effects, 52).
 
-- Any pddl-py planner solves 142 pairs, any FD configuration 305.
-- FD only: 176 pairs. pddl-py only: 13 (numeric and preference variants FD
-  does not accept, plus tyreworld and pathways).
+- `bfs`, `ucs` or `astar` solves 142 pairs, 152 with `temporal`. Any FD
+  configuration solves 305.
+- FD only: 176 pairs. pddl-py only: 23 (durative, numeric and preference
+  variants FD does not accept, plus tyreworld and pathways).
 - Every plan pddl-py returned passed its own validator: no `invalid` rows and
   no crashes.
 
@@ -104,7 +113,7 @@ conditions are not modeled; that is a gap not yet on the T2 list.
 ## Longer pass: 60 s, 3 per domain variant
 
 Same runners and limits as above, with 60 s per run and the first three
-problems of each domain variant (`CORPORA_PER_DOMAIN=3 BASELINE_TIMEOUT=60`):
+problems of each domain variant:
 1,430 pairs, 300 of them durative, about 6 h. Date: 2026-11-15.
 
 | runner | solved | unsolvable | limit | timeout | memout | refused | total |
@@ -117,7 +126,8 @@ problems of each domain variant (`CORPORA_PER_DOMAIN=3 BASELINE_TIMEOUT=60`):
 | fd-sat | 908 | | | 52 | 1 | 469 | 1430 |
 
 - `bfs`, `ucs` or `astar` solves 383 pairs, 409 with `temporal`. Any FD
-  configuration solves 908. FD only: 556 pairs.
+  configuration solves 908. FD only: 556 pairs; pddl-py only: 57, the same
+  kinds of variant as in the first pass.
 - 1,076 plans returned by pddl-py, all accepted by its validator.
 
 The first pass holds up:

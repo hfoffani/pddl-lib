@@ -11,8 +11,10 @@ were in (parse, ground, search, validate), and the seconds spent in each, so
 a timeout says where the time went.
 
 Rows already in the CSV are skipped, so an interrupted run resumes where it
-stopped. The default output directory names the time limit and the sample
-size, so runs with other settings do not mix.
+stopped; Fast Downward rows marked ``missing`` are rerun once it is
+installed. The default output directory names the time limit and the sample
+size, and ``settings.json`` there records the limits: a resume with other
+limits is refused, so runs with other settings do not mix.
 
 Runners:
   bfs, ucs, astar  pddlpy's planners (every pair)
@@ -319,12 +321,37 @@ def tasks(pairs: Iterable[Pair], runners: Sequence[str]) -> List[Tuple[Pair, str
     return work
 
 
-def done(path: str) -> set:
-    """``(problem, runner)`` keys already in the CSV."""
+def done(path: str, drop_missing: bool) -> set:
+    """``(problem, runner)`` keys already in the CSV. With ``drop_missing``,
+    the ``missing`` placeholder rows are removed from the CSV first, so those
+    runs are done again."""
     if not os.path.exists(path):
         return set()
     with open(path, newline="", encoding="utf-8") as f:
-        return {(r["problem"], r["runner"]) for r in csv.DictReader(f)}
+        rows = list(csv.DictReader(f))
+    if drop_missing and any(r["status"] == "missing" for r in rows):
+        rows = [r for r in rows if r["status"] != "missing"]
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, FIELDS)
+            writer.writeheader()
+            writer.writerows(rows)
+    return {(r["problem"], r["runner"]) for r in rows}
+
+
+def check_settings(out: str, settings: Dict[str, Any]) -> Optional[str]:
+    """Record ``settings`` in ``out``, or the reason they differ from the
+    ones recorded there."""
+    path = os.path.join(out, "settings.json")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            old = json.load(f)
+        if old != settings:
+            return "%s was run with %s, not %s; set BASELINE_OUT to a new directory" % (
+                out, old, settings)
+        return None
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(settings, f)
+    return None
 
 
 def run_one(pair: Pair, runner: str, corpora: str, fd: Optional[str],
@@ -365,11 +392,16 @@ def main() -> int:
         return 0
     out = out_dir(corpora, timeout)
     os.makedirs(out, exist_ok=True)
+    clash = check_settings(out, {"timeout": timeout, "memory_gb": memory / 2**30,
+                                 "per_domain": per_domain()})
+    if clash:
+        print("baseline: " + clash)
+        return 2
     path = os.path.join(out, "baseline.csv")
-    seen = done(path)
+    fd = fast_downward_bin()
+    seen = done(path, drop_missing=bool(fd))
     work = [(p, r) for p, r in tasks(pairs, runners)
             if (os.path.relpath(p[2], corpora), r) not in seen]
-    fd = fast_downward_bin()
     print("baseline: %d pairs, %d runs left (%d done) -> %s" % (
         len(pairs), len(work), len(seen), path), flush=True)
     if not fd and any(r in FD_CONFIGS for r in runners):
@@ -457,7 +489,7 @@ def summary(rows: List[Dict[str, str]]) -> str:
     for x in rows:
         if x["status"] == "solved":
             solved[x["runner"]].add(x["problem"])
-    pd = set().union(*(solved[r] for r in PDDLPY))
+    pd = set().union(*(solved[r] for r in PDDLPY + ("temporal",)))
     fd = solved["fd-opt"] | solved["fd-sat"]
     lines += ["", "Pairs solved: any pddlpy planner %d, any FD configuration %d, "
               "FD only %d, pddlpy only %d." % (len(pd), len(fd), len(fd - pd), len(pd - fd))]
@@ -501,16 +533,15 @@ def summary(rows: List[Dict[str, str]]) -> str:
 
     # Coverage per domain variant.
     lines += ["", "## Solved per domain variant", ""]
-    by = collections.defaultdict(collections.Counter)
-    n = collections.Counter()
+    by: Dict[str, collections.Counter] = collections.defaultdict(collections.Counter)
+    n = collections.defaultdict(set)
     for x in rows:
-        if x["runner"] == runners[0]:
-            n[x["variant"]] += 1
+        n[x["variant"]].add(x["problem"])
         if x["status"] == "solved":
             by[x["variant"]][x["runner"]] += 1
     variants = sorted({x["variant"] for x in rows})
     lines += _table(["variant", "pairs"] + runners,
-                    [[v, n[v] or ""] + [by[v][r] for r in runners] for v in variants])
+                    [[v, len(n[v])] + [by[v][r] for r in runners] for v in variants])
     return "\n".join(lines) + "\n"
 
 
