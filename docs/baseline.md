@@ -158,3 +158,43 @@ refuses 198 (66 %, as in the first pass). Expression durations appear in 156
 of the 198, equality conditions in 30, syntax errors (#141) in 27. Order of
 work unchanged: hFF with greedy best-first search (M6) first, then states that
 are cheaper to build and smaller to store.
+
+## After hFF: `gbfs` on the 60 s pass
+
+`gbfs` now searches on hFF (`pddlpy/planning/relaxed.py`). It ran alone,
+under the same limits as the longer pass (60 s, 3 per domain variant,
+2.5 GB, 6 jobs; date: 2026-11-17), into `baseline-t60-n3-gbfs/`; the other
+runners are unchanged. The sample has one more pair since a duplicated
+satellite pair was removed, so the comparison uses the 1,430 pairs both runs
+share.
+
+| | gbfs (hFF) | astar | fd-sat |
+|---|---|---|---|
+| solved | 523 | 364 | 908 |
+| search limit | 336 | 395 | |
+| memout in the search | 46 | 137 | |
+
+- Any pddl-py planner now solves 583 pairs, up from 409. FD-only pairs fall
+  from 556 to 389.
+- `gbfs` solves 184 pairs `astar` does not; `astar` solves 25 that `gbfs`
+  does not.
+- No `gbfs` run called a pair unsolvable that FD solves. All 523 plans
+  passed the validator.
+- On the 339 pairs both solve, `gbfs` expands a median of 12 states, `astar`
+  699. Its plans cost what FD's optimal plans cost at the median (379 pairs);
+  the worst is 8 times as expensive.
+- Only 29 of the 523 plans took over 10 s: as before, more time adds little.
+- Fewer states also means less memory: search memouts drop from 137 to 46.
+
+What stops `gbfs` now, on the 389 FD-only pairs: the search limit on 290,
+grounding (time or memory) on 31, memory in the search on 26, refusals on the
+rest. On 173 of those 290, lama-first solved the pair in fewer states than
+`gbfs` expanded. Two levers remain:
+
+1. **Expansion speed.** hFF is computed for every generated state: `gbfs`
+   expands a median of 630 states per second, against `astar`'s 1,800. Lazy
+   evaluation (compute h when a state is expanded, not generated) and
+   cheaper successor generation and states are the next step.
+2. **Guidance.** lama-first adds landmarks and preferred operators. Preferred
+   operators come from the relaxed plan hFF already builds, so they are the
+   cheaper of the two.
