@@ -238,3 +238,8 @@ On the 1,430 pairs shared with the passes above:
 - `astar` is six times faster per expansion and now runs out of memory
   instead of time: 427 memouts (178 before), 124 search limits (395).
   Smaller states matter for `astar` now. `gbfs` memouts: 80 → 105.
+
+The 60 s numbers predate one fix: the action sort now reads arguments in
+the operator's declared parameter order (review of PR #232). It reorders
+actions on some domains; the 10 s sample moves from 191 to 193 for `gbfs`
+and stays at 141 for `astar`.

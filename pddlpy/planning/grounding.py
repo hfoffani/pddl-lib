@@ -36,15 +36,15 @@ class GroundedTask:
         self.initial: State = State.from_problem(domainproblem)
         self.goals = domainproblem.goals()
         self.goal = domainproblem.goal_condition()
-        # Sorted by operator, then arguments: grounding enumerates sets, so
-        # its order follows the string hash seed, and the search (successor
-        # order, hFF supporters) would differ from run to run.
-        self.actions: List["Operator"] = [
-            gop
-            for name in domainproblem.operators()
-            for gop in sorted(domainproblem.ground_operator(name),
-                              key=lambda op: [str(v) for v in op.variable_list.values()])
-        ]
+        # Sorted by operator, then arguments in the operator's parameter
+        # order: grounding enumerates sets, so its order follows the string
+        # hash seed, and the search (successor order, hFF supporters) would
+        # differ from run to run.
+        self.actions: List["Operator"] = []
+        for name in domainproblem.operators():
+            params = list(domainproblem.domain.operators[name].variable_list)
+            self.actions += sorted(domainproblem.ground_operator(name), key=lambda op: [
+                str(op.variable_list[p]) for p in params])
 
         self._index: Optional[Tuple[List[int], Dict[GroundAtom, List[int]]]] = None
 
