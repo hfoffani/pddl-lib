@@ -45,7 +45,7 @@ class GroundedTask:
             gop
             for name in domainproblem.operators()
             for gop in sorted(domainproblem.ground_operator(name), key=lambda op: [
-                (declared.get(v, len(declared)), str(v)) for v in op.variable_list.values()])
+                (declared.get(str(v), len(declared)), str(v)) for v in op.variable_list.values()])
         ]
 
         self._index: Optional[Tuple[List[int], Dict[GroundAtom, List[int]]]] = None
