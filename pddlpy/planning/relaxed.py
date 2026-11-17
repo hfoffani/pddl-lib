@@ -97,16 +97,12 @@ class RelaxedTask:
         # initially; the action never applies when it does not.
         changed = set().union(*self.add, *map(_deletes, task.actions))
         initial = task.initial.atoms
-        # Ids follow the atoms sorted by predicate, then by the order the
-        # problem declares their objects, and every id tuple is sorted, so the
+        # Ids follow the sorted atoms and every id tuple is sorted, so the
         # supporters ``ff`` picks do not depend on set iteration order (the
         # string hash seed): the same task gives the same h in every run.
         dynamic = [frozenset(a for a in p if a in changed) for p in self.pre]
-        declared = {o: i for i, o in enumerate(task.domainproblem.worldobjects())}
         self._id: Dict["GroundAtom", int] = {
-            atom: i for i, atom in enumerate(sorted(
-                set().union(*dynamic, *self.add, self.goal),
-                key=lambda atom: (atom[0], [(declared.get(o, len(declared)), o) for o in atom[1:]])))}
+            atom: i for i, atom in enumerate(sorted(set().union(*dynamic, *self.add, self.goal)))}
         self._pre = [tuple(sorted(self._id[a] for a in p)) for p in dynamic]
         self._add = [tuple(sorted(self._id[a] for a in a_)) for a_ in self.add]
         self._needed_by: List[List[int]] = [[] for _ in self._id]
