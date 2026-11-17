@@ -112,8 +112,10 @@ def claims_unsolvable(sc: Scenario, answer: str, extractor: Optional[Extractor])
     if extractor is not None:
         reply = extractor(
             "Below is a problem statement and someone's answer to it. Does the "
-            "ANSWER conclude that the task cannot be done at all, whatever the "
-            "cost? Reply with exactly YES or NO.\n\nPROBLEM:\n%s\n\nANSWER:\n%s\n"
+            "ANSWER conclude that the task, with every constraint the problem "
+            "states, cannot be done? An answer that says so and then shows what "
+            "would work if a constraint were relaxed still counts. Reply with "
+            "exactly YES or NO.\n\nPROBLEM:\n%s\n\nANSWER:\n%s\n"
             % (sc.text, answer))
         return reply.strip().upper().startswith("YES")
     return bool(re.search(r"\b(impossible|not possible|cannot be done|unsolvable|"

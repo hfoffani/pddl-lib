@@ -123,6 +123,7 @@ class Run:
     tokens: int = 0
     detail: str = ""
     transcript: str = ""
+    answer: str = ""
 
 
 def _attr(obj, *names):
@@ -311,7 +312,7 @@ async def one_run(run: Run, sc, client, grade_client, grader_model, session,
         run.seconds = time.monotonic() - t0
         return run
     run.seconds = time.monotonic() - t0
-    answer = final_answer(messages)
+    answer = run.answer = final_answer(messages)
 
     async def extract_async(prompt: str) -> str:
         data = await grade_client.chat(grader_model, [{"role": "user", "content": prompt}],
@@ -470,21 +471,72 @@ def cmd_check(a) -> int:
     return rc
 
 
+def sync_extractor(model: Optional[str]):
+    """The extractor model as a blocking call, or None without a key."""
+    if not model or "OPENROUTER_API_KEY" not in os.environ:
+        return None
+    import httpx
+
+    def extractor(prompt: str) -> str:
+        r = httpx.post(OPENROUTER_URL, timeout=600, json={
+            "model": model, "temperature": 0,
+            "messages": [{"role": "user", "content": prompt}]},
+            headers={"Authorization": "Bearer %s" % os.environ["OPENROUTER_API_KEY"]})
+        r.raise_for_status()
+        return r.json()["choices"][0]["message"].get("content") or ""
+    return extractor
+
+
+def transcript_answer(text: str) -> str:
+    """The final answer of a transcript written before runs stored it: the
+    last assistant block, if no tool call follows it."""
+    if "\n## Assistant\n" not in text:
+        return ""
+    last = text.rsplit("\n## Assistant\n", 1)[1]
+    return "" if "\n### `" in last else last.strip()
+
+
+def cmd_regrade(a) -> int:
+    """Grade the stored answers of a results dir again (after a grader fix)."""
+    outdir = pathlib.Path(a.dir)
+    path = outdir / "results.jsonl"
+    recs = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    known = set(Run.__dataclass_fields__)
+    runs = [Run(**{k: v for k, v in r.items() if k in known}) for r in recs]
+    extractor = sync_extractor(a.grader_model)
+    changed = 0
+    for r in runs:
+        if r.verdict == "error":
+            continue
+        tpath = outdir / r.transcript
+        text = tpath.read_text(encoding="utf-8") if r.transcript else ""
+        r.answer = r.answer or transcript_answer(text)
+        g = grader.grade(scenarios.load(r.scenario), r.answer, extractor)
+        if not r.answer:
+            g.detail = "; ".join(x for x in ("no final answer", g.detail) if x)
+        if g.verdict != r.verdict:
+            changed += 1
+            print("%-24s %-7s %-26s #%d  %s -> %s" % (
+                r.scenario, r.arm, r.model, r.rep, r.verdict, g.verdict))
+        r.verdict, r.cost, r.optimum, r.detail = g.verdict, g.cost, g.optimum, g.detail
+        if text:
+            tpath.write_text(text.replace(
+                text.split("- **verdict:** `", 1)[1].split("`", 1)[0] + "`",
+                g.verdict + "`", 1) if "- **verdict:** `" in text else text, encoding="utf-8")
+    path.write_text("".join(json.dumps(asdict(r)) + "\n" for r in runs), encoding="utf-8")
+    stamp = outdir.name
+    (outdir / "results.md").write_text("# Playground results %s (regraded)\n\n%s\n\n"
+                                       "## Runs\n\n%s\n" % (stamp, table(runs), details(runs)),
+                                       encoding="utf-8")
+    print("\n%s\n\n%d verdicts changed; results: %s" % (
+        table(runs), changed, outdir / "results.md"))
+    return 0
+
+
 def cmd_grade(a) -> int:
     sc = scenarios.load(a.scenario)
     answer = pathlib.Path(a.answer).read_text(encoding="utf-8")
-    extractor = None
-    if a.grader_model and "OPENROUTER_API_KEY" in os.environ:
-        import httpx
-
-        def extractor(prompt: str) -> str:
-            r = httpx.post(OPENROUTER_URL, timeout=600, json={
-                "model": a.grader_model, "temperature": 0,
-                "messages": [{"role": "user", "content": prompt}]},
-                headers={"Authorization": "Bearer %s" % os.environ["OPENROUTER_API_KEY"]})
-            r.raise_for_status()
-            return r.json()["choices"][0]["message"].get("content") or ""
-    g = grader.grade(sc, answer, extractor)
+    g = grader.grade(sc, answer, sync_extractor(a.grader_model))
     print(json.dumps(asdict(g), indent=1))
     return 0 if g.passed else 1
 
@@ -503,6 +555,9 @@ def main(argv: Optional[List[str]] = None) -> int:
     p = sub.add_parser("grade", help="grade an answer file against a scenario")
     p.add_argument("scenario")
     p.add_argument("answer")
+    p.add_argument("--grader-model", default=DEFAULT_GRADER)
+    p = sub.add_parser("regrade", help="grade a results dir's answers again")
+    p.add_argument("dir")
     p.add_argument("--grader-model", default=DEFAULT_GRADER)
     p = sub.add_parser("run", help="run scenarios x arms x models")
     p.add_argument("scenarios", nargs="+")
@@ -525,7 +580,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     if a.cmd == "run":
         return asyncio.run(cmd_run(a))
     return {"list": cmd_list, "show": cmd_show, "check": cmd_check,
-            "grade": cmd_grade}[a.cmd](a)
+            "grade": cmd_grade, "regrade": cmd_regrade}[a.cmd](a)
 
 
 if __name__ == "__main__":

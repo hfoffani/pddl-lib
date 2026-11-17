@@ -125,7 +125,7 @@ def test_grade_unsolvable():
         return call
     assert grader.grade(sc, "No route delivers the tools.", fake("YES")).verdict \
         == grader.CORRECT
-    assert "cannot be done" in seen[0]
+    assert "cannot be done" in seen[0] and "every constraint" in seen[0]
     assert grader.grade(sc, "It is impossible to do better than 30.",
                         fake("NO")).verdict != grader.CORRECT
 
@@ -167,6 +167,34 @@ def test_codex_events_to_messages():
     assert calls == ["solve", "shell"]
     assert json.loads(msgs[2]["content"]) == {"status": "solved"}
     assert playground.final_answer(msgs) == "Answer"
+
+
+def test_transcript_answer():
+    t = "# x\n\n## User\n\nq\n\n## Assistant\n\nthinking\n\n### `solve`\n\n{}\n" \
+        "\n## Assistant\n\n## Answer\n\nImpossible.\n"
+    assert playground.transcript_answer(t) == "## Answer\n\nImpossible."
+    assert playground.transcript_answer(t.rsplit("\n## Assistant", 1)[0]) == ""
+    assert playground.transcript_answer("# x\n") == ""
+
+
+@pytest.mark.parametrize("stored", [True, False])
+def test_regrade(tmp_path, stored):
+    pytest.importorskip("httpx")
+    if not stored:
+        pytest.importorskip("mcp")
+    playground.main(["run", "courier-unsolvable", "--arm", "bare", "--dry-run",
+                     "--out", str(tmp_path)])
+    path = tmp_path / "results.jsonl"
+    rec = json.loads(path.read_text())
+    assert rec["answer"].startswith("It is impossible")
+    rec["verdict"] = "wrong"
+    if not stored:
+        rec["answer"] = ""
+    path.write_text(json.dumps(rec) + "\n")
+    assert playground.main(["regrade", str(tmp_path), "--grader-model", ""]) == 0
+    assert json.loads(path.read_text())["verdict"] == grader.CORRECT
+    assert "(regraded)" in (tmp_path / "results.md").read_text()
+    assert "**verdict:** `correct`" in (tmp_path / rec["transcript"]).read_text()
 
 
 def test_sandbox_runs_code(tmp_path):
