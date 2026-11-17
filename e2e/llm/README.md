@@ -34,6 +34,22 @@ $P run courier --arm bare,python,pddlpy --dry-run   # canned, no key
 $P grade maintenance my-answer.txt                  # grade by hand
 ```
 
+**ChatGPT subscription models** go through the Codex CLI (`codex login`
+with a ChatGPT account; no API key): `--model codex:<slug>`, slugs from
+`codex debug models` (e.g. `codex:gpt-6.1-sol`). Codex brings its own agent
+prompt and tools, so these arms only approximate the ones above:
+
+| Arm | Codex tools |
+|---|---|
+| `bare` | none (shell and code mode off) |
+| `python` | Codex's shell in its `workspace-write` sandbox (no network, writes only in a temp dir, reads anywhere) and code mode (JavaScript) |
+| `pddlpy` | the pddlpy MCP server, Codex's file edits and code mode; no shell |
+
+Each run gets a fresh `CODEX_HOME` with only a link to `~/.codex/auth.json`,
+and skills are off, so the user's Codex config, `AGENTS.md` and installed
+skills (a global pddlpy skill would leak into every arm) stay out. Grading
+still uses the OpenRouter extractor when `OPENROUTER_API_KEY` is set.
+
 Results go to `results/<stamp>/` (gitignored): `results.md` (pass table + run
 list), `results.jsonl`, and one transcript per run, with reasoning, code and
 PDDL inline. Offline tests: `uv run --with mcp,httpx pytest e2e/llm`.

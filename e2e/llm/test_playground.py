@@ -130,6 +130,45 @@ def test_grade_unsolvable():
                         fake("NO")).verdict != grader.CORRECT
 
 
+def test_codex_command_per_arm(tmp_path):
+    import codex_driver as cx
+
+    def cmd(arm):
+        return cx.command(arm, "gpt-x", tmp_path, "uv run pddlpy-mcp")
+    bare, py, pd = cmd("bare"), cmd("python"), cmd("pddlpy")
+    off = {arm: {c[i + 1] for i in range(len(c) - 1) if c[i] == "--disable"}
+           for arm, c in (("bare", bare), ("python", py), ("pddlpy", pd))}
+    assert {"code_mode_host", "shell_tool", "skill_search"} <= off["bare"]
+    assert "shell_tool" not in off["python"] and "code_mode_host" not in off["python"]
+    assert "shell_tool" in off["pddlpy"] and "code_mode_host" not in off["pddlpy"]
+    assert 'mcp_servers.pddlpy.command="uv"' in pd and "mcp_servers.pddlpy.command" not in \
+        " ".join(py)
+    assert bare[bare.index("-s") + 1] == "read-only" and py[py.index("-m") + 1] == "gpt-x"
+
+
+def test_codex_events_to_messages():
+    import codex_driver as cx
+    events = [
+        {"type": "item.completed", "item": {"type": "error", "message": "warn"}},
+        {"type": "item.completed", "item": {"type": "reasoning", "text": "think"}},
+        {"type": "item.completed", "item": {
+            "type": "mcp_tool_call", "tool": "solve", "arguments": {"planner": "ucs"},
+            "result": {"structured_content": {"result": {"status": "solved"}}}}},
+        {"type": "item.completed", "item": {
+            "type": "command_execution", "command": "python x.py",
+            "aggregated_output": "7\n", "exit_code": 0}},
+        {"type": "item.completed", "item": {"type": "agent_message", "text": "Answer"}},
+        {"type": "item.completed", "item": {"type": "reasoning", "text": "after"}},
+        {"type": "turn.completed", "usage": {"input_tokens": 10, "output_tokens": 5}},
+    ]
+    msgs, tokens, errors = cx.to_messages(events)
+    assert tokens == 15 and errors == ["warn"]
+    calls = [m["tool_calls"][0]["function"]["name"] for m in msgs if m.get("tool_calls")]
+    assert calls == ["solve", "shell"]
+    assert json.loads(msgs[2]["content"]) == {"status": "solved"}
+    assert playground.final_answer(msgs) == "Answer"
+
+
 def test_sandbox_runs_code(tmp_path):
     out = json.loads(sandbox.run_python("print(6*7)", tmp_path))
     assert (out["exit_code"], out["stdout"]) == (0, "42\n")

@@ -20,7 +20,8 @@ The answer is graded against the scenario's reference PDDL (see grader.py).
 
 Results land in e2e/llm/results/<stamp>/: results.md (table), results.jsonl,
 and one markdown transcript per run. Models are OpenRouter ids
-(OPENROUTER_API_KEY).
+(OPENROUTER_API_KEY), or ``codex:<slug>`` to go through the Codex CLI on a
+ChatGPT subscription (codex_driver.py; its arms differ slightly).
 """
 from __future__ import annotations
 
@@ -42,6 +43,7 @@ HERE = pathlib.Path(__file__).parent
 REPO = HERE.parent.parent
 sys.path.insert(0, str(HERE))
 
+import codex_driver  # noqa: E402
 import grader  # noqa: E402
 import sandbox  # noqa: E402
 import scenarios  # noqa: E402
@@ -244,7 +246,9 @@ async def converse(run: Run, sc, client, session, mcp_tools, max_turns: int,
 
 
 def final_answer(messages: List[dict]) -> str:
-    last = messages[-1] if messages else {}
+    # trailing reasoning-only messages (Codex) are not the answer
+    body = [m for m in messages if not (m.get("reasoning") and not m.get("content"))]
+    last = body[-1] if body else {}
     if last.get("role") != "assistant" or last.get("tool_calls"):
         return ""
     return last.get("content") or ""
@@ -293,10 +297,15 @@ def to_markdown(run: Run, messages: List[dict], g: grader.Grade) -> str:
 
 
 async def one_run(run: Run, sc, client, grade_client, grader_model, session,
-                  mcp_tools, max_turns, dry_run, outdir) -> Run:
+                  mcp_tools, max_turns, dry_run, outdir, server_cmd: str = "",
+                  codex_timeout: float = 1200.0) -> Run:
     t0 = time.monotonic()
     try:
-        messages = await converse(run, sc, client, session, mcp_tools, max_turns, dry_run)
+        if run.model.startswith(codex_driver.PREFIX):
+            messages = await codex_driver.converse(run, sc, server_cmd, codex_timeout)
+        else:
+            messages = await converse(run, sc, client, session, mcp_tools, max_turns,
+                                      dry_run)
     except Exception as exc:  # network / API errors: record and move on
         run.verdict, run.detail = "error", "%s: %s" % (type(exc).__name__, exc)
         run.seconds = time.monotonic() - t0
@@ -324,7 +333,8 @@ async def one_run(run: Run, sc, client, grade_client, grader_model, session,
         g.detail = "; ".join(x for x in ("no final answer", g.detail) if x)
     run.verdict, run.cost, run.optimum = g.verdict, g.cost, g.optimum
     run.detail = "; ".join(x for x in (run.detail, g.detail) if x)
-    name = "%s-%s-%s-%d.md" % (run.scenario, run.arm, run.model.replace("/", "_"), run.rep)
+    name = "%s-%s-%s-%d.md" % (run.scenario, run.arm,
+                                run.model.replace("/", "_").replace(":", "_"), run.rep)
     path = outdir / "transcripts" / name
     path.write_text(to_markdown(run, messages, g), encoding="utf-8")
     run.transcript = str(path.relative_to(outdir))
@@ -371,17 +381,22 @@ def details(runs: List[Run]) -> str:
 
 async def cmd_run(a) -> int:
     dry = a.dry_run
-    if not dry and "OPENROUTER_API_KEY" not in os.environ:
-        print("OPENROUTER_API_KEY not set (use --dry-run to test the pipeline)",
-              file=sys.stderr)
+    models = ["dry-run"] if dry else a.model.split(",")
+    api_models = [m for m in models if not m.startswith(codex_driver.PREFIX)]
+    has_key = "OPENROUTER_API_KEY" in os.environ
+    if not dry and api_models and not has_key:
+        print("OPENROUTER_API_KEY not set (use --dry-run to test the pipeline, or "
+              "codex:<slug> models)", file=sys.stderr)
         return 2
+    if not dry and not has_key:
+        print("note: no OPENROUTER_API_KEY, so no extractor model: plans are read "
+              "from (action ...) lines only", file=sys.stderr)
     scs = [scenarios.load(n) for n in a.scenarios]
     arms = a.arm.split(",")
     bad = [x for x in arms if x not in ARMS]
     if bad:
         print("unknown arm(s) %s; choose from %s" % (bad, ", ".join(ARMS)), file=sys.stderr)
         return 2
-    models = ["dry-run"] if dry else a.model.split(",")
     stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     outdir = pathlib.Path(a.out or HERE / "results" / stamp)
     (outdir / "transcripts").mkdir(parents=True, exist_ok=True)
@@ -392,7 +407,7 @@ async def cmd_run(a) -> int:
     import httpx
     async with contextlib.AsyncExitStack() as stack:
         session, mcp_tools = None, []
-        if "pddlpy" in arms:
+        if "pddlpy" in arms and (dry or api_models):
             from mcp import ClientSession, StdioServerParameters
             from mcp.client.stdio import stdio_client
             cmd, *cmd_args = a.server_cmd.split()
@@ -402,7 +417,7 @@ async def cmd_run(a) -> int:
             await session.initialize()
             mcp_tools = (await session.list_tools()).tools
         http = await stack.enter_async_context(httpx.AsyncClient())
-        client = None if dry else OpenRouter(http)
+        client = OpenRouter(http) if not dry and has_key else None
         sem = asyncio.Semaphore(a.jobs)
         log = (outdir / "results.jsonl").open("a", encoding="utf-8")
         stack.callback(log.close)
@@ -410,7 +425,8 @@ async def cmd_run(a) -> int:
         async def go(r: Run) -> Run:
             async with sem:
                 await one_run(r, by_name[r.scenario], client, client, a.grader_model,
-                              session, mcp_tools, a.max_turns, dry, outdir)
+                              session, mcp_tools, a.max_turns, dry, outdir,
+                              a.server_cmd, a.codex_timeout)
             log.write(json.dumps(asdict(r)) + "\n")
             log.flush()
             print("%-12s %-7s %-34s #%d  %-16s %s" % (
@@ -491,10 +507,13 @@ def main(argv: Optional[List[str]] = None) -> int:
     p = sub.add_parser("run", help="run scenarios x arms x models")
     p.add_argument("scenarios", nargs="+")
     p.add_argument("--arm", default="bare", help="comma list of %s" % ",".join(ARMS))
-    p.add_argument("--model", default="openai/gpt-5", help="comma list of OpenRouter ids")
+    p.add_argument("--model", default="openai/gpt-5",
+                   help="comma list of OpenRouter ids and codex:<slug> (ChatGPT via Codex)")
     p.add_argument("--repeats", type=int, default=1)
     p.add_argument("--jobs", type=int, default=4, help="concurrent runs")
     p.add_argument("--max-turns", type=int, default=30)
+    p.add_argument("--codex-timeout", type=float, default=1200.0,
+                   help="seconds per codex: run")
     p.add_argument("--grader-model", default=DEFAULT_GRADER,
                    help="extractor model (temperature 0)")
     p.add_argument("--server-cmd", default="uv run --project %s --extra mcp pddlpy-mcp" % REPO,
