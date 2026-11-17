@@ -8,6 +8,16 @@ domain --validate_plan--> verdict:
     goal-not-reached  every step runs, the goal does not hold at the end
     invalid           a step is malformed or cannot run
     unparseable       no plan could be read from the answer
+
+``check-plan`` and ``unsolvable`` scenarios (see scenarios.py) ask for a
+judgment instead of a plan:
+
+    correct           the right judgment
+    wrong             a ``VERDICT:`` line with the wrong judgment
+    unparseable       no judgment found
+
+An ``unsolvable`` answer that proposes a plan instead gets that plan's
+verdict (never optimal: no plan exists).
 """
 from __future__ import annotations
 
@@ -24,6 +34,10 @@ Extractor = Callable[[str], str]
 
 OPTIMAL, SUBOPTIMAL, GOAL, INVALID, UNPARSEABLE = (
     "optimal", "suboptimal", "goal-not-reached", "invalid", "unparseable")
+CORRECT, WRONG = "correct", "wrong"
+PASS = (OPTIMAL, CORRECT)
+
+_VERDICT = re.compile(r"VERDICT:\W*(valid|invalid\W+at\W+step\W*(\d+))", re.I)
 
 _STEP = re.compile(r"\(\s*([A-Za-z][\w-]*)((?:\s+[\w-]+)*)\s*\)")
 
@@ -39,7 +53,7 @@ class Grade:
 
     @property
     def passed(self) -> bool:
-        return self.verdict == OPTIMAL
+        return self.verdict in PASS
 
 
 def regex_steps(answer: str, actions: set) -> List[PlanStep]:
@@ -92,7 +106,37 @@ def extract(sc: Scenario, answer: str, extractor: Optional[Extractor]):
         return (steps or None), "extractor"
 
 
+def claims_unsolvable(sc: Scenario, answer: str, extractor: Optional[Extractor]) -> bool:
+    """Whether the answer concludes the task cannot be done (the extractor
+    decides; without one, a keyword match)."""
+    if extractor is not None:
+        reply = extractor(
+            "Below is a problem statement and someone's answer to it. Does the "
+            "ANSWER conclude that the task cannot be done at all, whatever the "
+            "cost? Reply with exactly YES or NO.\n\nPROBLEM:\n%s\n\nANSWER:\n%s\n"
+            % (sc.text, answer))
+        return reply.strip().upper().startswith("YES")
+    return bool(re.search(r"\b(impossible|not possible|cannot be done|unsolvable|"
+                          r"no (valid )?(plan|route|solution) exists)\b", answer, re.I))
+
+
+def grade_check(sc: Scenario, answer: str) -> Grade:
+    found = _VERDICT.findall(answer)
+    if not found:
+        return Grade(UNPARSEABLE, detail="no VERDICT line")
+    text, step = found[-1]
+    said = int(step) if step else None
+    ok = said == sc.first_bad_step
+    return Grade(CORRECT if ok else WRONG, detail="said %s, first bad step %s" % (
+        " ".join(text.lower().split()), sc.first_bad_step), source="regex")
+
+
 def grade(sc: Scenario, answer: str, extractor: Optional[Extractor] = None) -> Grade:
+    if sc.kind == "check-plan":
+        return grade_check(sc, answer)
+    if sc.kind == "unsolvable" and claims_unsolvable(sc, answer, extractor):
+        return Grade(CORRECT, detail="says no plan exists",
+                     source="extractor" if extractor else "regex")
     steps, source = extract(sc, answer, extractor)
     if not steps:
         return Grade(UNPARSEABLE, optimum=sc.optimal_cost, source=source,
@@ -107,5 +151,7 @@ def grade(sc: Scenario, answer: str, extractor: Optional[Extractor] = None) -> G
         return Grade(kind, None, sc.optimal_cost, shown,
                      v.failure.message, source)  # type: ignore[union-attr]
     cost = final_cost(v.simulation.state, len(steps))
+    if sc.optimal_cost is None:  # a valid plan for an unsolvable task: a broken scenario
+        return Grade(WRONG, cost, None, shown, "the reference says no plan exists", source)
     verdict = OPTIMAL if cost <= sc.optimal_cost + 1e-9 else SUBOPTIMAL
     return Grade(verdict, cost, sc.optimal_cost, shown, "", source)

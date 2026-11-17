@@ -6,6 +6,16 @@ A scenario is a directory under ``e2e/llm/scenarios/``:
     domain.pddl   reference domain  } used only to grade answers and to
     problem.pddl  reference problem } check the optimum; never shown to the model
     meta.json     {"optimal_cost": N, "planner": "ucs", "source": "..."}
+
+``meta.json`` may set ``kind``:
+
+    solve         (default) find a cheapest plan; graded against optimal_cost
+    improve-plan  problem.md shows a valid but suboptimal plan
+                  (proposed.plan); graded like solve
+    check-plan    problem.md shows a plan (proposed.plan) that first fails at
+                  step ``first_bad_step``; the answer ends with a
+                  ``VERDICT:`` line
+    unsolvable    no plan exists (no optimal_cost); the answer must say so
 """
 from __future__ import annotations
 
@@ -16,7 +26,7 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 from pddlpy import DomainProblem
-from pddlpy.planning import plan_cost, plan_steps, solve
+from pddlpy.planning import parse_plan, plan_cost, plan_steps, solve, validate_plan
 from pddlpy.planning.state import State
 
 ROOT = pathlib.Path(__file__).parent / "scenarios"
@@ -27,9 +37,11 @@ class Scenario:
     name: str
     path: pathlib.Path
     text: str
-    optimal_cost: float
+    optimal_cost: Optional[float]
     planner: str
     source: str
+    kind: str = "solve"
+    first_bad_step: Optional[int] = None
 
     @property
     def domain_file(self) -> pathlib.Path:
@@ -38,6 +50,10 @@ class Scenario:
     @property
     def problem_file(self) -> pathlib.Path:
         return self.path / "problem.pddl"
+
+    @property
+    def proposed_file(self) -> pathlib.Path:
+        return self.path / "proposed.plan"
 
     def reference(self) -> DomainProblem:
         return DomainProblem(str(self.domain_file), str(self.problem_file))
@@ -48,9 +64,11 @@ def load(name: str, root: pathlib.Path = ROOT) -> Scenario:
     if not (path / "problem.md").is_file():
         raise SystemExit("no scenario %r (see `playground.py list`)" % name)
     meta = json.loads((path / "meta.json").read_text(encoding="utf-8"))
+    opt = meta.get("optimal_cost")
     return Scenario(name, path, (path / "problem.md").read_text(encoding="utf-8").strip(),
-                    float(meta["optimal_cost"]), meta.get("planner", "ucs"),
-                    meta.get("source", ""))
+                    None if opt is None else float(opt), meta.get("planner", "ucs"),
+                    meta.get("source", ""), meta.get("kind", "solve"),
+                    meta.get("first_bad_step"))
 
 
 def all_scenarios(root: pathlib.Path = ROOT) -> List[Scenario]:
@@ -64,18 +82,31 @@ class Check:
     seconds: float
     plan: List[str]
     message: str
+    ok: bool = False
 
 
 def check(sc: Scenario, timeout: float = 60.0) -> Check:
-    """Solve the reference problem with the scenario's (optimal) planner."""
+    """Solve the reference problem with the scenario's (optimal) planner.
+    ``ok``: the result matches ``meta.json`` (the optimum; no plan for
+    ``unsolvable``; for ``check-plan`` the proposed plan first fails at
+    ``first_bad_step``)."""
     dp = sc.reference()
     t0 = time.monotonic()
     res = solve(dp, sc.planner, timeout=timeout)
     secs = time.monotonic() - t0
     if res.plan is None:
-        return Check(None, secs, [], res.message or res.status)
+        ok = sc.kind == "unsolvable" and res.status == "unsolvable"
+        return Check(None, secs, [], res.message or res.status, ok)
     steps = plan_steps(dp, res.plan)
-    return Check(float(res.plan.cost), secs, [str(s) for s in steps], res.message)
+    cost = float(res.plan.cost)
+    ok = sc.optimal_cost is not None and abs(cost - sc.optimal_cost) < 1e-9
+    message = res.message
+    if sc.kind == "check-plan":
+        v = validate_plan(dp, parse_plan(sc.proposed_file.read_text(encoding="utf-8")))
+        bad = None if v.valid else v.failure.step  # type: ignore[union-attr]
+        ok = bad == sc.first_bad_step
+        message = "; ".join(x for x in (message, "proposed plan fails at step %s" % bad) if x)
+    return Check(cost, secs, [str(s) for s in steps], message, ok)
 
 
 def final_cost(state: State, n_steps: int) -> float:

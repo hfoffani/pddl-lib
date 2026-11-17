@@ -166,6 +166,10 @@ def dry_run_turns(sc: scenarios.Scenario, arm: str, workdir: pathlib.Path) -> li
     """Canned assistant turns: the reference plan, reached the arm's way."""
     plan = "\n".join(scenarios.check(sc).plan)
     answer = "Here is the plan:\n\n%s\n" % plan
+    if sc.kind == "unsolvable":
+        plan, answer = "no plan", "It is impossible: no plan exists.\n"
+    elif sc.kind == "check-plan":
+        plan = answer = "VERDICT: invalid at step %d\n" % sc.first_bad_step
     if arm == "python":
         return [{"tool_calls": [("run_python", {"code": "print(%r)" % plan})]},
                 {"content": answer}]
@@ -178,8 +182,11 @@ def dry_run_turns(sc: scenarios.Scenario, arm: str, workdir: pathlib.Path) -> li
                 ("write_file", {"filename": "problem.pddl",
                                 "content": sc.problem_file.read_text()})]},
             {"tool_calls": [("validate", {"domain_file": d, "problem_file": p})]},
-            {"tool_calls": [("solve", {"domain_file": d, "problem_file": p,
-                                       "planner": sc.planner})]},
+            {"tool_calls": [
+                ("validate_plan", {"domain_file": d, "problem_file": p,
+                                   "plan": sc.proposed_file.read_text()})
+                if sc.kind == "check-plan" else
+                ("solve", {"domain_file": d, "problem_file": p, "planner": sc.planner})]},
             {"content": answer}]
     return [{"content": answer}]
 
@@ -339,8 +346,8 @@ def table(runs: List[Run]) -> str:
             if not rs:
                 cells.append("")
                 continue
-            ok = sum(r.verdict == grader.OPTIMAL for r in rs)
-            others = sorted({r.verdict for r in rs if r.verdict != grader.OPTIMAL})
+            ok = sum(r.verdict in grader.PASS for r in rs)
+            others = sorted({r.verdict for r in rs if r.verdict not in grader.PASS})
             cells.append("%d/%d%s" % (ok, len(rs), (" (" + ", ".join(others) + ")")
                                       if others else ""))
         out.append("| %s | %s | %s |" % (sc, arm, " | ".join(cells)))
@@ -422,7 +429,9 @@ async def cmd_run(a) -> int:
 
 def cmd_list(a) -> int:
     for sc in scenarios.all_scenarios():
-        print("%-22s optimum %-6g %s" % (sc.name, sc.optimal_cost, sc.source))
+        target = ("optimum %g" % sc.optimal_cost if sc.optimal_cost is not None
+                  else "no plan")
+        print("%-22s %-13s %-11s %s" % (sc.name, sc.kind, target, sc.source))
     return 0
 
 
@@ -436,10 +445,9 @@ def cmd_check(a) -> int:
     rc = 0
     for sc in scs:
         c = scenarios.check(sc, a.timeout)
-        ok = c.cost is not None and abs(c.cost - sc.optimal_cost) < 1e-9
-        rc |= not ok
-        print("%-22s %s  %s cost %s (meta %g), %d steps, %.1fs %s" % (
-            sc.name, "ok " if ok else "BAD", sc.planner, c.cost, sc.optimal_cost,
+        rc |= not c.ok
+        print("%-22s %s  %s cost %s (meta %s), %d steps, %.1fs %s" % (
+            sc.name, "ok " if c.ok else "BAD", sc.planner, c.cost, sc.optimal_cost,
             len(c.plan), c.seconds, c.message))
         if a.plan:
             print("    " + "\n    ".join(c.plan))

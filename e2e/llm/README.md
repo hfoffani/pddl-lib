@@ -47,9 +47,25 @@ PDDL inline. Offline tests: `uv run --with mcp,httpx pytest e2e/llm`.
 | `logistics` | 25 | truck/plane hand-offs across 3 cities |
 | `maintenance` | 2 | set cover; the greedy pick leads to 3 days |
 
+The verifier claims, one scenario each. The model is asked to judge a plan, or
+the task has no plan; the question never hints which:
+
+| Scenario | Kind | Pass | The trap |
+|---|---|---|---|
+| `courier-check` | `check-plan` | `VERDICT: invalid at step 16` | a 20-step dispatcher plan; step 16 drives a one-way road backwards |
+| `maintenance-improve` | `improve-plan` | a 2-day schedule | the office proposes the greedy 3-day schedule; it is valid |
+| `courier-unsolvable` | `unsolvable` | says it cannot be done | `courier-parcels` without the only road into the castle |
+
+`check-plan` answers end with a `VERDICT:` line, graded by regex. An
+`unsolvable` answer passes when the extractor model says it concludes the
+task cannot be done; a plan instead gets that plan's verdict. Passing verdicts
+are `optimal` and `correct`.
+
 **Adding a scenario:** create a directory with `problem.md`, `domain.pddl`,
-`problem.pddl` and `meta.json` (`optimal_cost`, `planner`, `source`), then
-check it with `$P check NAME`. Use an optimal planner: `ucs` always, `astar`
+`problem.pddl` and `meta.json` (`optimal_cost`, `planner`, `source`, and
+optionally `kind` and `first_bad_step`; see `scenarios.py`), plus
+`proposed.plan` for `check-plan` and `improve-plan`. Then check it with
+`$P check NAME`. Use an optimal planner: `ucs` always, `astar`
 only for unit costs where no action reaches two goal atoms at once.
 
 ## Courier harness (#106) Reproduces

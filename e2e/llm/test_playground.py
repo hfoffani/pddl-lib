@@ -17,28 +17,29 @@ import sandbox  # noqa: E402
 import scenarios  # noqa: E402
 
 ALL = [sc.name for sc in scenarios.all_scenarios()]
+#: scenarios answered with a plan
+PLANS = [sc.name for sc in scenarios.all_scenarios() if sc.kind in ("solve", "improve-plan")]
 
 
 @pytest.fixture(scope="module")
 def plans():
-    return {n: scenarios.check(scenarios.load(n)).plan for n in ALL}
+    return {n: scenarios.check(scenarios.load(n)).plan for n in PLANS}
 
 
 @pytest.mark.parametrize("name", ALL)
-def test_reference_solves_at_optimum(name, plans):
-    sc = scenarios.load(name)
-    c = scenarios.check(sc)
-    assert c.cost == sc.optimal_cost
+def test_reference_matches_meta(name):
+    c = scenarios.check(scenarios.load(name))
+    assert c.ok, c
     assert c.seconds < 10
 
 
-@pytest.mark.parametrize("name", ALL)
+@pytest.mark.parametrize("name", PLANS)
 def test_grade_reference_plan_optimal(name, plans):
     g = grader.grade(scenarios.load(name), "Plan:\n" + "\n".join(plans[name]))
     assert g.verdict == grader.OPTIMAL, g
 
 
-@pytest.mark.parametrize("name", ALL)
+@pytest.mark.parametrize("name", PLANS)
 def test_grade_truncated_plan_goal_not_reached(name, plans):
     g = grader.grade(scenarios.load(name), "\n".join(plans[name][:-1]))
     assert g.verdict in (grader.GOAL, grader.UNPARSEABLE), g
@@ -46,7 +47,7 @@ def test_grade_truncated_plan_goal_not_reached(name, plans):
         assert g.verdict == grader.GOAL
 
 
-@pytest.mark.parametrize("name", ALL)
+@pytest.mark.parametrize("name", PLANS)
 def test_grade_unknown_object_invalid(name, plans):
     first = plans[name][0].strip("()").split()
     bogus = "(%s %s)" % (first[0], " ".join(["nowhere"] * (len(first) - 1)))
@@ -54,7 +55,7 @@ def test_grade_unknown_object_invalid(name, plans):
     assert g.verdict == grader.INVALID, g
 
 
-@pytest.mark.parametrize("name", ALL)
+@pytest.mark.parametrize("name", PLANS)
 def test_grade_prose_unparseable(name):
     g = grader.grade(scenarios.load(name), "I am not sure, it depends.")
     assert g.verdict == grader.UNPARSEABLE
@@ -82,6 +83,51 @@ def test_grade_extractor_path():
     assert (g.verdict, g.source) == (grader.OPTIMAL, "extractor")
     assert "(drive ?from - place ?to - place)" in seen[0] and prose in seen[0]
     assert grader.grade(sc, prose, lambda p: "NONE").verdict == grader.UNPARSEABLE
+
+
+def test_improve_plan_shows_a_valid_suboptimal_plan():
+    sc = scenarios.load("maintenance-improve")
+    g = grader.grade(sc, sc.proposed_file.read_text())
+    assert (g.verdict, g.cost) == (grader.SUBOPTIMAL, 3.0)
+
+
+def test_grade_check_plan():
+    sc = scenarios.load("courier-check")
+    assert sc.kind == "check-plan" and sc.first_bad_step == 16
+
+    def verdict(answer):
+        return grader.grade(sc, answer).verdict
+    assert verdict("The road runs the other way.\nVERDICT: invalid at step 16") == grader.CORRECT
+    assert verdict("**VERDICT:** Invalid at step 16.") == grader.CORRECT
+    assert verdict("VERDICT: invalid at step 3\n...\nVERDICT: invalid at step 16") == grader.CORRECT
+    assert verdict("VERDICT: invalid at step 17") == grader.WRONG
+    assert verdict("VERDICT: valid") == grader.WRONG
+    assert verdict("It fails at step 16.") == grader.UNPARSEABLE
+
+
+def test_grade_unsolvable():
+    sc = scenarios.load("courier-unsolvable")
+    assert sc.optimal_cost is None
+    assert grader.grade(sc, "This is impossible: nothing reaches the castle.").verdict \
+        == grader.CORRECT
+    # a plan instead gets that plan's verdict: here the tools never arrive
+    reference = scenarios.check(scenarios.load("courier-parcels")).plan
+    g = grader.grade(sc, "\n".join(reference))
+    assert g.verdict == grader.INVALID, g
+    assert grader.grade(sc, "Hmm.").verdict == grader.UNPARSEABLE
+    # the extractor decides when there is one
+    seen = []
+
+    def fake(reply):
+        def call(prompt):
+            seen.append(prompt)
+            return reply
+        return call
+    assert grader.grade(sc, "No route delivers the tools.", fake("YES")).verdict \
+        == grader.CORRECT
+    assert "cannot be done" in seen[0]
+    assert grader.grade(sc, "It is impossible to do better than 30.",
+                        fake("NO")).verdict != grader.CORRECT
 
 
 def test_sandbox_runs_code(tmp_path):
@@ -126,13 +172,14 @@ def test_sandbox_fails_closed(tmp_path, monkeypatch):
     assert not list(tmp_path.iterdir())
 
 
+@pytest.mark.parametrize("name", ["courier", "courier-check", "courier-unsolvable"])
 @pytest.mark.parametrize("arm", playground.ARMS)
-def test_dry_run(arm, tmp_path):
+def test_dry_run(arm, name, tmp_path):
     if arm == "pddlpy":
         pytest.importorskip("mcp")
     pytest.importorskip("httpx")
-    rc = playground.main(["run", "courier", "--arm", arm, "--dry-run", "--out", str(tmp_path)])
+    rc = playground.main(["run", name, "--arm", arm, "--dry-run", "--out", str(tmp_path)])
     assert rc == 0
     rec = json.loads((tmp_path / "results.jsonl").read_text().splitlines()[0])
-    assert rec["verdict"] == grader.OPTIMAL, rec
-    assert "| courier | %s | 1/1 |" % arm in (tmp_path / "results.md").read_text()
+    assert rec["verdict"] in grader.PASS, rec
+    assert "| %s | %s | 1/1 |" % (name, arm) in (tmp_path / "results.md").read_text()

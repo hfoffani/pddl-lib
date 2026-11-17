@@ -1,0 +1,2 @@
+{"kind": "check-plan", "first_bad_step": 16, "planner": "ucs",
+ "source": "courier-parcels plus a dispatcher's 20-step plan. Step 16 drives hospital -> castle, but that road only runs castle -> hospital. The plan is otherwise feasible."}
