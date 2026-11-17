@@ -16,6 +16,10 @@ A scenario is a directory under ``e2e/llm/scenarios/``:
                   step ``first_bad_step``; the answer ends with a
                   ``VERDICT:`` line
     unsolvable    no plan exists (no optimal_cost); the answer must say so
+
+``"planner": "none"`` marks a scenario too large for the reference check:
+``check`` then validates ``optimal.plan`` at ``optimal_cost`` instead of
+solving (its minimality comes from the generator, see ``source``).
 """
 from __future__ import annotations
 
@@ -92,6 +96,13 @@ def check(sc: Scenario, timeout: float = 60.0) -> Check:
     ``first_bad_step``)."""
     dp = sc.reference()
     t0 = time.monotonic()
+    if sc.planner == "none":
+        text = (sc.path / "optimal.plan").read_text(encoding="utf-8")
+        v = validate_plan(dp, parse_plan(text))
+        cost = final_cost(v.simulation.state, len(text.split("\n")) - 1) if v.valid else None
+        ok = cost is not None and abs(cost - (sc.optimal_cost or 0)) < 1e-9
+        return Check(cost, time.monotonic() - t0, text.split("\n")[:-1],
+                     "optimal.plan, not solved", ok)
     res = solve(dp, sc.planner, timeout=timeout)
     secs = time.monotonic() - t0
     if res.plan is None:
