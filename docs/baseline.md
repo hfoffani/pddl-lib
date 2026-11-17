@@ -198,3 +198,48 @@ rest. On 173 of those 290, lama-first solved the pair in fewer states than
 2. **Guidance.** lama-first adds landmarks and preferred operators. Preferred
    operators come from the relaxed plan hFF already builds, so they are the
    cheaper of the two.
+
+## hFF speed and tie-breaking
+
+Four changes on the `gbfs` above, then `gbfs` and `astar` rerun under the
+same limits (60 s, 3 per domain variant, 2.5 GB, 6 jobs; date: 2026-11-17)
+into `baseline-t60-n3-gbfs-speed/`. Each change was measured on its own: on
+a fixed number of expansions when it leaves the search unchanged, and on
+the 10 s / 1 per variant sample when it does not.
+
+- **Reproducible search.** The grounded action order followed the string
+  hash seed (grounding enumerates sets), and so did hFF's choice of
+  supporters. Actions and hFF's atoms are now sorted. Before, `gbfs` solved
+  182, 182 and 183 pairs of the 10 s sample under three seeds.
+- **Same search, faster.** hFF drops atoms no action changes; successor
+  generation tests only actions whose rarest needed atom holds (every
+  planner benefits); successor states skip re-normalizing their atoms.
+  Up to 36 % less time per expansion, none on some domains.
+- **hFF's supporters by h_add.** Of the actions that reach an atom in the
+  same layer, hFF keeps the one with the lowest h_add (1 plus its
+  preconditions' costs). `gbfs` on the 10 s sample: 179 solved with
+  alphabetical tie-breaking, 191 with h_add. Ordering by the problem's
+  object declarations added nothing on top and was dropped.
+- **Lazy evaluation**, h computed when a state is expanded instead of
+  generated, solved no more pairs (181 vs 182) and was dropped.
+
+On the 1,430 pairs shared with the passes above:
+
+| | before | after | gained | lost | expansions/s |
+|---|---|---|---|---|---|
+| gbfs | 523 | 553 | 41 | 11 | 630 → 660 |
+| astar | 364 | 390 | 26 | 0 | 1,700 → 10,500 |
+
+- Any pddl-py planner solves 620 pairs (583 before); FD-only pairs fall from
+  389 to 356. fd-sat solves 908.
+- No `gbfs` unsolvable verdict on a pair FD solves; all 943 plans validate.
+- `gbfs` spends what it gains in speed on the h_add tie-break: its
+  expansions per second barely move, its guidance does.
+- `astar` is six times faster per expansion and now runs out of memory
+  instead of time: 427 memouts (178 before), 124 search limits (395).
+  Smaller states matter for `astar` now. `gbfs` memouts: 80 → 105.
+
+The 60 s numbers predate one fix: the action sort now reads arguments in
+the operator's declared parameter order (review of PR #232). It reorders
+actions on some domains; the 10 s sample moves from 191 to 193 for `gbfs`
+and stays at 141 for `astar`.

@@ -7,14 +7,18 @@ without re-deriving it (PRD §5.2).
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterator, List, Tuple
+import collections
+from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Tuple
 
 from pddlpy.pddl import holds3
 
-from .state import State, goal_holds
+from .relaxed import needed_atoms
+from .state import State, atom_tuple, goal_holds
 
 if TYPE_CHECKING:
     from pddlpy.pddl import DomainProblem, Operator
+
+    from .state import GroundAtom
 
 
 class GroundedTask:
@@ -32,15 +36,49 @@ class GroundedTask:
         self.initial: State = State.from_problem(domainproblem)
         self.goals = domainproblem.goals()
         self.goal = domainproblem.goal_condition()
-        self.actions: List["Operator"] = [
-            gop
-            for name in domainproblem.operators()
-            for gop in domainproblem.ground_operator(name)
-        ]
+        # Sorted by operator, then arguments in the operator's parameter
+        # order: grounding enumerates sets, so its order follows the string
+        # hash seed, and the search (successor order, hFF supporters) would
+        # differ from run to run.
+        self.actions: List["Operator"] = []
+        for name in domainproblem.operators():
+            params = list(domainproblem.domain.operators[name].variable_list)
+            self.actions += sorted(domainproblem.ground_operator(name), key=lambda op: [
+                str(op.variable_list[p]) for p in params])
+
+        self._index: Optional[Tuple[List[int], Dict[GroundAtom, List[int]]]] = None
+
+    def _candidates(self, state: State) -> List[int]:
+        """Indices, in order, of the actions that may apply in ``state``.
+
+        Each action is filed under one atom its precondition always needs,
+        the one fewest actions need; it is a candidate only when that atom
+        holds. Actions that need no atom are always candidates. Built on
+        first use."""
+        if self._index is None:
+            needs = [_needs(a) for a in self.actions]
+            freq = collections.Counter(atom for n in needs for atom in n)
+            always: List[int] = []
+            by_atom: Dict[GroundAtom, List[int]] = {}
+            for i, n in enumerate(needs):
+                if n:
+                    by_atom.setdefault(min(n, key=lambda a: (freq[a], a)), []).append(i)
+                else:
+                    always.append(i)
+            self._index = (always, by_atom)
+        always, by_atom = self._index
+        found = list(always)
+        for atom in state.atoms:
+            found.extend(by_atom.get(atom, ()))
+        found.sort()
+        return found
 
     def successors(self, state: State) -> Iterator[Tuple["Operator", State]]:
-        """Yield ``(action, successor_state)`` for every applicable action."""
-        for action in self.actions:
+        """Yield ``(action, successor_state)`` for every applicable action,
+        in the order of ``actions``."""
+        actions = self.actions
+        for i in self._candidates(state):
+            action = actions[i]
             if state.applicable(action) and self._defined(action, state):
                 yield action, state.apply(action).derived(self.domainproblem)
 
@@ -57,3 +95,12 @@ class GroundedTask:
     def is_goal(self, state: State) -> bool:
         """True if ``state`` satisfies the goal."""
         return goal_holds(self.goal, state)
+
+
+def _needs(action: "Operator") -> "set[GroundAtom]":
+    """Atoms ``action``'s precondition needs in every case (a necessary
+    condition for ``State.applicable``)."""
+    precondition = getattr(action, "precondition", None)
+    if precondition is not None:
+        return needed_atoms(precondition)
+    return {atom_tuple(a) for a in action.precondition_pos}

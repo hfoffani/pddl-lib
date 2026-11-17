@@ -113,6 +113,16 @@ class State:
             frozenset(self._fluents.items()),
         )
 
+    @classmethod
+    def _of(cls, atoms: frozenset[GroundAtom], fluents: Valuation) -> "State":
+        """A state from atoms already normalized to tuples (``apply``):
+        skips ``atom_tuple`` on every atom."""
+        state = cls.__new__(cls)
+        state._atoms = atoms
+        state._fluents = dict(fluents)
+        state._key = (atoms, frozenset(state._fluents.items()))
+        return state
+
     @property
     def atoms(self) -> frozenset[GroundAtom]:
         return self._atoms
@@ -177,7 +187,7 @@ class State:
         if num_effects:
             fluents = apply_numeric(self._fluents, [
                 (eff.head.head, eff.op, eff.expr.value(self._fluents)) for eff in num_effects])
-        return State((self._atoms - delete) | add, fluents)
+        return State._of((self._atoms - delete) | add, fluents)
 
     def satisfies(self, goals: Iterable[Any]) -> bool:
         """True if every (positive) goal atom holds in this state."""

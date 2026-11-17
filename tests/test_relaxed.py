@@ -139,11 +139,12 @@ def test_gbfs_solves_and_proves(tmp_path):
 
 def test_gbfs_exhausts_what_the_relaxation_misses(tmp_path):
     # (not (visited b)) blocks go a b; the relaxation ignores negative
-    # conditions, so only the search proves there is no plan
+    # conditions, so only the search proves there is no plan. go a d leads
+    # to a dead end, pruned
     (tmp_path / "d.pddl").write_text(CHAIN)
     (tmp_path / "p.pddl").write_text(
-        "(define (problem p) (:domain chain) (:objects a b)"
-        " (:init (at a) (link a b) (visited b)) (:goal (at b)))")
+        "(define (problem p) (:domain chain) (:objects a b d)"
+        " (:init (at a) (link a b) (link a d) (visited b)) (:goal (at b)))")
     from pddlpy.planning import get
     dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
     assert RelaxedTask(GroundedTask(dp)).explore().solvable
@@ -162,3 +163,57 @@ def test_goal_at_start_keeps_the_accumulated_cost(tmp_path):
     dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
     assert get("gbfs").solve(dp).cost == 7
     assert get("bfs").solve(dp).cost == 7
+
+
+def test_static_atoms_take_their_initial_value(tmp_path):
+    # (p b) is never added: usep b can never apply, though p is not a static
+    # predicate; (q a) never changes and holds initially, so it is dropped
+    (tmp_path / "d.pddl").write_text("""(define (domain s)
+ (:requirements :strips)
+ (:predicates (p ?x) (q ?x) (done ?x))
+ (:action setp :parameters (?x) :precondition (q ?x) :effect (p ?x))
+ (:action usep :parameters (?x) :precondition (p ?x) :effect (done ?x)))""")
+    (tmp_path / "p.pddl").write_text(
+        "(define (problem p) (:domain s) (:objects a b) (:init (q a))"
+        " (:goal (done a)))")
+    task = GroundedTask(DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl")))
+    relaxed = RelaxedTask(task)
+    assert relaxed.ff(task.initial.atoms) == 2
+    assert relaxed.ff([]) == 2  # (q a) holds in every reachable state
+    names = [(a.operator_name, a.variable_list["?x"]) for a in task.actions]
+    assert relaxed._npre[names.index(("usep", "b"))] == -1
+
+
+def test_gbfs_is_the_same_under_any_hash_seed():
+    """Grounding order and hFF's supporters must not follow set iteration
+    order, or the search differs between runs (gripper's raw grounding
+    order does)."""
+    import subprocess
+    import sys
+    code = ("import os; from pddlpy import DomainProblem; from pddlpy.planning import get; "
+            "c = %r; dp = DomainProblem(os.path.join(c, 'domain.pddl'), "
+            "os.path.join(c, 'p01.pddl')); p = get('gbfs').solve(dp); "
+            "print([(a.operator_name, sorted(a.variable_list.items())) for a in p])"
+            % os.path.join(CORPUS, "ipc", "gripper-round-1-strips"))
+    out = {subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
+                          env={**os.environ, "PYTHONHASHSEED": seed}, check=True).stdout
+           for seed in ("1", "2", "3")}
+    assert len(out) == 1 and next(iter(out)).startswith("[(")
+
+
+def test_ff_prefers_the_cheaper_supporter_in_a_layer(tmp_path):
+    # a and b both reach (g) in layer 2; a needs two atoms (h_add 3), b one
+    # (h_add 2): the relaxed plan uses b, so hFF is 2, not 3
+    (tmp_path / "d.pddl").write_text("""(define (domain t)
+ (:requirements :strips)
+ (:predicates (s) (p1) (p2) (p3) (g))
+ (:action a :parameters () :precondition (and (p1) (p2)) :effect (g))
+ (:action b :parameters () :precondition (p3) :effect (g))
+ (:action m1 :parameters () :precondition (s) :effect (p1))
+ (:action m2 :parameters () :precondition (s) :effect (p2))
+ (:action m3 :parameters () :precondition (s) :effect (p3)))""")
+    (tmp_path / "p.pddl").write_text(
+        "(define (problem p) (:domain t) (:init (s)) (:goal (g)))")
+    task = GroundedTask(DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl")))
+    assert [a.operator_name for a in task.actions][:2] == ["a", "b"]
+    assert RelaxedTask(task).ff(task.initial.atoms) == 2
