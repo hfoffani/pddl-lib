@@ -13,6 +13,17 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   is relaxed-unreachable is reported unsolvable without a search. Plans
   are still not optimal. The solve baseline (`make baseline`) runs `gbfs`
   too.
+- **Reproducible search**: grounded actions are sorted by operator and
+  arguments. Their order used to follow Python's string hash seed, so a
+  planner could return a different plan (same length for `bfs`/`astar`/
+  `ucs`) from run to run.
+- **Faster successor generation** for every planner: only actions whose
+  rarest needed atom holds are tested. `astar` expands about six times as
+  many states per second on the IPC corpora.
+- **`gbfs`'s hFF** picks, among the actions that reach an atom in the same
+  layer, the one with the lowest h_add, and ignores atoms no action changes.
+  60 s baseline: `gbfs` 523 → 553 pairs, `astar` 364 → 390
+  (`docs/baseline.md`).
 
 ### Quality
 - **Mutation testing**: `make mutmut` mutates the plan validator and the
