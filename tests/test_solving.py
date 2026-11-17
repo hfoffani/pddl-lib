@@ -18,7 +18,9 @@ from pddlpy.planning import (
     plan_steps,
     register,
     solve,
+    solving,
 )
+from pddlpy.planning.validation import PlanValidationError, validate_plan
 
 CORPUS = os.path.join(os.path.dirname(__file__), "corpus")
 
@@ -52,16 +54,48 @@ def test_plan_steps_in_parameter_order():
         assert step.args == tuple(action.variable_list[v] for v in lifted)
 
 
-def test_unsolvable():
-    result = solve(_dp("temporal-weld", "temporal-weld-notorch"), "temporal")
+def test_unsolvable(tmp_path):
+    (tmp_path / "d.pddl").write_text(
+        "(define (domain d) (:requirements :strips) (:predicates (p) (q))\n"
+        " (:action a :parameters () :precondition (p) :effect (not (p))))")
+    (tmp_path / "p.pddl").write_text("(define (problem p) (:domain d) (:init (p)) (:goal (q)))")
+    dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
+    result = solve(dp, "bfs")
     assert (result.status, result.plan, result.validated) == (UNSOLVABLE, None, False)
+
+
+def test_temporal_exhausted_is_limit():
+    # temporal searches sequential schedules only: exhausting them proves
+    # nothing about plans with overlapping actions (#219)
+    result = solve(_dp("temporal-weld", "temporal-weld-notorch"), "temporal")
+    assert (result.status, result.plan, result.validated) == (LIMIT, None, False)
+    assert "sequential" in result.message
+
+
+def test_temporal_needs_concurrency_is_limit(tmp_path):
+    # #219 repro: only an overlapping plan exists, and validate_plan accepts it
+    (tmp_path / "d.pddl").write_text(
+        "(define (domain mc) (:requirements :strips :durative-actions)\n"
+        " (:predicates (light) (fixed) (unused))\n"
+        " (:durative-action light_match :parameters () :duration (= ?duration 5)\n"
+        "   :condition (and (at start (unused)))\n"
+        "   :effect (and (at start (not (unused))) (at start (light)) (at end (not (light)))))\n"
+        " (:durative-action mend_fuse :parameters () :duration (= ?duration 2)\n"
+        "   :condition (and (over all (light)))\n"
+        "   :effect (and (at end (fixed)))))")
+    (tmp_path / "p.pddl").write_text(
+        "(define (problem p) (:domain mc) (:init (unused)) (:goal (and (fixed))))")
+    dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
+    assert solve(dp, "temporal").status == LIMIT
+    overlapping = [PlanStep("light_match", (), 0.0, 5.0), PlanStep("mend_fuse", (), 1.0, 2.0)]
+    assert validate_plan(dp, overlapping).valid
 
 
 @pytest.mark.parametrize("planner", ["bfs", "astar", "temporal"])
 def test_max_expansions(planner):
     dp = _dp("temporal-charge" if planner == "temporal" else "gripper")
     result = solve(dp, planner, max_expansions=1)
-    assert (result.status, result.plan) == (LIMIT, None)
+    assert (result.status, result.plan, result.validated) == (LIMIT, None, False)
     assert "stopped after 1 expansions" in result.message
     with pytest.raises(SearchLimitError):
         get(planner, max_expansions=1).solve(dp)
@@ -78,16 +112,15 @@ def test_limits_reset_per_search():
     assert planner.solve(dp) is not None and planner.solve(dp) is not None
 
 
-def test_unvalidated_when_the_validator_refuses(tmp_path):
-    (tmp_path / "d.pddl").write_text("(define (domain d) (:predicates (p) (q))"
-                                     " (:action a :parameters () :effect (and (p) (q))))")
-    (tmp_path / "p.pddl").write_text("(define (problem p) (:domain d) (:init)"
-                                     " (:goal (or (p) (q))))")
-    dp = DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl"))
-    result = solve(dp, "bfs")
+def test_unvalidated_when_the_validator_refuses(monkeypatch):
+    def refuse(dp, steps):
+        raise PlanValidationError("cannot judge this")
+    monkeypatch.setattr(solving, "validate_plan", refuse)
+    result = solve(_dp("gripper"), "bfs")
     assert result.status == SOLVED
+    assert result.plan is not None
     assert result.validated is False
-    assert result.message.startswith("plan not validated:") and "#138" in result.message
+    assert result.message == "plan not validated: cannot judge this"
 
 
 class _Liar(Planner):
@@ -101,5 +134,13 @@ class _Liar(Planner):
 
 def test_invalid_plan_is_an_error():
     register("liar", _Liar)
-    with pytest.raises(PlannerError, match="liar returned a plan that fails validation"):
+    with pytest.raises(PlannerError, match="^liar returned a plan that fails validation: "):
         solve(_dp("gripper"), "liar")
+
+
+def test_default_planner_is_astar(monkeypatch):
+    used = []
+    real_get = solving.get
+    monkeypatch.setattr(solving, "get", lambda name, **kw: used.append(name) or real_get(name, **kw))
+    solve(_dp("gripper"))
+    assert used == ["astar"]

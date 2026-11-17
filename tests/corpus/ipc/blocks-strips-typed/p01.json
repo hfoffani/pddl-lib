@@ -6,42 +6,42 @@
     "effect_neg": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "A"
+      "a"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "holding",
-      "A"
+      "a"
      ]
     ],
     "name": "pick-up",
     "parameters": {
-     "?x": "A"
+     "?x": "a"
     },
-    "precondition": "(and (clear A) (handempty) (ontable A))",
+    "precondition": "(and (clear a) (handempty) (ontable a))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "A"
+      "a"
      ]
     ]
    },
@@ -50,42 +50,42 @@
     "effect_neg": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "B"
+      "b"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "holding",
-      "B"
+      "b"
      ]
     ],
     "name": "pick-up",
     "parameters": {
-     "?x": "B"
+     "?x": "b"
     },
-    "precondition": "(and (clear B) (handempty) (ontable B))",
+    "precondition": "(and (clear b) (handempty) (ontable b))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "B"
+      "b"
      ]
     ]
    },
@@ -94,42 +94,42 @@
     "effect_neg": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "C"
+      "c"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "holding",
-      "C"
+      "c"
      ]
     ],
     "name": "pick-up",
     "parameters": {
-     "?x": "C"
+     "?x": "c"
     },
-    "precondition": "(and (clear C) (handempty) (ontable C))",
+    "precondition": "(and (clear c) (handempty) (ontable c))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "C"
+      "c"
      ]
     ]
    },
@@ -138,42 +138,42 @@
     "effect_neg": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "D"
+      "d"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "holding",
-      "D"
+      "d"
      ]
     ],
     "name": "pick-up",
     "parameters": {
-     "?x": "D"
+     "?x": "d"
     },
-    "precondition": "(and (clear D) (handempty) (ontable D))",
+    "precondition": "(and (clear d) (handempty) (ontable d))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "D"
+      "d"
      ]
     ]
    }
@@ -184,35 +184,35 @@
     "effect_neg": [
      [
       "holding",
-      "A"
+      "a"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "A"
+      "a"
      ]
     ],
     "name": "put-down",
     "parameters": {
-     "?x": "A"
+     "?x": "a"
     },
-    "precondition": "(holding A)",
+    "precondition": "(holding a)",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "holding",
-      "A"
+      "a"
      ]
     ]
    },
@@ -221,35 +221,35 @@
     "effect_neg": [
      [
       "holding",
-      "B"
+      "b"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "B"
+      "b"
      ]
     ],
     "name": "put-down",
     "parameters": {
-     "?x": "B"
+     "?x": "b"
     },
-    "precondition": "(holding B)",
+    "precondition": "(holding b)",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "holding",
-      "B"
+      "b"
      ]
     ]
    },
@@ -258,35 +258,35 @@
     "effect_neg": [
      [
       "holding",
-      "C"
+      "c"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "C"
+      "c"
      ]
     ],
     "name": "put-down",
     "parameters": {
-     "?x": "C"
+     "?x": "c"
     },
-    "precondition": "(holding C)",
+    "precondition": "(holding c)",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "holding",
-      "C"
+      "c"
      ]
     ]
    },
@@ -295,35 +295,35 @@
     "effect_neg": [
      [
       "holding",
-      "D"
+      "d"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "ontable",
-      "D"
+      "d"
      ]
     ],
     "name": "put-down",
     "parameters": {
-     "?x": "D"
+     "?x": "d"
     },
-    "precondition": "(holding D)",
+    "precondition": "(holding d)",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "holding",
-      "D"
+      "d"
      ]
     ]
    }
@@ -334,45 +334,45 @@
     "effect_neg": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "A"
+      "a",
+      "a"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "A",
-     "?y": "A"
+     "?x": "a",
+     "?y": "a"
     },
-    "precondition": "(and (clear A) (holding A))",
+    "precondition": "(and (clear a) (holding a))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ]
    },
@@ -381,45 +381,45 @@
     "effect_neg": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "A"
+      "b",
+      "a"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "B",
-     "?y": "A"
+     "?x": "b",
+     "?y": "a"
     },
-    "precondition": "(and (clear A) (holding B))",
+    "precondition": "(and (clear a) (holding b))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ]
    },
@@ -428,45 +428,45 @@
     "effect_neg": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "A"
+      "c",
+      "a"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "C",
-     "?y": "A"
+     "?x": "c",
+     "?y": "a"
     },
-    "precondition": "(and (clear A) (holding C))",
+    "precondition": "(and (clear a) (holding c))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ]
    },
@@ -475,45 +475,45 @@
     "effect_neg": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "A"
+      "d",
+      "a"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "D",
-     "?y": "A"
+     "?x": "d",
+     "?y": "a"
     },
-    "precondition": "(and (clear A) (holding D))",
+    "precondition": "(and (clear a) (holding d))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ]
    },
@@ -522,45 +522,45 @@
     "effect_neg": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "B"
+      "a",
+      "b"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "A",
-     "?y": "B"
+     "?x": "a",
+     "?y": "b"
     },
-    "precondition": "(and (clear B) (holding A))",
+    "precondition": "(and (clear b) (holding a))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ]
    },
@@ -569,45 +569,45 @@
     "effect_neg": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "B"
+      "b",
+      "b"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "B",
-     "?y": "B"
+     "?x": "b",
+     "?y": "b"
     },
-    "precondition": "(and (clear B) (holding B))",
+    "precondition": "(and (clear b) (holding b))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ]
    },
@@ -616,45 +616,45 @@
     "effect_neg": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "B"
+      "c",
+      "b"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "C",
-     "?y": "B"
+     "?x": "c",
+     "?y": "b"
     },
-    "precondition": "(and (clear B) (holding C))",
+    "precondition": "(and (clear b) (holding c))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ]
    },
@@ -663,45 +663,45 @@
     "effect_neg": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "B"
+      "d",
+      "b"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "D",
-     "?y": "B"
+     "?x": "d",
+     "?y": "b"
     },
-    "precondition": "(and (clear B) (holding D))",
+    "precondition": "(and (clear b) (holding d))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ]
    },
@@ -710,45 +710,45 @@
     "effect_neg": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "C"
+      "a",
+      "c"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "A",
-     "?y": "C"
+     "?x": "a",
+     "?y": "c"
     },
-    "precondition": "(and (clear C) (holding A))",
+    "precondition": "(and (clear c) (holding a))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ]
    },
@@ -757,45 +757,45 @@
     "effect_neg": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "C"
+      "b",
+      "c"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "B",
-     "?y": "C"
+     "?x": "b",
+     "?y": "c"
     },
-    "precondition": "(and (clear C) (holding B))",
+    "precondition": "(and (clear c) (holding b))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ]
    },
@@ -804,45 +804,45 @@
     "effect_neg": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "C"
+      "c",
+      "c"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "C",
-     "?y": "C"
+     "?x": "c",
+     "?y": "c"
     },
-    "precondition": "(and (clear C) (holding C))",
+    "precondition": "(and (clear c) (holding c))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ]
    },
@@ -851,45 +851,45 @@
     "effect_neg": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "C"
+      "d",
+      "c"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "D",
-     "?y": "C"
+     "?x": "d",
+     "?y": "c"
     },
-    "precondition": "(and (clear C) (holding D))",
+    "precondition": "(and (clear c) (holding d))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ]
    },
@@ -898,45 +898,45 @@
     "effect_neg": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "D"
+      "a",
+      "d"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "A",
-     "?y": "D"
+     "?x": "a",
+     "?y": "d"
     },
-    "precondition": "(and (clear D) (holding A))",
+    "precondition": "(and (clear d) (holding a))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ]
    },
@@ -945,45 +945,45 @@
     "effect_neg": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "D"
+      "b",
+      "d"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "B",
-     "?y": "D"
+     "?x": "b",
+     "?y": "d"
     },
-    "precondition": "(and (clear D) (holding B))",
+    "precondition": "(and (clear d) (holding b))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ]
    },
@@ -992,45 +992,45 @@
     "effect_neg": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "D"
+      "c",
+      "d"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "C",
-     "?y": "D"
+     "?x": "c",
+     "?y": "d"
     },
-    "precondition": "(and (clear D) (holding C))",
+    "precondition": "(and (clear d) (holding c))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ]
    },
@@ -1039,45 +1039,45 @@
     "effect_neg": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "D"
+      "d",
+      "d"
      ]
     ],
     "name": "stack",
     "parameters": {
-     "?x": "D",
-     "?y": "D"
+     "?x": "d",
+     "?y": "d"
     },
-    "precondition": "(and (clear D) (holding D))",
+    "precondition": "(and (clear d) (holding d))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ]
    }
@@ -1088,49 +1088,49 @@
     "effect_neg": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "A"
+      "a",
+      "a"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "A",
-     "?y": "A"
+     "?x": "a",
+     "?y": "a"
     },
-    "precondition": "(and (clear A) (handempty) (on A A))",
+    "precondition": "(and (clear a) (handempty) (on a a))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "A"
+      "a",
+      "a"
      ]
     ]
    },
@@ -1139,49 +1139,49 @@
     "effect_neg": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "B"
+      "a",
+      "b"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "A",
-     "?y": "B"
+     "?x": "a",
+     "?y": "b"
     },
-    "precondition": "(and (clear A) (handempty) (on A B))",
+    "precondition": "(and (clear a) (handempty) (on a b))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "B"
+      "a",
+      "b"
      ]
     ]
    },
@@ -1190,49 +1190,49 @@
     "effect_neg": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "C"
+      "a",
+      "c"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "A",
-     "?y": "C"
+     "?x": "a",
+     "?y": "c"
     },
-    "precondition": "(and (clear A) (handempty) (on A C))",
+    "precondition": "(and (clear a) (handempty) (on a c))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "C"
+      "a",
+      "c"
      ]
     ]
    },
@@ -1241,49 +1241,49 @@
     "effect_neg": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "D"
+      "a",
+      "d"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "A"
+      "a"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "A",
-     "?y": "D"
+     "?x": "a",
+     "?y": "d"
     },
-    "precondition": "(and (clear A) (handempty) (on A D))",
+    "precondition": "(and (clear a) (handempty) (on a d))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "A",
-      "D"
+      "a",
+      "d"
      ]
     ]
    },
@@ -1292,49 +1292,49 @@
     "effect_neg": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "A"
+      "b",
+      "a"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "B",
-     "?y": "A"
+     "?x": "b",
+     "?y": "a"
     },
-    "precondition": "(and (clear B) (handempty) (on B A))",
+    "precondition": "(and (clear b) (handempty) (on b a))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "A"
+      "b",
+      "a"
      ]
     ]
    },
@@ -1343,49 +1343,49 @@
     "effect_neg": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "B"
+      "b",
+      "b"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "B",
-     "?y": "B"
+     "?x": "b",
+     "?y": "b"
     },
-    "precondition": "(and (clear B) (handempty) (on B B))",
+    "precondition": "(and (clear b) (handempty) (on b b))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "B"
+      "b",
+      "b"
      ]
     ]
    },
@@ -1394,49 +1394,49 @@
     "effect_neg": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "C"
+      "b",
+      "c"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "B",
-     "?y": "C"
+     "?x": "b",
+     "?y": "c"
     },
-    "precondition": "(and (clear B) (handempty) (on B C))",
+    "precondition": "(and (clear b) (handempty) (on b c))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "C"
+      "b",
+      "c"
      ]
     ]
    },
@@ -1445,49 +1445,49 @@
     "effect_neg": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "D"
+      "b",
+      "d"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "B"
+      "b"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "B",
-     "?y": "D"
+     "?x": "b",
+     "?y": "d"
     },
-    "precondition": "(and (clear B) (handempty) (on B D))",
+    "precondition": "(and (clear b) (handempty) (on b d))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "B",
-      "D"
+      "b",
+      "d"
      ]
     ]
    },
@@ -1496,49 +1496,49 @@
     "effect_neg": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "A"
+      "c",
+      "a"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "C",
-     "?y": "A"
+     "?x": "c",
+     "?y": "a"
     },
-    "precondition": "(and (clear C) (handempty) (on C A))",
+    "precondition": "(and (clear c) (handempty) (on c a))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "A"
+      "c",
+      "a"
      ]
     ]
    },
@@ -1547,49 +1547,49 @@
     "effect_neg": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "B"
+      "c",
+      "b"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "C",
-     "?y": "B"
+     "?x": "c",
+     "?y": "b"
     },
-    "precondition": "(and (clear C) (handempty) (on C B))",
+    "precondition": "(and (clear c) (handempty) (on c b))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "B"
+      "c",
+      "b"
      ]
     ]
    },
@@ -1598,49 +1598,49 @@
     "effect_neg": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "C"
+      "c",
+      "c"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "C",
-     "?y": "C"
+     "?x": "c",
+     "?y": "c"
     },
-    "precondition": "(and (clear C) (handempty) (on C C))",
+    "precondition": "(and (clear c) (handempty) (on c c))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "C"
+      "c",
+      "c"
      ]
     ]
    },
@@ -1649,49 +1649,49 @@
     "effect_neg": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "D"
+      "c",
+      "d"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "C"
+      "c"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "C",
-     "?y": "D"
+     "?x": "c",
+     "?y": "d"
     },
-    "precondition": "(and (clear C) (handempty) (on C D))",
+    "precondition": "(and (clear c) (handempty) (on c d))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "C",
-      "D"
+      "c",
+      "d"
      ]
     ]
    },
@@ -1700,49 +1700,49 @@
     "effect_neg": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "A"
+      "d",
+      "a"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "A"
+      "a"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "D",
-     "?y": "A"
+     "?x": "d",
+     "?y": "a"
     },
-    "precondition": "(and (clear D) (handempty) (on D A))",
+    "precondition": "(and (clear d) (handempty) (on d a))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "A"
+      "d",
+      "a"
      ]
     ]
    },
@@ -1751,49 +1751,49 @@
     "effect_neg": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "B"
+      "d",
+      "b"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "B"
+      "b"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "D",
-     "?y": "B"
+     "?x": "d",
+     "?y": "b"
     },
-    "precondition": "(and (clear D) (handempty) (on D B))",
+    "precondition": "(and (clear d) (handempty) (on d b))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "B"
+      "d",
+      "b"
      ]
     ]
    },
@@ -1802,49 +1802,49 @@
     "effect_neg": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "C"
+      "d",
+      "c"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "C"
+      "c"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "D",
-     "?y": "C"
+     "?x": "d",
+     "?y": "c"
     },
-    "precondition": "(and (clear D) (handempty) (on D C))",
+    "precondition": "(and (clear d) (handempty) (on d c))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "C"
+      "d",
+      "c"
      ]
     ]
    },
@@ -1853,49 +1853,49 @@
     "effect_neg": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "D"
+      "d",
+      "d"
      ]
     ],
     "effect_num": [],
     "effect_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "holding",
-      "D"
+      "d"
      ]
     ],
     "name": "unstack",
     "parameters": {
-     "?x": "D",
-     "?y": "D"
+     "?x": "d",
+     "?y": "d"
     },
-    "precondition": "(and (clear D) (handempty) (on D D))",
+    "precondition": "(and (clear d) (handempty) (on d d))",
     "precondition_connective": "and",
     "precondition_neg": [],
     "precondition_num": [],
     "precondition_pos": [
      [
       "clear",
-      "D"
+      "d"
      ],
      [
       "handempty"
      ],
      [
       "on",
-      "D",
-      "D"
+      "d",
+      "d"
      ]
     ]
    }
@@ -1906,65 +1906,65 @@
   "durative_operators": [],
   "goals": [
    [
-    "ON",
-    "B",
-    "A"
+    "on",
+    "b",
+    "a"
    ],
    [
-    "ON",
-    "C",
-    "B"
+    "on",
+    "c",
+    "b"
    ],
    [
-    "ON",
-    "D",
-    "C"
+    "on",
+    "d",
+    "c"
    ]
   ],
   "initial_numeric": {},
   "initial_state": [
    [
-    "CLEAR",
-    "A"
+    "clear",
+    "a"
    ],
    [
-    "CLEAR",
-    "B"
+    "clear",
+    "b"
    ],
    [
-    "CLEAR",
-    "C"
+    "clear",
+    "c"
    ],
    [
-    "CLEAR",
-    "D"
+    "clear",
+    "d"
    ],
    [
-    "HANDEMPTY"
+    "handempty"
    ],
    [
-    "ONTABLE",
-    "A"
+    "ontable",
+    "a"
    ],
    [
-    "ONTABLE",
-    "B"
+    "ontable",
+    "b"
    ],
    [
-    "ONTABLE",
-    "C"
+    "ontable",
+    "c"
    ],
    [
-    "ONTABLE",
-    "D"
+    "ontable",
+    "d"
    ]
   ],
   "metric": null,
   "objects": {
-   "A": "block",
-   "B": "block",
-   "C": "block",
-   "D": "block"
+   "a": "block",
+   "b": "block",
+   "c": "block",
+   "d": "block"
   },
   "operators": [
    "pick-up",
@@ -1988,28 +1988,7 @@
   }
  },
  "validate": {
-  "issues": [
-   {
-    "check": "undeclared_predicate",
-    "message": "predicate 'CLEAR' is not declared in :predicates (used in :init)",
-    "severity": "error"
-   },
-   {
-    "check": "undeclared_predicate",
-    "message": "predicate 'HANDEMPTY' is not declared in :predicates (used in :init)",
-    "severity": "error"
-   },
-   {
-    "check": "undeclared_predicate",
-    "message": "predicate 'ON' is not declared in :predicates (used in :goal)",
-    "severity": "error"
-   },
-   {
-    "check": "undeclared_predicate",
-    "message": "predicate 'ONTABLE' is not declared in :predicates (used in :init)",
-    "severity": "error"
-   }
-  ],
-  "valid": false
+  "issues": [],
+  "valid": true
  }
 }

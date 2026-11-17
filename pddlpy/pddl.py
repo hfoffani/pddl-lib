@@ -35,6 +35,7 @@ from typing import (
     AbstractSet,
     Any,
     Dict,
+    FrozenSet,
     Iterator,
     List,
     Optional,
@@ -45,7 +46,7 @@ from typing import (
     cast,
 )
 
-from pddlpy._vendor.antlr4 import CommonTokenStream, FileStream, ParseTreeWalker
+from pddlpy._vendor.antlr4 import CommonTokenStream, InputStream, ParseTreeWalker
 from pddlpy._vendor.antlr4.error.ErrorListener import ErrorListener
 
 from .binding import CartesianBinder, StaticPrunedBinder, VariableBinder
@@ -624,13 +625,28 @@ def _atom_from_formula(ctx: Any) -> Atom:
     return Atom(pred)
 
 
+
+def _type_name(ctx) -> str:
+    """The type of a typed list: a name, or ``(either t1 t2 ...)`` (#200)."""
+    prims = [p.getText() for p in ctx.primType()]
+    if ctx.getChild(0).getText() == '(':
+        return '(either %s)' % ' '.join(prims)
+    return prims[0]
+
+
+def _either_members(t: Optional[str]) -> Optional[List[str]]:
+    """The member types of an ``(either ...)`` type, else ``None``."""
+    if t is not None and t.startswith('(either '):
+        return t[len('(either '):-1].split()
+    return None
+
 def _typed_var_list(ctx: Any) -> Dict[str, Optional[str]]:
     """Read a typedVariableList context into an ordered {var: type} dict."""
     varlist: Dict[str, Optional[str]] = {}
     for v in ctx.VARIABLE():
         varlist[v.getText()] = None
     for vs in ctx.singleTypeVarList():
-        t = vs.r_type().getText()
+        t = _type_name(vs.r_type())
         for v in vs.VARIABLE():
             varlist[v.getText()] = t
     return varlist
@@ -653,11 +669,251 @@ def _build_condition(gd: Any) -> Condition:
     if kw == 'imply':
         return Or([Not(_build_condition(subs[0])), _build_condition(subs[1])])
     if kw == '=':
-        terms = gd.term()
+        terms = gd.term() or gd.objectTerm()  # object fluents are refused (#211)
         return Equality(terms[0].getText(), terms[1].getText())
     body = _build_condition(subs[0])
     varlist = _typed_var_list(gd.typedVariableList())
     return Exists(varlist, body) if kw == 'exists' else Forall(varlist, body)
+
+
+class Preference():
+    """A goal preference, ``(preference name GD)`` (#201), possibly under
+    ``(forall (vars) ...)``: one instance per binding of ``params``, each
+    violated when its condition does not hold at the end of the plan."""
+
+    def __init__(self, name: Optional[str], params: Dict[str, Optional[str]],
+                 body: Condition) -> None:
+        self.name = name
+        self.params = dict(params)
+        self.body = body
+
+    def ground(self, dp: "DomainProblem") -> List[Condition]:
+        """The grounded condition of every instance."""
+        names = list(self.params)
+        domains = [dp.candidate_objects(self.params[v]) for v in names]
+        return [self.body.ground(dict(zip(names, combo)), dp)
+                for combo in itertools.product(*domains)]
+
+    def __repr__(self) -> str:
+        return "(preference %s %r)" % (self.name, self.body)
+
+
+def _build_pregd(ctx: Any, params: Dict[str, Optional[str]]
+                 ) -> Tuple[List[Condition], List[Preference]]:
+    """The hard conditions and the preferences of a preGD (#201)."""
+    first = ctx.getChild(1).getText().lower() if ctx.getChildCount() > 1 else None
+    if ctx.goalDesc() is None and first == 'and':
+        hard: List[Condition] = []
+        prefs: List[Preference] = []
+        for sub in ctx.preGD():
+            h, p = _build_pregd(sub, params)
+            hard += h
+            prefs += p
+        return hard, prefs
+    if ctx.goalDesc() is None:  # (forall (vars) preGD)
+        varlist = _typed_var_list(ctx.typedVariableList())
+        h, p = _build_pregd(ctx.preGD(0), {**params, **varlist})
+        return ([Forall(varlist, And(h))] if h else []), p
+    if first == 'preference':
+        name = ctx.name().getText().lower() if ctx.name() is not None else None
+        return [], [Preference(name, params, _build_condition(ctx.goalDesc()))]
+    return [_build_condition(ctx.goalDesc())], []
+
+
+#: A metric as a linear form (#201): coefficient per term, the terms being
+#: ``""`` (the constant), ``"total-cost"`` and ``"is-violated NAME"``.
+LinearMetric = Dict[str, float]
+
+
+def _scale(form: LinearMetric, k: float) -> LinearMetric:
+    return {t: k * c for t, c in form.items()}
+
+
+def _add(a: LinearMetric, b: LinearMetric) -> LinearMetric:
+    out = dict(a)
+    for t, c in b.items():
+        out[t] = out.get(t, 0.0) + c
+    return out
+
+
+def _linear_metric(m: Any) -> Optional[LinearMetric]:
+    """A metricFExp as a linear form over ``total-cost`` and preference
+    violations (#201), or ``None`` for any other expression."""
+    if m.NUMBER() is not None:
+        return {"": float(m.NUMBER().getText())}
+    first = m.getChild(1).getText().lower() if m.getChildCount() > 1 else m.getText().lower()
+    if first == 'is-violated':
+        return {"is-violated " + m.name(0).getText().lower(): 1.0}
+    if m.functionSymbol() is not None:
+        if first == 'total-cost' and not m.name():
+            return {"total-cost": 1.0}
+        return None  # another fluent, or total-time
+    subs = [_linear_metric(s) for s in m.metricFExp()]
+    if not subs or any(s is None for s in subs):
+        return None
+    forms = cast(List[LinearMetric], subs)
+    if len(forms) == 1:  # (- e)
+        return _scale(forms[0], -1.0)
+    if first == '+':
+        out: LinearMetric = {}
+        for f in forms:
+            out = _add(out, f)
+        return out
+    if first == '-':
+        return _add(forms[0], _scale(forms[1], -1.0))
+    if first == '/':
+        if len(forms) != 2 or set(forms[1]) != {""} or not forms[1][""]:
+            return None
+        return _scale(forms[0], 1.0 / forms[1][""])
+    # '*': every factor but one must be a constant
+    variable = [f for f in forms if set(f) - {""}]
+    if len(variable) > 1:
+        return None
+    k = 1.0
+    for f in forms:
+        if not variable or f is not variable[0]:
+            k *= f.get("", 0.0)
+    return _scale(variable[0], k) if variable else {"": k}
+def _ordered_params(tvl: Any) -> List[Tuple[str, Optional[str]]]:
+    """A typedVariableList's ``(variable, type)`` pairs in written order."""
+    params: List[Tuple[str, Optional[str]]] = []
+    for child in tvl.getChildren():
+        if isinstance(child, pddlParser.SingleTypeVarListContext):
+            t = _type_name(child.r_type())
+            params.extend((v.getText(), t) for v in child.VARIABLE())
+        else:
+            params.append((child.getText(), None))
+    return params
+
+
+def _polarities(cond: Condition, negated: bool = False) -> Iterator[Tuple[str, bool]]:
+    """``(predicate, negated)`` for each literal of an ungrounded condition."""
+    if isinstance(cond, Lit):
+        yield cond.atom.predicate[0], negated
+    elif isinstance(cond, Not):
+        yield from _polarities(cond.child, not negated)
+    elif isinstance(cond, (And, Or)):
+        for c in cond.children:
+            yield from _polarities(c, negated)
+    elif isinstance(cond, _Quantifier):
+        yield from _polarities(cond.body, negated)
+
+
+def _compares(cond: Condition) -> bool:
+    """True if an ungrounded condition has a numeric comparison."""
+    if isinstance(cond, NumericCond):
+        return True
+    if isinstance(cond, Not):
+        return _compares(cond.child)
+    if isinstance(cond, (And, Or)):
+        return any(_compares(c) for c in cond.children)
+    if isinstance(cond, _Quantifier):
+        return _compares(cond.body)
+    return False
+
+
+def _expr_fluents(e: Expr) -> Iterator[GroundAtom]:
+    """The function heads a numeric expression reads."""
+    if isinstance(e, Fluent):
+        yield e.head
+    elif isinstance(e, BinOp):
+        yield from _expr_fluents(e.left)
+        yield from _expr_fluents(e.right)
+    elif isinstance(e, Neg):
+        yield from _expr_fluents(e.operand)
+
+
+#: Marks a derived atom whose rule read a fluent with no value (#141): the
+#: state holds ``(UNDEFINED, pred, args...)`` instead of the atom, and any
+#: condition that reads the atom is undefined too.
+UNDEFINED = "#undefined"
+
+
+def undefined_marker(atom: GroundAtom) -> GroundAtom:
+    return (UNDEFINED,) + tuple(atom)
+
+
+def _rank(c: Condition) -> int:
+    """VAL's evaluation cost of a condition (``Proposition::rank``, first
+    component): 1 per numeric comparison, 0 per atom."""
+    if isinstance(c, NumericCond):
+        return 1
+    if isinstance(c, Not):
+        return _rank(c.child)
+    if isinstance(c, (And, Or)):
+        return sum(_rank(k) for k in c.children)
+    return 0
+
+
+def holds3(c: Condition, atoms: AbstractSet[GroundAtom], fluents: Valuation) -> Optional[bool]:
+    """Three-valued truth of a grounded condition, in VAL's evaluation order
+    (``ConjGoal`` / ``DisjGoal::evaluate``): ``None`` when it reads a fluent
+    with no value or an undefined derived atom (#141). ``and`` evaluates its
+    children cheapest first (atoms before comparisons, a stable sort by
+    rank), ``or`` in written order; both stop at the first child that
+    settles the result or is undefined."""
+    if isinstance(c, Lit):
+        atom = tuple(c.atom.predicate)
+        return None if undefined_marker(atom) in atoms else atom in atoms
+    if isinstance(c, NumericCond):
+        k = c.constraint
+        if any(f not in fluents for f in itertools.chain(_expr_fluents(k.lhs), _expr_fluents(k.rhs))):
+            return None
+        return c.holds(atoms, fluents)
+    if isinstance(c, Not):
+        v = holds3(c.child, atoms, fluents)
+        return None if v is None else not v
+    if isinstance(c, (And, Or)):
+        settle = isinstance(c, Or)  # the value that decides it
+        children = sorted(c.children, key=_rank) if isinstance(c, And) else c.children
+        for child in children:
+            v = holds3(child, atoms, fluents)
+            if v is None or v == settle:
+                return v
+        return not settle
+    return c.holds(atoms, fluents)  # Equality
+
+
+def _reads(c: Condition) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+    """``(atoms, fluents)`` a grounded condition mentions."""
+    if isinstance(c, Lit):
+        return {tuple(c.atom.predicate)}, set()
+    if isinstance(c, NumericCond):
+        k = c.constraint
+        return set(), set(_expr_fluents(k.lhs)) | set(_expr_fluents(k.rhs))
+    atoms: Set[GroundAtom] = set()
+    fluents: Set[GroundAtom] = set()
+    children = [c.child] if isinstance(c, Not) else c.children if isinstance(c, (And, Or)) else []
+    for child in children:
+        a, f = _reads(child)
+        atoms |= a
+        fluents |= f
+    return atoms, fluents
+
+
+class DerivedRule():
+    """A derived predicate rule, ``(:derived (p ?x - t) GD)`` (#141): the
+    atom ``(p o)`` holds in a state iff ``GD`` with ``?x = o`` does."""
+
+    def __init__(self, predicate: str, params: List[Tuple[str, Optional[str]]],
+                 body: Condition) -> None:
+        self.predicate = predicate
+        self.params = params
+        self.body = body
+
+    def ground(self, dp: "DomainProblem") -> List[Tuple[GroundAtom, Condition]]:
+        """``(head, grounded body)`` for every binding of the head."""
+        names = [v for v, _ in self.params]
+        domains = [dp.candidate_objects(t) for _, t in self.params]
+        out = []
+        for combo in itertools.product(*domains):
+            varvals = dict(zip(names, combo))
+            out.append(((self.predicate,) + tuple(combo), self.body.ground(varvals, dp)))
+        return out
+
+    def __repr__(self) -> str:
+        return "(:derived (%s %s) %r)" % (
+            self.predicate, " ".join(v for v, _ in self.params), self.body)
 
 
 def _is_simple_conjunction(cond: Condition) -> bool:
@@ -672,6 +928,11 @@ def _is_simple_conjunction(cond: Condition) -> bool:
     if isinstance(cond, And):
         return all(_is_simple_conjunction(c) for c in cond.children)
     return False
+
+
+def _is_til(initel: Any) -> bool:
+    """True for a timed initial literal, ``(at NUMBER literal)`` (#142)."""
+    return initel.nameLiteral() is not None and initel.NUMBER() is not None
 
 
 def _positive_conjunction(cond: Condition) -> bool:
@@ -704,6 +965,8 @@ def _simple_dagd(gd: Any) -> bool:
 def _simple_daeffect(de: Any) -> bool:
     """True if a daEffect context is a conjunction of time-tagged add /
     delete effects (no numeric, when or forall)."""
+    if de.daGD() is not None:
+        return False  # (when <daGD> <timedEffect>): its child is timed too
     te = de.timedEffect()
     if te is not None:
         ce = te.cEffect()
@@ -713,14 +976,28 @@ def _simple_daeffect(de: Any) -> bool:
     return all(_simple_daeffect(e) for e in de.daEffect())
 
 
+def _duration_range(ctx: Any) -> Optional[Tuple[float, float]]:
+    """The ``(lo, hi)`` durations a durationConstraint allows (#143), or
+    ``None`` unless every constraint is an untimed numeric bound."""
+    lo, hi = 0.0, math.inf
+    sdcs = ctx.simpleDurationConstraint()
+    if not sdcs:
+        return None
+    for s in sdcs:
+        if s.durOp() is None or s.durValue().NUMBER() is None:
+            return None
+        op, n = s.durOp().getText(), float(s.durValue().NUMBER().getText())
+        if op != '<=':
+            lo = max(lo, n)
+        if op != '>=':
+            hi = min(hi, n)
+    return lo, hi
+
+
 def _simple_durative(body: Any) -> bool:
     """True if a daDefBody context is fully captured by ``DurativeAction``:
-    a single (= ?duration NUMBER) and literal conditions / effects."""
-    sdcs = body.durationConstraint().simpleDurationConstraint()
-    if len(sdcs) != 1:
-        return False
-    sdc = sdcs[0]
-    if sdc.durOp() is None or sdc.durOp().getText() != '=' or sdc.durValue().NUMBER() is None:
+    numeric duration bounds and literal conditions / effects."""
+    if _duration_range(body.durationConstraint()) is None:
         return False
     gd, de = body.daGD(), body.daEffect()
     return (gd is None or _simple_dagd(gd)) and (de is None or _simple_daeffect(de))
@@ -728,6 +1005,8 @@ def _simple_durative(body: Any) -> bool:
 
 def _build_peffect(pe: Any) -> Effect:
     """Build an Effect from a pEffect context (assignment / add / delete)."""
+    if pe.functionTerm() is not None:
+        return EffAnd([])  # (assign (f ?x) ?obj): object fluents are refused (#211)
     if pe.assignOp() is not None:
         return NumEff(NumericEffect(pe.assignOp().getText().lower(),
                                     Fluent(_parse_fhead(pe.fHead())),
@@ -883,10 +1162,14 @@ class DurativeAction():
         effect_pos / effect_neg -- dicts keyed by 'start'/'end', each a set of
                     effect atoms to add / delete at that time point.
         simple -- True when the definition is fully captured by the fields
-                    above: a fixed (= ?duration N) and conjunctions of
+                    above: numeric duration bounds and conjunctions of
                     time-tagged literals. Numeric, conditional, quantified or
-                    preference parts, and duration inequalities, are not
-                    modeled (#139, #143); plan validation refuses such actions.
+                    preference parts, and timed or expression duration
+                    bounds, are not modeled (#139, #143); plan validation
+                    refuses such actions.
+        continuous -- True when an effect is continuous, an untimed
+                    (increase|decrease <f-head> <f-exp-t>), e.g. with #t
+                    (#213). Not modeled: solve and validation refuse it.
     """
     CONDITION_TIMES = ('start', 'over', 'end')
     EFFECT_TIMES = ('start', 'end')
@@ -895,11 +1178,22 @@ class DurativeAction():
         self.operator_name = name
         self.variable_list: Dict[str, Optional[str]] = {}
         self.duration: Optional[float] = None
+        #: ``(lo, hi)`` the duration constraints allow (#143), ``hi``
+        #: possibly ``inf``; ``None`` when they are not plain numeric bounds
+        self.duration_range: Optional[Tuple[float, float]] = None
         self.condition_pos: Dict[str, set] = {t: set() for t in self.CONDITION_TIMES}
         self.condition_neg: Dict[str, set] = {t: set() for t in self.CONDITION_TIMES}
         self.effect_pos: Dict[str, set] = {t: set() for t in self.EFFECT_TIMES}
         self.effect_neg: Dict[str, set] = {t: set() for t in self.EFFECT_TIMES}
         self.simple = True
+        self.continuous = False
+
+    def bounds(self) -> Optional[Tuple[float, float]]:
+        """``(lo, hi)`` durations allowed (#143): ``duration_range``, or
+        ``(duration, duration)`` for an action built with only a duration."""
+        if self.duration_range is None and self.duration is not None:
+            return self.duration, self.duration
+        return self.duration_range
 
     def ground(self, varvals: VarVals) -> "DurativeAction":
         """Return a grounded copy with variables substituted and atoms turned
@@ -907,7 +1201,9 @@ class DurativeAction():
         g = DurativeAction(self.operator_name)
         g.variable_list = dict(varvals)
         g.duration = self.duration
+        g.duration_range = self.duration_range
         g.simple = self.simple
+        g.continuous = self.continuous
         for t in self.CONDITION_TIMES:
             g.condition_pos[t] = set(a.ground(varvals) for a in self.condition_pos[t])
             g.condition_neg[t] = set(a.ground(varvals) for a in self.condition_neg[t])
@@ -939,9 +1235,12 @@ class DomainListener(pddlListener):
         self.durative_operators = {}
         self.scopes = []
         self.negativescopes = []
+        self.constraints = False  # a (:constraints ...) block was read (#140)
+        self.derived: List[DerivedRule] = []  # (:derived ...) rules (#141)
         self.requirements = set()
         self.predicates = set()  # declared predicate names (#12)
         self.functions = {}
+        self.object_fluents = False  # an object-valued function (#211)
         self._datimes = []      # stack of current 'start'/'over'/'end' tags
 
     def enterRequireDef(self, ctx):
@@ -958,6 +1257,13 @@ class DomainListener(pddlListener):
     def exitFunctionsDef(self, ctx):
         self.scopes.pop()
 
+    def enterFunctionList(self, ctx):
+        if any(t.getText().lower() != 'number' for t in ctx.functionType()):
+            self.object_fluents = True
+
+    def enterFunctionTerm(self, ctx):
+        self.object_fluents = True
+
     def enterAtomicFunctionSkeleton(self, ctx):
         # Capture a :functions declaration: name -> ordered list of param types.
         name = ctx.functionSymbol().getText()
@@ -966,7 +1272,7 @@ class DomainListener(pddlListener):
         for v in tvl.VARIABLE():
             params.append((v.getText(), None))
         for vs in tvl.singleTypeVarList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.VARIABLE():
                 params.append((v.getText(), t))
         self.functions[name] = params
@@ -988,13 +1294,15 @@ class DomainListener(pddlListener):
         action.simple = _simple_durative(ctx.daDefBody())
         self.durative_operators[action.operator_name] = action
 
-    def enterSimpleDurationConstraint(self, ctx):
-        # Capture (= ?duration N) / (<= ?duration N) etc. when N is a literal.
-        durval = ctx.durValue()
-        if durval is not None and durval.NUMBER() is not None:
-            da = self.scopes[-1]
-            if isinstance(da, DurativeAction):
-                da.duration = float(durval.NUMBER().getText())
+    def exitDurationConstraint(self, ctx):
+        # (= ?duration N) is a fixed duration; >= / <= bounds a range the
+        # temporal planner picks from (#143). A timed (at start (= ?duration
+        # 2)) or an expression bound is not modeled.
+        da = self.scopes[-1]
+        if isinstance(da, DurativeAction):
+            da.duration_range = _duration_range(ctx)
+            lo, hi = da.duration_range or (None, None)
+            da.duration = lo if lo == hi else None
 
     def enterTimedGD(self, ctx):
         # (at start|end goalDesc) or (over all goalDesc): collect the condition
@@ -1013,11 +1321,17 @@ class DomainListener(pddlListener):
         da.condition_neg[time] |= set(scope.negatoms)
 
     def enterTimedEffect(self, ctx):
+        if ctx.assignOpT() is not None:
+            # (increase (f) (* #t 2)): a continuous effect, not modeled (#213)
+            next(s for s in reversed(self.scopes) if isinstance(s, DurativeAction)).continuous = True
+            return
         # (at start|end cEffect): collect the effect atoms into a fresh Scope.
         self._datimes.append(ctx.timeSpecifier().getText().lower())
         self.scopes.append(Scope())
 
     def exitTimedEffect(self, ctx):
+        if ctx.assignOpT() is not None:
+            return
         scope = self.scopes.pop()
         time = self._datimes.pop()
         da = self.scopes[-1]
@@ -1056,7 +1370,7 @@ class DomainListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeVarList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.VARIABLE():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1075,6 +1389,31 @@ class DomainListener(pddlListener):
             scope.addatom(Atom(pred))
         else:
             scope.addnegatom(Atom(pred))
+
+    def enterConstraints(self, ctx):
+        # (:constraints ...) is not modeled; walk it in a throwaway scope so
+        # its atoms land nowhere, and record that it was there (#140).
+        self.constraints = True
+        self.scopes.append(Scope())
+        self.negativescopes.append(False)
+
+    def exitConstraints(self, ctx):
+        self.negativescopes.pop()
+        self.scopes.pop()
+
+    def enterDerivedDef(self, ctx):
+        # (:derived (p ?x) GD) (#141): build the rule from the tree, and walk
+        # it in a throwaway scope so its atoms land nowhere else.
+        skel = ctx.atomicFormulaSkeleton()
+        self.derived.append(DerivedRule(skel.predicate().getText(),
+                                        _ordered_params(skel.typedVariableList()),
+                                        _build_condition(ctx.goalDesc())))
+        self.scopes.append(Scope())
+        self.negativescopes.append(False)
+
+    def exitDerivedDef(self, ctx):
+        self.negativescopes.pop()
+        self.scopes.pop()
 
     def enterPrecondition(self, ctx):
         self.scopes.append(Scope())
@@ -1132,11 +1471,27 @@ class DomainListener(pddlListener):
                 negscope = True
                 break
         self.negativescopes.append(negscope)
+        if self._quantified_condition(ctx):
+            # A quantifier in a durative condition is not modeled (the action
+            # is not simple); its atoms use its own variables, so they land in
+            # a throwaway scope instead of the action's conditions (#193).
+            self.scopes.append(Scope())
 
     def exitGoalDesc(self, ctx):
         self.negativescopes.pop()
+        if self._quantified_condition(ctx):
+            self.scopes.pop()
+
+    def _quantified_condition(self, ctx):
+        return bool(self._datimes) and \
+            ctx.getChildCount() > 1 and ctx.getChild(1).getText().lower() in ('forall', 'exists')
 
     def enterPEffect(self, ctx):
+        if ctx.functionTerm() is not None or (
+                ctx.assignOp() is not None and ctx.assignOp().getText().lower() == 'assign'
+                and _nth_fexp(ctx, 0).getText().lower() == 'undefined'
+                and 'undefined' not in self.functions):
+            self.object_fluents = True  # (assign (loc ?t) ?l | undefined) (#211)
         # A numeric assignment effect, e.g. (decrease (fuel ?v) 5).
         if ctx.assignOp() is not None:
             scope = self.scopes[-1]
@@ -1161,7 +1516,7 @@ class DomainListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeNameList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.name():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1199,13 +1554,39 @@ class ProblemListener(pddlListener):
         self.init_numeric = {}
         self.metric = None
         # False when the goal is more than a conjunction of positive atoms:
-        # ``goals`` then misreads it (#138).
+        # ``goals`` then lists only its positive atoms; ``goal`` is the whole
+        # condition tree (#138).
         self.simple_goal = True
+        self.goal: Condition = And([])
+        self.preferences: List[Preference] = []  # goal preferences (#201)
+        self.metric_form: Optional[LinearMetric] = None
+        self.constraints = False  # a (:constraints ...) block was read (#140)
+        # Timed initial literals, (at N lit) in :init, as (time, Atom,
+        # positive). Kept out of ``initialstate``: they are not true at 0 (#142).
+        self.timed_literals = []
+        self.object_fluents = False  # an object-valued function (#211)
+        self.requirements: Set[str] = set()  # a problem may declare some too (#208)
+        # (not (p ...)) in :init, untimed: false anyway under the closed-world
+        # assumption, so kept out of ``initialstate`` (#186).
+        self.negative_init = []
+
+    def enterProbConstraints(self, ctx):
+        # Not modeled: walk it in a throwaway scope (#140).
+        self.constraints = True
+        self.scopes.append(Scope())
+
+    def exitProbConstraints(self, ctx):
+        self.scopes.pop()
 
     def enterMetricSpec(self, ctx):
-        # Capture the optimization metric, e.g. ('minimize', '(total-cost)').
+        # Capture the optimization metric, e.g. ('minimize', '(total-cost)'),
+        # as written (whitespace collapsed), and as a linear form (#201).
+        m = ctx.metricFExp()
+        text = m.start.getInputStream().getText(m.start.start, m.stop.stop)
         self.metric = (ctx.optimization().getText().lower(),
-                       ctx.metricFExp().getText())
+                       " ".join(text.replace("(", "( ").replace(")", " )").split())
+                       .replace("( ", "(").replace(" )", ")"))
+        self.metric_form = _linear_metric(m)
 
     def enterInit(self, ctx):
         self.scopes.append(Scope())
@@ -1213,18 +1594,54 @@ class ProblemListener(pddlListener):
     def exitInit(self, ctx):
         self.initialstate = set( self.scopes.pop().atoms )
 
+    def enterFunctionTerm(self, ctx):
+        self.object_fluents = True
+
+    def enterRequireDef(self, ctx):
+        for rk in ctx.REQUIRE_KEY():
+            self.requirements.add(rk.getText().lower())
+
     def enterInitEl(self, ctx):
+        if ctx.fHead() is not None and ctx.name() is not None:
+            self.object_fluents = True  # (= (loc t1) l1) (#211)
         # Numeric init assignment: (= (fhead ...) NUMBER).
         if ctx.fHead() is not None and ctx.NUMBER() is not None:
             head = _parse_fhead(ctx.fHead())
             self.init_numeric[head] = float(ctx.NUMBER().getText())
+        elif _is_til(ctx):
+            self.scopes.append(Scope())  # its atom must not reach the init scope
+
+    def exitInitEl(self, ctx):
+        if _is_til(ctx):
+            atom = self.scopes.pop().atoms[0]
+            positive = ctx.nameLiteral().getChildCount() == 1  # no (not ...)
+            self.timed_literals.append((float(ctx.NUMBER().getText()), atom, positive))
+
+    def enterNameLiteral(self, ctx):
+        if ctx.getChildCount() > 1 and not _is_til(ctx.parentCtx):
+            self.scopes.append(Scope())  # untimed (not ...): not an init atom
+
+    def exitNameLiteral(self, ctx):
+        if ctx.getChildCount() > 1 and not _is_til(ctx.parentCtx):
+            self.negative_init.append(self.scopes.pop().atoms[0])
 
     def enterGoal(self, ctx):
         self.scopes.append(Scope())
 
+    def enterPreGD(self, ctx):
+        if ctx.getChildCount() > 1 and ctx.getChild(1).getText().lower() == 'preference':
+            # a preference's atoms are no hard goal (#201)
+            self.scopes.append(Scope())
+
+    def exitPreGD(self, ctx):
+        if ctx.getChildCount() > 1 and ctx.getChild(1).getText().lower() == 'preference':
+            self.scopes.pop()
+
     def exitGoal(self, ctx):
         self.goals = set( self.scopes.pop().atoms )
-        self.simple_goal = _positive_conjunction( _build_condition( ctx.goalDesc() ) )
+        hard, self.preferences = _build_pregd( ctx.preGD(), {} )
+        self.goal = hard[0] if len(hard) == 1 else And(hard)
+        self.simple_goal = _positive_conjunction( self.goal )
 
     def enterAtomicNameFormula(self, ctx):
         pred = []
@@ -1252,7 +1669,7 @@ class ProblemListener(pddlListener):
             vname = v.getText()
             self.scopes[-1].variable_list[v.getText()] = None
         for vs in ctx.singleTypeNameList():
-            t = vs.r_type().getText()
+            t = _type_name(vs.r_type())
             for v in vs.name():
                 vname = v.getText()
                 self.scopes[-1].variable_list[vname] = t
@@ -1273,7 +1690,8 @@ class ProblemListener(pddlListener):
                     vs.add( (s, None) )
             for a in self.goals:
                 for s in a.predicate[1:]:
-                    vs.add( (s, None) )
+                    if not s.startswith('?'):  # a ?variable is no object (#138)
+                        vs.add( (s, None) )
             self.objects = dict( vs )
 
 
@@ -1285,6 +1703,27 @@ class _ErrorCounter(ErrorListener):
     def syntaxError(self, recognizer: Any, offendingSymbol: Any, line: int,
                     column: int, msg: str, e: Any) -> None:
         self.count += 1
+
+
+def _walk(listener: Any, tree: Any, errors: "_ErrorCounter") -> None:
+    """Walk ``tree`` into ``listener``. A tree ANTLR recovered from syntax
+    errors can lack the children the listener expects; the walk then stops
+    and the model stays partial, which is safe: ``syntax_errors`` makes
+    solve and plan validation refuse it, and ``validate`` reports the
+    errors. Without syntax errors, an exception is a bug and propagates."""
+    try:
+        ParseTreeWalker().walk(listener, tree)
+    except Exception:
+        if not errors.count:
+            raise
+
+
+def source_stream(path: str) -> InputStream:
+    """The lexer input for the PDDL file ``path``: read as UTF-8 (#103) and
+    lowercased, since PDDL identifiers are case-insensitive (#157). Names
+    therefore come out lowercase, as Fast Downward and VAL print them."""
+    with open(path, "rb") as f:  # binary: keep line endings as written
+        return InputStream(f.read().decode("utf-8").lower())
 
 
 class DomainProblem():
@@ -1300,10 +1739,10 @@ class DomainProblem():
                   to StaticPrunedBinder. Pass a custom VariableBinder, or set
                   the .binder attribute later, to override grounding.
         """
+        self._grounded_strata: Optional[List[List[Tuple[GroundAtom, Condition]]]] = None
+        self._derived_deps: Optional[Dict[GroundAtom, Tuple[Set[GroundAtom], Set[GroundAtom]]]] = None
         # domain
-        # ANTLR's FileStream defaults to ASCII; PDDL files may carry UTF-8
-        # (typically in comments) -- see #103.
-        inp = FileStream(domainfile, encoding="utf-8")
+        inp = source_stream(domainfile)
         lexer = pddlLexer(inp)
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)
@@ -1314,10 +1753,9 @@ class DomainProblem():
         parser.addErrorListener(errors)
         tree = parser.domain()
         self.domain = DomainListener()
-        walker = ParseTreeWalker()
-        walker.walk(self.domain, tree)
+        _walk(self.domain, tree, errors)
         # problem
-        inp = FileStream(problemfile, encoding="utf-8")
+        inp = source_stream(problemfile)
         lexer = pddlLexer(inp)
         stream = CommonTokenStream(lexer)
         parser = pddlParser(stream)
@@ -1326,8 +1764,7 @@ class DomainProblem():
         tree = parser.problem()
         self.syntax_errors: int = errors.count
         self.problem = ProblemListener()
-        walker = ParseTreeWalker()
-        walker.walk(self.problem, tree)
+        _walk(self.problem, tree, errors)
         # Variable binding strategy used by ground_operator (#12).
         self.binder: VariableBinder = binder if binder is not None else StaticPrunedBinder()
 
@@ -1346,10 +1783,10 @@ class DomainProblem():
 
     def requirements(self) -> set:
         """Returns the set of :requirements keywords declared in the domain
-        (e.g. {':strips', ':typing'}), normalized to lowercase. Empty if the
-        domain declares none.
+        or the problem (e.g. {':strips', ':typing'}), normalized to
+        lowercase. Empty if neither declares any.
         """
-        return set(self.domain.requirements)
+        return set(self.domain.requirements) | self.problem.requirements
 
     def predicates(self) -> Set[str]:
         """Returns the set of predicate names declared in the domain's
@@ -1381,8 +1818,9 @@ class DomainProblem():
         is a grounded instance.
 
         returns -- An iterator of Operator instances.
+        Names match in any case (#157).
         """
-        op = self.domain.operators[op_name]
+        op = self.domain.operators[op_name.lower()]
         for st in self.binder.bind( self, op ):
             yield self._ground_operator( op, st )
 
@@ -1390,8 +1828,10 @@ class DomainProblem():
         """Returns the instance of action ``op_name`` (instantaneous or
         durative) under ``binding``, a {variable: object} dict, whether or not
         a binder would generate it. Plan validation uses it to ground a plan
-        step as written.
+        step as written. Names match in any case (#157).
         """
+        op_name = op_name.lower()
+        binding = {k.lower(): v.lower() for k, v in binding.items()}
         if op_name in self.domain.operators:
             return self._ground_operator( self.domain.operators[op_name], binding )
         return self.domain.durative_operators[op_name].ground( binding )
@@ -1426,8 +1866,9 @@ class DomainProblem():
 
         Durative actions always use the cartesian binder: their conditions are
         time-tagged and static-precondition pruning does not apply.
+        Names match in any case (#157).
         """
-        op = self.domain.durative_operators[op_name]
+        op = self.domain.durative_operators[op_name.lower()]
         for st in CartesianBinder().bind( self, op ):
             yield op.ground( st )
 
@@ -1442,19 +1883,34 @@ class DomainProblem():
         # the implicit None root and match an untyped parameter.
         if t is None:
             return ot is None
+        members = _either_members(t)
+        if members is not None:
+            return any(self._is_subtype(ot, m) for m in members)
+        # Climb the hierarchy; an (either ...) type branches to its members.
+        # One seen set covers every branch, so a cycle ends the walk.
         seen = set()
-        while ot is not None and ot not in seen:
-            if ot == t:
-                return True
+        stack = [ot]
+        while stack:
+            ot = stack.pop()
+            if ot is None or ot in seen:
+                continue
             seen.add(ot)
-            ot = self.domain.types.get(ot)
+            members = _either_members(ot)
+            if members is not None:
+                stack.extend(members)
+            elif ot == t:
+                return True
+            else:
+                stack.append(self.domain.types.get(ot))
         return False
 
     def candidate_objects(self, t) -> List[str]:
         """Returns the objects that can bind a parameter of type ``t``: any
         object whose type is ``t`` or a (transitive) subtype of it (#22).
-        Used by the variable binders (#12).
+        Used by the variable binders (#12). ``t`` matches in any case (#157);
+        ``None`` means untyped.
         """
+        t = t.lower() if t else t
         return [ k for k,v in self.worldobjects().items() if self._is_subtype(v, t) ]
 
     def static_predicates(self) -> set:
@@ -1474,7 +1930,130 @@ class DomainProblem():
             for time in da.EFFECT_TIMES:
                 for a in da.effect_pos[time] | da.effect_neg[time]:
                     modified.add(a.predicate[0])
+        # a derived predicate's truth changes with the state (#141)
+        modified |= self.derived_predicates()
         return set(self.domain.predicates) - modified
+
+    def derived_predicates(self) -> Set[str]:
+        """The names of the derived predicates (#141)."""
+        return {r.predicate for r in self.domain.derived}
+
+    def derived_strata(self) -> Optional[List[List[DerivedRule]]]:
+        """The ``(:derived ...)`` rules in evaluation order (#141): a rule
+        comes in a stratum after every derived predicate it reads, strictly
+        after those it reads negated. ``None`` if the rules are not
+        stratifiable (a derived predicate depends negatively on itself)."""
+        rules = self.domain.derived
+        names = self.derived_predicates()
+        level = dict.fromkeys(names, 0)
+        for _ in range(len(names) + 1):
+            changed = False
+            for r in rules:
+                for q, negated in _polarities(r.body):
+                    if q in names and level[r.predicate] < level[q] + negated:
+                        level[r.predicate] = level[q] + negated
+                        changed = True
+            if not changed:
+                return [[r for r in rules if level[r.predicate] == n]
+                        for n in sorted(set(level.values()))]
+        return None
+
+    def recursive_numeric_derived(self) -> List[str]:
+        """The recursive derived predicates whose rules read a numeric fluent,
+        directly or through other derived predicates (#141). VAL decides
+        such an atom on demand, and whether it reads a fluent with no value
+        depends on where the recursion started, so they are refused."""
+        names = self.derived_predicates()
+        deps: Dict[str, Set[str]] = {n: set() for n in names}
+        compares = set()
+        for r in self.domain.derived:
+            deps[r.predicate] |= {q for q, _ in _polarities(r.body) if q in names}
+            if _compares(r.body):
+                compares.add(r.predicate)
+
+        def reach(p: str) -> Set[str]:
+            seen: Set[str] = set()
+            todo = list(deps[p])
+            while todo:
+                q = todo.pop()
+                if q not in seen:
+                    seen.add(q)
+                    todo += deps[q]
+            return seen
+
+        return sorted(p for p in names
+                      if p in reach(p) and (reach(p) | {p}) & compares)
+
+    def _grounded_rules(self) -> List[List[Tuple[GroundAtom, Condition]]]:
+        if self._grounded_strata is None:
+            strata = self.derived_strata()
+            assert strata is not None, "rules are not stratifiable"
+            self._grounded_strata = [[g for r in s for g in r.ground(self)] for s in strata]
+        return self._grounded_strata
+
+    def derived_reads(self, atoms: AbstractSet[GroundAtom]
+                      ) -> Tuple[Set[GroundAtom], Set[GroundAtom]]:
+        """``(atoms, fluents)`` that deciding the derived atoms among
+        ``atoms`` reads, through every rule that can derive them,
+        transitively (#141): what a read of a derived atom depends on."""
+        if self._derived_deps is None:
+            deps: Dict[GroundAtom, Tuple[Set[GroundAtom], Set[GroundAtom]]] = {}
+            for stratum in self._grounded_rules():
+                for head, body in stratum:
+                    a, f = _reads(body)
+                    da, df = deps.setdefault(head, (set(), set()))
+                    da |= a
+                    df |= f
+            self._derived_deps = deps
+        out_atoms: Set[GroundAtom] = set()
+        out_fluents: Set[GroundAtom] = set()
+        todo = [a for a in atoms if a in self._derived_deps]
+        seen: Set[GroundAtom] = set()
+        while todo:
+            head = todo.pop()
+            if head in seen:
+                continue
+            seen.add(head)
+            a, f = self._derived_deps[head]
+            out_atoms |= a
+            out_fluents |= f
+            todo.extend(x for x in a if x in self._derived_deps)
+        return out_atoms, out_fluents
+
+    def derive(self, atoms: AbstractSet[GroundAtom], fluents: Valuation) -> FrozenSet[GroundAtom]:
+        """``atoms`` with the derived atoms recomputed (#141): those already
+        there are dropped, then each stratum is evaluated to a fixpoint."""
+        names = self.derived_predicates()
+        out = {a for a in atoms if a[0] not in names and a[0] != UNDEFINED}
+        for stratum in self._grounded_rules():
+            pending = list(stratum)
+            changed = True
+            while changed:
+                changed = False
+                rest = []
+                for head, body in pending:
+                    if holds3(body, out, fluents):
+                        out.add(head)
+                        changed = True
+                    else:
+                        rest.append((head, body))
+                pending = rest
+            # VAL decides a derived atom on demand, trying its rules in
+            # written order: undefined if that reads a fluent with no value
+            # or an undefined atom before a true body, even when a later
+            # body holds. Marks only grow, so repeat until stable.
+            bodies: Dict[GroundAtom, List[Condition]] = {}
+            for head, body in stratum:
+                bodies.setdefault(head, []).append(body)
+            changed = True
+            while changed:
+                changed = False
+                for head, alternatives in bodies.items():
+                    mark = undefined_marker(head)
+                    if mark not in out and holds3(Or(alternatives), out, fluents) is None:
+                        out.add(mark)
+                        changed = True
+        return frozenset(out)
 
     def types(self) -> Dict[str, Optional[str]]:
         """Returns the declared type hierarchy as a dict mapping each subtype to
@@ -1487,20 +2066,12 @@ class DomainProblem():
     def subtypes_of(self, t: str) -> set:
         """Returns the set of all transitive subtypes of ``t`` (#22), excluding
         ``t`` itself. E.g. for the logistics hierarchy ``subtypes_of('physobj')``
-        is ``{'package', 'vehicle', 'truck', 'airplane'}``.
+        is ``{'package', 'vehicle', 'truck', 'airplane'}``. ``t`` matches in
+        any case (#157). A type declared ``- (either t1 t2)`` is a subtype of
+        each member (#200).
         """
-        hierarchy = self.domain.types
-        result = set()
-        changed = True
-        while changed:
-            changed = False
-            for sub, sup in hierarchy.items():
-                if sub in result:
-                    continue
-                if sup == t or sup in result:
-                    result.add(sub)
-                    changed = True
-        return result
+        t = t.lower()
+        return {sub for sub in self.domain.types if sub != t and self._is_subtype(sub, t)}
 
     def initialstate(self) -> set:
         """Returns a set of atoms (Atom objects) corresponding to the initial
@@ -1513,6 +2084,14 @@ class DomainProblem():
         defined in the problem file.
         """
         return self.problem.goals
+
+    def goal_condition(self) -> Condition:
+        """The whole goal as a grounded condition tree (#138): ``not``,
+        ``or``, ``imply``, ``exists``, ``forall`` and numeric comparisons
+        included, quantifiers expanded over the objects. Evaluate it with
+        ``holds(atoms, fluents)``. ``goals()`` lists only its positive atoms.
+        """
+        return self.problem.goal.ground({}, self)
 
     def worldobjects(self) -> Dict[str, Optional[str]]:
         """Returns a dictionary of key value pairs where the key is the name of

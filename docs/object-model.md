@@ -46,10 +46,14 @@ The entry point. Parses both files and exposes:
 | `metric()` | `(optimization, expr_text)` or `None` |
 
 `dp.syntax_errors` counts the syntax errors ANTLR recovered from while
-parsing; the model may misread such input. `dp.problem.simple_goal` is
-`False` when the goal is more than a conjunction of atoms (#138), and a
+parsing; the model may misread such input. `goals()` lists the goal's
+positive atoms; `dp.goal_condition()` is the whole goal as a grounded
+condition tree (`not`, `or`, `imply`, `exists`, `forall`, numeric
+comparisons; #138), evaluated with `holds(atoms, fluents)`.
+`dp.problem.simple_goal` is `False` when the goal is more than a
+conjunction of positive atoms. A
 `DurativeAction`'s `simple` is `False` when it has parts the model does not
-capture (numeric, conditional, quantified, duration inequalities).
+capture (numeric, conditional, quantified, timed or expression duration bounds).
 
 ### `Atom`
 A predicate applied to terms, e.g. `(on ?x ?y)`. `predicate` is
@@ -97,7 +101,10 @@ evaluates a numeric precondition; `NumericEffect.apply(valuation)` returns the
 ### `DurativeAction` (#23)
 A durative action with time-tagged `condition_pos`/`condition_neg` keyed by
 `'start'`/`'over'`/`'end'`, `effect_pos`/`effect_neg` keyed by
-`'start'`/`'end'`, and a `duration`. Recovered into the model; the reference
+`'start'`/`'end'`, a fixed `duration` (`None` for a range), and
+`duration_range`, the `(lo, hi)` its numeric bounds allow (#143; `hi` may be
+`inf`; `None` for timed or expression bounds). `bounds()` returns
+`duration_range`, falling back to `(duration, duration)`. Recovered into the model; the reference
 planners are non-temporal, but the `temporal` planner (below) schedules them.
 
 ## Planning layer (`pddlpy.planning`)
@@ -111,7 +118,9 @@ planners are non-temporal, but the `temporal` planner (below) schedules them.
 - **`Planner`** ABC — `solve(domainproblem) -> Plan | None`, with a
   `capabilities` set and fail-fast capability/`:requirements` checks (#9).
 - **`registry`** — register/get planners by name.
-- **Reference planners** — `bfs`, `astar` (goal-count heuristic), `gbfs`,
+- **Reference planners** — `bfs`, `astar` (fewest actions, admissible
+  heuristic), `gbfs` (greedy on hFF, from the relaxed exploration in
+  `pddlpy/planning/relaxed.py`),
   `ucs` (cost-optimal, #3).
 
 ### Durative surface (#23)
@@ -120,8 +129,8 @@ The semantic layer on top of `DurativeAction` — validation and `at start`
 applicability, deliberately short of a temporal planner:
 
 - **`validate_durative_action(action, declared_predicates=None)`** — raises
-  `DurativeValidationError` unless the duration is present and strictly
-  positive, every `?variable` in a condition/effect is a declared parameter,
+  `DurativeValidationError` unless the duration bounds are numeric and allow
+  a positive duration, every `?variable` in a condition/effect is a declared parameter,
   and (when `declared_predicates` is passed, e.g. `dp.predicates()`) every
   referenced predicate is declared.
 - **`validate_durative_actions(dp)`** — validates every durative action in a
@@ -225,8 +234,8 @@ reading a fluent with no value fails. Names match case-insensitively.
 
 What the model cannot represent raises `PlanValidationError` instead of a
 verdict: syntax errors, requirements outside `VALIDATION_CAPABILITIES`
-(ADL, numeric fluents, action costs, durative actions), goals beyond a
-conjunction of atoms (#138), and durative actions that are not `simple`.
+(ADL, numeric fluents, action costs, durative actions), and durative
+actions that are not `simple`.
 
 ```python
 from pddlpy.planning import load_plan, validate_plan
@@ -242,7 +251,8 @@ if not result.valid:
 registered planner and returns a `SolveResult`: `status` is `SOLVED`,
 `UNSOLVABLE` (the search space was exhausted) or `LIMIT` (the planner
 raised `SearchLimitError` at `max_expansions` expanded states or `timeout`
-seconds); `plan`; `validated` (the plan passed `validate_plan`; `False` when
+seconds, or a planner with `complete = False`, such as `temporal`,
+exhausted its search); `plan`; `validated` (the plan passed `validate_plan`; `False` when
 the validator refuses the domain); `message`. A plan that fails validation
 raises `PlannerError`. The CLI and MCP `solve` use it. Every `Planner`
 takes the two limits as constructor keywords (`get("bfs", timeout=10)`);
@@ -251,9 +261,6 @@ into `PlanStep`s for `validate_plan`.
 
 ## Known limitations
 
-- **Union types:** the `:types` hierarchy is supported (#22) — a parameter
-  typed with a supertype binds objects of any transitive subtype — but
-  `(either ...)` union types are not handled.
 - **ADL (#10):** conditional/universal effects, quantified and full-boolean
   preconditions and `=` equality are parsed, grounded and **solved** by the
   reference planners. One gap remains: ADL structure on the **goal** side of a

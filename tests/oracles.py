@@ -143,6 +143,32 @@ def fd_solve(fd: str, domain: str, problem: str, timeout: float
     """Run FD with a complete search (A* with the blind heuristic), so exit
     code 11 proves unsolvability. Returns ``(exit code, plan)``; the code is
     ``None`` on timeout and the plan ``None`` when none was written."""
+    code, plan, _ = fd_solve_cost(fd, domain, problem, timeout)
+    return code, plan
+
+
+#: FD's last plan-file line: '; cost = 12 (unit cost)' or '(general cost)'.
+_COST = re.compile(r"^;\s*cost\s*=\s*([\d.]+)\s*\((unit|general) cost\)")
+
+#: ``(cost, unit)``: the plan's cost, and whether FD counted every action as 1.
+Cost = Tuple[float, bool]
+
+
+def read_plan_cost(path: str) -> Optional[Cost]:
+    """The cost FD wrote at the end of a plan file, or ``None``."""
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            m = _COST.match(line.strip())
+            if m:
+                return float(m.group(1)), m.group(2) == "unit"
+    return None
+
+
+def fd_solve_cost(fd: str, domain: str, problem: str, timeout: float
+                  ) -> Tuple[Optional[int], Optional[List[Step]], Optional[Cost]]:
+    """``fd_solve`` plus the plan's cost. Blind A* is optimal, so on exit 0
+    the cost is the optimum: plan length under unit cost, the sum of action
+    costs under ``(:metric minimize (total-cost))``."""
     with tempfile.TemporaryDirectory() as tmp:
         plan_file = os.path.join(tmp, "plan")
         proc = _run(_command(fd) + _fd_limits(timeout) + [
@@ -150,8 +176,10 @@ def fd_solve(fd: str, domain: str, problem: str, timeout: float
             os.path.abspath(domain), os.path.abspath(problem),
             "--search", "astar(blind())",
         ], timeout + FD_GRACE, cwd=tmp)
-        plan = read_plan(plan_file) if os.path.exists(plan_file) else None
-    return (None if proc is None else proc.returncode), plan
+        written = os.path.exists(plan_file)
+        plan = read_plan(plan_file) if written else None
+        cost = read_plan_cost(plan_file) if written else None
+    return (None if proc is None else proc.returncode), plan, cost
 
 
 def val(validate: str, domain: str, problem: str, plan_file: str,

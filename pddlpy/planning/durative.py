@@ -52,7 +52,7 @@ def validate_durative_action(
 
     Checks, in order:
 
-    1. ``duration`` is present and strictly positive.
+    1. the duration bounds are numeric and allow a positive duration (#143).
     2. Every variable (a ``?``-prefixed token) used in a condition/effect is a
        declared parameter of the action (in ``variable_list``).
     3. If ``declared_predicates`` is given, every predicate referenced by a
@@ -62,13 +62,19 @@ def validate_durative_action(
     validated standalone; pass ``DomainProblem.predicates()`` to enforce check 3.
     """
     name = action.operator_name
-    if action.duration is None:
+    bounds = action.bounds()
+    if bounds is None:
         raise DurativeValidationError(
             "durative action %r has no simple numeric duration" % name
         )
-    if action.duration <= 0:
+    lo, hi = bounds
+    if hi <= 0:
         raise DurativeValidationError(
-            "durative action %r has non-positive duration %r" % (name, action.duration)
+            "durative action %r has non-positive duration %r" % (name, hi)
+        )
+    if lo > hi:
+        raise DurativeValidationError(
+            "durative action %r: no duration is at least %g and at most %g" % (name, lo, hi)
         )
 
     params = set(action.variable_list)

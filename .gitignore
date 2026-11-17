@@ -29,6 +29,7 @@ antlr-*-complete.jar
 
 # test / coverage artifacts
 .coverage
+coverage.xml
 .coverage.*
 htmlcov/
 .pytest_cache/
@@ -46,3 +47,5 @@ e2e/llm/results/
 .corpora/
 # oracle builds, by scripts/build-oracles.sh (#153)
 .oracles/
+mutants/
+mutmut.log

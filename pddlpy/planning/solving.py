@@ -23,11 +23,17 @@ if TYPE_CHECKING:
 #: ``SolveResult.status`` values.
 SOLVED, UNSOLVABLE, LIMIT = "solved", "unsolvable", "limit"
 
+#: ``limit`` message when an incomplete planner exhausts its search (#219).
+INCOMPLETE_MESSAGE = ("%s exhausted its search, but it builds sequential schedules "
+                      "only: no sequential plan was found; a plan with overlapping "
+                      "actions was not searched for")
+
 
 class SolveResult(NamedTuple):
     """``status`` is ``solved``, ``unsolvable`` (the search space was
     exhausted: no plan exists) or ``limit`` (the search stopped at
-    ``max_expansions`` / ``timeout``: nothing proven). ``validated`` says
+    ``max_expansions`` / ``timeout``, or an incomplete planner such as
+    ``temporal`` exhausted its search: nothing proven). ``validated`` says
     whether ``validate_plan`` checked the plan; it cannot on domains it
     refuses (see :mod:`pddlpy.planning.validation`)."""
 
@@ -62,10 +68,13 @@ def solve(dp: "DomainProblem", planner: str = "astar",
     limits: Dict[str, Any] = {k: v for k, v in
                               (("max_expansions", max_expansions), ("timeout", timeout))
                               if v is not None}
+    solver = get(planner, **limits)
     try:
-        plan = get(planner, **limits).solve(dp)
+        plan = solver.solve(dp)
     except SearchLimitError as exc:
         return SolveResult(LIMIT, None, False, str(exc))
+    if plan is None and not solver.complete:
+        return SolveResult(LIMIT, None, False, INCOMPLETE_MESSAGE % planner)
     if plan is None:
         return SolveResult(UNSOLVABLE, None, False, "search space exhausted: no plan exists")
     try:

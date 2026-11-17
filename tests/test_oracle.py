@@ -36,7 +36,7 @@ from oracles import (
     FD_TRANSLATE_UNSOLVABLE,
     declared_requirements,
     fast_downward_bin,
-    fd_solve,
+    fd_solve_cost,
     fd_supports,
     fd_translate,
     inval,
@@ -55,7 +55,7 @@ from validation_cases import CASES
 
 from pddlpy import DomainProblem
 from pddlpy.diagnostics import diagnose
-from pddlpy.planning import PlannerError, get, load_plan, validate_plan
+from pddlpy.planning import TOTAL_COST, PlannerError, State, get, load_plan, validate_plan
 
 pytestmark = pytest.mark.oracle
 
@@ -64,18 +64,8 @@ ORACLE = os.path.join(os.path.dirname(__file__), "corpus", "oracle")
 
 # Known disagreements on the committed pairs, by (check, domain directory);
 # strict xfails, so a fix shows up as XPASS. Checks: accept, fd_plan,
-# pddlpy_plan, solvable, verdict, pddlpy_verdict.
-DERIVED = "(:derived ...) does not parse (#141)"
-CASE = "identifiers are case-sensitive: (CLEAR c) vs (clear ?x) (#157)"
-GOALS = "forall goal is misread (#138)"
+# pddlpy_plan, solvable, verdict, pddlpy_verdict, optimal.
 KNOWN = {
-    ("accept", "psr-middle-derived-predicates-adl"): DERIVED,
-    ("fd_plan", "psr-middle-derived-predicates-adl"): DERIVED,
-    ("fd_plan", "blocks-strips-typed"): CASE,
-    ("verdict", "blocks-strips-typed"): CASE,
-    ("solvable", "blocks-strips-typed"): CASE,
-    ("fd_plan", "elevator-adl-full-typed"): GOALS,
-    ("solvable", "elevator-adl-full-typed"): GOALS,
 }
 
 
@@ -120,8 +110,13 @@ def need(path, what):
 
 
 @functools.lru_cache(maxsize=None)
+def fd_full(domain, problem):
+    """``(exit code, plan, (cost, unit))`` from FD's optimal search."""
+    return fd_solve_cost(need(fast_downward_bin(), "Fast Downward"), domain, problem, TIMEOUT)
+
+
 def fd_result(domain, problem):
-    return fd_solve(need(fast_downward_bin(), "Fast Downward"), domain, problem, TIMEOUT)
+    return fd_full(domain, problem)[:2]
 
 
 class _Timeout(BaseException):  # not swallowed by `except Exception`
@@ -157,9 +152,17 @@ def _accepts(domain, problem):
     return not any(i["check"] == "syntax" for i in diagnose(domain, problem)["issues"])
 
 
-def _solve(domain, problem):
+def _solve(domain, problem, classical=None):
+    """``(planner, plan or PlannerError)``. Without ``classical``: ``temporal``
+    on durative pairs, ``astar`` on the rest. With it: that planner, and
+    durative pairs are not solved (``("temporal", None)``)."""
     dp = DomainProblem(domain, problem)
-    planner = "temporal" if dp.durative_operators() else "astar"
+    if dp.durative_operators():
+        if classical:
+            return "temporal", None
+        planner = "temporal"
+    else:
+        planner = classical or "astar"
     try:
         return planner, get(planner).solve(dp)
     except PlannerError as exc:
@@ -174,8 +177,8 @@ def _accepts_outcome(domain, problem):
 
 
 @functools.lru_cache(maxsize=None)
-def _solve_outcome(domain, problem):
-    return bounded(_solve, domain, problem)
+def _solve_outcome(domain, problem, classical=None):
+    return bounded(_solve, domain, problem, classical)
 
 
 def pddlpy_accepts(domain, problem):
@@ -187,12 +190,14 @@ def pddlpy_accepts(domain, problem):
     return accepted
 
 
-def pddlpy_plan(domain, problem):
-    """``(planner, plan)``; plan ``None`` if unsolvable. Skips when pddlpy
-    cannot load the pair, refuses it, or runs out of time or memory."""
+def pddlpy_plan(domain, problem, classical=None):
+    """``(planner, plan)``; plan ``None`` if unsolvable. ``classical`` solves
+    the pairs without durative actions and leaves durative ones unsolved
+    (see ``_solve``). Skips when pddlpy cannot load the
+    pair, refuses it, or runs out of time or memory."""
     if not pddlpy_accepts(domain, problem):
         pytest.skip("pddlpy rejects the pair")
-    reason, result = _solve_outcome(domain, problem)
+    reason, result = _solve_outcome(domain, problem, classical)
     if reason:
         pytest.skip(reason)
     planner, plan = result
@@ -389,6 +394,37 @@ def test_pddlpy_plan_passes_val(domain, problem, tmp_path):
     assert_val_valid(validate, domain, problem, plan_file)
 
 
+def gbfs_plan(domain, problem):
+    """``pddlpy_plan`` with ``gbfs``; skips durative pairs without solving them."""
+    planner, plan = pddlpy_plan(domain, problem, "gbfs")
+    if planner != "gbfs":
+        pytest.skip("durative pair: temporal, not gbfs")
+    return plan
+
+
+@pytest.mark.parametrize("domain,problem", params("gbfs_plan"))
+def test_gbfs_plan_passes_val(domain, problem, tmp_path):
+    """hFF dead-end pruning and the greedy search return only valid plans."""
+    validate = need(validate_bin(), "VAL")
+    plan = gbfs_plan(domain, problem)
+    if plan is None:
+        pytest.skip("gbfs found no plan")
+    plan_file = str(tmp_path / "plan")
+    write_pddlpy_plan(domain, problem, "gbfs", plan, plan_file)
+    assert_val_valid(validate, domain, problem, plan_file)
+
+
+@pytest.mark.parametrize("domain,problem", params("gbfs_solvable"))
+def test_gbfs_solvability_agrees_with_fd(domain, problem):
+    """gbfs prunes relaxed dead ends: it must never call unsolvable a pair
+    FD solves."""
+    fd_only(domain)
+    code, _ = fd_result(domain, problem)
+    if code not in (FD_SUCCESS, FD_TRANSLATE_UNSOLVABLE, FD_SEARCH_UNSOLVABLE):
+        pytest.skip("FD gave no verdict (exit %s)" % code)
+    assert (gbfs_plan(domain, problem) is not None) == (code == FD_SUCCESS)
+
+
 @pytest.mark.parametrize("domain,problem", params("solvable"))
 def test_solvability_agrees_with_fd(domain, problem):
     fd_only(domain)
@@ -401,6 +437,56 @@ def test_solvability_agrees_with_fd(domain, problem):
         pytest.skip("FD gave no verdict (exit %s)" % code)
     _, plan = pddlpy_plan(domain, problem)
     assert (plan is not None) == fd_solvable
+
+
+def _optimal(domain, problem, planner):
+    """``(plan, ucs and FD minimize different things)`` from ``planner``, or
+    the refusal. FD uses action costs only under a total-cost metric; ucs
+    whenever the problem tracks total-cost."""
+    dp = DomainProblem(domain, problem)
+    tracks = TOTAL_COST in State.from_problem(dp).fluents
+    metric = dp.metric()
+    by_cost = bool(metric) and metric[0] == "minimize" and "total-cost" in metric[1]
+    try:
+        return get(planner).solve(dp), tracks and not by_cost
+    except PlannerError as exc:
+        return exc, False
+
+
+@functools.lru_cache(maxsize=None)
+def _optimal_outcome(domain, problem, planner):
+    return bounded(_optimal, domain, problem, planner)
+
+
+@pytest.mark.parametrize("planner", ["bfs", "astar", "ucs"])
+@pytest.mark.parametrize("domain,problem", params("optimal"))
+def test_optimal_cost_agrees_with_fd(domain, problem, planner):
+    """bfs / astar find the fewest actions and ucs the least total-cost (M1):
+    each must match the optimum of FD's blind A*."""
+    fd_only(domain)
+    code, _, cost = fd_full(domain, problem)
+    if code != FD_SUCCESS or cost is None:
+        pytest.skip("FD found no optimal plan (exit %s)" % code)
+    optimum, unit = cost
+    if planner != "ucs" and not unit:
+        pytest.skip("FD minimized action costs; %s minimizes plan length" % planner)
+    if not pddlpy_accepts(domain, problem):
+        pytest.skip("pddlpy rejects the pair")
+    reason, result = _optimal_outcome(domain, problem, planner)
+    if reason:
+        pytest.skip(reason)
+    plan, objectives_differ = result
+    if isinstance(plan, PlannerError):
+        pytest.skip("pddlpy refuses: %s" % plan)
+    if planner == "ucs" and objectives_differ:
+        pytest.skip("FD ignores total-cost without a cost metric; ucs minimizes it")
+    assert plan is not None, "FD found a plan of cost %s, %s none" % (optimum, planner)
+    if planner == "ucs":
+        # ucs sums float costs; no relative tolerance, so a dearer plan fails
+        assert plan.cost == pytest.approx(optimum, rel=0, abs=1e-6), \
+            "ucs %s, FD optimum %s" % (plan.cost, optimum)
+    else:
+        assert len(plan) == optimum, "%s %s, FD optimum %s" % (planner, len(plan), optimum)
 
 
 @pytest.mark.parametrize("plan", fixtures(), ids=lambda p: os.path.relpath(p, IPC))

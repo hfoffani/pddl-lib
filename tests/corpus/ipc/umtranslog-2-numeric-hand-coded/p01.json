@@ -3017,7 +3017,7 @@
   "move-vehicle-nonroad-route3": {
    "truncated_at": 50
   },
-  "move-vehicle-road-route-crossCity": {
+  "move-vehicle-road-route-crosscity": {
    "truncated_at": 50
   },
   "open-door-airplane": [
@@ -4214,7 +4214,7 @@
    "move-vehicle-nonroad-route1",
    "move-vehicle-nonroad-route2",
    "move-vehicle-nonroad-route3",
-   "move-vehicle-road-route-crossCity",
+   "move-vehicle-road-route-crosscity",
    "open-door-airplane",
    "open-door-regular",
    "open-valve",

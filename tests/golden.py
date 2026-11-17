@@ -9,6 +9,10 @@ records the exception instead.
 ``tests/test_golden.py`` recomputes every snapshot and compares. After an
 intended change in parsing semantics, regenerate with ``make golden`` and
 review the diff.
+
+``tests/corpus/validation/reports.json`` freezes the full ``validate_plan``
+report (verdict, failure message and fields, simulation trace) of every
+probe in ``tests/validation_cases.py``: agents act on the message text.
 """
 from __future__ import annotations
 
@@ -22,7 +26,14 @@ from pddlpy import DomainProblem
 from pddlpy.diagnostics import diagnose
 from pddlpy.pddl import And, Lit, Not, Or
 from pddlpy.planning import atom_tuple
-from pddlpy.serialize import atoms_list, domain_problem_dict, operator_dict
+from pddlpy.planning.validation import parse_plan, validate_plan
+from pddlpy.serialize import (
+    atoms_list,
+    domain_problem_dict,
+    operator_dict,
+    simulation_dict,
+    validation_dict,
+)
 
 IPC = os.path.join(os.path.dirname(__file__), "corpus", "ipc")
 
@@ -111,6 +122,20 @@ def snapshot(domain: str, problem: str) -> Dict[str, Any]:
     return result
 
 
+def validation_reports() -> Dict[str, Any]:
+    """The ``validate_plan`` report of every validation probe, by case id."""
+    from validation_cases import CASES  # tests/ is on sys.path
+    reports = {}
+    for case_id, pair, text, _, _ in CASES:
+        result = validate_plan(DomainProblem(*pair), parse_plan(text))
+        reports[case_id] = dict(validation_dict(result),
+                                simulation=simulation_dict(result.simulation))
+    return reports
+
+
+REPORTS = os.path.join(os.path.dirname(__file__), "corpus", "validation", "reports.json")
+
+
 def dumps(data: Dict[str, Any]) -> str:
     return json.dumps(data, indent=1, sort_keys=True) + "\n"
 
@@ -120,6 +145,9 @@ def main() -> None:
         with open(golden_path(problem), "w", encoding="utf-8") as f:
             f.write(dumps(snapshot(domain, problem)))
         print(os.path.relpath(golden_path(problem)))
+    with open(REPORTS, "w", encoding="utf-8") as f:
+        f.write(dumps(validation_reports()))
+    print(os.path.relpath(REPORTS))
 
 
 if __name__ == "__main__":

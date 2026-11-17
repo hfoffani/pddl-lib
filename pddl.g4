@@ -71,19 +71,11 @@ pddlDoc : domain | problem;
 /************* DOMAINS ****************************/
 
 domain
+    // One alternative: two that differ only in where the optional
+    // contextDef goes are identical without it, and ANTLR then looks
+    // ahead to the end of the file to choose.
     : '(' 'define' domainName
-      requireDef?
-      contextDef?
-      typesDef?
-      constantsDef?
-      predicatesDef?
-      functionsDef?
-      constraints?
-      structureDef*
-      ')'
-    | '(' 'define' domainName
-      contextDef?
-      requireDef?
+      ( requireDef contextDef? | contextDef requireDef? )?
       typesDef?
       constantsDef?
       predicatesDef?
@@ -142,9 +134,10 @@ atomicFunctionSkeleton
 	: '(' functionSymbol typedVariableList ')'
 	;
 
-functionSymbol : name ;
+functionSymbol : symbol ;
 
-functionType : 'number' ; // Currently in PDDL only numeric functions are allowed
+// an object type needs :object-fluents (PDDL 3.1, #211)
+functionType : 'number' | r_type ;
 
 constantsDef
 	: '(' ':constants' typedNameList ')'
@@ -158,7 +151,7 @@ atomicFormulaSkeleton
 	: '(' predicate typedVariableList ')'
 	;
 
-predicate : name ;
+predicate : symbol ;
 
 // If have any typed variables, they must come FIRST!
 typedVariableList
@@ -188,7 +181,7 @@ actionDef
            actionDefBody ')'
     ;
 
-actionSymbol : name ;
+actionSymbol : symbol ;
 
 
 // Should allow preGD instead of goalDesc for preconditions -
@@ -225,6 +218,7 @@ goalDesc
 	| '(' 'forall' '(' typedVariableList ')' goalDesc ')'
 	| '(' '=' term term ')'
     | fComp
+    | '(' '=' objectTerm objectTerm ')'   // object fluents (#211)
     ;
 
 fComp
@@ -232,10 +226,15 @@ fComp
 	;
 
 atomicTermFormula
-	: '(' predicate term* ')'
+	: '(' predicate objectTerm* ')'
 	;
 
 term : name | VARIABLE ;
+
+// a term, or an object fluent's value (#211)
+objectTerm : term | functionTerm ;
+
+functionTerm : '(' functionSymbol objectTerm* ')' ;
 
 /************* DURATIVE ACTIONS ****************************/
 
@@ -273,7 +272,7 @@ interval : 'all' ;
 /************* DERIVED DEFINITIONS ****************************/
 
 derivedDef
-	: '(' ':derived' typedVariableList goalDesc ')'
+	: '(' ':derived' atomicFormulaSkeleton goalDesc ')'
 	;
 
 /************* EXPRESSIONS ****************************/
@@ -307,6 +306,7 @@ cEffect
 
 pEffect
 	: '(' assignOp fHead fExp ')'
+	| '(' 'assign' functionTerm objectTerm ')'   // object fluents, also `undefined` (#211)
 	| '(' 'not' atomicTermFormula ')'
 	| atomicTermFormula
 	;
@@ -354,7 +354,7 @@ daEffect
 timedEffect
 	: '(' 'at' timeSpecifier cEffect ')'
 	| '(' 'at' timeSpecifier fAssignDA ')'
-	| '(' assignOpT fHead fExp ')' /* fExpT in BNF but not making sense */
+	| '(' assignOpT fHead fExpT ')'   // a continuous effect (#213)
 	;
 
 fAssignDA
@@ -369,35 +369,20 @@ fExpDA
 
 assignOpT : 'increase' | 'decrease' ;
 
-/*
- * We should have fExpT according to:
- * http://www.plg.inf.uc3m.es/ipc2011-deterministic/attachments/OtherContributions/kovacs-pddl-3.1-2011.pdf
-
+// PDDL 2.1's f-exp-t, plus a plain fExp (#213)
 fExpT
-	: '(*' fExp #t ')'
-	| '(*' #t fExp ')'
-	| #t
+	: '(' '*' fExp '#t' ')'
+	| '(' '*' '#t' fExp ')'
+	| '#t'
+	| fExp
 	;
- */
 
 /************* PROBLEMS ****************************/
 
 problem
+    // One alternative, as in domain: no lookahead to the end of the file.
     : '(' 'define' problemDecl
-      problemDomain
-      requireDef?
-      contextDef?
-      objectDecl?
-      init
-      goal
-      probConstraints?
-      metricSpec?
-      // lengthSpec? This is not defined anywhere in the BNF spec
-      ')'
-    | '(' 'define' problemDecl
-      contextDef?
-      problemDomain
-      requireDef?
+      ( problemDomain requireDef? contextDef? | contextDef problemDomain requireDef? )
       objectDecl?
       init
       goal
@@ -426,6 +411,7 @@ init
 initEl
 	: nameLiteral
 	| '(' '=' fHead NUMBER ')'         
+	| '(' '=' fHead name ')'   // object fluents (#211)
 	| '(' 'at' NUMBER nameLiteral ')'
 	;
 
@@ -443,8 +429,18 @@ atomicNameFormula
 // This means 'preference' preconditions cannot be used
 //goal : '(' ':goal' preGD ')'  
 goal
-    : '(' ':goal' goalDesc ')' 
+    : '(' ':goal' preGD ')'
     ;
+
+// A goal with PDDL 3.0 preferences (#201). 'and' / 'forall' come first, so
+// a plain goal is read through them (ANTLR picks the first alternative of
+// an ambiguity); the listener rebuilds the hard goal and the preferences.
+preGD
+	: '(' 'and' preGD* ')'
+	| '(' 'forall' '(' typedVariableList ')' preGD ')'
+	| '(' 'preference' name? goalDesc ')'
+	| goalDesc
+	;
 
 probConstraints
 	: '(' ':constraints'  prefConGD ')'
@@ -465,12 +461,13 @@ optimization : 'minimize' | 'maximize' ;
 
 metricFExp
 	: '(' binaryOp metricFExp metricFExp ')'
-	| '(' ('*'|'/') metricFExp metricFExp+ ')'
+	| '(' ('+'|'*'|'/') metricFExp metricFExp+ ')'
 	| '(' '-' metricFExp ')'
 	| NUMBER
 	| '(' functionSymbol name* ')'
 	| functionSymbol
-    | 'total-time'
+	| 'total-time'
+	| '(' 'total-time' ')'
 	| '(' 'is-violated' name ')'
 	;
 
@@ -512,17 +509,44 @@ REQUIRE_KEY
     | ':adl'
     | ':durative-actions'
     | ':derived-predicates'
+    | ':duration-inequalities'
     | ':timed-initial-literals'
     | ':preferences'
     | ':constraints'
     | ':semantics'
+    // recognized so they can be refused by name (#208)
+    | ':continuous-effects'
+    | ':object-fluents'
+    | ':domain-axioms'
+    | ':subgoals-through-axioms'
+    | ':safety-constraints'
+    | ':expression-evaluation'
+    | ':open-world'
+    | ':true-negation'
+    | ':ucpop'
     ;
 
 /*
  * allowing keywords as identifier where allowed
  * may need more to specify
  */
+// A name: objects, constants, types, arguments (#163). PDDL names are any
+// letter-led identifier, so a word the lexer reads as a keyword token is a
+// name here too.
 name
+	: symbol
+	| 'all' | 'always' | 'always-within' | 'and' | 'assign' | 'at-most-once'
+	| 'decrease' | 'define' | 'domain' | 'either' | 'end' | 'exists'
+	| 'forall' | 'hold-after' | 'hold-during' | 'imply' | 'increase'
+	| 'is-violated' | 'maximize' | 'minimize' | 'not' | 'number' | 'or'
+	| 'preference' | 'problem' | 'scale-down' | 'scale-up' | 'sometime'
+	| 'sometime-after' | 'sometime-before' | 'start' | 'total-time' | 'when'
+	| 'within'
+	;
+
+// Predicate, function and action names: keywords stay out, so (and),
+// (not ...) and (or ...) keep one reading.
+symbol
 	: NAME
 	| 'at'
 	| 'over'

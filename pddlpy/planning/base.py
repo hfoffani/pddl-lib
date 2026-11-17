@@ -93,6 +93,70 @@ def validate_requirements(domainproblem: "DomainProblem") -> None:
             )
 
 
+#: PDDL 1.2 requirements later versions dropped (#208).
+OBSOLETE_REQUIREMENTS = frozenset({
+    ":domain-axioms", ":subgoals-through-axioms", ":safety-constraints",
+    ":expression-evaluation", ":open-world", ":true-negation", ":ucpop"})
+
+#: Requirements that parse but nothing models yet (#208).
+UNMODELED_REQUIREMENTS = frozenset({":continuous-effects", ":object-fluents"})
+
+
+def check_modeled(domainproblem: "DomainProblem", syntax: bool = True,
+                  timed: bool = False, preferences: bool = False) -> None:
+    """Refuse input the object model reads but drops or misreads, so nothing
+    is solved or judged as if it were absent: ``(:constraints ...)`` (#140)
+    and, unless ``timed`` (the caller handles time: the temporal planner,
+    plan validation, ``validate``), timed initial literals (#142), even when
+    their requirement is not declared.
+    With ``syntax``, also input with syntax errors: the parser skips what it
+    cannot read, e.g. a ``(:derived ...)`` rule (#141). ``diagnose`` reports
+    those itself and passes ``syntax=False``. Unless ``preferences`` (the
+    caller honours them: ``ucs``, plan validation, ``validate``), also goal
+    preferences (#201): solving without them would ignore the metric."""
+    if syntax and domainproblem.syntax_errors:
+        raise UnsupportedRequirementsError(
+            "the domain or problem has syntax errors, so parts of it were "
+            "skipped; run `pddlpy validate` (#141)")
+    obsolete = sorted(domainproblem.requirements() & OBSOLETE_REQUIREMENTS)
+    if obsolete:
+        raise UnsupportedRequirementsError(
+            "%s: obsolete PDDL 1.2 requirement, not supported (#208)" % ", ".join(obsolete))
+    unmodeled = sorted(domainproblem.requirements() & UNMODELED_REQUIREMENTS)
+    if unmodeled:
+        raise UnsupportedRequirementsError(
+            "%s: not supported yet (#208)" % ", ".join(unmodeled))
+    if domainproblem.domain.object_fluents or domainproblem.problem.object_fluents:
+        raise UnsupportedRequirementsError(
+            "object fluents, functions whose value is an object, are not "
+            "supported yet (#211)")
+    continuous = sorted(name for name, a in domainproblem.domain.durative_operators.items()
+                        if a.continuous)
+    if continuous:
+        raise UnsupportedRequirementsError(
+            "continuous effects, (increase|decrease ... #t), are not supported "
+            "yet: %s (#213)" % ", ".join(continuous))
+    if domainproblem.problem.preferences and not preferences:
+        raise UnsupportedRequirementsError(
+            "goal preferences, (preference ...), need the ucs planner (#201)")
+    if domainproblem.problem.timed_literals and not timed:
+        raise UnsupportedRequirementsError(
+            "timed initial literals, (at N ...) in :init, need the temporal "
+            "planner (#142)")
+    if domainproblem.domain.derived and domainproblem.derived_strata() is None:
+        raise UnsupportedRequirementsError(
+            "the (:derived ...) rules are not stratifiable: a derived predicate "
+            "depends on its own negation (#141)")
+    recursive = domainproblem.domain.derived and domainproblem.recursive_numeric_derived()
+    if recursive:
+        raise UnsupportedRequirementsError(
+            "recursive (:derived ...) rules that compare numeric fluents are "
+            "not supported: %s (#141)" % ", ".join(recursive))
+    if domainproblem.domain.constraints or domainproblem.problem.constraints:
+        raise UnsupportedRequirementsError(
+            "(:constraints ...) is not supported yet (#140)")
+
+
 class Planner(ABC):
     """Abstract solver. Subclasses declare ``capabilities`` and implement
     ``solve``.
@@ -104,6 +168,14 @@ class Planner(ABC):
 
     #: requirement keywords this planner supports
     capabilities: FrozenSet[str] = frozenset()
+
+    #: True if the planner minimizes the metric over goal preferences (#201)
+    preferences: bool = False
+
+    #: True if an exhausted search proves that no plan exists. A planner that
+    #: searches only part of the plan space sets it False, and ``solve``
+    #: reports ``limit`` instead of ``unsolvable`` (#219).
+    complete: bool = True
 
     def __init__(self, max_expansions: Optional[int] = None,
                  timeout: Optional[float] = None) -> None:
@@ -143,6 +215,7 @@ class Planner(ABC):
     def prepare(self, domainproblem: "DomainProblem") -> GroundedTask:
         """Run #9 + capability checks, then build the GroundedTask."""
         validate_requirements(domainproblem)
+        check_modeled(domainproblem, preferences=self.preferences)
         self.check_capabilities(domainproblem)
         return GroundedTask(domainproblem)
 

@@ -13,6 +13,7 @@ make pyparser     # Regenerate parser from pddl.g4 (needs Java; commit the outpu
 make lint         # ruff
 make typecheck    # mypy
 make coverage     # tests with coverage report
+make mutmut       # mutation testing of validation.py + solving.py; fails on any survivor (CI-gated)
 make build        # Build wheel/sdist
 make examples     # Run the example showcase
 make golden       # Regenerate IPC subset golden files; review the diff (#153)
@@ -23,6 +24,8 @@ make corpora-test # pddlpy over every fetched pair; report in $CORPORA_DIR/resul
 make oracles      # Build Fast Downward / VAL / INVAL (pinned) into $ORACLES_DIR (default .oracles)
 make oracle       # pytest -m oracle: pddlpy vs FD/VAL/INVAL; missing tools skip; ORACLE_CORPORA=1 for full corpora
                   # (CORPORA_PER_DOMAIN=N samples N problems per domain variant, also for corpora-test)
+make baseline     # solve baseline: bfs/ucs/astar/temporal vs FD on the corpora (M2), resumable;
+                  # CSV + summary.md in $CORPORA_DIR/results/baseline-t<s>-n<N>; findings in docs/baseline.md
 uv run pddlpy parse|ground|solve|validate DOMAIN PROBLEM   # the CLI
 uv run pddlpy validate-plan|simulate DOMAIN PROBLEM PLAN  # plan checks (#166)
 uv run pddlpy-mcp # MCP server on stdio
@@ -108,10 +111,12 @@ plan = get("astar").solve(dp)        # or bfs/gbfs/ucs/temporal; None if unsolva
 
 ## Known Issue
 None outstanding. Type hierarchies (#22) supported (supertype binds transitive
-subtypes); `(either ...)` union types remain unhandled. Durative actions are
+subtypes); `(either ...)` union types bind any member type (#200). Durative actions are
 solved by the `temporal` planner under sequential semantics only (no required
 concurrency).
 
 ## Style
 - Follow YAGNI principle.
 - 100% of coverage in unit test (CI-enforced).
+- No surviving mutant in `[tool.mutmut] only_mutate` (CI-enforced, `make mutmut`).
+  An equivalent mutant gets `# pragma: no mutate` with the reason.

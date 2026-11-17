@@ -60,8 +60,8 @@ happenings (within 0.001) must not touch the same atoms, and a durative
 step needs its `[duration]`.
 
 `solve` reports `status`: `solved`, `unsolvable` (no plan exists — tell
-the user, or fix the PDDL) or `limit` (stopped at a bound: nothing proven;
-retry with a larger bound or another planner). It validates its own plan
+the user, or fix the PDDL) or `limit` (stopped at a bound, or `temporal` found no
+sequential plan: nothing proven; retry with a larger bound or another planner). It validates its own plan
 (`validated: true`).
 
 Exit codes: `0` success, `1` search proved there is no plan / validate found
@@ -109,9 +109,10 @@ if plan is not None:
     print(plan.action_names())  # [(name, bindings), ...]
 ```
 
-Planner choice: `bfs` (fewest actions), `astar` (goal-count heuristic; not
-guaranteed optimal, use `bfs` for fewest actions), `gbfs` (greedy, fast), `ucs` (cost-optimal for `:action-costs`
-domains), `temporal` (durative actions; returns a schedule with start times and
+Planner choice: `bfs` (fewest actions), `astar` (fewest actions, usually
+faster than `bfs`), `gbfs` (greedy on the hFF heuristic: try it first on large problems; plans are not optimal), `ucs` (cost-optimal for `:action-costs`
+domains; `bfs` and `astar` ignore action costs, so use `ucs` whenever the
+problem minimizes `total-cost` through nonnegative `increase` effects), `temporal` (durative actions; returns a schedule with start times and
 a `makespan`). A planner raises `UnsupportedRequirementsError` if a domain declares
 `:requirements` it does not support.
 
@@ -149,22 +150,32 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   `from pddlpy.planning import atom_tuple` (or compare `repr`s / use `State`).
 - **Type hierarchies** are supported: a parameter typed with a supertype
   binds objects of any transitive subtype (`dp.types()` / `dp.subtypes_of(t)`
-  expose the hierarchy). `(either ...)` union types parse but bind no objects.
-- **Goals** must be a conjunction of positive atoms. `not`, `or`, `exists`,
-  `forall` and numeric comparisons in `(:goal ...)` are misread without an
-  error (e.g. `(not (p))` is read as `(p)`), so plans for such goals are wrong
-  ([#138](https://github.com/hfoffani/pddl-lib/issues/138)). Not supported at all: `:derived-predicates`, `:constraints`,
-  `:preferences` in goals, timed initial literals, duration inequalities,
-  `:object-fluents`. `validate-plan` / `simulate` refuse (exit 2) what
-  the model cannot represent instead of guessing: syntax errors, goals that
-  are not a conjunction of atoms, durative actions with numeric, conditional
-  or quantified parts or duration inequalities. Full status per requirement:
+  expose the hierarchy). `(either t1 t2)` binds objects of any member type.
+- **Goals** can use `not`, `or`, `imply`, `exists`, `forall`, `=` and
+  numeric comparisons. `dp.goals()` lists only the positive atoms; the
+  whole goal is `dp.goal_condition()`. With such goals `astar` searches
+  blind, so prefer `bfs`/`ucs`/`gbfs`. Derived predicates (`(:derived ...)`) work with the
+  classical planners, not `temporal`. Not supported at all: `:constraints`,
+  `:object-fluents`, `:continuous-effects` (`#t` effects) and the obsolete PDDL 1.2 keys
+  (refused by name). `solve` refuses (exit 2) a pair with syntax errors:
+  the parser skips what it cannot read, so the answer would be for another
+  domain. `validate-plan` / `simulate` refuse (exit 2) what
+  the model cannot represent instead of guessing: syntax errors, durative actions with numeric, conditional
+  or quantified parts, or timed or expression duration bounds. Numeric
+  duration bounds (`(and (>= ?duration 1) (<= ?duration 3))`) are solved
+  with the shortest allowed duration. Full status per requirement:
   [docs/pddl-support.md](https://github.com/hfoffani/pddl-lib/blob/main/docs/pddl-support.md).
+- **Preferences** in `(:goal ...)` are soft: only `ucs` honours them,
+  minimizing a metric like `(+ (total-cost) (* 5 (is-violated p)))`; the
+  other planners refuse them, and `validate-plan` ignores them.
 - **Durative actions** (`:durative-actions`) parse into `DurativeAction`
   (`dp.durative_operators()`) and are solved only by `temporal`, under
   sequential semantics: domains that require overlapping actions are not solved.
-- Uppercase keywords (`(:INIT ...)`) are fine — keywords are case-insensitive;
-  identifiers keep their case.
+  Timed initial literals (`(at 5 (p))` in `:init`) need `temporal` too; the
+  goal must still hold after the last one.
+- Case does not matter: keywords and names are case-insensitive, and names
+  come out lowercase (`(CLEAR A)` is reported as `(clear a)`), as in Fast
+  Downward and VAL.
 
 ## Developing pddl-lib itself (repo checkout only)
 

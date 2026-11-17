@@ -11,7 +11,7 @@ from __future__ import annotations
 import math
 from typing import Any, Dict, Iterable, List, Optional, Union
 
-from pddlpy.pddl import DomainProblem, Operator
+from pddlpy.pddl import UNDEFINED, DomainProblem, Operator
 from pddlpy.planning import (
     Failure,
     Plan,
@@ -123,9 +123,10 @@ def solve_dict(result: SolveResult) -> Dict[str, Any]:
 
 def state_dict(state: State) -> Dict[str, Any]:
     """A state: its atoms, and its numeric fluents keyed like
-    ``initial_numeric``."""
+    ``initial_numeric``. Derived atoms left undefined by a fluent with no
+    value (#141) are neither true nor listed."""
     return {
-        "atoms": atoms_list(state.atoms),
+        "atoms": atoms_list(a for a in state.atoms if a[0] != UNDEFINED),
         "fluents": {" ".join(head): number(v) for head, v in sorted(state.fluents.items())},
     }
 

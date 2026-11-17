@@ -53,6 +53,7 @@ def ground(domain_file: str, problem_file: str, operator: str) -> Dict[str, Any]
     with the list of known operators if ``operator`` is not in the domain.
     Untyped domains can ground to many instances (objects^parameters)."""
     dp = DomainProblem(domain_file, problem_file)
+    operator = operator.lower()  # names are case-insensitive (#157)
     if operator not in dp.operators():
         raise ValueError(
             "unknown operator %r; known: %s" % (operator, sorted(dp.operators()))
@@ -68,13 +69,17 @@ def solve(domain_file: str, problem_file: str, planner: str = "astar",
           max_expansions: Optional[int] = None,
           timeout: Optional[float] = None) -> Dict[str, Any]:
     """Search for a plan on a PDDL domain/problem pair. ``planner`` is one of
-    the registered planners: bfs, astar (default), gbfs, ucs (cost-optimal for
-    :action-costs), or temporal (required for :durative-actions; steps carry
+    the registered planners: bfs and astar (default), both fewest actions,
+    action costs ignored; gbfs (greedy on the hFF heuristic: reaches
+    furthest of the built-in planners, plans not optimal); ucs (cost-optimal: use
+    it when the problem minimizes total-cost through nonnegative increase
+    effects); or temporal (required for :durative-actions; steps carry
     start/duration/end and the result a ``makespan``). ``max_expansions`` /
     ``timeout`` (seconds) bound the search. Returns the plan
     (solved/cost/length/steps) and ``status``: solved, unsolvable (search
-    space exhausted: no plan exists) or limit (stopped at a bound: try a
-    larger one or another planner). ``validated`` says whether the plan was
+    space exhausted: no plan exists) or limit (stopped at a bound, or temporal
+    found no sequential plan: nothing proven; try a larger bound or another
+    planner). ``validated`` says whether the plan was
     checked with validate_plan. Fails if the domain declares :requirements
     the chosen planner does not support."""
     if planner not in registry.names():

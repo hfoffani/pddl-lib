@@ -1,13 +1,335 @@
 {
- "error": {
-  "message": "list index out of range",
-  "type": "IndexError"
+ "ground": {},
+ "ground_durative": {
+  "pop-end": {
+   "truncated_at": 50
+  },
+  "pop-start": {
+   "truncated_at": 50
+  },
+  "pop-unitarypipe": {
+   "truncated_at": 50
+  },
+  "push-end": {
+   "truncated_at": 50
+  },
+  "push-start": {
+   "truncated_at": 50
+  },
+  "push-unitarypipe": {
+   "truncated_at": 50
+  }
+ },
+ "parse": {
+  "durative_operators": [
+   "pop-end",
+   "pop-start",
+   "pop-unitarypipe",
+   "push-end",
+   "push-start",
+   "push-unitarypipe"
+  ],
+  "goals": [
+   [
+    "on",
+    "b0",
+    "a3"
+   ],
+   [
+    "on",
+    "b1",
+    "a1"
+   ],
+   [
+    "on",
+    "b6",
+    "a2"
+   ]
+  ],
+  "initial_numeric": {
+   "speed s12": 1.0,
+   "speed s13": 1.0
+  },
+  "initial_state": [
+   [
+    "connect",
+    "a1",
+    "a2",
+    "s12"
+   ],
+   [
+    "connect",
+    "a1",
+    "a3",
+    "s13"
+   ],
+   [
+    "first",
+    "b2",
+    "s13"
+   ],
+   [
+    "first",
+    "b5",
+    "s12"
+   ],
+   [
+    "is-product",
+    "b0",
+    "rat-a"
+   ],
+   [
+    "is-product",
+    "b1",
+    "gasoleo"
+   ],
+   [
+    "is-product",
+    "b2",
+    "rat-a"
+   ],
+   [
+    "is-product",
+    "b3",
+    "oca1"
+   ],
+   [
+    "is-product",
+    "b4",
+    "gasoleo"
+   ],
+   [
+    "is-product",
+    "b5",
+    "gasoleo"
+   ],
+   [
+    "is-product",
+    "b6",
+    "lco"
+   ],
+   [
+    "is-product",
+    "b7",
+    "oca1"
+   ],
+   [
+    "last",
+    "b2",
+    "s13"
+   ],
+   [
+    "last",
+    "b5",
+    "s12"
+   ],
+   [
+    "may-interface",
+    "gasoleo",
+    "gasoleo"
+   ],
+   [
+    "may-interface",
+    "gasoleo",
+    "lco"
+   ],
+   [
+    "may-interface",
+    "gasoleo",
+    "oc1b"
+   ],
+   [
+    "may-interface",
+    "gasoleo",
+    "oca1"
+   ],
+   [
+    "may-interface",
+    "gasoleo",
+    "rat-a"
+   ],
+   [
+    "may-interface",
+    "lco",
+    "gasoleo"
+   ],
+   [
+    "may-interface",
+    "lco",
+    "lco"
+   ],
+   [
+    "may-interface",
+    "lco",
+    "oc1b"
+   ],
+   [
+    "may-interface",
+    "lco",
+    "oca1"
+   ],
+   [
+    "may-interface",
+    "lco",
+    "rat-a"
+   ],
+   [
+    "may-interface",
+    "oc1b",
+    "gasoleo"
+   ],
+   [
+    "may-interface",
+    "oc1b",
+    "lco"
+   ],
+   [
+    "may-interface",
+    "oc1b",
+    "oc1b"
+   ],
+   [
+    "may-interface",
+    "oc1b",
+    "oca1"
+   ],
+   [
+    "may-interface",
+    "oca1",
+    "gasoleo"
+   ],
+   [
+    "may-interface",
+    "oca1",
+    "lco"
+   ],
+   [
+    "may-interface",
+    "oca1",
+    "oc1b"
+   ],
+   [
+    "may-interface",
+    "oca1",
+    "oca1"
+   ],
+   [
+    "may-interface",
+    "rat-a",
+    "gasoleo"
+   ],
+   [
+    "may-interface",
+    "rat-a",
+    "lco"
+   ],
+   [
+    "may-interface",
+    "rat-a",
+    "rat-a"
+   ],
+   [
+    "normal",
+    "s12"
+   ],
+   [
+    "normal",
+    "s13"
+   ],
+   [
+    "on",
+    "b0",
+    "a1"
+   ],
+   [
+    "on",
+    "b1",
+    "a3"
+   ],
+   [
+    "on",
+    "b3",
+    "a1"
+   ],
+   [
+    "on",
+    "b4",
+    "a2"
+   ],
+   [
+    "on",
+    "b6",
+    "a3"
+   ],
+   [
+    "on",
+    "b7",
+    "a1"
+   ],
+   [
+    "unitary",
+    "s12"
+   ],
+   [
+    "unitary",
+    "s13"
+   ]
+  ],
+  "metric": null,
+  "objects": {
+   "a1": "area",
+   "a2": "area",
+   "a3": "area",
+   "b0": "batch-atom",
+   "b1": "batch-atom",
+   "b2": "batch-atom",
+   "b3": "batch-atom",
+   "b4": "batch-atom",
+   "b5": "batch-atom",
+   "b6": "batch-atom",
+   "b7": "batch-atom",
+   "gasoleo": "product",
+   "lco": "product",
+   "oc1b": "product",
+   "oca1": "product",
+   "rat-a": "product",
+   "s12": "pipe",
+   "s13": "pipe"
+  },
+  "operators": [],
+  "predicates": [
+   "connect",
+   "first",
+   "follow",
+   "is-product",
+   "last",
+   "may-interface",
+   "normal",
+   "not-unitary",
+   "on",
+   "pop-updating",
+   "push-updating",
+   "unitary"
+  ],
+  "requirements": [
+   ":durative-actions",
+   ":equality",
+   ":fluents",
+   ":strips",
+   ":typing"
+  ],
+  "types": {
+   "area": null,
+   "batch-atom": null,
+   "pipe": null,
+   "product": null
+  }
  },
  "validate": {
   "issues": [
    {
     "check": "syntax",
-    "message": "domain file: line 5:70 no viable alternative at input '(define(domainpipesworld_strips)(:requirements:strips:typing:durative-actions:fluents:equality:constraints'",
+    "message": "domain file: line 5:70 extraneous input ':constraints' expecting {'(', ')', REQUIRE_KEY}",
     "severity": "error"
    }
   ],

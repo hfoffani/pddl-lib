@@ -1,5 +1,8 @@
 ## pddl-lib ##
 
+[![codecov](https://codecov.io/gh/hfoffani/pddl-lib/graph/badge.svg?branch=main)](https://codecov.io/gh/hfoffani/pddl-lib)
+[![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/hfoffani/pddl-lib?label=CodeRabbit%20Reviews&labelColor=171717&color=FF570A)](https://coderabbit.ai)
+
 pddl-py (`pip install pddlpy`) is a PDDL toolkit for Python. It parses PDDL
 domain and problem files with an ANTLR 4 grammar, builds an object model,
 checks the files for common mistakes, and solves them with small reference
@@ -65,7 +68,8 @@ pddlpy simulate      domain.pddl problem.pddl plan.txt   # state after each step
 `astar`, `gbfs`, `ucs` or `temporal`. `--max-expansions N` and `--timeout
 SECONDS` bound the search. The result's `status` is `solved`, `unsolvable`
 (the search space was exhausted, so no plan exists) or `limit` (a bound was
-hit first, which proves nothing), and `validated` says whether the plan was
+hit first, or `temporal`, which builds sequential schedules only, found
+none; either way nothing is proven), and `validated` says whether the plan was
 checked with `validate-plan` before being returned.
 
 ```bash
@@ -257,8 +261,8 @@ It provides:
   them.
 * `registry`: register and look up planners by name.
 * Five reference planners: `BFSPlanner` (`"bfs"`, fewest actions),
-  `AStarPlanner` (`"astar"`, goal-count heuristic), `GBFSPlanner` (`"gbfs"`,
-  greedy), `UniformCostPlanner` (`"ucs"`, cost-optimal) and `TemporalPlanner`
+  `AStarPlanner` (`"astar"`, fewest actions, admissible heuristic), `GBFSPlanner` (`"gbfs"`,
+  greedy on hFF, reaches furthest of the built-in planners, not optimal), `UniformCostPlanner` (`"ucs"`, cost-optimal) and `TemporalPlanner`
   (`"temporal"`, durative actions).
 
 ```python
@@ -360,7 +364,7 @@ These are plans, not promises, and there are no dates. Roughly in order:
 5. Requirements by priority: goal-side ADL and `(either ...)`, timed initial
    literals, derived predicates, preferences, concurrent durative actions,
    trajectory constraints.
-6. Duration inequalities, continuous effects, object fluents.
+6. Continuous effects, object fluents.
 7. HDDL / HTN.
 
 ### History and acknowledgments ###
@@ -417,6 +421,8 @@ on the library itself. Installing and using the package needs none of it.
 * `make pyparser` - Generate the Python parser from `pddl.g4` (needs Java)
 * `make test` - Run Python tests only
 * `make coverage` - Run tests with a coverage report
+* `make mutmut` - Mutation testing of the plan validator and solve verdicts;
+  fails if a mutant survives
 * `make lint` - Lint with ruff
 * `make typecheck` - Type-check with mypy
 * `make build` - Build distribution packages (wheel and source dist)
@@ -429,7 +435,8 @@ Publishing to PyPI happens only in GitHub Actions when a `v*` tag is pushed
 (TestPyPI first, then PyPI, via [Trusted
 Publishing](https://docs.pypi.org/trusted-publishers/)). See
 [`.github/workflows/publish.yaml`](.github/workflows/publish.yaml). CI (tests,
-100% coverage gate, lint, typecheck) runs on every pull request.
+100% coverage gate, mutation testing, lint, typecheck) runs on every pull
+request.
 
 ### Contribution guidelines ###
 

@@ -83,6 +83,14 @@ corpora:
 corpora-test:
 	$(PYTHON) tests/corpora_run.py
 
+# Solve baseline (M2): pddlpy's planners and Fast Downward over the sampled
+# corpora; CSV + summary.md in $(CORPORA_DIR)/results/baseline-t<s>-n<N>.
+# Resumes an interrupted run. Defaults: 1 problem per domain variant, 10 s,
+# 3 GB and 4 runs at a time (BASELINE_TIMEOUT, BASELINE_MEMORY_GB,
+# BASELINE_JOBS, BASELINE_RUNNERS; see tests/solve_baseline.py).
+baseline:
+	CORPORA_PER_DOMAIN=$${CORPORA_PER_DOMAIN:-1} $(PYTHON) tests/solve_baseline.py
+
 # Fetch and build Fast Downward, VAL and INVAL (pinned) into $(ORACLES_DIR).
 # Needs cmake, a C++ compiler and sbcl.
 ORACLES_DIR ?= .oracles
@@ -99,6 +107,18 @@ oracle:
 coverage:
 	@echo "Running tests with coverage..."
 	$(PYTHON) -m pytest --cov=pddlpy --cov-report=term-missing
+
+# Mutation testing of the files in [tool.mutmut] only_mutate (pyproject.toml).
+# Fails if a mutant survives: a behavior no test pins down. A timeout counts
+# as caught. Fresh each run: mutmut's cache does not see test changes.
+mutmut:
+	rm -rf mutants
+	@uv run mutmut run > mutmut.log 2>&1 || { tail -c 3000 mutmut.log; exit 1; }
+	@tail -c 300 mutmut.log | tr '\r' '\n' | grep -a 'killed\|🎉' | tail -1
+	@out=$$(uv run mutmut results) || { echo "mutmut results failed"; exit 1; }; \
+	left=$$(printf '%s\n' "$$out" | grep -v ': timeout$$'); \
+	if [ -n "$$left" ]; then printf '%s\n' "$$left"; \
+		echo "surviving mutants: inspect with 'uv run mutmut show <name>'"; exit 1; fi
 
 # Lint with ruff (generated ANTLR files are excluded via pyproject)
 lint:
@@ -171,9 +191,11 @@ help:
 	@echo "  golden       - Regenerate IPC subset golden files (tests/corpus/ipc)"
 	@echo "  corpora      - Fetch the full IPC corpora into CORPORA_DIR (default .corpora, ~3 GB)"
 	@echo "  corpora-test - Run pddlpy over the fetched corpora (DOMAIN=... to filter)"
+	@echo "  baseline     - Solve baseline: pddlpy planners vs Fast Downward on the corpora"
 	@echo "  oracles      - Build Fast Downward, VAL, INVAL into ORACLES_DIR (default .oracles)"
 	@echo "  oracle       - Compare pddlpy with the oracles (ORACLE_CORPORA=1 for full corpora)"
 	@echo "  coverage     - Run tests with coverage report"
+	@echo "  mutmut       - Mutation testing (validation.py, solving.py); fails on survivors"
 	@echo "  lint         - Lint with ruff"
 	@echo "  typecheck    - Type-check with mypy"
 	@echo "  build        - Build distribution packages"
@@ -184,4 +206,4 @@ help:
 	@echo "  e2e-llm      - Manual LLM+solver end-to-end (MODEL=..., needs OPENROUTER_API_KEY)"
 	@echo "  playground   - LLM playground: scenarios x arms x models (ARGS=..., see e2e/llm/README.md)"
 
-.PHONY: all init testgrammar pyparser test golden corpora corpora-test oracles oracle coverage lint typecheck build clean demo testpublish e2e-llm playground help
+.PHONY: all init testgrammar pyparser test golden corpora corpora-test baseline oracles oracle coverage mutmut lint typecheck build clean demo testpublish e2e-llm playground help

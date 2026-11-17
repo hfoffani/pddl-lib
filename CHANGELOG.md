@@ -5,7 +5,80 @@ All notable changes to `pddlpy` are documented here. This project adheres to
 
 ## [Unreleased]
 
+### Changed
+- **`gbfs` searches on hFF** (Hoffmann & Nebel 2001) instead of goal-count:
+  the size of a relaxed plan, from a delete-relaxed exploration of the
+  grounded task (`pddlpy/planning/relaxed.py`). States from which the
+  relaxation cannot reach a goal atom are pruned, and a problem whose goal
+  is relaxed-unreachable is reported unsolvable without a search. Plans
+  are still not optimal. The solve baseline (`make baseline`) runs `gbfs`
+  too.
+- **Reproducible search**: grounded actions are sorted by operator and
+  arguments. Their order used to follow Python's string hash seed, so a
+  planner could return a different plan (same length for `bfs`/`astar`/
+  `ucs`) from run to run.
+- **Faster successor generation** for every planner: only actions whose
+  rarest needed atom holds are tested. `astar` expands about six times as
+  many states per second on the IPC corpora.
+- **`gbfs`'s hFF** picks, among the actions that reach an atom in the same
+  layer, the one with the lowest h_add, and ignores atoms no action changes.
+  60 s baseline: `gbfs` 523 → 553 pairs, `astar` 364 → 390
+  (`docs/baseline.md`).
+
+### Quality
+- **Mutation testing**: `make mutmut` mutates the plan validator and the
+  solve verdicts (`validation.py`, `solving.py`) and fails if any mutant
+  survives; CI runs it on every pull request. Getting there added tests for
+  every failure report (now a golden file, `tests/corpus/validation/reports.json`)
+  and for happening semantics: merged deletes, mutex reads of guards,
+  comparisons and effect expressions, timed literals, undefined fluents in
+  goals and preferences.
+- **Solve baseline**: `make baseline` runs `bfs`, `ucs`, `astar` (and
+  `temporal` on durative pairs) next to Fast Downward over the sampled IPC
+  corpora, with time and memory caps. The first numbers and the first
+  bottleneck (the heuristic) are in `docs/baseline.md`.
+
+## [1.3.0] - 2026-11-15
+
+Plan validation and simulation, solve verdicts, zero runtime dependencies,
+more of PDDL 2.1-3.1 parsed or solved, and fixes for planners that claimed
+more than they proved (#217, #218, #219).
+
 ### Added
+- **Python 3.14**: tested in CI and declared in the classifiers.
+- **Codecov**: CI uploads the coverage report; the 100% gate stays in CI.
+- **Continuous effects parse** (#213): `#t`, `(* <f-exp> #t)` and
+  `(* #t <f-exp>)` in untimed `increase` / `decrease` effects of durative
+  actions no longer cause syntax errors. They are not modeled yet, so
+  `solve`, `validate-plan` and `validate` refuse them, declared or not
+  (`DurativeAction.continuous`). An untimed `(increase (f) 2)` in a durative
+  effect no longer crashes the parser.
+- **Duration inequalities** (#143): numeric bounds such as
+  `(and (>= ?duration 1) (<= ?duration 3))` give a duration range
+  (`DurativeAction.duration_range`, `bounds()`). `temporal` schedules the
+  lower bound (0.002 if it is 0.001 or less), or, around timed
+  literals, the longest one or one stretched to end just after a literal, and `validate-plan` accepts any duration in the
+  range. Timed and expression bounds are still refused.
+- **Object fluents parse** (#211): object-valued functions,
+  `(:functions (loc ?t) - location)`, function terms as arguments,
+  `(assign (loc ?t) ?l)` and `(= (loc t1) l1)` in `:init` no longer cause
+  syntax errors. They are not modeled yet, so `solve`, `validate-plan` and
+  `validate` refuse them (`dp.domain.object_fluents`,
+  `dp.problem.object_fluents`).
+- **Goal preferences** (#201): `(preference name GD)` in `(:goal ...)`,
+  also under `and` / `forall`, and `(is-violated name)` in `:metric`, parse.
+  The hard goal and the preferences are kept apart
+  (`dp.problem.preferences`). `ucs` minimizes a metric linear in
+  `(total-cost)` and `(is-violated ...)`, the soft goals compiled to costs
+  as in Keyder & Geffner (2009); the other planners refuse preferences.
+  `+` in a metric takes any number of arguments. `metric()` keeps the
+  expression's spacing.
+- **Derived predicates** (#141): `(:derived (p ?x) GD)` rules are solved by
+  `bfs`/`astar`/`gbfs`/`ucs` and judged by `validate-plan`. Derived atoms
+  are recomputed in every state (recursion to a fixpoint, negation by
+  strata); rules that are not stratifiable are refused. `temporal` refuses
+  them. `DomainProblem.derived_predicates()`, `derived_strata()` and
+  `derive()`; `State.derived(dp)`.
 - **Plan validation and simulation** (#166): `pddlpy validate-plan` and
   `pddlpy simulate` (MCP: `validate_plan`, `simulate`; Python:
   `pddlpy.planning.validate_plan` / `simulate`). Plans in the IPC format or
@@ -35,8 +108,122 @@ All notable changes to `pddlpy` are documented here. This project adheres to
   and the server is ported from `FastMCP` to `MCPServer`. `pddlpy-mcp` serves
   2026-07-28 clients and still accepts the 2024-11-05 to 2025-11-25 handshake;
   tests connect over stdio at each version.
+- **Names are lowercased** (#157): `parse`, `ground`, `solve` and
+  `validate` print every name (predicates, actions, types, objects,
+  constants) in lowercase, as Fast Downward and VAL do, whatever the case
+  in the PDDL files.
 
 ### Fixed
+- **`astar` returned plans with more actions than needed** (#217): goal-count
+  overestimated when one action adds several goal atoms. A* now divides it
+  by the most goal atoms one action adds (conditional adds included; every
+  goal atom with derived predicates), so it finds a plan with the fewest
+  actions, like `bfs`. `gbfs` keeps plain goal-count.
+- **`ucs` minimized a different cost than it reported** (#218): an action
+  with no `(increase (total-cost) ...)` effect cost 1 in the search but 0 in
+  `Plan.cost`, so under `(:metric minimize (total-cost))` it could return a
+  dearer plan. It now costs 0 whenever the problem tracks `total-cost`; unit
+  cost stays the fallback without it.
+- **`temporal` claimed "no plan exists" for problems that need concurrency**
+  (#219): it searches sequential schedules only, so an exhausted search now
+  gives `status: limit` with a message saying no sequential plan was found, not
+  `unsolvable`. The CLI exits 3 instead of 1 in that case. `Planner.complete`
+  (default `True`) marks planners whose exhausted search proves unsolvability.
+- **Obsolete and unsupported `:requirements` keys were syntax errors** (#208):
+  `:domain-axioms` was lexed as `:domain` plus junk. The obsolete PDDL 1.2
+  keys (`:domain-axioms`, `:subgoals-through-axioms`, `:safety-constraints`,
+  `:expression-evaluation`, `:open-world`, `:true-negation`, `:ucpop`),
+  `:continuous-effects` and `:object-fluents` now parse, and `solve`,
+  `validate-plan` and `validate` refuse them by name.
+- **Timed initial literals are solved and validated** (#142): `(at 5 (p))`
+  in `:init` was refused. `temporal` now plans with them (waiting for a
+  literal, applying the ones during an action to its `over all`
+  conditions), and `validate-plan` / `simulate` apply them as happenings
+  (`til` events in the trace), mutex with a step touching the same atom
+  then. The goal is judged after the last literal, as in VAL. The
+  classical planners still refuse them.
+- **Goals other than a conjunction of positive atoms are solved** (#138):
+  `not`, `or`, `imply`, `exists`, `forall`, `=` and numeric comparisons in
+  `(:goal ...)` were misread (a `(not (p))` goal was read as `(p)`), then
+  refused. The planners and `validate-plan` now evaluate the whole goal;
+  `DomainProblem.goal_condition()` exposes it. `validate-plan` reports the
+  failing conjuncts, and a goal reading a fluent with no value fails, as in
+  VAL. `astar`/`gbfs` use a blind heuristic for such goals.
+- **`(either t1 t2)` types bound no objects** (#200): an action with an
+  `(either ...)` parameter grounded to zero instances. It now binds objects
+  of any member type or its subtypes; objects and types declared
+  `- (either ...)` count as each member.
+- **`validate` reported quantified variables in durative conditions as
+  undeclared parameters** (#193): in `(at start (forall (?y - a) (p ?y)))`,
+  `?y` was taken for a parameter of the action. Such conditions are still
+  not modeled (the action is refused by `temporal` and `validate-plan`).
+- **`(:metric minimize (total-time))` was a syntax error** (#158), and the
+  parser's recovery dropped the rest of the problem: objects, `:init` and
+  goals came out empty for IPC temporal problems. It now parses, and
+  `metric()` returns `("minimize", "(total-time)")`.
+- **`(:derived (p ?x) GD)` was a syntax error** (#141): the grammar expected
+  a variable list where PDDL 2.2 has an atom. It now parses; the rule is
+  not modeled yet, so `validate` reports it as `unsupported` and `solve` /
+  `validate-plan` refuse it. `validate` no longer reports a quantified
+  goal's `?variable` as an unknown object.
+- **Duration inequalities became a fixed duration** (#143):
+  `:duration-inequalities` was a syntax error, and without it
+  `(and (>= ?duration 1) (<= ?duration 3))` set the duration to the last
+  bound (3). The key now parses, only `(= ?duration N)` sets a duration,
+  and inequality durations are reported by `validate` and refused by
+  `temporal` and `validate-plan`.
+- **Names spelled like keywords were syntax errors** (#163): an object,
+  constant, type or argument named `or`, `and`, `start`, `domain`, ... (in
+  any case) broke the parse and dropped the rest of `:objects`, e.g. the
+  object `OR` in the large IPC blocksworld problems. They are names now.
+  Predicate, function and action names still can't be keywords.
+- **Parsing is ~2.7x faster, and a syntax error no longer empties the
+  file**: the grammar's `domain` and `problem` rules had two alternatives
+  identical up to the end of the file, so ANTLR read every token before
+  choosing one, and recovery from a syntax error dropped the whole file.
+  The largest corpus problem (nomystery p09, 1.4 MB) parses in 4.6 s instead
+  of 12.4 s; IPC pairs with one unsupported construct now load the rest
+  (the pair still reports the syntax error and is refused by `solve`).
+- **`solve` answered for input it had skipped** (#141): the parser recovers
+  from a syntax error by dropping what it cannot read, such as a standard
+  `(:derived (r ?x) ...)` rule, and `solve` then reported "no plan exists"
+  for the rest. `solve` now refuses any pair with syntax errors (exit `2`),
+  as `validate-plan` already did. Parsing `:derived` is on the roadmap.
+- **Identifiers were case-sensitive** (#157): `(CLEAR C)` in `:init` did not
+  match `(clear ?x)`, nor `Hoist` the type `hoist`, so IPC pairs such as
+  blocks-strips-typed and depots were reported unsolvable or ungroundable.
+  PDDL names are case-insensitive; they now match in any case, also where
+  callers pass them: `ground` (CLI, MCP, `dp.ground_operator`, `dp.ground`
+  and its binding), `dp.candidate_objects` / `dp.subtypes_of`, and plan
+  steps, including `args` variables in JSON plans.
+- **`(not (p))` in `:init` was read as `(p)`** (#186): the negation was
+  ignored, so the atom started true. It is now kept out of the initial
+  state (closed world: it is false anyway) and stored in
+  `dp.problem.negative_init`. `validate` warns that it is ignored
+  (`negative_init`), or reports an error when the atom is also asserted.
+- **Timed initial literals were true at time 0** (#142): `(at N lit)` in
+  `:init` went into `initialstate()`, so a domain that did not declare
+  `:timed-initial-literals` was solved as if the literal held from the
+  start. TILs are now kept out of the initial state, stored as
+  `dp.problem.timed_literals` (`(time, atom, positive)`), and refused by
+  `solve` / `validate-plan` and reported by `validate`.
+- **Non-conjunctive goals were silently misread** (#138): `(not (p))` was
+  read as `(p)`, `or` as `and`, numeric goals were dropped, so `solve` could
+  return wrong plans or an empty plan as `solved`. Goals other than a
+  conjunction of positive atoms are now refused by `solve` (exit `2`) and
+  reported by `validate` as an `unsupported` error. Supporting them is on
+  the roadmap.
+- **`(:constraints ...)` crashed the loader** (#140): any constraints block,
+  in the domain or the problem, raised `IndexError`, so `validate` crashed
+  too. The block now loads; it is not modeled, so `solve` and
+  `validate-plan` refuse it (exit `2`) and `validate` reports an
+  `unsupported` error. New `pddlpy.planning.check_modeled()`. Declaring
+  `:constraints` in `:requirements` is still a syntax error.
+- **temporal planner ignored numeric parts of durative actions** (#139): it
+  scheduled durative actions as if their numeric conditions and effects (and
+  conditional or quantified parts) were absent, returning invalid plans. It
+  now refuses such actions with `UnsupportedRequirementsError` (CLI exit `2`).
+  Instantaneous actions keep full numeric support.
 - **An empty `Plan` was falsy** (#180): `Plan` had `__len__` but no
   `__bool__`, so `if plan:` read the zero-step plan (goal already true in
   `:init`) as "no solution". A `Plan` is now always truthy; planners still
@@ -247,6 +434,8 @@ public API (`Development Status :: 5 - Production/Stable`).
 - 150 tests, 100% line coverage; layering between grammar / model / planner enforced
   by a test. Python 3.11+.
 
+[Unreleased]: https://github.com/hfoffani/pddl-lib/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.3.0
 [1.2.2]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.2
 [1.2.1]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.1
 [1.2.0]: https://github.com/hfoffani/pddl-lib/releases/tag/v1.2.0

@@ -296,6 +296,24 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#objectTerm.
+    def enterObjectTerm(self, ctx:pddlParser.ObjectTermContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#objectTerm.
+    def exitObjectTerm(self, ctx:pddlParser.ObjectTermContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#functionTerm.
+    def enterFunctionTerm(self, ctx:pddlParser.FunctionTermContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#functionTerm.
+    def exitFunctionTerm(self, ctx:pddlParser.FunctionTermContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#durativeActionDef.
     def enterDurativeActionDef(self, ctx:pddlParser.DurativeActionDefContext):
         pass
@@ -539,6 +557,15 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#fExpT.
+    def enterFExpT(self, ctx:pddlParser.FExpTContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#fExpT.
+    def exitFExpT(self, ctx:pddlParser.FExpTContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#problem.
     def enterProblem(self, ctx:pddlParser.ProblemContext):
         pass
@@ -620,6 +647,15 @@ class pddlListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by pddlParser#preGD.
+    def enterPreGD(self, ctx:pddlParser.PreGDContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#preGD.
+    def exitPreGD(self, ctx:pddlParser.PreGDContext):
+        pass
+
+
     # Enter a parse tree produced by pddlParser#probConstraints.
     def enterProbConstraints(self, ctx:pddlParser.ProbConstraintsContext):
         pass
@@ -680,6 +716,15 @@ class pddlListener(ParseTreeListener):
 
     # Exit a parse tree produced by pddlParser#name.
     def exitName(self, ctx:pddlParser.NameContext):
+        pass
+
+
+    # Enter a parse tree produced by pddlParser#symbol.
+    def enterSymbol(self, ctx:pddlParser.SymbolContext):
+        pass
+
+    # Exit a parse tree produced by pddlParser#symbol.
+    def exitSymbol(self, ctx:pddlParser.SymbolContext):
         pass
 
 
