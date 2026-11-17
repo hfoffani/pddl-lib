@@ -199,3 +199,21 @@ def test_gbfs_is_the_same_under_any_hash_seed():
                           env={**os.environ, "PYTHONHASHSEED": seed}, check=True).stdout
            for seed in ("1", "2", "3")}
     assert len(out) == 1 and next(iter(out)).startswith("[(")
+
+
+def test_ff_prefers_the_cheaper_supporter_in_a_layer(tmp_path):
+    # a and b both reach (g) in layer 2; a needs two atoms (h_add 3), b one
+    # (h_add 2): the relaxed plan uses b, so hFF is 2, not 3
+    (tmp_path / "d.pddl").write_text("""(define (domain t)
+ (:requirements :strips)
+ (:predicates (s) (p1) (p2) (p3) (g))
+ (:action a :parameters () :precondition (and (p1) (p2)) :effect (g))
+ (:action b :parameters () :precondition (p3) :effect (g))
+ (:action m1 :parameters () :precondition (s) :effect (p1))
+ (:action m2 :parameters () :precondition (s) :effect (p2))
+ (:action m3 :parameters () :precondition (s) :effect (p3)))""")
+    (tmp_path / "p.pddl").write_text(
+        "(define (problem p) (:domain t) (:init (s)) (:goal (g)))")
+    task = GroundedTask(DomainProblem(str(tmp_path / "d.pddl"), str(tmp_path / "p.pddl")))
+    assert [a.operator_name for a in task.actions][:2] == ["a", "b"]
+    assert RelaxedTask(task).ff(task.initial.atoms) == 2

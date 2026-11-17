@@ -97,12 +97,16 @@ class RelaxedTask:
         # initially; the action never applies when it does not.
         changed = set().union(*self.add, *map(_deletes, task.actions))
         initial = task.initial.atoms
-        # Ids follow the sorted atoms and every id tuple is sorted, so the
+        # Ids follow the atoms sorted by predicate, then by the order the
+        # problem declares their objects, and every id tuple is sorted, so the
         # supporters ``ff`` picks do not depend on set iteration order (the
         # string hash seed): the same task gives the same h in every run.
         dynamic = [frozenset(a for a in p if a in changed) for p in self.pre]
+        declared = {o: i for i, o in enumerate(task.domainproblem.worldobjects())}
         self._id: Dict["GroundAtom", int] = {
-            atom: i for i, atom in enumerate(sorted(set().union(*dynamic, *self.add, self.goal)))}
+            atom: i for i, atom in enumerate(sorted(
+                set().union(*dynamic, *self.add, self.goal),
+                key=lambda atom: (atom[0], [(declared.get(o, len(declared)), o) for o in atom[1:]])))}
         self._pre = [tuple(sorted(self._id[a] for a in p)) for p in dynamic]
         self._add = [tuple(sorted(self._id[a] for a in a_)) for a_ in self.add]
         self._needed_by: List[List[int]] = [[] for _ in self._id]
@@ -148,10 +152,12 @@ class RelaxedTask:
         state must be reachable from the initial state: static atoms keep
         their initial value, whatever ``atoms`` holds.
 
-        Layer by layer, each newly reached atom records the action that
-        first reached it; the relaxed plan collects those supporters
-        backwards from the goal atoms. 0 means the goal's needed atoms hold,
-        not that the state is a goal."""
+        Layer by layer, each newly reached atom records its supporter: of
+        the actions that reach it in that layer, the one with the lowest
+        h_add cost (1 plus the costs of its preconditions; atoms of the state
+        cost 0), the first on a tie. The relaxed plan collects those
+        supporters backwards from the goal atoms. 0 means the goal's needed
+        atoms hold, not that the state is a goal."""
         ids = self._id
         reached = bytearray(len(ids))
         layer = sorted(a for a in map(ids.get, atoms) if a is not None)
@@ -161,8 +167,10 @@ class RelaxedTask:
         missing = len(goal) - sum(reached[g] for g in goal)
         is_goal = self._is_goal
         supporter: Dict[int, int] = {}
+        cost: Dict[int, int] = {}  # h_add of each atom reached; 0 if absent
+        cost_of = cost.get
         waiting = self._npre[:]
-        needed_by, add = self._needed_by, self._add
+        needed_by, add, pre = self._needed_by, self._add, self._pre
         ready = list(self._free)
         while missing:
             for a in layer:
@@ -172,19 +180,24 @@ class RelaxedTask:
                         ready.append(i)
             if not ready:
                 return None
-            layer = []
+            new: Dict[int, int] = {}  # atoms reached in this layer -> cost
             for i in ready:
+                c = 1 + sum(cost_of(p, 0) for p in pre[i])
                 for a in add[i]:
                     if not reached[a]:
                         reached[a] = 1
                         supporter[a] = i
-                        layer.append(a)
+                        new[a] = c
                         missing -= is_goal[a]
+                    elif c < new.get(a, c):
+                        supporter[a] = i
+                        new[a] = c
+            cost.update(new)
+            layer = list(new)
             ready = []
         plan: Set[int] = set()
         stack = list(goal)
         seen: Set[int] = set()
-        pre = self._pre
         while stack:
             a = stack.pop()
             if a in seen:
