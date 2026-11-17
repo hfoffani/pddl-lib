@@ -83,6 +83,8 @@ def test_grade_extractor_path():
     assert (g.verdict, g.source) == (grader.OPTIMAL, "extractor")
     assert "(drive ?from - place ?to - place)" in seen[0] and prose in seen[0]
     assert grader.grade(sc, prose, lambda p: "NONE").verdict == grader.UNPARSEABLE
+    replies = ["", "(drive depot town)"]
+    assert grader.grade(sc, prose, lambda p: replies.pop(0)).verdict == grader.SUBOPTIMAL
 
 
 def test_improve_plan_shows_a_valid_suboptimal_plan():

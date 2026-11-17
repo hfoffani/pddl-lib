@@ -94,7 +94,13 @@ def extract(sc: Scenario, answer: str, extractor: Optional[Extractor]):
         return steps, "regex"
     if extractor is None:
         return None, ""
-    text = extractor(extractor_prompt(sc, answer)).strip()
+    prompt = extractor_prompt(sc, answer)
+    # an empty reply is a transient API failure (seen with gpt-5-mini), not NONE
+    text = ""
+    for _ in range(3):
+        text = extractor(prompt).strip()
+        if text:
+            break
     text = re.sub(r"^```\w*\s*|\s*```$", "", text)
     if not text or text.upper().startswith("NONE"):
         return None, "extractor"

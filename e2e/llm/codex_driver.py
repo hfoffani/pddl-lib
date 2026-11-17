@@ -9,8 +9,9 @@ ones, because Codex brings its own agent prompt and tools:
              can compute (``exec`` fails closed)
     python   Codex's shell in its ``workspace-write`` sandbox (writes only in
              the run's temp dir, no network); it can read the rest of the disk
-    pddlpy   the pddlpy MCP server and Codex's file edits; shell and code mode
-             off
+    pddlpy   the pddlpy MCP server and Codex's file edits; shell off. Code
+             mode stays on: Codex routes MCP calls through it, so the model
+             can also compute in JavaScript
 
 Each run gets a fresh ``CODEX_HOME`` holding only a link to the account's
 ``auth.json``, so neither ``~/.codex/config.toml`` nor the global

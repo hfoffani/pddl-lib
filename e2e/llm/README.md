@@ -45,6 +45,12 @@ prompt and tools, so these arms only approximate the ones above:
 | `python` | Codex's shell in its `workspace-write` sandbox (no network, writes only in a temp dir, reads anywhere) and code mode (JavaScript) |
 | `pddlpy` | the pddlpy MCP server, Codex's file edits and code mode; no shell |
 
+Code mode cannot be turned off for `python` and `pddlpy`: Codex routes every
+tool call, MCP included, through it. So a Codex `pddlpy` run can also compute
+in JavaScript, and models do: on `maintenance-improve-60` gpt-6.1-sol wrote
+its own exhaustive search next to the pddlpy calls. For arms that hold
+strictly, use OpenRouter models.
+
 Each run gets a fresh `CODEX_HOME` with only a link to `~/.codex/auth.json`,
 and skills are off, so the user's Codex config, `AGENTS.md` and installed
 skills (a global pddlpy skill would leak into every arm) stay out. Grading
