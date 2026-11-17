@@ -1,0 +1,7 @@
+{
+ "kind": "improve-plan",
+ "optimal_cost": 4,
+ "proposed_cost": 5,
+ "planner": "ucs",
+ "source": "maintenance at 30 planes, 6 days, 5 airports (random, seed 152). The office proposes the greedy schedule (most planes first): 5 days, none of them redundant. The optimum, 4 days, is unique and shares no working day with it."
+}

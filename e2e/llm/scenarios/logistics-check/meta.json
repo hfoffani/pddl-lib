@@ -1,0 +1,2 @@
+{"kind": "check-plan", "first_bad_step": 16, "planner": "astar",
+ "source": "logistics plus a 26-step dispatcher plan. Step 4 drives the Madrid truck back to the office; step 16 loads p2 into it at Madrid airport, 12 steps later. Spotting it means tracking the truck, not reading a table."}

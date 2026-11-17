@@ -71,6 +71,12 @@ the task has no plan; the question never hints which:
 | `courier-check` | `check-plan` | `VERDICT: invalid at step 16` | a 20-step dispatcher plan; step 16 drives a one-way road backwards |
 | `maintenance-improve` | `improve-plan` | a 2-day schedule | the office proposes the greedy 3-day schedule; it is valid |
 | `courier-unsolvable` | `unsolvable` | says it cannot be done | `courier-parcels` without the only road into the castle |
+| `logistics-check` | `check-plan` | `VERDICT: invalid at step 16` | 26 steps; step 4 drives the Madrid truck away, step 16 loads into it at the airport |
+| `maintenance-improve-30` | `improve-plan` | a 4-day schedule | 30 planes, 6 days, 5 airports; the greedy 5-day proposal has no redundant day and shares none with the unique optimum |
+| `courier-budget` | `unsolvable` | says it cannot be done | `courier-parcels` with 26 coins for tolls; the cheapest plan costs 27 |
+
+The first three hide the trap in the table: both models tested pass them in
+every arm, `bare` included. The last three need state tracking or search.
 
 `check-plan` answers end with a `VERDICT:` line, graded by regex. An
 `unsolvable` answer passes when the extractor model says it concludes the
