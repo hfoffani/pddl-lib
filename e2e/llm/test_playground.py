@@ -82,7 +82,7 @@ def test_regex_keeps_unknown_steps_for_the_extractor():
     # prose in parentheses before or after the plan is fine
     good = "(drive depot riverside) (drive riverside oldbridge) (drive oldbridge town)"
     assert grader.grade(sc, "Here it is (see below): " + good).verdict == grader.OPTIMAL
-    assert grader.grade(sc, good + " (total 7)").verdict == grader.OPTIMAL
+    assert grader.grade(sc, good + "\nThat costs 7 (the minimum).").verdict == grader.OPTIMAL
 
 
 def test_grade_suboptimal():
