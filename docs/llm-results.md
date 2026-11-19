@@ -48,7 +48,7 @@ Earlier, single runs on `courier-parcels` (deliver three parcels over 28
 one-way tolled roads; optimum 27): `bare` gpt-6.1-sol answered 30, its
 `python` and `pddlpy` arms 27.
 
-Raw tables and selected transcripts: [`e2e/llm/runs/2026-11-17/`](../e2e/llm/runs/2026-11-17/).
+Raw tables and selected transcripts: [`e2e/llm/runs/2026-11-17/`](../e2e/llm/runs/2026-11-17/README.md).
 
 ## What the transcripts show
 

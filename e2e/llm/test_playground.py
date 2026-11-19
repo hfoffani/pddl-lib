@@ -61,6 +61,17 @@ def test_grade_prose_unparseable(name):
     assert g.verdict == grader.UNPARSEABLE
 
 
+def test_regex_keeps_unknown_steps_for_the_extractor():
+    sc = scenarios.load("courier")
+    plan = "(drive depot riverside) (teleport riverside oldbridge) (drive oldbridge town)"
+    assert grader.grade(sc, plan).verdict == grader.UNPARSEABLE  # no extractor
+    replies = ["(drive depot riverside)\n(teleport riverside oldbridge)\n"
+               "(drive oldbridge town)"]
+    assert grader.grade(sc, plan, lambda p: replies[0]).verdict == grader.INVALID
+    # prose in parentheses before the plan is fine
+    assert grader.grade(sc, "(see below) (drive depot town)").verdict == grader.SUBOPTIMAL
+
+
 def test_grade_suboptimal():
     sc = scenarios.load("courier")
     g = grader.grade(sc, "Just take the highway: (drive depot town)")
@@ -117,6 +128,8 @@ def test_grade_unsolvable():
     g = grader.grade(sc, "\n".join(reference))
     assert g.verdict == grader.INVALID, g
     assert grader.grade(sc, "Hmm.").verdict == grader.UNPARSEABLE
+    assert grader.grade(sc, "The task is not impossible.").verdict == grader.UNPARSEABLE
+    assert grader.grade(sc, "It isn't really unsolvable.").verdict == grader.UNPARSEABLE
     # the extractor decides when there is one
     seen = []
 
@@ -196,19 +209,81 @@ def test_regrade(tmp_path, stored):
     assert playground.main(["regrade", str(tmp_path), "--grader-model", ""]) == 0
     assert json.loads(path.read_text())["verdict"] == grader.CORRECT
     assert "(regraded)" in (tmp_path / "results.md").read_text()
-    assert "**verdict:** `correct`" in (tmp_path / rec["transcript"]).read_text()
+    text = (tmp_path / rec["transcript"]).read_text()
+    assert "**verdict:** `correct`" in text and "## User" in text
+    assert text.count("**graded plan**") == 1
 
 
+def test_regrade_retries_grading_errors(tmp_path):
+    pytest.importorskip("httpx")
+    playground.main(["run", "courier", "--arm", "bare", "--dry-run", "--out", str(tmp_path)])
+    path = tmp_path / "results.jsonl"
+    rec = json.loads(path.read_text())
+    rec.update(verdict="error", detail="grading failed: boom")
+    path.write_text(json.dumps(rec) + "\n")
+    playground.main(["regrade", str(tmp_path), "--grader-model", ""])
+    assert json.loads(path.read_text())["verdict"] == grader.OPTIMAL
+
+
+def test_codex_nonzero_exit_is_an_error(tmp_path, monkeypatch):
+    import codex_driver as cx
+
+    class Proc:
+        returncode = 1
+
+        async def communicate(self, data=None):
+            return b"", b"boom: not logged in"
+
+    async def fake_exec(*a, **k):
+        return Proc()
+    monkeypatch.setattr(cx.asyncio, "create_subprocess_exec", fake_exec)
+    monkeypatch.setattr(cx, "codex_home", lambda w: tmp_path)
+    run = playground.Run("courier", "bare", "codex:x", 1)
+    with pytest.raises(RuntimeError, match="not logged in"):
+        import asyncio
+        asyncio.run(cx.converse(run, scenarios.load("courier"), "x", 5))
+
+
+def test_server_cmd_keeps_spaces():
+    import shlex
+    cmd = "uv run --project %s pddlpy-mcp" % shlex.quote("/a b/c")
+    assert shlex.split(cmd)[3] == "/a b/c"
+
+
+needs_sandbox = pytest.mark.skipif(not sandbox.shutil.which("sandbox-exec"),
+                                   reason="run_python needs sandbox-exec (macOS)")
+
+
+@needs_sandbox
 def test_sandbox_runs_code(tmp_path):
     out = json.loads(sandbox.run_python("print(6*7)", tmp_path))
     assert (out["exit_code"], out["stdout"]) == (0, "42\n")
 
 
+@needs_sandbox
+def test_sandbox_host_write_ignores_planted_symlink(tmp_path):
+    work, outside = tmp_path / "work", tmp_path / "victim.txt"
+    work.mkdir()
+    outside.write_text("keep")
+    (work / "run_1.py").symlink_to(outside)
+    out = json.loads(sandbox.run_python("print('ok')", work, n=1))
+    assert out["stdout"] == "ok\n" and outside.read_text() == "keep"
+
+
+@needs_sandbox
+def test_sandbox_bounds_output(tmp_path):
+    out = json.loads(sandbox.run_python("print('x' * 50000)", tmp_path))
+    assert len(out["stdout"]) < sandbox.MAX_OUTPUT + 100
+    assert "truncated 40001 bytes" in out["stdout"]
+
+
+@needs_sandbox
 def test_sandbox_timeout(tmp_path):
     out = json.loads(sandbox.run_python("while True: pass", tmp_path, timeout=1))
     assert out["exit_code"] is None and out["timed_out_after_seconds"] == 1
 
 
+@needs_sandbox
 def test_sandbox_has_no_pddlpy(tmp_path):
     out = json.loads(sandbox.run_python("import pddlpy", tmp_path))
     assert "ModuleNotFoundError" in out["stderr"]

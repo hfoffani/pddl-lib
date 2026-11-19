@@ -21,9 +21,9 @@ What changed is who calls it. LLMs now write well-formed PDDL, and frontier
 models also check plans and solve small problems on their own, or write a
 search in Python for them. What they cannot give is a guarantee. So the
 primary goal of pddl-py is now to be the verifier an agent trusts: a plan
-checked step by step, a cheapest plan from a planner whose search proves it,
-an `unsolvable` that comes from an exhausted search space, through the CLI
-and the MCP server. [`docs/llm-results.md`](docs/llm-results.md) measures
+checked step by step, a cheapest plan from an optimal planner (`ucs`) whose
+search proves it, an `unsolvable` that comes from an exhausted search space,
+through the CLI and the MCP server. [`docs/llm-results.md`](docs/llm-results.md) measures
 what two models gain from it, with and without tools.
 
 Researchers and app developers stay first-class users of the Python API. I am
@@ -168,9 +168,12 @@ For agents that work from files instead of MCP, there is also an Agent Skill in
 > **Why pair an LLM with a solver at all?** LLMs translate problems into PDDL
 > well. Without tools they often miss the cheapest plan: in
 > [our runs](docs/llm-results.md) a frontier model found the optimal 60-plane
-> maintenance schedule once in three tries, and a small model never. A solver's
-> answer comes with a guarantee, and `validate_plan` checks any plan, the
-> model's own included.
+> maintenance schedule once in three tries, and a small model never. An
+> optimal planner's answer comes with a guarantee (`ucs`, or `bfs` when every
+> action costs the same; `gbfs` finds a plan, not the cheapest), and
+> `validate_plan` checks a plan from anywhere, the model's own included. It
+> refuses the domains it cannot judge rather than guess (see
+> [`docs/pddl-support.md`](docs/pddl-support.md)).
 > [`docs/llm-interaction.md`](docs/llm-interaction.md) walks through a complete
 > example (natural language, PDDL, `pddlpy solve`, natural language) on a small
 > cost-optimal routing problem where the intuitive answer is wrong.

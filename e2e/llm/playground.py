@@ -33,6 +33,7 @@ import itertools
 import json
 import os
 import pathlib
+import shlex
 import sys
 import tempfile
 import time
@@ -255,7 +256,8 @@ def final_answer(messages: List[dict]) -> str:
     return last.get("content") or ""
 
 
-def to_markdown(run: Run, messages: List[dict], g: grader.Grade) -> str:
+def grade_header(run: Run, g: grader.Grade) -> List[str]:
+    """A transcript's title and grading evidence, up to its first ``## ``."""
     lines = ["# %s · %s · %s · rep %d" % (run.scenario, run.arm, run.model, run.rep), "",
              "- **verdict:** `%s`" % g.verdict,
              "- **cost / optimum:** %s / %s" % (g.cost, g.optimum),
@@ -265,6 +267,11 @@ def to_markdown(run: Run, messages: List[dict], g: grader.Grade) -> str:
         lines.append("- **detail:** %s" % "; ".join(x for x in (run.detail, g.detail) if x))
     lines += ["- **graded plan** (%s):" % (g.source or "-"), "", "```",
               "\n".join(g.steps) or "(none)", "```", ""]
+    return lines
+
+
+def to_markdown(run: Run, messages: List[dict], g: grader.Grade) -> str:
+    lines = grade_header(run, g)
     for m in messages:
         role = m["role"]
         if role == "system":
@@ -411,7 +418,7 @@ async def cmd_run(a) -> int:
         if "pddlpy" in arms and (dry or api_models):
             from mcp import ClientSession, StdioServerParameters
             from mcp.client.stdio import stdio_client
-            cmd, *cmd_args = a.server_cmd.split()
+            cmd, *cmd_args = shlex.split(a.server_cmd)
             read, write = await stack.enter_async_context(
                 stdio_client(StdioServerParameters(command=cmd, args=cmd_args)))
             session = await stack.enter_async_context(ClientSession(read, write))
@@ -506,12 +513,15 @@ def cmd_regrade(a) -> int:
     extractor = sync_extractor(a.grader_model)
     changed = 0
     for r in runs:
-        if r.verdict == "error":
-            continue
         tpath = outdir / r.transcript
         text = tpath.read_text(encoding="utf-8") if r.transcript else ""
         r.answer = r.answer or transcript_answer(text)
-        g = grader.grade(scenarios.load(r.scenario), r.answer, extractor)
+        if r.verdict == "error" and not text:
+            continue  # the conversation failed: nothing to grade
+        try:
+            g = grader.grade(scenarios.load(r.scenario), r.answer, extractor)
+        except Exception as exc:
+            g = grader.Grade("error", detail="grading failed: %s" % exc)
         if not r.answer:
             g.detail = "; ".join(x for x in ("no final answer", g.detail) if x)
         if g.verdict != r.verdict:
@@ -519,10 +529,10 @@ def cmd_regrade(a) -> int:
             print("%-24s %-7s %-26s #%d  %s -> %s" % (
                 r.scenario, r.arm, r.model, r.rep, r.verdict, g.verdict))
         r.verdict, r.cost, r.optimum, r.detail = g.verdict, g.cost, g.optimum, g.detail
-        if text:
-            tpath.write_text(text.replace(
-                text.split("- **verdict:** `", 1)[1].split("`", 1)[0] + "`",
-                g.verdict + "`", 1) if "- **verdict:** `" in text else text, encoding="utf-8")
+        if text:  # new grading evidence, same conversation
+            body = text[text.index("\n## "):] if "\n## " in text else ""
+            tpath.write_text("\n".join(grade_header(r, g)).rstrip("\n") + "\n" + body,
+                             encoding="utf-8")
     path.write_text("".join(json.dumps(asdict(r)) + "\n" for r in runs), encoding="utf-8")
     stamp = outdir.name
     (outdir / "results.md").write_text("# Playground results %s (regraded)\n\n%s\n\n"
@@ -571,7 +581,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                    help="seconds per codex: run")
     p.add_argument("--grader-model", default=DEFAULT_GRADER,
                    help="extractor model (temperature 0)")
-    p.add_argument("--server-cmd", default="uv run --project %s --extra mcp pddlpy-mcp" % REPO,
+    p.add_argument("--server-cmd",
+                   default="uv run --project %s --extra mcp pddlpy-mcp" % shlex.quote(str(REPO)),
                    help="MCP server (default: this checkout); published: "
                         "'uvx --from pddlpy[mcp] pddlpy-mcp'")
     p.add_argument("--out", help="results dir (default results/<stamp>)")

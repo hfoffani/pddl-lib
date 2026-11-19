@@ -57,12 +57,19 @@ class Grade:
 
 
 def regex_steps(answer: str, actions: set) -> List[PlanStep]:
-    """``(action arg ...)`` groups naming a domain action, in order."""
-    out = []
+    """``(action arg ...)`` groups naming a domain action, in order. Empty if
+    an action-shaped group with an unknown name sits between two of them:
+    that plan has a bad step, and dropping it would grade another plan (the
+    extractor transcribes it instead)."""
+    out, unknown_since = [], None
     for m in _STEP.finditer(answer):
         name = m.group(1).lower()
         if name in actions:
+            if unknown_since is not None and out:
+                return []
             out.append(PlanStep(name, tuple(a.lower() for a in m.group(2).split())))
+        elif m.group(2).strip():
+            unknown_since = len(out)
     return out
 
 
@@ -124,8 +131,12 @@ def claims_unsolvable(sc: Scenario, answer: str, extractor: Optional[Extractor])
             "exactly YES or NO.\n\nPROBLEM:\n%s\n\nANSWER:\n%s\n"
             % (sc.text, answer))
         return reply.strip().upper().startswith("YES")
-    return bool(re.search(r"\b(impossible|not possible|cannot be done|unsolvable|"
-                          r"no (valid )?(plan|route|solution) exists)\b", answer, re.I))
+    claims = re.finditer(r"\b(impossible|not possible|cannot be done|unsolvable|"
+                         r"no (valid )?(plan|route|solution) exists)\b", answer, re.I)
+    # "not impossible", "isn't unsolvable": a negated claim is not one
+    return any(not re.search(r"(\bnot|n't|\bnever)\s+(\w+\s+)?$",
+                             answer[max(0, m.start() - 20):m.start()], re.I)
+               for m in claims)
 
 
 def grade_check(sc: Scenario, answer: str) -> Grade:

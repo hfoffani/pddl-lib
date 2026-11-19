@@ -97,11 +97,11 @@ def check(sc: Scenario, timeout: float = 60.0) -> Check:
     dp = sc.reference()
     t0 = time.monotonic()
     if sc.planner == "none":
-        text = (sc.path / "optimal.plan").read_text(encoding="utf-8")
-        v = validate_plan(dp, parse_plan(text))
-        cost = final_cost(v.simulation.state, len(text.split("\n")) - 1) if v.valid else None
+        steps = parse_plan((sc.path / "optimal.plan").read_text(encoding="utf-8"))
+        v = validate_plan(dp, steps)
+        cost = final_cost(v.simulation.state, len(steps)) if v.valid else None
         ok = cost is not None and abs(cost - (sc.optimal_cost or 0)) < 1e-9
-        return Check(cost, time.monotonic() - t0, text.split("\n")[:-1],
+        return Check(cost, time.monotonic() - t0, [str(s) for s in steps],
                      "optimal.plan, not solved", ok)
     res = solve(dp, sc.planner, timeout=timeout)
     secs = time.monotonic() - t0

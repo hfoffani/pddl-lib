@@ -123,12 +123,16 @@ async def converse(run, sc, server_cmd: str, timeout: float) -> List[dict]:
         stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
         env={**os.environ, "CODEX_HOME": str(codex_home(workdir))})
+    timed_out = False
     try:
-        out, _ = await asyncio.wait_for(proc.communicate(prompt.encode()), timeout)
+        out, err = await asyncio.wait_for(proc.communicate(prompt.encode()), timeout)
     except asyncio.TimeoutError:
         proc.kill()
-        out, _ = await proc.communicate()
-        run.detail = "codex timed out after %ds" % timeout
+        out, err = await proc.communicate()
+        run.detail, timed_out = "codex timed out after %ds" % timeout, True
+    if proc.returncode and not timed_out:  # an infrastructure failure, not an answer
+        raise RuntimeError("codex exited %d: %s" % (
+            proc.returncode, err.decode(errors="replace").strip()[-500:]))
     events = [json.loads(line) for line in out.decode().splitlines()
               if line.startswith("{")]
     body, run.tokens, errors = to_messages(events)

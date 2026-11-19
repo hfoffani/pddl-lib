@@ -18,6 +18,7 @@ import pathlib
 import shutil
 import subprocess
 import sys
+import threading
 
 PYTHON = os.path.realpath(os.path.join(sys.base_exec_prefix, "bin", "python3"))
 MAX_OUTPUT = 10_000
@@ -56,21 +57,40 @@ def run_python(code: str, workdir: pathlib.Path, timeout: float = 60.0,
         return json.dumps({"error": "run_python is unavailable: no sandbox "
                                     "(sandbox-exec) on this machine"})
     script = workdir / ("run_%d.py" % n)
-    script.write_text(code, encoding="utf-8")
+    # earlier sandboxed code can plant a symlink here; the host must not follow it
+    if script.is_symlink() or script.exists():
+        script.unlink()
+    fd = os.open(script, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
+                 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.write(code)
     cmd = ["sandbox-exec", "-p", _profile(workdir), PYTHON, "-I", script.name]
     env = {"PATH": "/usr/bin:/bin", "PYTHONDONTWRITEBYTECODE": "1",
            "HOME": str(workdir), "TMPDIR": str(workdir)}
+    p = subprocess.Popen(cmd, cwd=workdir, env=env, stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+    kept = {"stdout": bytearray(), "stderr": bytearray()}
+    dropped = {"stdout": 0, "stderr": 0}
+
+    def drain(name, stream):  # keep at most MAX_OUTPUT bytes, count the rest
+        for chunk in iter(lambda: stream.read(65536), b""):
+            room = MAX_OUTPUT - len(kept[name])
+            kept[name] += chunk[:max(room, 0)]
+            dropped[name] += max(len(chunk) - max(room, 0), 0)
+    readers = [threading.Thread(target=drain, args=(k, getattr(p, k)), daemon=True)
+               for k in kept]
+    for t in readers:
+        t.start()
     try:
-        p = subprocess.run(cmd, cwd=workdir, env=env, capture_output=True,
-                           text=True, timeout=timeout)
-        out = {"exit_code": p.returncode, "stdout": p.stdout, "stderr": p.stderr}
-    except subprocess.TimeoutExpired as exc:
-        def text(b):
-            return b.decode(errors="replace") if isinstance(b, bytes) else (b or "")
-        out = {"exit_code": None, "timed_out_after_seconds": timeout,
-               "stdout": text(exc.stdout), "stderr": text(exc.stderr)}
-    for k in ("stdout", "stderr"):
-        if len(out[k]) > MAX_OUTPUT:
-            out[k] = out[k][:MAX_OUTPUT] + "\n... [truncated %d chars]" % (
-                len(out[k]) - MAX_OUTPUT)
+        out = {"exit_code": p.wait(timeout=timeout)}
+    except subprocess.TimeoutExpired:
+        p.kill()
+        p.wait()
+        out = {"exit_code": None, "timed_out_after_seconds": timeout}
+    for t in readers:
+        t.join()
+    for k in kept:
+        out[k] = kept[k].decode(errors="replace")
+        if dropped[k]:
+            out[k] += "\n... [truncated %d bytes]" % dropped[k]
     return json.dumps(out)
