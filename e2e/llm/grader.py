@@ -58,9 +58,14 @@ class Grade:
 
 def regex_steps(answer: str, actions: set) -> List[PlanStep]:
     """``(action arg ...)`` groups naming a domain action, in order. Empty if
-    an action-shaped group with an unknown name sits between two of them:
-    that plan has a bad step, and dropping it would grade another plan (the
-    extractor transcribes it instead)."""
+    the answer has a step with an unknown name: a group between two known
+    ones, or a line holding nothing but such a group. Dropping it would grade
+    another plan; the extractor transcribes the answer instead. Inline groups
+    before or after the plan, like ``(see below)``, are prose."""
+    for line in answer.splitlines():
+        m = _STEP.fullmatch(line.strip().lstrip("-*0123456789. ").strip("`"))
+        if m and m.group(1).lower() not in actions:
+            return []
     out, gap = [], False  # gap: an unknown group since the first known step
     for m in _STEP.finditer(answer):
         name = m.group(1).lower()

@@ -16,14 +16,16 @@ import contextlib
 import json
 import os
 import pathlib
+import selectors
 import shutil
 import signal
 import subprocess
 import sys
-import threading
+import time
 
 PYTHON = os.path.realpath(os.path.join(sys.base_exec_prefix, "bin", "python3"))
 MAX_OUTPUT = 10_000
+GRACE = 2.0  # seconds to drain the pipes after the process ends
 
 TOOL = {
     "type": "function",
@@ -74,26 +76,42 @@ def run_python(code: str, workdir: pathlib.Path, timeout: float = 60.0,
                          stderr=subprocess.PIPE, start_new_session=True)
     kept = {"stdout": bytearray(), "stderr": bytearray()}
     dropped = {"stdout": 0, "stderr": 0}
-
-    def drain(name, stream):  # keep at most MAX_OUTPUT bytes, count the rest
-        for chunk in iter(lambda: stream.read1(65536), b""):
-            room = MAX_OUTPUT - len(kept[name])
+    sel = selectors.DefaultSelector()
+    for name in kept:
+        sel.register(getattr(p, name), selectors.EVENT_READ, name)
+    deadline = time.monotonic() + timeout
+    out: dict = {}
+    stop = None  # once the process is gone: read what is left for GRACE seconds
+    while sel.get_map():
+        now = time.monotonic()
+        if stop is None and (p.poll() is not None or now >= deadline):
+            out = ({"exit_code": p.returncode} if p.returncode is not None else
+                   {"exit_code": None, "timed_out_after_seconds": timeout})
+            with contextlib.suppress(ProcessLookupError, PermissionError):
+                os.killpg(p.pid, signal.SIGKILL)  # its children too
+            p.wait()
+            stop = now + GRACE
+        if stop is not None and now >= stop:
+            break  # a descendant in another session still holds a pipe
+        for key, _ in sel.select(0.1):
+            chunk = os.read(key.fileobj.fileno(), 65536)  # type: ignore[union-attr]
+            if not chunk:
+                sel.unregister(key.fileobj)
+                continue
+            name, room = key.data, MAX_OUTPUT - len(kept[key.data])
             kept[name] += chunk[:max(room, 0)]
             dropped[name] += max(len(chunk) - max(room, 0), 0)
-    readers = [threading.Thread(target=drain, args=(k, getattr(p, k)), daemon=True)
-               for k in kept]
-    for t in readers:
-        t.start()
-    try:
-        out = {"exit_code": p.wait(timeout=timeout)}
-    except subprocess.TimeoutExpired:
-        out = {"exit_code": None, "timed_out_after_seconds": timeout}
-    with contextlib.suppress(ProcessLookupError, PermissionError):
-        os.killpg(p.pid, signal.SIGKILL)
-    p.wait()
-    # a descendant in another session can still hold the pipes: stop waiting
-    for t in readers:
-        t.join(timeout=2)
+    if not out:  # both pipes closed before the process was reaped
+        try:
+            out = {"exit_code": p.wait(timeout=max(deadline - time.monotonic(), 0))}
+        except subprocess.TimeoutExpired:
+            out = {"exit_code": None, "timed_out_after_seconds": timeout}
+        with contextlib.suppress(ProcessLookupError, PermissionError):
+            os.killpg(p.pid, signal.SIGKILL)
+        p.wait()
+    sel.close()
+    p.stdout.close()  # type: ignore[union-attr]
+    p.stderr.close()  # type: ignore[union-attr]
     for k in kept:
         out[k] = kept[k].decode(errors="replace")
         if dropped[k]:

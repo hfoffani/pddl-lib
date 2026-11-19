@@ -68,8 +68,15 @@ def test_regex_keeps_unknown_steps_for_the_extractor():
     replies = ["(drive depot riverside)\n(teleport riverside oldbridge)\n"
                "(drive oldbridge town)"]
     assert grader.grade(sc, plan, lambda p: replies[0]).verdict == grader.INVALID
+    good_steps = ["(drive depot riverside)", "(drive riverside oldbridge)",
+                  "(drive oldbridge town)"]
     assert grader.grade(sc, "(drive depot riverside) (teleport) (drive riverside oldbridge)"
                             " (drive oldbridge town)").verdict == grader.UNPARSEABLE
+    # a step line with an unknown action, before or after the known ones
+    for bad in ("(unknown-action)\n" + "\n".join(good_steps),
+                "\n".join(good_steps) + "\n(teleport town depot)",
+                "1. (unknown-action)\n2. (drive depot riverside)"):
+        assert grader.grade(sc, bad).verdict == grader.UNPARSEABLE, bad
     # prose in parentheses before or after the plan is fine
     good = "(drive depot riverside) (drive riverside oldbridge) (drive oldbridge town)"
     assert grader.grade(sc, "(see below) " + good).verdict == grader.OPTIMAL
@@ -284,16 +291,49 @@ def test_sandbox_bounds_output(tmp_path):
     assert "truncated 40001 bytes" in out["stdout"]
 
 
+def _alive(pid):
+    import os
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    out = __import__("subprocess").run(["ps", "-o", "stat=", "-p", str(pid)],
+                                       capture_output=True, text=True).stdout
+    return bool(out.strip()) and not out.strip().startswith("Z")
+
+
 @needs_sandbox
-def test_sandbox_returns_despite_children_holding_the_pipes(tmp_path):
+@pytest.mark.parametrize("ends", ["exit", "timeout"])
+def test_sandbox_kills_children_and_returns(tmp_path, ends):
+    """A child in the group dies with the run; one in its own session keeps the
+    pipes open, and run_python still returns on time."""
+    import os
+    import signal
     import time
-    code = ("import subprocess, os\n"
-            "subprocess.Popen(['/bin/sleep', '30'])\n"
-            "subprocess.Popen(['/bin/sleep', '30'], start_new_session=True)\n"
-            "print('parent done')\n")
+    code = ("import subprocess, time\n"
+            "a = subprocess.Popen(['/bin/sleep', '30'])\n"
+            "b = subprocess.Popen(['/bin/sleep', '30'], start_new_session=True)\n"
+            "open('pids', 'w').write('%d %d' % (a.pid, b.pid))\n"
+            "print('parent done', flush=True)\n"
+            + ("time.sleep(30)\n" if ends == "timeout" else ""))
     t0 = time.monotonic()
-    out = json.loads(sandbox.run_python(code, tmp_path, timeout=10))
-    assert time.monotonic() - t0 < 8 and out["stdout"].startswith("parent done")
+    out = json.loads(sandbox.run_python(code, tmp_path, timeout=4))
+    took = time.monotonic() - t0
+    in_group, own_session = map(int, (tmp_path / "pids").read_text().split())
+    try:
+        assert out["stdout"].startswith("parent done")
+        assert took < 4 + sandbox.GRACE + 2
+        assert (out["exit_code"] is None) == (ends == "timeout")
+        time.sleep(0.2)
+        assert not _alive(in_group)
+    finally:
+        for pid in (in_group, own_session):
+            try:
+                os.kill(pid, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError):
+                pass
 
 
 @needs_sandbox
