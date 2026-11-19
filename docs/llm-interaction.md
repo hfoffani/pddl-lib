@@ -7,6 +7,10 @@ plausible-sounding answer is not the same as the *cheapest* one. A classical
 solver is the opposite: it cannot read your problem, but its answer comes
 with a guarantee.
 
+For measurements across several problems, two models and three tool setups,
+see [`llm-results.md`](llm-results.md): at the sizes tested there, frontier
+models already check plans on their own; they gain most on optimization.
+
 This page shows the division of labour on a real, captured conversation:
 **the LLM translates, pddlpy solves, the LLM translates back.** The point is
 deliberately model-agnostic. Frontier models keep getting better at planning,
