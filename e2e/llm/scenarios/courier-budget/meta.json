@@ -1,0 +1,2 @@
+{"kind": "unsolvable", "planner": "ucs",
+ "source": "courier-parcels with 26 coins for tolls; its cheapest plan costs 27, so no plan fits. Nothing is missing from the table: proving it impossible means proving the optimum exceeds 26. With 27 coins it is solvable."}

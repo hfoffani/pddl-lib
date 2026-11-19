@@ -1,0 +1,2 @@
+{"kind": "improve-plan", "optimal_cost": 2, "proposed_cost": 3, "planner": "ucs",
+ "source": "maintenance plus the greedy schedule (day 1 Madrid covers six planes first): 3 days. The optimum is 2 (day 2 Madrid, day 3 Paris)."}

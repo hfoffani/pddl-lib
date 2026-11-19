@@ -17,12 +17,14 @@ I started pddl-py in 2015 as a PDDL parser with a simple object model, so
 planning students and researchers could plug in their own search algorithms.
 That is still in here and it still works.
 
-What changed is who calls it. LLMs now write well-formed PDDL, but they are
-unreliable at producing correct or optimal plans, at tracking state over many
-steps, and at proving that a problem has no plan. Those are exactly the jobs a
-PDDL tool does well. So the primary goal of pddl-py is now to be the
-conformant PDDL toolkit that agents call to fill those gaps: parse, validate,
-simulate and solve, through the CLI and the MCP server.
+What changed is who calls it. LLMs now write well-formed PDDL, and frontier
+models also check plans and solve small problems on their own, or write a
+search in Python for them. What they cannot give is a guarantee. So the
+primary goal of pddl-py is now to be the verifier an agent trusts: a plan
+checked step by step, a cheapest plan from an optimal planner (`ucs`) whose
+search proves it, an `unsolvable` that comes from an exhausted search space,
+through the CLI and the MCP server. [`docs/llm-results.md`](docs/llm-results.md) measures
+what two models gain from it, with and without tools.
 
 Researchers and app developers stay first-class users of the Python API. I am
 not dropping that audience, I am adding a new one and letting it set the
@@ -30,13 +32,18 @@ priorities.
 
 A few things follow from this:
 
-* **Conformance target.** PDDL 1.2, 2.1, 2.2, 3.0 and 3.1. Support is partial
-  today, and I publish it per `:requirements` keyword in
-  [`docs/pddl-support.md`](docs/pddl-support.md), including what does not work.
-* **Priorities.** I add requirements in the order that helps LLM use most.
-* **Not a Fast Downward competitor.** The reference planners stay small and
-  readable. Hard search will go to external solvers, not to a bigger planner
-  inside this package.
+* **Support is published, not promised.** PDDL support is partial, and I
+  publish it per `:requirements` keyword in
+  [`docs/pddl-support.md`](docs/pddl-support.md), including what does not
+  work.
+* **Checking first.** Work that makes a verdict more trustworthy comes before
+  new PDDL features.
+* **A built-in solver for medium problems.** The planners are pure Python
+  and stay readable, and they are getting faster (see
+  [`docs/baseline.md`](docs/baseline.md)). They are not there yet: on a
+  60-plane scheduling problem a frontier model's own Python search beats
+  them. Large problems will go to external planners through a bridge, as an
+  extension.
 
 ### Install ###
 
@@ -159,8 +166,14 @@ For agents that work from files instead of MCP, there is also an Agent Skill in
 
 > [!IMPORTANT]
 > **Why pair an LLM with a solver at all?** LLMs translate problems into PDDL
-> well but are unreliable at producing plans, let alone optimal ones. Handing the
-> search to a solver uses each for what it is good at.
+> well. Without tools they often miss the cheapest plan: in
+> [our runs](docs/llm-results.md) a frontier model found the optimal 60-plane
+> maintenance schedule once in three tries, and a small model never. An
+> optimal planner's answer comes with a guarantee (`ucs`, or `bfs` when every
+> action costs the same; `gbfs` finds a plan, not the cheapest), and
+> `validate_plan` checks a plan from anywhere, the model's own included. It
+> refuses the domains it cannot judge rather than guess (see
+> [`docs/pddl-support.md`](docs/pddl-support.md)).
 > [`docs/llm-interaction.md`](docs/llm-interaction.md) walks through a complete
 > example (natural language, PDDL, `pddlpy solve`, natural language) on a small
 > cost-optimal routing problem where the intuitive answer is wrong.
@@ -347,6 +360,8 @@ More PDDL pairs for testing live in [`examples-pddl/`](examples-pddl/) and
   keyword supports today, and the known bugs.
 * [`docs/llm-interaction.md`](docs/llm-interaction.md): worked example of an
   LLM and pddlpy splitting the work: translate, solve, translate back (#99).
+* [`docs/llm-results.md`](docs/llm-results.md): what two LLMs gain from
+  pddlpy, with and without tools, on 7 problems (M3).
 * [`skills/pddlpy/SKILL.md`](skills/pddlpy/SKILL.md): an Agent Skill so coding
   agents can drive the library and the CLI.
 

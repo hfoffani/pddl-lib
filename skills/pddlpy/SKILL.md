@@ -173,6 +173,11 @@ s.applicable(op); s.apply(op)              # no manual Atom/tuple casting
   sequential semantics: domains that require overlapping actions are not solved.
   Timed initial literals (`(at 5 (p))` in `:init`) need `temporal` too; the
   goal must still hold after the last one.
+- **Search limits.** The planners are pure Python and slow on large
+  combinatorial problems (a 60-plane covering schedule takes `gbfs` about
+  400 s). Pass a `timeout`, and read `status`: `limit` proves nothing,
+  `unsolvable` is a proof. A plan you found another way can still be checked
+  with `validate-plan`.
 - Case does not matter: keywords and names are case-insensitive, and names
   come out lowercase (`(CLEAR A)` is reported as `(clear a)`), as in Fast
   Downward and VAL.

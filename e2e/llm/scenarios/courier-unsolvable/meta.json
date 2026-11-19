@@ -1,0 +1,2 @@
+{"kind": "unsolvable", "planner": "gbfs",
+ "source": "courier-parcels without its only road into the castle (park -> castle): the tools cannot be delivered. The question is unchanged: it does not hint that the task may be impossible. A plain search has to exhaust the state space; pddlpy's relaxed exploration proves it before searching."}

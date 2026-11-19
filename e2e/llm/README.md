@@ -1,6 +1,102 @@
-# LLM + solver end-to-end (#106)
+# LLM + solver end-to-end
 
-Manual, non-deterministic — **never wired into CI**. Reproduces
+Two manual, non-deterministic tools, **never wired into CI**:
+
+- `playground.py`: many scenarios × models × arms. Use it to explore.
+- `harness.py`: the single courier run behind `docs/llm-interaction.md` (#106).
+
+## Playground
+
+Every arm gets the same English problem and must answer in English. Only the
+tools differ:
+
+| Arm | Tools | Shows |
+|---|---|---|
+| `bare` | none | what the model learned in training |
+| `python` | `run_python`: base interpreter, stdlib only, temp dir, 60 s timeout, macOS `sandbox-exec` (no network, no writes outside the temp dir, no reads under `/Users`) | whether the model writes a solver on its own |
+| `pddlpy` | `write_file` + the pddlpy MCP tools (this checkout) | the pddl-lib route |
+
+System prompts only name the tools, never a method. The answer is graded
+against the scenario's reference PDDL. `(action args)` lines are read
+directly; otherwise an extractor model (`--grader-model`, temperature 0)
+transcribes the answer into those lines, and then `validate_plan` decides:
+`optimal`, `suboptimal`, `goal-not-reached`, `invalid` or `unparseable`.
+
+```bash
+export OPENROUTER_API_KEY=...
+P="uv run --with mcp,httpx python e2e/llm/playground.py"
+$P list                      # scenarios + optimum
+$P show maintenance          # the English text the model sees
+$P check --plan              # solve every reference problem
+$P run maintenance logistics --arm bare,python,pddlpy \
+   --model openai/gpt-5,qwen/qwen3-235b-a22b --repeats 3
+$P run courier --arm bare,python,pddlpy --dry-run   # canned, no key
+$P grade maintenance my-answer.txt                  # grade by hand
+```
+
+**ChatGPT subscription models** go through the Codex CLI (`codex login`
+with a ChatGPT account; no API key): `--model codex:<slug>`, slugs from
+`codex debug models` (e.g. `codex:gpt-6.1-sol`). Codex brings its own agent
+prompt and tools, so these arms only approximate the ones above:
+
+| Arm | Codex tools |
+|---|---|
+| `bare` | none (shell and code mode off) |
+| `python` | Codex's shell in its `workspace-write` sandbox (no network, writes only in a temp dir, reads anywhere) and code mode (JavaScript) |
+| `pddlpy` | the pddlpy MCP server, Codex's file edits and code mode; no shell |
+
+Code mode cannot be turned off for `python` and `pddlpy`: Codex routes every
+tool call, MCP included, through it. So a Codex `pddlpy` run can also compute
+in JavaScript, and models do: on `maintenance-improve-60` gpt-6.1-sol wrote
+its own exhaustive search next to the pddlpy calls. For arms that hold
+strictly, use OpenRouter models.
+
+Each run gets a fresh `CODEX_HOME` with only a link to `~/.codex/auth.json`,
+and skills are off, so the user's Codex config, `AGENTS.md` and installed
+skills (a global pddlpy skill would leak into every arm) stay out. Grading
+still uses the OpenRouter extractor when `OPENROUTER_API_KEY` is set.
+
+Results go to `results/<stamp>/` (gitignored): `results.md` (pass table + run
+list), `results.jsonl`, and one transcript per run, with reasoning, code and
+PDDL inline. Offline tests: `uv run --with mcp,httpx pytest e2e/llm`.
+
+| Scenario | Optimum | What makes it hard |
+|---|---|---|
+| `courier` | 7 | nothing: a control case |
+| `courier-parcels` | 27 | pickup-and-delivery routing over 28 one-way tolls |
+| `blocksworld` | 18 | 8 blocks; tearing everything down works but isn't optimal |
+| `mystery-blocksworld` | 16 | same physics with meaningless names (PlanBench) |
+| `logistics` | 25 | truck/plane hand-offs across 3 cities |
+| `maintenance` | 2 | set cover; the greedy pick leads to 3 days |
+
+The verifier claims, one scenario each. The model is asked to judge a plan, or
+the task has no plan; the question never hints which:
+
+| Scenario | Kind | Pass | The trap |
+|---|---|---|---|
+| `courier-check` | `check-plan` | `VERDICT: invalid at step 16` | a 20-step dispatcher plan; step 16 drives a one-way road backwards |
+| `maintenance-improve` | `improve-plan` | a 2-day schedule | the office proposes the greedy 3-day schedule; it is valid |
+| `courier-unsolvable` | `unsolvable` | says it cannot be done | `courier-parcels` without the only road into the castle |
+| `logistics-check` | `check-plan` | `VERDICT: invalid at step 16` | 26 steps; step 4 drives the Madrid truck away, step 16 loads into it at the airport |
+| `maintenance-improve-30` | `improve-plan` | a 4-day schedule | 30 planes, 6 days, 5 airports; the greedy 5-day proposal has no redundant day and shares none with the unique optimum |
+| `courier-budget` | `unsolvable` | says it cannot be done | `courier-parcels` with 26 coins for tolls; the cheapest plan costs 27 |
+
+The first three hide the trap in the table: both models tested pass them in
+every arm, `bare` included. The last three need state tracking or search.
+
+`check-plan` answers end with a `VERDICT:` line, graded by regex. An
+`unsolvable` answer passes when the extractor model says it concludes the
+task cannot be done; a plan instead gets that plan's verdict. Passing verdicts
+are `optimal` and `correct`.
+
+**Adding a scenario:** create a directory with `problem.md`, `domain.pddl`,
+`problem.pddl` and `meta.json` (`optimal_cost`, `planner`, `source`, and
+optionally `kind` and `first_bad_step`; see `scenarios.py`), plus
+`proposed.plan` for `check-plan` and `improve-plan`. Then check it with
+`$P check NAME`. Use an optimal planner: `ucs` always, `astar`
+only for unit costs where no action reaches two goal atoms at once.
+
+## Courier harness (#106) Reproduces
 [docs/llm-interaction.md](../../docs/llm-interaction.md) with a *real* model:
 the LLM gets the courier problem in natural language plus tools (a local
 `write_file` and the pddlpy MCP tools `validate`/`ground`/`solve`/`parse`,

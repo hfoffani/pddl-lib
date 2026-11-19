@@ -1,0 +1,2 @@
+{"optimal_cost": 25, "planner": "astar",
+ "source": "IPC Logistics (1998/2000), typed STRIPS: 3 cities, 3 trucks, 1 plane, 3 packages. astar = ucs = 25."}
