@@ -75,11 +75,13 @@ def test_regex_keeps_unknown_steps_for_the_extractor():
     # a step line with an unknown action, before or after the known ones
     for bad in ("(unknown-action)\n" + "\n".join(good_steps),
                 "\n".join(good_steps) + "\n(teleport town depot)",
-                "1. (unknown-action)\n2. (drive depot riverside)"):
+                "1. (unknown-action)\n2. (drive depot riverside)",
+                "(unknown-action) " + " ".join(good_steps),
+                " ".join(good_steps) + " (teleport)"):
         assert grader.grade(sc, bad).verdict == grader.UNPARSEABLE, bad
     # prose in parentheses before or after the plan is fine
     good = "(drive depot riverside) (drive riverside oldbridge) (drive oldbridge town)"
-    assert grader.grade(sc, "(see below) " + good).verdict == grader.OPTIMAL
+    assert grader.grade(sc, "Here it is (see below): " + good).verdict == grader.OPTIMAL
     assert grader.grade(sc, good + " (total 7)").verdict == grader.OPTIMAL
 
 
@@ -142,7 +144,8 @@ def test_grade_unsolvable():
     assert grader.grade(sc, "The task is not impossible.").verdict == grader.UNPARSEABLE
     assert grader.grade(sc, "It isn't really unsolvable.").verdict == grader.UNPARSEABLE
     for hedged in ("The task might be impossible.", "It is probably impossible.",
-                   "This seems impossible."):
+                   "This seems impossible.", "The task might actually be impossible.",
+                   "It may well turn out impossible."):
         assert grader.grade(sc, hedged).verdict == grader.UNPARSEABLE, hedged
     # the extractor decides when there is one
     seen = []
@@ -324,7 +327,8 @@ def test_sandbox_kills_children_and_returns(tmp_path, ends):
     in_group, own_session = map(int, (tmp_path / "pids").read_text().split())
     try:
         assert out["stdout"].startswith("parent done")
-        assert took < 4 + sandbox.GRACE + 2
+        # a timeout keeps the deadline even with a detached child on the pipes
+        assert took < (4.6 if ends == "timeout" else 4 + sandbox.GRACE + 1)
         assert (out["exit_code"] is None) == (ends == "timeout")
         time.sleep(0.2)
         assert not _alive(in_group)

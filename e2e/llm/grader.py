@@ -63,8 +63,10 @@ def regex_steps(answer: str, actions: set) -> List[PlanStep]:
     another plan; the extractor transcribes the answer instead. Inline groups
     before or after the plan, like ``(see below)``, are prose."""
     for line in answer.splitlines():
-        m = _STEP.fullmatch(line.strip().lstrip("-*0123456789. ").strip("`"))
-        if m and m.group(1).lower() not in actions:
+        line = line.strip().lstrip("-*0123456789. ").strip("`")
+        # a line of nothing but steps is a plan: every group on it is a step
+        if line and not _STEP.sub("", line).strip() and any(
+                m.group(1).lower() not in actions for m in _STEP.finditer(line)):
             return []
     out, gap = [], False  # gap: an unknown group since the first known step
     for m in _STEP.finditer(answer):
@@ -140,9 +142,9 @@ def claims_unsolvable(sc: Scenario, answer: str, extractor: Optional[Extractor])
                          r"no (valid )?(plan|route|solution) exists)\b", answer, re.I)
     # "not impossible", "might be unsolvable": a negated or hedged claim is not one
     hedge = (r"(\bnot|n't|\bnever|\bmight|\bmay|\bcould|\bperhaps|\bpossibly|"
-             r"\bprobably|\bmaybe|\blikely|\bseems?)\s+(\w+\s+)?$")
+             r"\bprobably|\bmaybe|\blikely|\bseems?)\s+(\w+\s+){0,3}$")
     return any(not re.search(hedge,
-                             answer[max(0, m.start() - 20):m.start()], re.I)
+                             answer[max(0, m.start() - 50):m.start()], re.I)
                for m in claims)
 
 

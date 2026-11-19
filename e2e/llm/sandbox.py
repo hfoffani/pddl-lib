@@ -25,7 +25,7 @@ import time
 
 PYTHON = os.path.realpath(os.path.join(sys.base_exec_prefix, "bin", "python3"))
 MAX_OUTPUT = 10_000
-GRACE = 2.0  # seconds to drain the pipes after the process ends
+GRACE = 2.0  # seconds to drain the pipes after the process exits
 
 TOOL = {
     "type": "function",
@@ -90,7 +90,8 @@ def run_python(code: str, workdir: pathlib.Path, timeout: float = 60.0,
             with contextlib.suppress(ProcessLookupError, PermissionError):
                 os.killpg(p.pid, signal.SIGKILL)  # its children too
             p.wait()
-            stop = now + GRACE
+            # after an exit, let the pipes drain; after a timeout, keep the deadline
+            stop = now + (GRACE if out["exit_code"] is not None else 0.1)
         if stop is not None and now >= stop:
             break  # a descendant in another session still holds a pipe
         for key, _ in sel.select(0.1):
