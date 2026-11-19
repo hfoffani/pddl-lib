@@ -12,10 +12,12 @@ run. A guard rail for a manual playground, not a hardened jail.
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import pathlib
 import shutil
+import signal
 import subprocess
 import sys
 import threading
@@ -67,13 +69,14 @@ def run_python(code: str, workdir: pathlib.Path, timeout: float = 60.0,
     cmd = ["sandbox-exec", "-p", _profile(workdir), PYTHON, "-I", script.name]
     env = {"PATH": "/usr/bin:/bin", "PYTHONDONTWRITEBYTECODE": "1",
            "HOME": str(workdir), "TMPDIR": str(workdir)}
+    # its own process group, so a timeout or exit also ends the children it started
     p = subprocess.Popen(cmd, cwd=workdir, env=env, stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
+                         stderr=subprocess.PIPE, start_new_session=True)
     kept = {"stdout": bytearray(), "stderr": bytearray()}
     dropped = {"stdout": 0, "stderr": 0}
 
     def drain(name, stream):  # keep at most MAX_OUTPUT bytes, count the rest
-        for chunk in iter(lambda: stream.read(65536), b""):
+        for chunk in iter(lambda: stream.read1(65536), b""):
             room = MAX_OUTPUT - len(kept[name])
             kept[name] += chunk[:max(room, 0)]
             dropped[name] += max(len(chunk) - max(room, 0), 0)
@@ -84,11 +87,13 @@ def run_python(code: str, workdir: pathlib.Path, timeout: float = 60.0,
     try:
         out = {"exit_code": p.wait(timeout=timeout)}
     except subprocess.TimeoutExpired:
-        p.kill()
-        p.wait()
         out = {"exit_code": None, "timed_out_after_seconds": timeout}
+    with contextlib.suppress(ProcessLookupError, PermissionError):
+        os.killpg(p.pid, signal.SIGKILL)
+    p.wait()
+    # a descendant in another session can still hold the pipes: stop waiting
     for t in readers:
-        t.join()
+        t.join(timeout=2)
     for k in kept:
         out[k] = kept[k].decode(errors="replace")
         if dropped[k]:

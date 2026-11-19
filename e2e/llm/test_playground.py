@@ -68,8 +68,12 @@ def test_regex_keeps_unknown_steps_for_the_extractor():
     replies = ["(drive depot riverside)\n(teleport riverside oldbridge)\n"
                "(drive oldbridge town)"]
     assert grader.grade(sc, plan, lambda p: replies[0]).verdict == grader.INVALID
-    # prose in parentheses before the plan is fine
-    assert grader.grade(sc, "(see below) (drive depot town)").verdict == grader.SUBOPTIMAL
+    assert grader.grade(sc, "(drive depot riverside) (teleport) (drive riverside oldbridge)"
+                            " (drive oldbridge town)").verdict == grader.UNPARSEABLE
+    # prose in parentheses before or after the plan is fine
+    good = "(drive depot riverside) (drive riverside oldbridge) (drive oldbridge town)"
+    assert grader.grade(sc, "(see below) " + good).verdict == grader.OPTIMAL
+    assert grader.grade(sc, good + " (total 7)").verdict == grader.OPTIMAL
 
 
 def test_grade_suboptimal():
@@ -130,6 +134,9 @@ def test_grade_unsolvable():
     assert grader.grade(sc, "Hmm.").verdict == grader.UNPARSEABLE
     assert grader.grade(sc, "The task is not impossible.").verdict == grader.UNPARSEABLE
     assert grader.grade(sc, "It isn't really unsolvable.").verdict == grader.UNPARSEABLE
+    for hedged in ("The task might be impossible.", "It is probably impossible.",
+                   "This seems impossible."):
+        assert grader.grade(sc, hedged).verdict == grader.UNPARSEABLE, hedged
     # the extractor decides when there is one
     seen = []
 
@@ -275,6 +282,18 @@ def test_sandbox_bounds_output(tmp_path):
     out = json.loads(sandbox.run_python("print('x' * 50000)", tmp_path))
     assert len(out["stdout"]) < sandbox.MAX_OUTPUT + 100
     assert "truncated 40001 bytes" in out["stdout"]
+
+
+@needs_sandbox
+def test_sandbox_returns_despite_children_holding_the_pipes(tmp_path):
+    import time
+    code = ("import subprocess, os\n"
+            "subprocess.Popen(['/bin/sleep', '30'])\n"
+            "subprocess.Popen(['/bin/sleep', '30'], start_new_session=True)\n"
+            "print('parent done')\n")
+    t0 = time.monotonic()
+    out = json.loads(sandbox.run_python(code, tmp_path, timeout=10))
+    assert time.monotonic() - t0 < 8 and out["stdout"].startswith("parent done")
 
 
 @needs_sandbox
