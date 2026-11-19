@@ -145,7 +145,9 @@ def test_grade_unsolvable():
     assert grader.grade(sc, "It isn't really unsolvable.").verdict == grader.UNPARSEABLE
     for hedged in ("The task might be impossible.", "It is probably impossible.",
                    "This seems impossible.", "The task might actually be impossible.",
-                   "It may well turn out impossible."):
+                   "It may well turn out impossible.",
+                   "I am unsure whether the task is impossible.",
+                   "I can't tell if it is unsolvable."):
         assert grader.grade(sc, hedged).verdict == grader.UNPARSEABLE, hedged
     # the extractor decides when there is one
     seen = []
@@ -308,7 +310,7 @@ def _alive(pid):
 
 
 @needs_sandbox
-@pytest.mark.parametrize("ends", ["exit", "timeout"])
+@pytest.mark.parametrize("ends", ["exit", "exit-near-deadline", "timeout"])
 def test_sandbox_kills_children_and_returns(tmp_path, ends):
     """A child in the group dies with the run; one in its own session keeps the
     pipes open, and run_python still returns on time."""
@@ -316,6 +318,8 @@ def test_sandbox_kills_children_and_returns(tmp_path, ends):
     import signal
     import time
     code = ("import subprocess, time\n"
+            + ("time.sleep(3.5)\n" if ends == "exit-near-deadline" else "")
+            +
             "a = subprocess.Popen(['/bin/sleep', '30'])\n"
             "b = subprocess.Popen(['/bin/sleep', '30'], start_new_session=True)\n"
             "open('pids', 'w').write('%d %d' % (a.pid, b.pid))\n"
@@ -328,7 +332,8 @@ def test_sandbox_kills_children_and_returns(tmp_path, ends):
     try:
         assert out["stdout"].startswith("parent done")
         # a timeout keeps the deadline even with a detached child on the pipes
-        assert took < (4.6 if ends == "timeout" else 4 + sandbox.GRACE + 1)
+        # the deadline holds even with a detached child on the pipes
+        assert took < 4.6
         assert (out["exit_code"] is None) == (ends == "timeout")
         time.sleep(0.2)
         assert not _alive(in_group)

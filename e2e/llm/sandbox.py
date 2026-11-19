@@ -91,7 +91,9 @@ def run_python(code: str, workdir: pathlib.Path, timeout: float = 60.0,
                 os.killpg(p.pid, signal.SIGKILL)  # its children too
             p.wait()
             # after an exit, let the pipes drain; after a timeout, keep the deadline
-            stop = now + (GRACE if out["exit_code"] is not None else 0.1)
+            # (never past the run's deadline)
+            stop = (min(now + GRACE, max(deadline, now + 0.1))
+                    if out["exit_code"] is not None else now + 0.1)
         if stop is not None and now >= stop:
             break  # a descendant in another session still holds a pipe
         for key, _ in sel.select(0.1):

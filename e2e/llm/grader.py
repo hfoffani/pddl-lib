@@ -128,7 +128,8 @@ def extract(sc: Scenario, answer: str, extractor: Optional[Extractor]):
 
 def claims_unsolvable(sc: Scenario, answer: str, extractor: Optional[Extractor]) -> bool:
     """Whether the answer concludes the task cannot be done (the extractor
-    decides; without one, a keyword match)."""
+    decides; without one, a keyword match that skips negated and hedged
+    phrasings: a heuristic for offline grading, not a parser)."""
     if extractor is not None:
         reply = extractor(
             "Below is a problem statement and someone's answer to it. Does the "
@@ -142,7 +143,8 @@ def claims_unsolvable(sc: Scenario, answer: str, extractor: Optional[Extractor])
                          r"no (valid )?(plan|route|solution) exists)\b", answer, re.I)
     # "not impossible", "might be unsolvable": a negated or hedged claim is not one
     hedge = (r"(\bnot|n't|\bnever|\bmight|\bmay|\bcould|\bperhaps|\bpossibly|"
-             r"\bprobably|\bmaybe|\blikely|\bseems?)\s+(\w+\s+){0,3}$")
+             r"\bprobably|\bmaybe|\blikely|\bseems?|\bunsure|\buncertain|\bwhether|"
+             r"\bif)\s+(\w+\s+){0,3}$")
     return any(not re.search(hedge,
                              answer[max(0, m.start() - 50):m.start()], re.I)
                for m in claims)
